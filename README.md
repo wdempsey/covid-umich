@@ -19,7 +19,7 @@ If there are steps to run the code list them as follows:
 0. Dependencies: all code is developed in Python using [Anaconda](https://anaconda.org/about).
 * The Anaconda environment can be installed using [covid.yml](./bayesian.yml). See [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file) for instructions on creating the environment.  Simply open Anaconda shell, open to github repo and run:
 ```
-conda env create -f bayesian.yml
+conda env create -f covid.yml
 ```
 1. Datasets and exploratory data analysis
 * World testing data is accessed [here](https://ourworldindata.org/covid-testing) and country population totals is accessed [here](https://www.worldometers.info/world-population/population-by-country/)
