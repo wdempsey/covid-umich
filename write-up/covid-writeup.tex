@@ -85,6 +85,8 @@ Let $N$ denote the population size.  At a fixed moment in time, let $Y_j \in \{ 
 A primary question is the prevalence o
 We are interested in the population average $\bar Y = \frac{1}{N} \sum_{j=1}^N Y_j$. Suppose we observe a sample of $n$ tests.  A natural candidate for prevalence is the proportion of positive tests $\bar y = \frac{1}{n} \sum_{i=1}^n y_i$.
 
+Prevalence is important in the long-run because the
+
 Based on Meng (2019), we can express the error between $\bar y$ and the true proportion as
 $$
 \bar y_n - \bar Y =  \rho_{I, Y} \times \sqrt{\frac{1-f}{f}} \times \sigma_Y
@@ -163,6 +165,9 @@ Suppose we collected $f=1/2$ and peak occurs at $\mu = 0.10$ and $\rho = 0.005$,
 
 Many (cites) hve
 
+\emph{Increasing testing leads to lower correlation only if we see the gap $\Delta$ decrease.  If we just see $f$ }
+
+
 \section{Compartmental model}
 
 (A) Heterogeneity in $R_0$
@@ -183,9 +188,13 @@ We must then layer on measurement-error.  Tests can
 
 The SIR model with parameters.
 
-\subsection{Stratified sampling}
+\subsection{Ration-based testing allocation}
 
-Suppose we stratify such that weighting is uninmportant.
+We assume that the percentage of tests is rationed according to severity of symptoms.
+
+Note that a person who displays severe symptoms may be COVID negative.
+
+
 
 \emph{Increasing testing leads to lower correlation in}
 
