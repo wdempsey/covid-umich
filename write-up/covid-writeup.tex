@@ -98,11 +98,11 @@ Figure~\ref{} presents testing per capita across reporting countries.  We see th
 
 Two countries with the same testing strategy (i.e., $\rho_{I,Y}$ equal) can yield wildly different estimates due to pop size.
 
-\subsection{Imperfect tests and }
+\subsection{Imperfect testing}
 
-Meng's analysis is critical when selection bias is present.  For the current crisis, the analysis should be extended in two directions.  First, tests are imperfect. Measurement-error.
+Tests are imperfect.  COVID-19 testing is no exception.  State-level case-count data is often used to signify disease prevalence per state.  When assessing prevalence in a community, sensitivity (true positive rate) and specificity (true negative rate) must be taken into account.  Here we investigate the interplay between imperfect testing and selection bias.  The standard story of ``measurement-error leads to parameter attenuation'' does not pan out.  Instead, the two sources of error become entangled, and the biases can become magnified, muted, or even switch signs.
 
-Let $P_j$ be an indicator that equals 1 when we observe reverse of the true outcome and equals 0 when we observe the true outcome. We suppose this is a stochastic variable that satisfies $\pr(P_j = 1 \mid Y_j = 1) =: FN$ is the false-negative rate and $\pr(P_j = 1 \mid Y_j = 0) =: FP$ is the false-positive rate.  If individual $j$ is selected (i.e., $I_j = 1$) then the  $Y_j^\star = Y_j(1-P_j) + (1-Y_j) P_j$.
+First we require some additional notation.  Let $P_j$ be an indicator of measurement error, equal to $1$ when we mismeasure the outcome and $0$ when we observe the true outcome. We suppose this is a stochastic variable that satisfies $\pr(P_j = 1 \mid Y_j = 1, I_j = 1) =: FN$ is the false-negative rate and $\pr(P_j = 1 \mid Y_j = 0, I_j = 1) =: FP$ is the false-positive rate.  If individual $j$ is selected (i.e., $I_j = 1$) then the observed outcome can be written as $Y_j^\star = Y_j(1-P_j) + (1-Y_j) P_j$.
 
 $$
 \bar y_n - \bar Y = \sqrt{\frac{1-f}{f}} \left[ \rho_{I,Y} \times \mu_Y (1-\mu_Y) + \rho_{I,PZ} \times \sigma_{PZ} + \sqrt{\frac{f}{1-f}}  \left( FP - (FP+FN) \bar Y \right) \right] .
@@ -111,8 +111,12 @@ where $\sigma_{PZ} = \sqrt{2 FP} \sqrt{\bar Y \left[ 1 - \frac{FP+FN}{FP} \bar Y
 
 This is quite complex but he main point is that the sign of the new terms can be either positive or negative.  Moreover, there is an interaction between...
 This means that raw application is, of course, biased but the expected bias directionality is not guaranteed.  There's a clear interaction between selection bias, measurement-error, prevalence, and data quantity!
+We are not the first to note this, but  (twitter guy) for a longer discussion of additional myths related
 
-To see this
+ critical when selection bias is present.  For the current crisis, the analysis should be extended in two directions.  First, tests are imperfect. Measurement-error.
+
+
+In addition, testing quality is likely to be a dynamic process.  The US is keen to increase testing.  Commentators have requested expedited FDA approval for variations on the currently available tests to speed up production.  This is likely to increase testing inaccuracies.  The bias and MSE depend on interaction among specificity,
 
 
 The attentive data analyst will recognize the estimator $\bar y_n$ will be biased even for simple random samples and suggest the alternative $\tilde y_n = \bar y_n + (1-\bar y_n) FP + FN \bar y_n$. We again wish to express the error $\tilde  y_n - \bar Y$ in statistical terms.  Let $Z_j = 1 - 2Y_j$; this converts the binary $0/1$ variable into a sign indicator, equal to $1$ when the outcome is.  In the appendix, we show that the error now can be expressed as
@@ -188,6 +192,10 @@ We must then layer on measurement-error.  Tests can
 
 The SIR model with parameters.
 
+\begin{itemize}
+\item Simulation study showing that $R_t$ and prevalence over time changes the effective sample size....
+\end{itemize}
+
 \subsection{Ration-based testing allocation}
 
 We assume that the percentage of tests is rationed according to severity of symptoms.
@@ -213,6 +221,11 @@ $B$
 \emph{Non-identifiable} and rely on assumptions.  As per Cox's statement.
 
 This makes models \emph{fragile} and rely on strong data-generating assumptions.  For a disease
+
+\subsection{Stratified sampling: improving precision in low-prevalence environments}
+
+Sampling network is hard.  Sampling high-risk strata is easy.  Simple example.
+DTR and network connectivity is useful for understanding spread and where "testing should go".
 
 \section{Decision-making: data versus information.}
 
@@ -246,6 +259,7 @@ What do we do when we are faced with?  We design experiments with our objectives
 Use prior results to show that ratio estimator under SRS is a good predictor of potential outbreak.
 
 ``Disease free''
+
 
 \section{Conclusion}
 
