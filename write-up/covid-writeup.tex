@@ -1,5 +1,6 @@
 \documentclass[12pt]{article}
 \usepackage{graphicx}
+\usepackage{wrapfig}
 \usepackage{setspace}
 \DeclareGraphicsExtensions{.eps, .ps}
 \usepackage{soul,color,hyperref}
@@ -19,6 +20,7 @@
 \newtheorem{proposition}[theorem]{Proposition}
 
 \def\pr{\text{pr}}
+\def\sgn{\text{sgn}}
 
 
 \begin{document}
@@ -98,31 +100,50 @@ Figure~\ref{} presents testing per capita across reporting countries.  We see th
 
 Two countries with the same testing strategy (i.e., $\rho_{I,Y}$ equal) can yield wildly different estimates due to pop size.
 
+For the current crisis, the analysis should be extended in two directions.  First, imperfect testing . Measurement-error.
+
 \subsection{Imperfect testing}
 
-Tests are imperfect.  COVID-19 testing is no exception.  State-level case-count data is often used to signify disease prevalence per state.  When assessing prevalence in a community, sensitivity (true positive rate) and specificity (true negative rate) must be taken into account.  Here we investigate the interplay between imperfect testing and selection bias.  The standard story of ``measurement-error leads to parameter attenuation'' does not pan out.  Instead, the two sources of error become entangled, and the biases can become magnified, muted, or even switch signs.
+Tests are imperfect.  COVID-19 testing is no exception.  Data analysis must account for test inaccuracy to distinguish signal and noise.  Here we investigate the interplay between imperfect testing and selection bias.  When discussing testing inaccuracies, the standard assumption is measurement-error leads to parameter attenuation.  When paired with selection bias, however, the two sources of error become entangled, and the biases can become magnified, muted, or even switch signs.
 
-First we require some additional notation.  Let $P_j$ be an indicator of measurement error, equal to $1$ when we mismeasure the outcome and $0$ when we observe the true outcome. We suppose this is a stochastic variable that satisfies $\pr(P_j = 1 \mid Y_j = 1, I_j = 1) =: FN$ is the false-negative rate and $\pr(P_j = 1 \mid Y_j = 0, I_j = 1) =: FP$ is the false-positive rate.  If individual $j$ is selected (i.e., $I_j = 1$) then the observed outcome can be written as $Y_j^\star = Y_j(1-P_j) + (1-Y_j) P_j$.
-
+First we require some additional notation.  Let $P_j$ be an indicator of measurement error, equal to $1$ when we mismeasure the outcome and $0$ when we observe the true outcome. We suppose this is a stochastic variable that satisfies $\pr(P_j = 1 \mid Y_j = 1, I_j = 1) =: FN$ is the false-negative rate and $\pr(P_j = 1 \mid Y_j = 0, I_j = 1) =: FP$ is the false-positive rate.  If individual $j$ is selected (i.e., $I_j = 1$) then the observed outcome can be written as $Y_j^\star = Y_j(1-P_j) + (1-Y_j) P_j$.  Suppose disease prevalence was estimated as the fraction who tested positive for COVID-19, i.e., $\bar y_n^\star = \frac{\sum_{i=1}^N I_j Y_j^\star}{\sum_{i=1}^N I_j}$.  We can again investigate the error compared to the true prevalence $\bar Y$ in statistical terms:
 $$
-\bar y_n - \bar Y = \sqrt{\frac{1-f}{f}} \left[ \rho_{I,Y} \times \mu_Y (1-\mu_Y) + \rho_{I,PZ} \times \sigma_{PZ} + \sqrt{\frac{f}{1-f}}  \left( FP - (FP+FN) \bar Y \right) \right] .
+\bar y_n^\star - \bar Y = \sqrt{\frac{1-f}{f}} \left[ \rho_{I,Y} \times \sigma_Y + \rho_{I,PZ} \times \sigma_{PZ} + \sqrt{\frac{f}{1-f}}  \left( FP - (FP+FN) \bar Y \right) \right] .
 $$
-where $\sigma_{PZ} = \sqrt{2 FP} \sqrt{\bar Y \left[ 1 - \frac{FP+FN}{FP} \bar Y \right]}$.
+where $Z = 1-2Y$. The first term represents the perfect testing regime, the second term represents the interaction between imperfect testing and selection bias, while the third time represents the bias due to imperfect testing.  From here on, we refer to $\rho_{I,Y}$ as the \emph{true data quality}, and $\rho_{I,PZ}$ as the \emph{observed data quality} that accounts for both selection bias and measurement-error.  We show the sign of $\rho_{I,PZ}$ is the opposite of the sign of $\rho_{I,Y}$, and so the second term adjusts the true data quality.
 
-This is quite complex but he main point is that the sign of the new terms can be either positive or negative.  Moreover, there is an interaction between...
-This means that raw application is, of course, biased but the expected bias directionality is not guaranteed.  There's a clear interaction between selection bias, measurement-error, prevalence, and data quantity!
-We are not the first to note this, but  (twitter guy) for a longer discussion of additional myths related
-
- critical when selection bias is present.  For the current crisis, the analysis should be extended in two directions.  First, tests are imperfect. Measurement-error.
-
-
-In addition, testing quality is likely to be a dynamic process.  The US is keen to increase testing.  Commentators have requested expedited FDA approval for variations on the currently available tests to speed up production.  This is likely to increase testing inaccuracies.  The bias and MSE depend on interaction among specificity,
-
-
-The attentive data analyst will recognize the estimator $\bar y_n$ will be biased even for simple random samples and suggest the alternative $\tilde y_n = \bar y_n + (1-\bar y_n) FP + FN \bar y_n$. We again wish to express the error $\tilde  y_n - \bar Y$ in statistical terms.  Let $Z_j = 1 - 2Y_j$; this converts the binary $0/1$ variable into a sign indicator, equal to $1$ when the outcome is.  In the appendix, we show that the error now can be expressed as
+We start by considering the first two terms and assess whether the sign of the bias can reverse due to the interaction of measurement-error and selection bias.  To do this, we require the sampling rates differential.  Let $f_1 := P_J(I_J = 1 \mid Y_J = 1)$ and $f_0 := P_J(I_J = 1 \mid Y_J = 1)$ be the sampling rates.  Then if $\Delta = f_1 - f_0$ is the sampling rate differential, we have
 $$
-\tilde y_n - \bar Y = (1+FP+FN) \rho_{I,Y} \times \sqrt{\frac{1-f}{f}} \times \sigma_{Y} + \rho_{I,PZ} \times \sqrt{\frac{1-f}{f}} \times \sigma_{PZ}.
+\rho_{I,Y} \times \sigma_Y + \rho_{I,PZ} \times \sigma_{PZ} =
+\rho_{I,Y} \times \sigma_Y \left[ 1 - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right].
 $$
+The final term in brackets is the \emph{measurement-error adjustment to data quality} which is a complex function of sampling rate differential, the odds ratio, and the ratio of measurement-error interaction with prevalence and sampling rates interaction with prevalence. Note $\sgn(\Delta) = \sgn(\rho_{I,Y})$ so the measurement-error adjustment either shrinks the data quality measure toward zero or reverses its sign.
+
+While prior investigations have notes the interaction between measurement-error and selection bias (cites), the interaction with the sample size relative to the population,i.e., $f$, has largely been ignored.  The above statistical decomposition clarifies the importance of this quantity~$f$.  In particular, note that the statistical error also includes a bias term due to measurement-error and this term increases as the sampled fraction $f$ increases. Therefore, how the first two terms interact with the final term depends on the fraction of the population sampled.  This interaction is complex, but implies that whether the estimate $\bar y^\star_n$ is an overestimate or underestimate is a complicated question due to the relation amongst these three pieces.
+
+The attentive data analyst will recognize the estimator $\bar y_n$ is biased even for simple random samples and, if sensitivity and specificity were known a priori, may suggest the alternative estimator $\tilde y_n = \bar y_n + (1-\bar y_n) FP + FN \bar y_n$ which is unbiased under simple random sampling. We again wish to express the error $\tilde  y_n - \bar Y$ in statistical terms. In the appendix, we show that the error now can be expressed as
+$$
+\tilde y_n - \bar Y = \rho_{I,Y} \times \sqrt{\frac{1-f}{f}} \times \sigma_{Y}
+\left[ 1 + FP + FN - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right].
+$$
+
+
+Above we ignore an important consideration, namely that testing quality is likely a dynamic process.  In the US, states are rightly trying to increase testing capacity.  Commentators have requested expedited FDA approval for variations on the currently available tests to speed up production.  This is likely to increase testing inaccuracies, impacting both false negative and false positive rates.  Increased capacity may reduce
+
+\newpage
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+\centering
+\includegraphics[width = 0.4\textwidth]{../methods/figs/mem_heatmap_article.png}
+\caption{Measurement-error data quality adjustment: relative frequency $f_1/f_0$ (x-axis) against odds ratio (y-axis) for $FP=0.15$ and $FN=0.10$. Color scaled so blue = $-6$, white = 0, and red = $6$.}
+\end{wrapfigure}
+
+
+
+
+For fixed prevalence,
+
+
 The first term is the same as before but increased by $(1 + FP + FN)$ to account for the additional uncertainty due to measurement-error.  The second term is the interaction between selection bias and measurement error.  Interestingly we can show that the sign is reversed, i.e., $sgn(\rho_{I,PZ}) = 1 - sgn(\rho_{I,Y})$, leading to an absolute \emph{reduction} in the error.
 
 For this adjusted estimate, we can see that the directionality is maintained.  Therefore, the benefit is if the expected correlation is positive, we can feel like the estimate is likely an over-estimate and vice versa.  You pay a penalty in terms of variance and therefore the MSE may not be much smaller (CHECK!)
@@ -165,12 +186,17 @@ Then we can be even further off than the prevalence by a factor of the odds rati
 
 Suppose we collected $f=1/2$ and peak occurs at $\mu = 0.10$ and $\rho = 0.005$, then $9-\rho 3 = 9 - 0.005 \times 3 = 8.985$ and
 
+{\bf How many days of dropping to guarantee it has decreased}
+
 \subsection{Testing increase changes data quality}
 
 Many (cites) hve
 
 \emph{Increasing testing leads to lower correlation only if we see the gap $\Delta$ decrease.  If we just see $f$ }
 
+\subsection{Clinical trials}
+
+Random sampling negates effect modifiers.  Random treatment assignment negates unobserved confounders.  Show simple example where $E[U]$ is high due to sampling bias and therefore you will think that the effect is significant! But it's because of sampling bias. Requires poststratification.
 
 \section{Compartmental model}
 
@@ -267,51 +293,37 @@ Interventions in this area are designed experiments.  Unlike Fischer's null, her
 
 \appendix
 
-\section{Setup and calculation}
+\section{Imperfect testing: derivation}
 
-I focused this note on the very simply setting of understanding the error when both selection bias and measurement-error are present.  I worked within Meng's derivation as it provides a guide for how to think this error in our current context.  The conclusion so far is that the mathematics will be quite cumbersome, but my hope is that we can potentially draw out some interesting conclusions.  In particular, my hope is to provide theoretical confirmation that the interaction of selection bias and measurement-error does not lead to ``attenuation'' of the effect as in a simple measurement-error context. This is a very very early draft but I wanted to share current ``state-of-affairs'' to see whether you thought further investigation along this line of thinking was merited.
-
-\begin{itemize}
-\item Finite-population of size $N$
-\item Binary outcome $Y_j \in \{0,1\}$ for $j=1,\ldots, N$.  As in survey methodology, we treat these as fixed, unknown population quantities. For now, we ignore the dynamic nature of the viral outbreak. So you are either COVID positive ($Y=1$) or negative ($Y=0$)
-\item Selection indicator $I_j \in \{0,1\}$.  This is an indicator that the individual was selected for testing ($I = 1$) or not ($I=0$).
-\item Measurement-error: Let $P_j$ be an indicator that equals 1 when we observe reverse of the true outcome and equals 0 when we observe the true outcome. We suppose this is a stochastic variable that satisfies $\pr(P_j = 1 \mid Y_j = 1) =: FN$ is the probability of a false-negative and $\pr(P_j = 1 \mid Y_j = 0) =: FP$ is the probability of a false-positive.
-\item If we select individual $j$ (i.e., $I_j = 1$) then we observe $Y_j^\star = Y_j(1-P_j) + (1-Y_j) P_j$
-\item  We are interested in the population average $\bar Y = \frac{1}{N} \sum_{j=1}^N Y_j$
-\item Consider the mean estimator
+We considered the mean estimator
 $$
-\bar y_n = \frac{1}{n} \sum_{j=1}^n Y_j^\star = \frac{\sum_{i=1}^N  I_j Y_j^\star }{\sum_{j=1}^N  I_j } = \frac{\sum_{i=1}^N  I_j \left[ Y_j (1-P_j) + (1-Y_j) P_j \right]}{\sum_{j=1}^N  I_j }
+\bar y_n^\star = \frac{\sum_{j=1}^N Y_j^\star I_j}{\sum_{j=1}^N I_j} = \frac{\sum_{i=1}^N  I_j Y_j^\star }{\sum_{j=1}^N  I_j } = \frac{\sum_{i=1}^N  I_j \left[ Y_j (1-P_j) + (1-Y_j) P_j \right]}{\sum_{j=1}^N  I_j }
 $$
-\item We wish to express the error $\bar y_n - \bar Y$ in statistical terms
-\item For any set of numbers $\{ A_1, \ldots, A_N \}$ we can view it as the support of a random variable $A_J$ induced by the random index $J$ defined on $\{1,\ldots, N\}$.  When $J$ is uniformly distributed $E_J (A_J) = \sum_{j=1}^N A_j / N \equiv \bar A_N$.
-\item Then
+For any set of numbers $\{ A_1, \ldots, A_N \}$ we can view it as the support of a random variable $A_J$ induced by the random index $J$ defined on $\{1,\ldots, N\}$.  When $J$ is uniformly distributed $E_J (A_J) = \sum_{j=1}^N A_j / N \equiv \bar A_N$. Then
 $$
 \begin{aligned}
-\bar y_n  - \bar Y_N &= \frac{E_J \left[ I_J \left[ Y_J (1-P_J) + (1-Y_J) P_J \right] \right]}{E_J [ I_J ] } - E_J[Y_J] \\
+\bar y_n^\star  - \bar Y_N &= \frac{E_J \left[ I_J \left[ Y_J (1-P_J) + (1-Y_J) P_J \right] \right]}{E_J [ I_J ] } - E_J[Y_J] \\
 &= \frac{E_J \left[ I_J P_J (1-2Y_J) \right]}{E_J [ I_J ] } + \left( \frac{E_J [I_J Y_J]}{E_J [ I_J ] } - \frac{E_J[Y_J] E_J[I_J]}{E_J[I_J]} \right) \\
 \end{aligned}
 $$
-\item The term in parentheses can be re-written as
+The term in parentheses can be re-written as
 $$
 \begin{aligned}
 \frac{E_J [I_J Y_J]- E_J[Y_J] E_J[I_J]}{E_J[I_J]} &=  \frac{E_J [I_J Y_J]- E_J[Y_J] E_J[I_J]}{\sqrt{V_J(I_J) V_J(Y_J)}} \frac{\sqrt{V_J(I_J)}}{E_J[I_J]} \times \sqrt{V_J(Y_J)} \\
 &= \rho_{I,Y} \times \sqrt{\frac{(1-f)}{f}} \times \sigma_Y
 \end{aligned}
 $$
-which agrees with the decomposition by Meng (2019).
-\item For the other term, first define $Z_j = 1 - 2 Y_j $. Then $Z_j = 1$ if $Y_j = 0$ and $Z_j = -1$ if $Y_j = 1$. Then the other term can be re-written as
+which agrees with Meng's (2019) decomposition. For the other term, first we define $Z_j := 1 - 2 Y_j $. Then $Z_j = 1$ if $Y_j = 0$ and $Z_j = -1$ if $Y_j = 1$. Then the term can be re-written as
 $$
 \begin{aligned}
 \frac{E_J \left[ I_J P_J (1-2Y_J) \right]}{E_J [ I_J ] } &= \left( \frac{E_J \left[ I_J P_J Z_J \right]}{E_J [ I_J ] } -  \frac{E_J \left[ P_J Z_J \right] E_J[ I_J]}{E_J [ I_J ] } \right) +  \frac{E_J \left[ P_J Z_J \right] E_J[ I_J]}{E_J [ I_J ] } \\
 \end{aligned}
 $$
-
-\item The term in parentheses can be re-expressed using Meng's techniques as:
+The term in parentheses can be re-expressed using the previous technique as:
 $$
 \rho_{I, PZ} \times \sqrt{\frac{1-f}{f}} \times \sigma_{PZ}
 $$
-where now the ``data defect'' and ``problem difficulty'' are with respect to $PZ$ rather than $Y$.
-\item The final term is equal to
+where now the ``data defect'' and ``problem difficulty'' are with respect to $PZ$ rather than $Y$. The final term is equal to
 $$
 \begin{aligned}
 E_J [P_J Z_J ] &= E_J [ E_J [ P_J Z_J \mid Y_J ] ] \\
@@ -319,58 +331,95 @@ E_J [P_J Z_J ] &= E_J [ E_J [ P_J Z_J \mid Y_J ] ] \\
 &= FP - (FP + FN) \cdot \bar Y
 \end{aligned}
 $$
-\item Combining these yields:
+Combining these yields:
 $$
-\bar y_n - \bar Y = \sqrt{\frac{1-f}{f}} \left[\rho_{I,Y} \sigma_Y + \rho_{I, PZ} \sigma_{PZ} + \sqrt{\frac{f}{1-f}} \left( FP - (FP+FN) \mu_Y \right) \right]
+\bar y_n^\star - \bar Y = \sqrt{\frac{1-f}{f}} \left[\rho_{I,Y} \sigma_Y + \rho_{I, PZ} \sigma_{PZ} + \sqrt{\frac{f}{1-f}} \left( FP - (FP+FN) \bar Y \right) \right]
 $$
-\item We know for binary outcome $Y$ that $\sigma_Y = \sqrt{\mu_Y (1-\mu_Y)}$.
-\item We can try and understand $\sigma_{PZ}$:
+For the binary outcome $Y$, we have $\sigma_Y = \sqrt{\bar Y (1-\bar Y)}$. Moreover,
 $$
 \begin{aligned}
 V_J(P_J Z_J) &= E_J[(P_J Z_J)^2] - E[P] E[Z] \\
-&= E[P] - E[P] (1 - 2 \mu_Y) = 2 \mu_Y E_J [ P_J ] \\
-&= 2 \mu_Y \left( FP (1-\mu_Y) + FN \mu_Y \right) \\
-\Rightarrow \sigma_{PZ} &= \sqrt{ 2 \mu_Y \left( FP (1-\mu_Y) + FN \mu_Y \right) }
+&= E[P] - E[P] (1 - 2 \bar Y) = 2 \bar Y E_J [ P_J ] \\
+&= 2 \bar Y \left( FP (1-\bar Y) + FN \bar Y \right) \\
+\Rightarrow \sigma_{PZ} &= \sqrt{ 2 \bar Y \left( FP (1-\bar Y) + FN \cdot  \bar Y \right) }
 \end{aligned}
 $$
-\item Then the formula for the error is given by:
+Then the formula for the error is given by:
 $$
-\sqrt{\frac{1-f}{f}} \left[\rho_{I,Y} \sqrt{\mu_Y (1-\mu_Y)} + \rho_{I, PZ} \sqrt{ 2 \mu_Y \left( FP (1-\mu_Y) + FN \mu_Y \right )} + \sqrt{\frac{f}{1-f}} \left( FP - (FP+FN) \mu_Y \right) \right]
+\sqrt{\frac{1-f}{f}} \left[\rho_{I,Y} \sqrt{\bar Y (1-\bar Y)} + \rho_{I, PZ} \sqrt{ 2 \bar Y \left( FP (1-\bar Y) + FN \cdot \bar Y \right )} + \sqrt{\frac{f}{1-f}} \left( FP - (FP+FN) \bar Y \right) \right]
 $$
-\item Let's consider a simple case first and assume no false positive results, i.e., set $FP=0$.  Then $\sigma_{PZ} = \mu_Y \sqrt{2 FN}$.  Then the math greatly simplifies:
-$$
-\bar y_n - \bar Y = \mu_Y \sqrt{\frac{1-f}{f}} \left[\rho_{I,Y} (1-\mu_Y) + \sqrt{FN} \left( \sqrt{2} \rho_{I, PZ} - \sqrt{\frac{f}{1-f}} \sqrt{FN} \right)  \right]
-$$
-\item We see an interesting trade-off in the second term.  The term in parentheses is positive iff
-$$
-\rho^2_{I,PZ}  \geq \frac{f}{1-f} \frac{FN}{2}
-$$
-\item Thus the sign of the additional error depends on selection bias ($\rho_{I, PZ}$), false negative rates (FN), and sample fraction $f$.  Moreover, the scale of the additional term depends on the false negative rate and the infection rate $\mu_Y = \bar Y$.
-\item Let's consider the other simple case and assume no false negative results, i.e., set $FN=0$.  Then $\sigma_{PZ} = \sqrt{2 FP \mu_Y (1-\mu_Y)}$.  Then the math greatly simplifies:
-$$
-\bar y_n - \bar Y = \sqrt{1-\mu_Y} \sqrt{\frac{1-f}{f}} \left[\rho_{I,Y} \mu_Y \sqrt{1-\mu_Y} +  \sqrt{FP} \left( \sqrt{2 \mu_Y} \rho_{I, PZ} - \sqrt{\frac{f}{1-f}} \sqrt{FP} \sqrt{1-\mu_Y} \right)  \right]
-$$
-\item We see an interesting trade-off in the second term.  The term in parentheses is positive iff
-$$
-\rho^2_{I,PZ}  \geq \frac{f}{1-f} \frac{FP}{2} \times \underbrace{\frac{1-\mu_Y}{\mu_Y}}_{\text{Inverse Odds Ratio}}
-$$
-\item Thus the sign of the additional error depends on selection bias ($\rho_{I, PZ}$), false positive rates (FP), sample fraction $f$, AND the odds ratio.  Moreover, the scale of the additional term depends on the false positive rate and one minus the infection rate $1-\mu_Y = 1-\bar Y$.
 
-\item Let's compute the MSE
+\subsection{Simple cases}
 
-\item If we adjust $\bar y_n$ by taking $\bar y_n + (FP+FN)\bar y_n - FP$; then
+We consider two simple cases here.  First, we assume no false positive results, i.e., set $FP=0$.  Then $\sigma_{PZ} = \bar Y \sqrt{2 FN}$.  Then the math simplifies:
 $$
-\sqrt{\frac{1-f}{f}} \left[ \rho_{I, Y} \sigma_{Y} (1+FP+FN)  + \rho_{I, PZ} \sqrt{ 2 \mu_y \left( FP (1-\mu_y) + FN \mu_Y \right)} \right]
+\bar y_n^\star - \bar Y = \bar Y \sqrt{\frac{1-f}{f}} \left[\rho_{I,Y} \sqrt{\frac{1-\bar Y}{\bar Y}} + \sqrt{FN} \left( \sqrt{2} \rho_{I, PZ} - \sqrt{\frac{f}{1-f}} \sqrt{FN} \right)  \right]
 $$
-\item In FN = 0; we have
+The sign of the error therefore depends on true data quality ($\rho_{I, Y}$), odds ratio, observed data quality~$\rho_{I,PZ}$, false negative rates (FN), and sample fraction $f$.
+
+Second, we assume no false negative results, i.e., set $FN=0$.  Then $\sigma_{PZ} = \sqrt{2 FP \bar Y (1-\bar Y)}$.  Then the math simplifies:
 $$
-\sqrt{\frac{1-f}{f}} \sqrt{\mu_Y(1-\mu_Y)} \left[ \rho_{I, Y} (1+FP) + \rho_{I, PZ} \sqrt{ 2 FP } \right]
+\bar y_n^\star - \bar Y = \sqrt{\bar Y (1-\bar Y)} \sqrt{\frac{1-f}{f}} \left[\rho_{I,Y} +  \sqrt{FP} \left( \sqrt{2} \rho_{I, PZ} + \sqrt{\frac{f}{1-f}} \sqrt{FP} \sqrt{1-\bar Y} \right)  \right]
 $$
-\item So the false positives actually offset some of the positive correlation.
-\end{itemize}
+The sign of the error therefore depends on true data quality ($\rho_{I, Y}$),  observed data quality~$\rho_{I,PZ}$, false positive rates (FP), one minus prevalence ($1-\bar Y$), and sample fraction $f$.
+
+\subsection{Adjusted estimator}
+
+Define $\bar y_n^{\star \star} = \bar y_n^\star + FN \bar y_n^\star - FP(1-\bar y_n^\star)$; then the error is
+$$
+\bar y_n^{\star \star} - \bar Y = \sqrt{\frac{1-f}{f}} \left[ \rho_{I, Y} \sigma_{Y} (1+FP+FN)  + \rho_{I, PZ} \sqrt{ 2 \bar Y \left( FP (1-\bar Y) + FN \bar Y \right)} \right]
+$$
+In the case when false negative rate is zero, we have
+$$
+\bar y_n^{\star \star} - \bar Y = \sqrt{\frac{1-f}{f}} \sqrt{\bar Y(1-\bar Y)} \left[ \rho_{I, Y} (1+FP) + \rho_{I, PZ} \sqrt{ 2 FP } \right]
+$$
+In the case when false positive rate is zero, we have
+$$
+\bar y_n^{\star \star} - \bar Y = \sqrt{\frac{1-f}{f}} \sqrt{\bar Y(1-\bar Y)} \left[ \rho_{I, Y} (1+FN) + \rho_{I, PZ} \sqrt{ 2 FN } \times \sqrt{\frac{\bar Y}{1-\bar Y}} \right]
+$$
+
+
+\subsection{Estimate of observed data quality}
 
 $$
-\rho_{I,PZ} = \frac{C(I, PZ)}{\sqrt{V()}}
+\begin{aligned}
+\rho_{I,PZ} &= \frac{C(I, PZ)}{\sqrt{V(PZ) V(I)}} \\
+&= \frac{C(I, PZ)}{\sqrt{V(Y) V(I)}} \sqrt{\frac{V(Y)}{V(PZ)}} \\
+&= \rho_{I,Y} \frac{C(I,PZ)}{C(I,Y)} \sqrt{ \frac{(1-\bar Y)}{2 ( FP (1-\bar Y) + FN \cdot \bar Y)} }
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+C(I, PZ) &= E[ I P Z ] - E[I] E[PZ] \\
+&=  [FP f_0 - (FP f_0 + FN f_1) \bar Y] - f [ FP - (FP+FN) \bar Y ] \\
+&=  - FP \Delta \bar Y + FP \bar Y^2 \Delta - FN \bar Y^2 \Delta \\
+&=  - \Delta \bar Y (FP \cdot (1-\bar Y) + FN \cdot \bar Y) \\
+\end{aligned}
+$$
+where $f = f_1 \bar Y + f_0 (1-\bar Y)$ so $f_0 - f = -\Delta \bar Y$ and $f_1 - f = \Delta (1-\bar Y)$.
+$$
+\begin{aligned}
+C(I, Y) &= E[ I Y ] - f \bar Y \\
+&=  f_1 \bar Y + f_0 (1-\bar Y) - f \bar Y \\
+&=  f_0 (1-\bar Y) + \Delta (1-\bar Y) \bar Y \\
+&= (1-\bar Y) (f_0 + \Delta \bar Y)
+\end{aligned}
+$$
+Combining yields
+$$
+\begin{aligned}
+\rho_{I,PZ} &= \rho_{I,Y} \times \frac{- \Delta \bar Y (FP \cdot (1-\bar Y) + FN \cdot \bar Y) }{(1-\bar Y) (f_0 + \Delta \bar Y)} \times \sqrt{ \frac{(1-\bar Y)}{2 ( FP (1-\bar Y) + FN \cdot \bar Y)} } \\
+&= - \rho_{I, Y} \times \Delta \times \sqrt{\frac{\bar Y}{1-\bar Y}} \frac{\sqrt{FP(1-\bar Y) + FN \cdot \bar Y}}{f_0 (1-\bar Y) + f_1 \bar Y} \times \sqrt{\frac{\bar Y}{2}}
+\end{aligned}
+$$
+We can then re-write $\rho_{I,Y} \sigma_Y + \rho_{I,PZ} \sigma_{PZ}$ as
+$$
+\rho_{I,Y} \sigma_Y \left( 1 - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right)
+$$
+Suppose $f_1 = M \cdot f_0$.  Then $\Delta = f_1 - f_0 = f_0 (M-1)$ and $f_0 (1-\bar Y) + f_1 \bar Y = f_0 ( (1-\bar Y) + M \bar Y )$ and we can re-write above as
+$$
+\rho_{I,Y} \sigma_Y \left( 1 - (M-1) \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{(1-\bar Y) + M \bar Y} \right).
 $$
 
 \section{Quotes}
@@ -382,8 +431,6 @@ I prefer to think of a statistical sensibility rather than statistical thinking.
 If an issue can be addressed nonparametrically then it will often be better to tackle it parametrically; however, if it cannot be resolved nonparametrically then it is usually dangerous to resolve it parametrically.” (p.96)
 
 A test of meaningfulness of a possible model for a data-generating process is whether it can be used directly to simulate data.” (p.104).  In our current setting, this most certainly related to simulation while accounting for measruement error.
-
-\end{itemize}
 
 
 
