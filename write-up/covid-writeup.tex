@@ -1,11 +1,11 @@
-\documentclass[12pt]{article}
+\documentclass[11pt]{article}
 \usepackage{graphicx}
 \usepackage{wrapfig}
 \usepackage{setspace}
 \DeclareGraphicsExtensions{.eps, .ps}
 \usepackage{soul,color,hyperref}
 \usepackage{amsmath, amsthm, amsfonts}
-\usepackage[margin=1in]{geometry}
+\usepackage[margin=1.5in]{geometry}
 
 \numberwithin{equation}{section}
 \theoremstyle{plain}
@@ -36,11 +36,20 @@ In this note, we aim to (a)	we posit a conceptual mathematical framework to char
 \end{abstract}
 
 \section{Introduction}
+The World Health Organization has declared the coronavirus disease 2019 (COVID-19) a public health emergency.  As of April 27th, 2020, a total of 2,993,00 cases have been confirmed worldwide.  As of that afternoon, the New York Times reports at least 965,214 people across the United States have tested positive for the virus, and at least 49,465 patients with the virus have died.  Aggressive policies had been put in place across the US with at least 50\% of the US population officially urged to stay home via state-wide executive actions.
 
-The World Health Organization has declared the coronavirus disease 2019 (COVID-19) a public health emergency.  As of March 28th, 2020, a total of 622,450 cases have been confirmed worldwide.  As of that afternoon, the New York Times reports at least 113,031 people across the United States have tested positive for the virus, and at least 1,895 patients with the virus have died.  Aggressive policies have been put in place across the US with at least 50\% of the US population officially urged to stay home via state-wide executive actions.
+Despite these necessary steps, the data landscape for understanding COVID-19 remains limited.  Public databases maintained by Johns Hopkins University (\url{https://bit.ly/2UqFSuA}) and the New York Times (\url{https://bit.ly/2vUHfrK}) provide incoming county-level information of confirmed cases and deaths.  Statisticians, epidemiologists, economists, and data scientists the world over have been using this granular data to
+
+
+
+
+The CDC reports 413,867 total tests performed in the US as of April 25th.
+
+Due to limited testing capacity, local and state health departments have focused on testing only those from high-risk populations, resulting in low data quality due to bias in sampling from the overall population.
+
+A critical question is whether there are alternative data streams that may be leveraged to understand the handling of the COVID-19 pandemic in the US.
 
 Despite these necessary steps, the data landscape for understanding COVID-19 remains limited.  Public databases maintained by Johns Hopkins University (\url{https://bit.ly/2UqFSuA}) and the New York Times (\url{https://bit.ly/2vUHfrK}) provide incoming county-level information of confirmed cases and deaths.
-Statisticians, epidemiologists, economists, and data scientists the world over have been using this granular data to
 
 The WHO reports, however, only 103,945 total tests performed in the US as of March 19th.  Due to limited testing capacity, local and state health departments have focused on testing only those from high-risk populations, resulting in low data quality due to bias in sampling from the overall population.  The public health community requires auxiliary sources of information to improve national and local health policy decisions.  Certain survey efforts are underway, but may take time to yield fruit.
 
@@ -60,13 +69,21 @@ There has been an abundance..
 
 However, most complain about testing \emph{capacity} (cite Nate Silver), there is clearly issues of data quality.
 
+Measurement-error discussions.
+Selection bias . Proponents of this critique suggest well-designed studies.
 
+Stanford study was Ionides.  They however, forgot about Critique #2: measurement
 
 \subsection{Outline}
 
+This article discusses the relationship between three statistical concepts: selection bias, measurement-error, and the long-forgotten population size. We clarify mathematically why the situation is much more complex than it first appears.  Through simple mathematical argument, we demonstrate three important, yet often forgotten, tenants of
+
 \begin{itemize}
-	\item Selection bias + MEM = problems! Scales with population size so cross country comparisons are meaningless.
-	\item What about cross-time same spot?  That's equally difficult!
+	\item Unadjusted prevalence rates have a bias due to imperfect testing; bias is a complex function of measurement-error and
+	\item Adjusted prevalence rates have an additional term in the error decomposition that highlights the interplay among measurement error, selection bias, and prevalence!
+	\item All errors in these rates with population size so cross country comparisons are meaningless. Even if we scale by population size, the errors don't go away.  So comparing two countries of different sizes based on case-counts per million is difficult
+	\item When testing increases are associated with increases in false positive/negative rates, the effective sample size may decrease.
+	\item Comparison of daily trends in rate of positive tests is equally problematic.  When testing rates and selection protocols are held constant, increases are underestimated and
 	\item Present a compartmental model that accounts for these time-varying factors.  Discuss identifiability (statistical issue) and how to proceed
 	\item Review testing and building selection models (sensitivity analysis)
 	\item Robustness (what directions are the models most resilient) and the notion of forecasts in bubbles
@@ -124,13 +141,17 @@ While prior investigations have notes the interaction between measurement-error 
 The attentive data analyst will recognize the estimator $\bar y_n$ is biased even for simple random samples and, if sensitivity and specificity were known a priori, may suggest the alternative estimator $\tilde y_n = \bar y_n + (1-\bar y_n) FP + FN \bar y_n$ which is unbiased under simple random sampling. We again wish to express the error $\tilde  y_n - \bar Y$ in statistical terms. In the appendix, we show that the error now can be expressed as
 $$
 \tilde y_n - \bar Y = \rho_{I,Y} \times \sqrt{\frac{1-f}{f}} \times \sigma_{Y}
-\left[ 1 + FP + FN - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right].
+\times \underbrace{\left[ 1 + FP + FN - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right]}_{D_M}.
 $$
 
+The updated formula accounts for measurement-error to re
+
+This results in an updates Z-score:
+$$
+Z_{n,N}
+$$
 
 Above we ignore an important consideration, namely that testing quality is likely a dynamic process.  In the US, states are rightly trying to increase testing capacity.  Commentators have requested expedited FDA approval for variations on the currently available tests to speed up production.  This is likely to increase testing inaccuracies, impacting both false negative and false positive rates.  Increased capacity may reduce
-
-\newpage
 
 \begin{wrapfigure}{r}{0.5\textwidth}
 \centering
@@ -148,10 +169,48 @@ The first term is the same as before but increased by $(1 + FP + FN)$ to account
 
 For this adjusted estimate, we can see that the directionality is maintained.  Therefore, the benefit is if the expected correlation is positive, we can feel like the estimate is likely an over-estimate and vice versa.  You pay a penalty in terms of variance and therefore the MSE may not be much smaller (CHECK!)
 
+The effective sample size can then be bounded by
+$$
+n_{eff} = \frac{f}{1-f} \times E_{I} \left[ \rho_{I,Y}^2 D_M^2 \right]
+$$
 
 \subsection{Testing strategies and population size: a tango}
 
 Data analysts have argued whether
+
+Increasing testing under test rationing lowers correlation.  Example in Michigan and try and find CA and NY numbers.  Then show that this may cause higher FPs (cite antibody studies).
+
+Plot Michigan tests per million and positives.  Next to NY.  Both as of April moved to prioritized sampling for symptomatic individuals.
+
+\subsection{Cross-country comparisons}
+
+So we can't estimate prevalence.  Can we not get a decent comparison?
+$$
+y_1 - y_2 = \frac{N_1}{n_1} ( \bar y_1 - Y_{1}) + \left( \frac{N_1}{n_1} Y_{1} - \frac{N_2}{n_2} Y_2  \right).
+$$
+OK then we should compare relative counts?
+The question is then ``What are you comparing at a populatoin level?''
+$$
+y_1/N_1 - y_2/ N_2 = \left[ f_1 \sigma_{Y_1} \rho_{I_1, Y_1} \sqrt{\frac{1-f_1}{f_1}} D_{M_1} - f_2 \sigma_{Y_2} \rho_{I_1, Y_1} \sqrt{\frac{1-f_1}{f_1}}  \right] + \left[ f_1 \bar Y_1 - f_2 \bar Y_2 \right]
+$$
+Is this a quantity of genuine interest? Under SRS, this makes sense if $f_1 = f_2$.  Otherwise, you are comparing apples and oranges.  With selection bias, it's not clear that agreement in this quantity is even desirable.
+
+$$
+\frac{n}{N} \times \rho_{I,Y} \times \sqrt{\frac{1-f}{f}} \times \sigma_{Y} \times D_M
+$$
+
+
+\subsection{Ration-based testing allocation}
+
+We assume that the percentage of tests is rationed according to severity of symptoms.
+
+Note that a person who displays severe symptoms may be COVID negative.  This gives us a sense of the data quality.
+
+\emph{Increasing testing leads to lower correlation in}
+
+\subsection{Estimation of Data Quality}
+
+We estimate $\rho$ using old and new methods.  Current SRS in US are weak.  So we just use my back of the envelope calculation. Tests per million as proxy since everyone is doing rationing. Cluster.
 
 \subsection{Regrettable rates}
 
@@ -166,14 +225,11 @@ Taylor series expansion:
 $$
 \begin{aligned}
 \frac{\bar y_2}{\bar y_1} - \frac{\bar Y_2}{\bar Y_1}
-&= \frac{\bar y_2}{\bar Y_1  \left(1 + \rho_{I,Y_1} \sqrt{\frac{1-f}{f}} CV (Y_1) \right) } - \frac{\bar Y_2}{\bar Y_1}  \\
-&\approx \frac{\bar y_2}{\bar Y_1} \left(1 - \rho_{I,Y_1} \sqrt{\frac{1-f}{f}} CV (Y_1) \right) - \frac{\bar Y_2}{\bar Y_1} \\
-&\approx \frac{1}{\bar Y_1} \left[ \rho_{I, Y_2} \sqrt{\frac{1-f}{f}} \sigma_{Y_2} - \rho_{I, Y_1} \sqrt{\frac{1-f}{f}} \sigma_{Y_1}
-\left( \frac{E_{J_2} [ I_{J_2} Y_{2,J_2} ]}{E_{J_2} [ I_{J_2} ]} + \frac{E_{J_2} [ I_{J_2} ] E_{J_2} [ Y_{2,J_2} ]}{E_{J_2} [ I_{J_2} ]} - \frac{E_{J_2} [ I_{J_2} ] E_{J_2} [ Y_{2,J_2} ]}{E_{J_2} [ I_{J_2} ]} \right) \right] \\
-&\approx \frac{1}{\bar Y_1} \left[ \rho_{I, Y_2} \sqrt{\frac{1-f}{f}} \sigma_{Y_2} - \rho_{I, Y_1} \sqrt{\frac{1-f}{f}} \sigma_{Y_1}
-\left( \rho_{I, Y_2} \sqrt{\frac{1-f}{f}} \sigma_{Y_2} + \mu_{Y_2} \right) \right]
+&= \frac{\bar Y_2}{\bar Y_1} \left[ \rho_{I_2, Y_2} \sqrt{\frac{1-f_2}{f_2}} CV(Y_2)  - \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \left[ \rho_{I_2, Y_2} \sqrt{\frac{1-f_2}{f_2}} CV(Y_2) + 1 \right] \right]
 \end{aligned}
 $$
+
+Supposing the sampling rate is constant, and
 
 We talk about wanting to know if we are at the peak.  Let's define that time as when $\bar Y_2 / \bar Y_1 = 0$.  Then $\mu_{Y_1} = \mu_{Y_2} = \mu$ and $\sigma_{Y_1} = \sigma_{Y_2} = \sigma$. If selection at each time is independent and the selection process is stationary, we have bias of
 $$
@@ -188,6 +244,10 @@ Suppose we collected $f=1/2$ and peak occurs at $\mu = 0.10$ and $\rho = 0.005$,
 
 {\bf How many days of dropping to guarantee it has decreased}
 
+What is the effective sample size for these tests?
+
+\subsubsection{Rate comparisons: a compounding mess}
+
 \subsection{Testing increase changes data quality}
 
 Many (cites) hve
@@ -198,42 +258,7 @@ Many (cites) hve
 
 Random sampling negates effect modifiers.  Random treatment assignment negates unobserved confounders.  Show simple example where $E[U]$ is high due to sampling bias and therefore you will think that the effect is significant! But it's because of sampling bias. Requires poststratification.
 
-\section{Compartmental model}
-
-(A) Heterogeneity in $R_0$
-(B) Selection bias
-(C)
-
-Above we took a general design perspective.  Here we take a model-assisted perspective.
-
-Susceptible individuals can become exposed to the disease.
-
-Selection bias occurs at 2 phases. Phase 1 is self-selection to seek
-
-Phase 2 is the decision to receive testing.  This is performed by the
-
-The result is we have multiple types of people: (A) Those disease-free who seek treatment due to high risk.
-
-We must then layer on measurement-error.  Tests can
-
-The SIR model with parameters.
-
-\begin{itemize}
-\item Simulation study showing that $R_t$ and prevalence over time changes the effective sample size....
-\end{itemize}
-
-\subsection{Ration-based testing allocation}
-
-We assume that the percentage of tests is rationed according to severity of symptoms.
-
-Note that a person who displays severe symptoms may be COVID negative.
-
-
-
-\emph{Increasing testing leads to lower correlation in}
-
-
-\subsection{Heterogeneiety  SIR with measurement-error and }
+\subsection{SI(E)R with measurement-error and }
 
 Here we explain a general state-space process model as compared to the measurement-process.  While related, the distinction drives our key results.
 
@@ -256,16 +281,6 @@ DTR and network connectivity is useful for understanding spread and where "testi
 \section{Decision-making: data versus information.}
 
 Above we point to flaws in using observed data to reason about the
-
-\subsection{Interventions on network effects}
-
-While we think of the intervention as reducing risk COVID-19; in reality the interventio nis
-
-Classical contact pretends the graph is fixed.  Here we assume the intervention is to reduce degree and remove edges.  Contact tracing is indeed the way we can
-
-How does $R_0$ relate to connectivity?  This accounts for the heterogeneity. Epi knows this, but I think this point is salient.
-
-
 
 \section{That which does not break us, makes us stronger (but potentially not smarter)}
 
@@ -421,6 +436,34 @@ Suppose $f_1 = M \cdot f_0$.  Then $\Delta = f_1 - f_0 = f_0 (M-1)$ and $f_0 (1-
 $$
 \rho_{I,Y} \sigma_Y \left( 1 - (M-1) \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{(1-\bar Y) + M \bar Y} \right).
 $$
+
+\subsection{Ratio estimator}
+
+$$
+\begin{aligned}
+\frac{\bar y_2}{\bar y_1} - \frac{\bar Y_2}{\bar Y_1}
+&= \frac{\bar y_2}{\bar Y_1  \left(1 + \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \right) } - \frac{\bar Y_2}{\bar Y_1}  \\
+&\approx \frac{\bar y_2}{\bar Y_1} \left(1 - \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \right) - \frac{\bar Y_2}{\bar Y_1} \\
+&= \frac{1}{\bar Y_1}  \rho_{I_2, Y_2} \sqrt{\frac{1-f_2}{f_2}} \sigma_{Y_2} - \frac{\bar y_2}{\bar Y_1} \cdot \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1).
+\end{aligned}
+$$
+Focusing on the second term, we have
+$$
+\begin{aligned}
+\frac{\bar y_2}{\bar Y_1} \cdot \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) &= \frac{1}{\bar Y_1} \cdot \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \left[ \bar y_2 - \bar Y_2 + \bar Y_2 \right] \\
+&= \frac{1}{\bar Y_1} \cdot \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \left[ \rho_{I_2, Y_2} \sqrt{\frac{1-f_2}{f_2}} \sigma_{Y_2} + \bar Y_2 \right] \\
+&= \frac{\bar Y_2}{\bar Y_1} \cdot \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \left[ \rho_{I_2, Y_2} \sqrt{\frac{1-f_2}{f_2}} CV(Y_2) + 1 \right] \\
+\end{aligned}
+$$
+Combining these we have
+$$
+\frac{\bar Y_2}{\bar Y_1} \left[ \rho_{I_2, Y_2} \sqrt{\frac{1-f_2}{f_2}} CV(Y_2)  - \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \left[ \rho_{I_2, Y_2} \sqrt{\frac{1-f_2}{f_2}} CV(Y_2) + 1 \right] \right]
+$$
+Under the assumption that the data quality and the sampling fraction are constant across time, this can be simplified
+$$
+\rho \times \sqrt{\frac{1-f}{f}} \times \frac{\bar Y_2}{\bar Y_1} \left[ \bar Y_1 - \bar Y_2 - (1-\bar Y_1)(1-\bar Y_2) \rho \sqrt{\frac{1-f}{f}} \right]
+$$
+
 
 \section{Quotes}
 
