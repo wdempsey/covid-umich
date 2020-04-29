@@ -1,6 +1,10 @@
-FP = 0.1; FN = 0.1
-odds_ratio = 1
-M = 10
+memunadj <- function(rho, f, odds_ratio, M, FP, FN) {
+  prevalence = odds_ratio/(1+odds_ratio)
+  D_M = 1 - (M-1) * odds_ratio * (FP*(1-prevalence) + FN *(prevalence))/((1-prevalence) + M * prevalence)
+  term1 = rho*D_M*sqrt(prevalence*(1-prevalence)) * sqrt((1-f)/f)
+  term2 = FP-(FP+FN)*prevalence
+  return (term1 + term2)
+}
 
 memadj <- function(odds_ratio, M, FP, FN) {
   prevalence = odds_ratio/(1+odds_ratio)
@@ -10,14 +14,19 @@ memadj <- function(odds_ratio, M, FP, FN) {
 seq_oddsratio = exp(seq(log(0.01), log(50), length.out = 100))
 seq_M = exp(seq(log(0.5),log(20), length.out = 100))
 result = matrix(nrow = length(seq_oddsratio), ncol = length(seq_M))
-FP = 0.15
-FN = 0.10
+result_unadj = matrix(nrow = length(seq_oddsratio), ncol = length(seq_M))
+FP = 0.01
+FN = 0.15
+rho = 0.01
+f = 0.01
+
 
 for(i in 1:length(seq_oddsratio)) {
   for (j in 1:length(seq_M)) {
     odds = seq_oddsratio[i]
     M = seq_M[j]
     result[i,j] = memadj(odds, M, FP, FN)
+    result_unadj[i,j] = memunadj(rho, f, odds, M, FP, FN)
   }
 }
 

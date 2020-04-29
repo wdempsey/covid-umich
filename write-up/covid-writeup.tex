@@ -29,7 +29,16 @@
 \maketitle
 
 \begin{abstract}
-Many statisticians, epidemiologists, economists and data scientists have registered their serious reservations regarding the reported coronavirus case-counts. Comparing countries and states using those case-counts seem inappropriate when every nation/state have adopted different testing strategies and protocols. Estimating prevalence of COVID-19 based on these data is a hopeless exercise and several groups have recently argued for estimating the number of truly infected cases by using mortality rates.
+Many statisticians, epidemiologists, economists and data scientists have registered serious reservations regarding the reported coronavirus case-counts. Limited testing capacity across many states has been widely identified as a key driver of suppressed coronavirus case-counts.  Calls for increased testing capacity are well-justified and increasingly frequent.  While expanded testing is laudable, the impact of selection bias does not disappear until .  Moreover, tests are imperfect.  The rate of false positives and false negatives interacts in complex ways with selection bias.  This note attempts to clarify this interaction.  We demonstrate pitfalls and paradoxes that can arise when considering case-count data in the presence of selection bias and measurement-error. The discussion guides a sequence of suggestions in current case-count visualizations and reporting.    unadjusted prevalence estimates Measurement-error do not  misinterpret  that does not cover   testing, if not on  increases  election bias and measurement-error are often cited as key drivers of case count data.  It is known, for example, that false negatives deflate
+
+However, most researchers forget about the importance of population sizes
+
+In this note, we demonstrate through simple calculations how selection bias and theoretical
+.
+
+
+
+Comparing countries and states using those case-counts seem inappropriate when every nation/state have adopted different testing strategies and protocols. Here, we show the paradoxes that can persist  Estimating prevalence of COVID-19 based on these data is a hopeless exercise and several groups have recently argued for estimating the number of truly infected cases by using mortality rates.
 % In a lucid article on FiveThirtyEight.com Nate Silver walks us through the problem by a simple numerical exercise in terms of the basic deterministic models of an epidemic using hypothetical scenarios involving R0 and the effective R.
 In this note, we aim to (a)	we posit a conceptual mathematical framework to characterize both sampling bias and misclassification/imperfection of the test simultaneously on the estimation of the prevalence rate, (b)	review current testing strategies in some of the countries where we have testing data, and (c) provide guidelines for testing strategy/disease surveillance that may help track the pulse of the epidemic, to identify disease free areas and identify disease outbreaks.
 % Also large-scale anti-body testing.
@@ -258,7 +267,12 @@ Many (cites) hve
 
 Random sampling negates effect modifiers.  Random treatment assignment negates unobserved confounders.  Show simple example where $E[U]$ is high due to sampling bias and therefore you will think that the effect is significant! But it's because of sampling bias. Requires poststratification.
 
-\subsection{SI(E)R with measurement-error and }
+\subsection{Death counts}
+
+\subsection{Stratified setting}
+
+
+\section{Brief discussion of model-based approaches}
 
 Here we explain a general state-space process model as compared to the measurement-process.  While related, the distinction drives our key results.
 
@@ -271,9 +285,9 @@ $B$
 
 \emph{Non-identifiable} and rely on assumptions.  As per Cox's statement.
 
-This makes models \emph{fragile} and rely on strong data-generating assumptions.  For a disease
+This makes models \emph{fragile} and rely on strong data-generating assumptions.  In these settings data integration
 
-\subsection{Stratified sampling: improving precision in low-prevalence environments}
+\section{Stratified sampling: improving precision in low-prevalence environments}
 
 Sampling network is hard.  Sampling high-risk strata is easy.  Simple example.
 DTR and network connectivity is useful for understanding spread and where "testing should go".
@@ -304,7 +318,9 @@ Use prior results to show that ratio estimator under SRS is a good predictor of 
 
 \section{Conclusion}
 
-Interventions in this area are designed experiments.  Unlike Fischer's null, here the objectives are settings, statisticians
+Interventions in this area are designed experiments.  Unlike Fischer's null, here the objectives are settings, statisticians.
+
+Account for data quality in models by incorporating auxiliary information.  Perform advanced sensitivity analysis.  Forecasts should be called coutnerfactual forecasts.
 
 \appendix
 
