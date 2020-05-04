@@ -18,7 +18,7 @@ result_unadj = matrix(nrow = length(seq_oddsratio), ncol = length(seq_M))
 FP = 0.01
 FN = 0.15
 rho = 0.01
-f = 0.01
+f = 0.001
 
 
 for(i in 1:length(seq_oddsratio)) {
@@ -34,8 +34,15 @@ result = data.frame(result)
 row.names(result) = round(seq_oddsratio,3)
 colnames(result) = round(seq_M,2)
 
+result_unadj = data.frame(result_unadj)
+row.names(result_unadj) = round(seq_oddsratio,3)
+colnames(result_unadj) = round(seq_M,2)
+
 library("gplots")
 heatmap.2(as.matrix(result), col = bluered(100), dendrogram='none',
           trace = "none", density.info = "none", Rowv=FALSE,
           Colv=FALSE, key.xlab = "Relative Sampling Frequency", key.ylab = "Odds Ratio")
 
+heatmap.2(as.matrix(result_unadj), col = bluered(100), dendrogram='none',
+          trace = "none", density.info = "none", Rowv=FALSE,
+          Colv=FALSE, key.xlab = "Relative Sampling Frequency", key.ylab = "Odds Ratio")
