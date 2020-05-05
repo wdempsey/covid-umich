@@ -434,31 +434,6 @@ $$
 \end{aligned}
 $$
 where the second equality is obtained by plugging in the statistical decomposition of the error for both time points and the coefficient of variation being defined as $CV(Y) := \sigma_Y/\mu_Y$.
-\newpage
-$$
-\begin{aligned}
-\frac{\bar y_2}{\bar y_1} - \frac{\bar Y_2}{\bar Y_1}
-&= \frac{\bar y_2}{\bar Y_1  \left(1 + \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \right) } - \frac{\bar Y_2}{\bar Y_1}  \\
-&\approx \frac{\bar y_2}{\bar Y_1} \left(1 - \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \right) - \frac{\bar Y_2}{\bar Y_1} \\
-&= \frac{1}{\bar Y_1}  \rho_{I_2, Y_2} \sqrt{\frac{1-f_2}{f_2}} \sigma_{Y_2} - \frac{\bar y_2}{\bar Y_1} \cdot \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1).
-\end{aligned}
-$$
-Focusing on the second term, we have
-$$
-\begin{aligned}
-\frac{\bar y_2}{\bar Y_1} \cdot \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) &= \frac{1}{\bar Y_1} \cdot \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \left[ \bar y_2 - \bar Y_2 + \bar Y_2 \right] \\
-&= \frac{1}{\bar Y_1} \cdot \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \left[ \rho_{I_2, Y_2} \sqrt{\frac{1-f_2}{f_2}} \sigma_{Y_2} + \bar Y_2 \right] \\
-&= \frac{\bar Y_2}{\bar Y_1} \cdot \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \left[ \rho_{I_2, Y_2} \sqrt{\frac{1-f_2}{f_2}} CV(Y_2) + 1 \right] \\
-\end{aligned}
-$$
-Combining these we have
-$$
-\frac{\bar Y_2}{\bar Y_1} \left[ \rho_{I_2, Y_2} \sqrt{\frac{1-f_2}{f_2}} CV(Y_2)  - \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \left[ \rho_{I_2, Y_2} \sqrt{\frac{1-f_2}{f_2}} CV(Y_2) + 1 \right] \right]
-$$
-Under the assumption that the data quality and the sampling fraction are constant across time, this can be simplified
-$$
-\rho \times \sqrt{\frac{1-f}{f}} \times \frac{\bar Y_2}{\bar Y_1} \left[ \bar Y_1 - \bar Y_2 - (1-\bar Y_1)(1-\bar Y_2) \rho \sqrt{\frac{1-f}{f}} \right]
-$$
 
 \section{Derivation for the effective sample size}
 
