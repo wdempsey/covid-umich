@@ -416,6 +416,25 @@ $$
 
 \subsection{Ratio estimator}
 
+Let ${\bf u} = (u_1,u_2) \in \mathbb{R}^2$ and $g({\bf u}) = \frac{u_2}{u_1}$, i.e., a differentiable function $g:\mathbb{R}^2 \to \mathbb{R}$. Centering a Taylor series expansion of second-order around coordinates $(U_2, U_1) \in \mathbb{R}^2$ yields
+$$
+\begin{aligned}
+g({\bf u}) =& g(U_1, U_2) - \frac{U_2}{U_1^2} (u_1 - U_1) + \frac{1}{U_1} (u_2 - U_2) \\
+&+ \frac{1}{2} \left[ \frac{2 U_2}{U_1^3} (u_1 - U_1)^2 + 0 \times (u_2 - U_2)^2 - 2 \times (u_1 - U_1) (u_2 - U_2) \frac{1}{U_1^2} \right]
+\end{aligned}
+$$
+Plugging in $(\bar y_1, \bar y_2)$ for $(u_1, u_2)$ and $(\bar Y_1, \bar Y_2)$ for $(U_1, U_2)$ yields
+$$
+\begin{aligned}
+\frac{\bar y_2}{\bar y_1} - \frac{\bar Y_2}{\bar Y_1} =& - \frac{\bar Y_2}{\bar Y_1^2} (\bar y_1 - \bar Y_1) + \frac{1}{\bar Y_1} (\bar y_2 - \bar Y_2) \\
+&+ \frac{\bar Y_2}{\bar Y_1^3} (\bar y_1 - \bar Y_1)^2 -  (\bar y_1 - \bar Y_1) (\bar y_2 - \bar Y_2) \frac{1}{\bar Y_1^2} \\
+&= \frac{\bar Y_2}{\bar Y_1} \bigg[  \rho_{I_2,Y_2} \sqrt{\frac{1-f_2}{f_2}} CV (Y_2)  -\rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \\
+&+ \rho^2_{I_1,Y_1} \frac{1-f_1}{f_1} CV^2 (Y_1) -  \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \times \rho_{I_2,Y_2} \sqrt{\frac{1-f_2}{f_2}} CV (Y_2)   \bigg] \\
+&= \frac{\bar Y_2}{\bar Y_1} \bigg[ \rho_{I_2,Y_2} \sqrt{\frac{1-f_2}{f_2}} CV (Y_2)  -\rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \bigg] \left[ 1 - \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \right]
+\end{aligned}
+$$
+where the second equality is obtained by plugging in the statistical decomposition of the error for both time points and the coefficient of variation being defined as $CV(Y) := \sigma_Y/\mu_Y$.
+\newpage
 $$
 \begin{aligned}
 \frac{\bar y_2}{\bar y_1} - \frac{\bar Y_2}{\bar Y_1}
