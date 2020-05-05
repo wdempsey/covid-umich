@@ -137,43 +137,46 @@ The data analyst, now frustrated with me but at least wary of estimating prevale
 Unfortunately, ratio estimators do not cancel errors as now both the numerator and the denominator are uncertain.  This means selection bias and measurement error can have paradoxical effects.  Here we consider the ratio estimators for the relative change in the prevalence rate.  We let $\bar Y_1$ and $\bar Y_2$ denotes the prevalence at time step $1$ and $2$ respectively (i.e., prevalence on two consecutive days).  Then the ratio estimator is given by $r = \bar y_1 / \bar y_2$.  We assume both numerator and denominator are the prevalence estimates adjusted for measurement-error. If the sample size at each time were equal (i.e., $n_1 = n_2 = n$) then this analysis would be equivalent to comparing the increase in observed case-counts (i.e., $\bar y_1/\bar y_2 = y_1/y_2$).  We wish to express the error $\frac{\bar y_2}{\bar y_1} - \frac{\bar Y_2}{\bar Y_1}$ in statistical terms.  Using a Taylor series approximation, we show that the error can be expressed approximately as
 $$
 \begin{aligned}
-\frac{\bar Y_2}{\bar Y_1} \left[ \rho_{I_2, Y_2} D_{M_2} \sqrt{\frac{1-f_2}{f_2}} CV(Y_2)  - \rho_{I_1,Y_1} D_{M_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \left[ \rho_{I_2, Y_2} D_{M_2} \sqrt{\frac{1-f_2}{f_2}} CV(Y_2) + 1 \right] \right]
+\frac{\bar Y_2}{\bar Y_1} &\times \bigg[ \rho_{I_2,Y_2} D_{M_2} \sqrt{\frac{1-f_2}{f_2}} CV (Y_2)  -\rho_{I_1,Y_1} D_{M_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \bigg] \\
+&\times \left[ 1 - \rho_{I_1,Y_1} D_{M_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \right]
 \end{aligned}
 $$
-where $\rho_{I_j, Y_j}$ is the data quality, $f_j$ is the sampling fraction, $D_{M_j}$ is the measurement-error adjustment, and $CV(Y_j) = \sigma_{Y_j}/\bar Y_j$ is the coefficient of variation at time step $j$.  We see that the magnitude of the error depends on the population-level ratio $\bar Y_2 / \bar Y_1$ so a large decrease in the prevalence rate will have a relatively small error as compared to a large increase in the prevalence rate. There are three terms in the brackets.  The two terms $\rho_{I_2, Y_2} D_{M_2} \sqrt{\frac{1-f_2}{f_2}} CV(Y_2) - \rho_{I_1, Y_1} D_{M_1} \sqrt{\frac{1-f_1}{f_1}} CV(Y_1)$  represent the ``cancellation'' that the naive analyst is hoping will occur.  We can see that when the data quality, sampling fraction, and measurement-error adjustments are help constant this different simplifies greatly to $\rho_{I,Y} D_M \sqrt{\frac{1-f}{f}} ( \bar Y_1 - \bar Y_2)$. The final component $\bar Y_1 - \bar Y_2$ represents impact of the prevalence trajectory on the statistical error.  When prevalence is increasing the component is negative, and when prevalence is decreasing the component is positive. At the peak this term is zero, representing when the naive analysts intuition is closest to correct.  Regardless, we always observe the final term which is a cross term that depends on the statistical error in both stages.
+where $\rho_{I_j, Y_j}$ is the data quality, $f_j$ is the sampling fraction, $D_{M_j}$ is the measurement-error adjustment, and $CV(Y_j) = \sigma_{Y_j}/\bar Y_j$ is the coefficient of variation at time step $j$.  The magnitude of the error depends on the population-level ratio $\bar Y_2 / \bar Y_1$ so a large decrease in the prevalence rate will have a relatively small error as compared to a large increase in the prevalence rate. The second term represents the ``cancellation'' that the naive analyst is hoping will occur.  The analyst's intuition only holds when the difference is equal to zero.  This occurs at times when data quality, sampling fraction, measurement-error, and prevalence are all held constant.  In the case of New York, for example, recent weeks it seems plausible that $\Delta$ (i.e., selection bias) has not changed drastically.  Figure XX shows the rate of testing remains constant and the total cases relative to the population is small enough such that $f_1 \equiv f_2$ is reasonable. Finally, the measurement-error adjustment is likely to be constant as no new testing procedures have been reported (as far as this author knows).  We will show how such a setting leads to over-estimation prior to and under-estimation after peak prevalence.  The final component is an adjustment to this differential error based on the statistical error at the first time point.
 
-Figure XX shows a trajectory of bias under several prevalence and data quality scenarios.  We see that in each case, the rate of change in prevalence is underestimated at most times, except for large decreases which are overestimated.  This points to a very sad realization.  At the beginning of the pandemic, we are underestimating the rate of change based on observed case counts.  Not only that, but the error is at its largest when the increase is large. This leads us to not take the virus seriously early on based on the observed data! Moreover, after the peak, we see that the bias is also negative other than for large decreases in the rate of change in prevalence.  This implies our estimates based on observed data trick us into thinking that the virus is ``going away'' faster than it actually is!
+Figure XXa shows a trajectory of bias under several prevalence and data quality scenarios.  We generate data from an SIR model with infection rate $\beta = XX$, total population = $100,000$.  We estimate the bias under a range of values for the relative sampling fraction $f_1/f_0$ and a sampling fraction of $f = 0.05$.  Figure XXb shows the trajectory of $\bar Y_2 / \bar Y_1$.  We see that in each case, the rate of change in prevalence is overestimated prior to the peak and then underestimated afterwards.  From a decision making perspective, such biases have impacts.  First, the over-estimation may give lawmakers and governors more leverage in proposing aggressive actions that reduce prevalence.  Of course, the analysis supports the argument that the estimates based on available data are overly pessimistic. What both sides miss is that the direction of bias is non-constant over time.  After we hit the peak, estimates will under-estimate prevalence.  Lawmakers and governors will be put under pressure to relax social distancing measures.  This will drive a sequence of cycle of panic and .
 
-A final question is whether an observed drop in prevalence can be interpreted as a ``real'' decrease in prevalence.  To this end, one would typically construct a Z-score and perform a
-
-Moreover, the question is ``Can we trust the observed data to let us know if we have reached the peak?''
-
-Based on this analysis, seeing a falling rate for XX time steps in a row would be needed to feel confidence that the true prevalence rate is on the decline.
+Moreover, the question is ``Can we trust the observed data to let us know if we have reached the peak?''  It appears that the peak time is the easiest to estimate in terms of having minimal error using availability data.  Note, however, that the standard errors on such estimates will be incredibly wide as the effective sample size is quite small compared to SRS at each time.  \textcolor{red}{Short description of effective sample size}.
 
 \subsubsection{Estimation of effective reproduction number}
-Many well-respected epidemiologists argue that tracking the effective reproduction number $R_t$ is the only way to manage through the crisis (cites).  We show here how these estimates are also impacted by selection bias and measurement error.  For simplicity, we again assume the estimates are adjusted for known false positive and false negative rates. Luis and Ribeiro (2008) show that under a Poisson likelihood, a simple relation between the trajectory of \emph{true new cases} and the effective reproduction number can be derived (see Appendix XX for discussion).  In particular, under an SIR model, the number of case counts is Poisson distributed with rate $K_{t-1} \exp \left( \frac{1}{\gamma} (R_t - 1) \right)$ where $\gamma$ is the serial interval, which is approximately $7$ days for COVID-19 (Sanche, 2020).  Using this, a method of moments estimator of the effective reproduction number at time $t$ can be given by
+Many well-respected epidemiologists argue that tracking the effective reproduction number $R_t$ is the only way to manage through the crisis (cites).  We show here how these estimates are also impacted by selection bias and measurement error.  For simplicity, we again assume the estimates are adjusted for known false positive and false negative rates. Luis and Ribeiro (2008) show that under a Poisson likelihood, a simple relation between the trajectory of \emph{true new cases} and the effective reproduction number can be derived (see Appendix XX for discussion).  In particular, under an SIR model, the number of case counts on day $t$ is Poisson distributed with rate $K_{t-1} \exp \left( \frac{1}{\gamma} (R_t - 1) \right)$ where $K_{t-1}$ is the number of new cases on day $t-1$ and $\gamma$ is the serial interval which is approximately $7$ days for COVID-19 (Sanche, 2020).  Using this, a method of moments estimator of the effective reproduction number at time $t$ can be given by
 $$
 R_t = 1 + \frac{1}{\gamma} \log \left( \frac{K_t}{K_{t-1}} \right).
 $$
-Of course, we do not observe $K_t$ and $K_{t-1}$ but noisy proxies $y_t$ and $y_{t-1}$, i.e., the observed case-count on day $t$ and $t-1$ respectively. The hope is that $y_t/y_{t-1}$ is a good proxy for $K_t/K_{t-1}$.  Under SRS with the same sample size at each step, this is true for sufficiently large sample size.  However, similar to Section~\ref{section:rates}, the proxy has error in both numerator and denominator that may cause issues.  We again wish with express the statistical error in the $1+\frac{1}{\gamma} \log \left( \frac{y_t}{y_{t-1}} \right) - R_t$ in useful terms.  Based on Section~\ref{section:rates}, we can re-arrange those terms to show that the error is  given by
+Of course, we do not observe $K_t$ and $K_{t-1}$ but noisy proxies $y_t$ and $y_{t-1}$, i.e., the observed case-count on day $t$ and $t-1$ respectively. The hope is that $y_t/y_{t-1}$ is a good proxy for $K_t/K_{t-1}$. Let $\hat R_t = 1 + \frac{1}{\gamma} \log \left( y_t / y_{t-1} \right)$ be the estimated effective reproduction number on day $t$.  Under SRS with the same sample size at each step, this is true for sufficiently large sample size.  However, similar to Section~\ref{section:rates}, the proxy has error in both numerator and denominator that may cause issues.  We again wish to express the statistical error of $\hat R_t - R_t$ in useful terms.  We can re-arrange the error decomposition from Section~\ref{section:rates} to show that this error is given by
 $$
-\frac{1}{\gamma}\log \bigg[ &1 + \rho_{I_t, K_t} D_{M_t} \sqrt{\frac{1-f}{f}} CV(K_t)  \\
-&- \rho_{I_{t-1},K_{t-1}} \sqrt{\frac{1-f}{f}} CV (K_{t-1}) \left[ \rho_{I_t, Y_t} \sqrt{\frac{1-f}{f}} CV(K_{t-1}) + 1 \right] \right].
+\begin{aligned}
+\frac{1}{\gamma}\log &\bigg( 1 + \bigg[ \rho_{I_t,K_t} D_{M_t} \sqrt{\frac{1-f_t}{f_t}} CV (K_t)  -\rho_{I_{t-1},K_t} D_{M_t} \sqrt{\frac{1-f_t}{f_t}} CV (K_t) \bigg] \\
+&\times \left[ 1 - \rho_{I_t,K_t} D_{M_t} \sqrt{\frac{1-f_t}{f_t}} CV (K_t) \right] \bigg)
+\end{aligned}
 $$
-The coefficient of variation $CV(K_t) = (1- \bar Y_t)$ is the fraction of the uninfected population that remain uninfected.  So here we see the exact same trade-off as with the rates but on the logarithmic scale.  For small values $\log(1+x) = x$ so the biases are similar.  However, the error is no longer scaled by the rate of change in prevalence $\bar Y_2/\bar Y_1$. Instead the error is scaled by the serial interval $\gamma^{-1} = 1/7$.
+So here we see the exact same trade-off as with the rates but on the logarithmic scale.  For small values $\log(1+x) = x$ so the biases are similar.  However, the error is no longer scaled by the rate of change in prevalence $\bar Y_2/\bar Y_1$. Instead the error is scaled by the serial interval $\gamma^{-1} = 1/7$.  Moreover, the error depends not on aggregate prevalence $\bar Y_t$ but fraction of new cases $\bar K_t$.
 
-The above decomposition of the statistical shows us that
-
-The question of interest is ``Is the effective reproduction number below one?'' When this is true, we can feel like that the .
-Therefore, we find the effective reproduction number suffers a similar story. And is consistently underestimated for in initial phases and then we are overconfident in the decline.
+In Figure XXc, we show the error in this quantity.  The trajectory follows the same as before; however, the errors are....
 
 \subsection{Clinical trials}
 
-In
+Here we show how selection bias can even creep into clinical trial analysis. The key concern is whether clinical trials on COVID-19 recruit from the pool of individuals who have tested positive for COVID-19 or whether they sample randomly from the population, test, and then recruit from this subset of tested individuals.  To see this issue, suppose we have an outcome $Y$, a treatment $A$ and an \emph{unobserved} $U$.  Suppose treatment is assigned at random, i.e., $A =1$ with probability $50\%$ and $A=0$ with probability $50\%$.  Suppose the conditional mean of the outcome satisfies  $E(Y \mid U, A ) = \beta_0 + \beta_1 A + \beta_2 U + \beta_3 A U$.  Typically, we are interested in the \emph{causal effect} of $A$ on $Y$.  In counterfactual language,
+$$
+E( Y(A=1) - Y(A=0) ) = E_U ( E_A ( Y(A=1) - Y(A=0) \mid U=u ))
+= \beta_1 + \beta_3 E(U).
+$$
+Even in a randomized experiment, the question is what the correct value for $E(U)$ is. For COVID-19, the value of interest is the expected value of $U$ in the population of COVID-19 positive individuals.  Due to selection bias, however, the bias in this marginal treatment effect compared to the true marginal effect of interest is $\beta_1 \cdot E_{\I} [ \rho_{I,U} ] \times \frac{f}{1-f} \times \sigma_U$.  Selection bias then leads to the estimated effect being biased if $\beta_1 \neq 0$.  Directionality of the bias will depend on the relationship between $U$ and $Y$.  If $U$ is a measure of disease severity, then it could be expected to see $\beta_1 > 0$ and therefore treatment effects to be overly optimistic as most individuals recruited are potentially higher on the severity index than the population average.
 
-Random sampling negates effect modifiers.  Random treatment assignment negates unobserved confounders.  Show simple example where $E[U]$ is high due to sampling bias and therefore you will think that the effect is significant! But it's because of sampling bias. Requires poststratification.
+Randomization of treatment assignment in clinical trials negates unobserved confounders.  This, however, does not negate effect modifiers.  Therefore, for marginal treatment effects to be interpretable, there must be a well-defined population.  As our main interest is in causal effects on the population of COVID-19 positive.  Randomization within the clinical trial design yields internal validity, but we also need external validity to estimate the marginal effect correctly.
 
 \subsection{Cross-country comparisons}
+
+So far we have focused on understanding the disease in a single location and the limitations of using case-count data to understand population quantities of interest.  Many in the
 
 So we can't estimate prevalence.  Can we not get a decent comparison?
 $$
@@ -185,6 +188,9 @@ $$
 y_1/N_1 - y_2/ N_2 = \left[ f_1 \sigma_{Y_1} \rho_{I_1, Y_1} \sqrt{\frac{1-f_1}{f_1}} D_{M_1} - f_2 \sigma_{Y_2} \rho_{I_1, Y_1} \sqrt{\frac{1-f_1}{f_1}}  \right] + \left[ f_1 \bar Y_1 - f_2 \bar Y_2 \right]
 $$
 Is this a quantity of genuine interest? Under SRS, this makes sense if $f_1 = f_2$.  Otherwise, you are comparing apples and oranges.  With selection bias, it's not clear that agreement in this quantity is even desirable.
+
+A final question is whether an observed drop in prevalence can be interpreted as a ``real'' decrease in prevalence.  To this end, one would typically construct a Z-score and perform a
+
 
 $$
 \frac{n}{N} \times \rho_{I,Y} \times \sqrt{\frac{1-f}{f}} \times \sigma_{Y} \times D_M
@@ -224,21 +230,6 @@ Many (cites) hve
 
 \subsection{Stratified setting}
 
-
-\section{Brief discussion of model-based approaches}
-
-Here we explain a general state-space process model as compared to the measurement-process.  While related, the distinction drives our key results.
-
-Observer controls testing, FP and FN.  Patients
-
-Their behavior may depend on forecasts and therefore the notion of a counterfactual is not well defined.  For example, suppose an highly prominent model....
-
-The transition from susceptible to infected is a complex function.  It is based on personal choices;  the second choice
-$B$
-
-\emph{Non-identifiable} and rely on assumptions.  As per Cox's statement.
-
-This makes models \emph{fragile} and rely on strong data-generating assumptions.  In these settings data integration
 
 \section{Stratified sampling: improving precision in low-prevalence environments}
 
@@ -433,7 +424,7 @@ $$
 &= \frac{\bar Y_2}{\bar Y_1} \bigg[ \rho_{I_2,Y_2} \sqrt{\frac{1-f_2}{f_2}} CV (Y_2)  -\rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \bigg] \left[ 1 - \rho_{I_1,Y_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \right]
 \end{aligned}
 $$
-where the second equality is obtained by plugging in the statistical decomposition of the error for both time points and the coefficient of variation being defined as $CV(Y) := \sigma_Y/\mu_Y$.
+where the second equality is obtained by plugging in the statistical decomposition of the error for both time points and the coefficient of variation being defined as $CV(Y) := \sigma_Y/\mu_Y$.  Under measurement-error, the extra terms $D_{2}$ and $D_1$ can be inserted in the correct locations.
 
 \section{Derivation for the effective sample size}
 
