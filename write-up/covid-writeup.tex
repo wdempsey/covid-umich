@@ -197,14 +197,22 @@ $$
 The first term is the difference in population prevalence (i.e., the quantity of interest).  If random sampling were performed in each population, $E_{\I} [ \rho_{I_j, Y_j}] = 0$ and so the estimate would be unbiased.  However, the second term represents the complex error that results from selection bias.
 The particular test of interest is $H_0: \bar Y_1 = \bar Y_2$.  Under the null, $\sigma_{Y_1} = \sigma_{Y_2}$.  In classical statistics, we would compute a Z-score:
 $$
-\frac{\bar y_1 - \bar y_2}{ V_{SRS} (\bar y_1 - \bar y_2) } =
-\frac{\rho_{I_1, Y_1} \times \sqrt{\frac{1-f_1}{f_1}}  - \rho_{I_2, Y_2} \times \sqrt{\frac{1-f_2}{f_2}} }{ \sqrt{\frac{1}{N_1 -1} \times \frac{1-f_1}{f_1} + \frac{1}{N_2 - 1} \times \frac{1-f_2}{f_2}} } \overset{\star}{=}
+\begin{aligned}
+\frac{\bar y_1 - \bar y_2}{ V_{SRS} (\bar y_1 - \bar y_2) } &=
+\frac{\rho_{I_1, Y_1} \times \sqrt{\frac{1-f_1}{f_1}}  - \rho_{I_2, Y_2} \times \sqrt{\frac{1-f_2}{f_2}} }{ \sqrt{\frac{1}{N_1 -1} \times \frac{1-f_1}{f_1} + \frac{1}{N_2 - 1} \times \frac{1-f_2}{f_2}} }  \\
+&\overset{\star}{=}
 \sqrt{\frac{(N_1-1)(N_2 -1)}{N_1 + N_2}} \left[ \rho_{I_1, Y_1} - \rho_{I_2, Y_2} \right]
+\end{aligned}
 $$
 Where the last equality holds under $f_1 = f_2$, i.e., same sampling rate relative to population size. This tells us that the exact error in the comparison of sample means, as an estimate of the difference in population means, scales as a function of the difference in data quality $\rho_{I_1, Y_1} - \rho_{I_2, Y_2}$ times a square root of a population adjustment.  For highly unequal population sizes (e.g., $N_1 \gg N_2$), the adjustment is approximated well by the square root of the smaller population size minus one (e.g. $\sqrt{N_2 -1}$).
 
-While problematic, this points to a potential setting in which comparisons are still valid: when sampling fraction~$f_1 = f_2$ are equal and data quality are equal.  The issue is how to assess data quality equivalence among populations. \textcolor{red}{Discuss the measures in the literature.}
+\textcolor{red}{Take, for example, a comparison of the US and Canada.  The two population sizes are approximately 328 million and 38 million people.  Then the population adjustment is $5.84$ million. As of May 5th, Canada has performed a total of 24.92 tests per 1,000 people while the US has performed a total of 22.01 tests per 1,000 people (cite: https://ourworldindata.org/grapher/full-list-cumulative-total-tests-per-thousand)} so the data quantities are approximately equal to $f = 23/1000 = 0.023$.  Then, under a prevalence of 10\%, one would need the differential $\Delta_1-\Delta_2$ to be much smaller than $11.68 \times 10^{-6}$ in order for the selection bias to not impact.  So only under the very strong assumptions of equal data quantity and quality will the comparisons be valid and the $Z$-score can be treated as in the classical setting.  The issue is how to assess data quality equivalence among populations. \textcolor{red}{Discuss the measures in the literature.}  If this does not hold, then the width of the CIs need to be multipled by
 
+\textcolor{red}{What is adjustment to CIs}.   Inserting the effective sample sizes can give us a better sense for a appropriate $Z$-score.  For example, using $n_eff = 20$ for each. And then
+$$
+Z_n = \frac{\bar y_1 - \bar y_2}{ \frac{1-f}{f} \sigma_y \sqrt{ \frac{1}{n_1 - 1} + \frac{1}{n_2 - 1}}}.
+$$
+So we see that we cannot reject the null. \textcolor{red}{We can do the same for different rates as well.}  This is not perfect but more appropriate.
 
 \subsection{Case count comparisons}
 
@@ -228,38 +236,20 @@ $$
 
 \subsection{Rate comparisons}
 
+An alternative is the comparison on the rates of case-count change over time.  Here, for simplicity, we focus on comparing the estimated effective reproductive rate.  We assume the two time-series are aligned so that $t=0$ is the time of first .  This negates the alignment issue and is common in the plots.
 
-\section{Testing strategies and population size: a tango}
+While the above issues on $Z$-scores and effective sample size are important, here we highlight a separate issue.  Namely, the interplay of bias when two trajectories when the peaks are slightly off.  We show that the biases can make us think the gap between two similar trajectories is larger than we would like!!!!
 
-Data analysts have argued whether
-
-Increasing testing under test rationing lowers correlation.  Example in Michigan and try and find CA and NY numbers.  Then show that this may cause higher FPs (cite antibody studies).
-
-Plot Michigan tests per million and positives.  Next to NY.  Both as of April moved to prioritized sampling for symptomatic individuals.
-
-\subsection{US testing: a ration system}
-
-There is a lot of hidden information in the selection indicator $I_j$.  Up until recently, an individual had to first \emph{want} to be tested, then call their primary health care provider who decided whether they met thresholds for testing
-
-. Currently, we are unaware of reliable information on the number of cases where
-
-In the UU
-We assume that the percentage of tests is rationed according to severity of symptoms.
-
-Note that a person who displays severe symptoms may be COVID negative.  This gives us a sense of the data quality.
-
-\emph{Increasing testing leads to lower correlation in}
-
-The CDC reports 413,867 total tests performed in the US as of April 25th.
+$$
+R_{t1} - R_{t2}
+$$
 
 \subsection{Estimation of Data Quality}
 
+Comparison of states with similar $f$ and similar testing inclusion protocols.  Not perfect.
+
 We estimate $\rho$ using old and new methods.  Current SRS in US are weak.  So we just use my back of the envelope calculation. Tests per million as proxy since everyone is doing rationing. Cluster.
-\subsection{Testing increase changes data quality}
 
-Many (cites) hve
-
-\emph{Increasing testing leads to lower correlation only if we see the gap $\Delta$ decrease.  If we just see $f$ }
 
 \subsection{Stratified setting}
 
@@ -295,7 +285,28 @@ Use prior results to show that ratio estimator under SRS is a good predictor of 
 ``Disease free''
 
 
-\section{Conclusion}
+\section{Discussion}
+
+In current crisis, data quality is tied to data quantity due to rationing system. \emph{Testing }
+Increasing testing under test rationing lowers correlation.  Example in Michigan and try and find CA and NY numbers.  Then show that this may cause higher FPs (cite antibody studies).
+
+Plot Michigan tests per million and positives.  Next to NY.  Both as of April moved to prioritized sampling for symptomatic individuals.
+
+There is a lot of hidden information in the selection indicator $I_j$.  Up until recently, an individual had to first \emph{want} to be tested, then call their primary health care provider who decided whether they met thresholds for testing
+
+. Currently, we are unaware of reliable information on the number of cases where
+
+In the UU
+We assume that the percentage of tests is rationed according to severity of symptoms.
+
+Note that a person who displays severe symptoms may be COVID negative.  This gives us a sense of the data quality.
+
+\emph{Increasing testing leads to lower correlation only if we see the gap $\Delta$ decrease.  If we just see $f$ }
+
+The CDC reports 413,867 total tests performed in the US as of April 25th.
+
+
+
 
 Use of these bounds as E-scores.  How bad can it go?
 
