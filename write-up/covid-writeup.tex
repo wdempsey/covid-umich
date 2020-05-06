@@ -1,4 +1,14 @@
-\documentclass[11pt]{article}
+ \documentclass[11pt]{amsart}
+
+\RequirePackage[OT1]{fontenc}
+
+\usepackage{biblatex}
+%\bibliographystyle{apalike}
+
+
+\usepackage{tchdr}
+\boldshortcuts
+
 \usepackage{graphicx}
 \usepackage{wrapfig}
 \usepackage{setspace}
@@ -7,17 +17,17 @@
 \usepackage{amsmath, amsthm, amsfonts}
 \usepackage[margin=1.5in]{geometry}
 
-\numberwithin{equation}{section}
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{example}{Example}
-\newtheorem{remark}{Remark}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{criterion}[theorem]{Criterion}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{exercise}[theorem]{Exercise}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
+% \numberwithin{equation}{section}
+% \theoremstyle{plain}
+% \newtheorem{theorem}{Theorem}[section]
+% \newtheorem{example}{Example}
+% \newtheorem{remark}{Remark}
+% \newtheorem{corollary}[theorem]{Corollary}
+% \newtheorem{criterion}[theorem]{Criterion}
+% \newtheorem{definition}[theorem]{Definition}
+% \newtheorem{exercise}[theorem]{Exercise}
+% \newtheorem{lemma}[theorem]{Lemma}
+% \newtheorem{proposition}[theorem]{Proposition}
 
 \def\pr{\text{pr}}
 \def\sgn{\text{sgn}}
@@ -129,12 +139,12 @@ This lowers the ranges by a factor of almost $3$, leading to effective sample si
 
 The above argument shows that the effective sample size is affected in a complex manner by the interaction between selection bias and measurement error.  Here, we discuss the impact of the interaction on the effective sample size when testing capacity is tied to measurement-error.  In the current pandemic, there have been well-justified calls for increases in testing capacity.  These increases, however, may come at the cost of increases in false-positive and false-negative rates.  In terms of effective sample size, if the data quality term remains constant, then testing increases can actually hurt effective sample size.  Consider the simplest case where $f$ increases from $0.05$ to $0.1$; suppose this required including tests such that the false negative rate jumps from $0.05$ to $0.15$.  Then we would think effective sample size should increase by a factor of $3.4$ but the actual increase is by a factor of only $1.8$!  Think about what this is saying, this is saying that sampling $15\%$ of the population rather than $5\%$ will only increase the effective sample size by a factor $1.8$ if the selection-bias persists and the false negative rate climbs to $15\%$.   It has been reported that false negative rates could increase more than that (cite NYT) and the false positive rate could go up slightly as well.  In a worst case scenario, if $FN \to 0.3$ and $FP \to 0.05$ then the factor is only 1.3.
 
-\subsection{Regrettable rates}
+\subsection{Regrettable rates: complex biases resulting from self-selection}
 \label{section:rates}
 
 The data analyst, now frustrated with me but at least wary of estimating prevalence and total counts, pauses and thinks.  They return shortly thereafter, a bit agitated but persistent: \emph{Ok, perhaps total counts is a lost cause. Certainly, however, we can estimate the rate of growth.  All I want to know is when we hit the point at which the curve flattens and number of deaths decrease.  That can't be too hard, surely!}
 
-Unfortunately, ratio estimators do not cancel errors as now both the numerator and the denominator are uncertain.  This means selection bias and measurement error can have paradoxical effects.  Here we consider the ratio estimators for the relative change in the prevalence rate.  We let $\bar Y_1$ and $\bar Y_2$ denotes the prevalence at time step $1$ and $2$ respectively (i.e., prevalence on two consecutive days).  Then the ratio estimator is given by $r = \bar y_1 / \bar y_2$.  We assume both numerator and denominator are the prevalence estimates adjusted for measurement-error. If the sample size at each time were equal (i.e., $n_1 = n_2 = n$) then this analysis would be equivalent to comparing the increase in observed case-counts (i.e., $\bar y_1/\bar y_2 = y_1/y_2$).  We wish to express the error $\frac{\bar y_2}{\bar y_1} - \frac{\bar Y_2}{\bar Y_1}$ in statistical terms.  Using a Taylor series approximation, we show that the error can be expressed approximately as
+Unfortunately, ratio estimators do not cancel errors as now both the numerator and the denominator are uncertain.  This means selection bias and measurement error can have paradoxical effects.  Here we consider the ratio estimators for the relative change in the prevalence rate.  We let $\bar Y_{t-1}$ and $\bar Y_{t}$ denotes the prevalence at time step $t-1$ and $t$ respectively (i.e., prevalence on two consecutive days).  Then the ratio estimator is given by $r = \bar y_t / \bar y_{t-1}$.  We assume both numerator and denominator are the prevalence estimates adjusted for measurement-error. If the sample size at each time were equal (i.e., $n_1 = n_2 = n$) then this analysis would be equivalent to comparing the increase in observed case-counts (i.e., $\bar y_1/\bar y_2 = y_1/y_2$).  We wish to express the error $\frac{\bar y_2}{\bar y_1} - \frac{\bar Y_2}{\bar Y_1}$ in statistical terms.  Using a Taylor series approximation, we show that the error can be expressed approximately as
 $$
 \begin{aligned}
 \frac{\bar Y_2}{\bar Y_1} &\times \bigg[ \rho_{I_2,Y_2} D_{M_2} \sqrt{\frac{1-f_2}{f_2}} CV (Y_2)  -\rho_{I_1,Y_1} D_{M_1} \sqrt{\frac{1-f_1}{f_1}} CV (Y_1) \bigg] \\
@@ -174,11 +184,18 @@ Even in a randomized experiment, the question is what the correct value for $E(U
 
 Randomization of treatment assignment in clinical trials negates unobserved confounders.  This, however, does not negate effect modifiers.  Therefore, for marginal treatment effects to be interpretable, there must be a well-defined population.  As our main interest is in causal effects on the population of COVID-19 positive.  Randomization within the clinical trial design yields internal validity, but we also need external validity to estimate the marginal effect correctly.
 
-\subsection{Cross-country comparisons}
+\section{Cross-population comparisons}
 
-So far we have focused on understanding the disease in a single location and the limitations of using case-count data to understand population quantities of interest.  Many in the
+So far we have focused on understanding the limitations of using case-count data to understand population quantities of interest for a \emph{single} population (i.e., United States, Germany, France or Michigan, New York, London in isolation).  Many are interested in cross-population comparisons.  Many pieces in the media as well as academic articles have plots of case-count over time aligned by time of first known case.  Others have claimed such comparisons unfair due to unequal population sizes and instead plotted case-count per million.  In this section, we focus on the statistical issues relevant to such comparisons. We do not make any comments on the multi-causal nature of success/failure in countries.
 
-So we can't estimate prevalence.  Can we not get a decent comparison?
+\subsection{Prevalence comparisons}
+
+At a fixed time, suppose prevalence estimates $\bar y_1$ and $\bar y_2$ are observed for two populations. We can express the error $\bar y_1 - \bar y_2$ in statistical terms as
+$$
+(\bar Y_1 - \bar Y_2) + \left[ \rho_{I_1, Y_1} \times \sqrt{\frac{1-f_1}{f_1}} \times \sigma_{Y_1}  \right]
+$$
+
+We could instead think about the number of new cases $K_1$ and $K_2$ within each population.  Then
 $$
 y_1 - y_2 = \frac{N_1}{n_1} ( \bar y_1 - Y_{1}) + \left( \frac{N_1}{n_1} Y_{1} - \frac{N_2}{n_2} Y_2  \right).
 $$
@@ -195,6 +212,9 @@ A final question is whether an observed drop in prevalence can be interpreted as
 $$
 \frac{n}{N} \times \rho_{I,Y} \times \sqrt{\frac{1-f}{f}} \times \sigma_{Y} \times D_M
 $$
+
+\subsection{Rate comparisons}
+
 
 \section{Testing strategies and population size: a tango}
 
