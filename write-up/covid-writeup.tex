@@ -34,7 +34,7 @@
 \def\I{\bf I}
 
 \begin{document}
-\title{The Hypothesis of Testing: Paradoxes arising out of reported coronavirus case-counts}
+\title[The Hypothesis of Testing]{The Hypothesis of Testing: Paradoxes arising out of reported coronavirus case-counts}
 % \author{Walter Dempsey\thanks{Department of Biostatistics, University of Michigan, 1415 Washington Heights, U.S.A. E-mail: wdem@umich.edu}}
 \maketitle
 
@@ -115,6 +115,7 @@ While prior investigations have noted the interaction between measurement-error 
 
 In the current setting, supposing the ratio of conditional selection rates $f_1/f_0$ is equal to 1.5.  The false negative rate ranges from 15\% to 40\%, while the false positive rate is low (around 1\%). Then under plausible prevalence rates that we discussed before, the relative MSE ranges from 1.4 to 0.12.  So that means in some cases we have a huge increase in MSE and in other settings we have a huge decrease in MSE.  What drives this is the false negative rate interaction with prevalence and sampling rates.  Therefore, whether we are better or worse off is a very difficult question to answer.
 
+
 The attentive data analyst will recognize the estimator $\bar y_n$ is biased even for simple random samples and, if sensitivity and specificity were known a priori, may suggest the alternative estimator $\tilde y_n = \bar y_n + (1-\bar y_n) FP + FN \bar y_n$ which is unbiased under simple random sampling. We again wish to express the error $\tilde  y_n - \bar Y$ in statistical terms. In the appendix, we show that the error now can be expressed as
 $$
 \tilde y_n - \bar Y = \rho_{I,Y} \times \sqrt{\frac{1-f}{f}} \times \sigma_{Y}
@@ -124,13 +125,6 @@ The first term is the same as before but increased by $(1 + FP + FN)$ to account
 
 For this adjusted estimate, we can see that the directionality is maintained.  Therefore, the benefit is if the expected correlation is positive, we can feel like the estimate is likely an over-estimate and vice versa.  You pay a penalty in terms of variance and therefore the MSE may not be much smaller (CHECK!)
 
-\begin{wrapfigure}{r}{0.5\textwidth}
-\centering
-\includegraphics[width = 0.4\textwidth]{../methods/figs/mem_heatmap_article.png}
-\caption{Measurement-error data quality adjustment: relative frequency $f_1/f_0$ (x-axis) against odds ratio (y-axis) for $FP=0.15$ and $FN=0.10$. Color scaled so blue = $-6$, white = 0, and red = $6$.}
-\vspace{-0.7cm}
-\end{wrapfigure}
-
 Under the same numbers, $D_M$ is approximately 1.7.  The effective sample size can then be bounded by
 $$
 n_{eff} = \frac{f}{1-f} \times \frac{1}{E_{I} \left[ \rho_{I,Y}^2 D_M^2 \right]}.
@@ -138,6 +132,13 @@ $$
 This lowers the ranges by a factor of almost $3$, leading to effective sample sizes from 69 to 13.
 
 The above argument shows that the effective sample size is affected in a complex manner by the interaction between selection bias and measurement error.  Here, we discuss the impact of the interaction on the effective sample size when testing capacity is tied to measurement-error.  In the current pandemic, there have been well-justified calls for increases in testing capacity.  These increases, however, may come at the cost of increases in false-positive and false-negative rates.  In terms of effective sample size, if the data quality term remains constant, then testing increases can actually hurt effective sample size.  Consider the simplest case where $f$ increases from $0.05$ to $0.1$; suppose this required including tests such that the false negative rate jumps from $0.05$ to $0.15$.  Then we would think effective sample size should increase by a factor of $3.4$ but the actual increase is by a factor of only $1.8$!  Think about what this is saying, this is saying that sampling $15\%$ of the population rather than $5\%$ will only increase the effective sample size by a factor $1.8$ if the selection-bias persists and the false negative rate climbs to $15\%$.   It has been reported that false negative rates could increase more than that (cite NYT) and the false positive rate could go up slightly as well.  In a worst case scenario, if $FN \to 0.3$ and $FP \to 0.05$ then the factor is only 1.3.
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+\centering
+\includegraphics[width = 0.4\textwidth]{../methods/figs/mem_heatmap_article.png}
+\caption{Measurement-error data quality adjustment: relative frequency $f_1/f_0$ (x-axis) against odds ratio (y-axis) for $FP=0.15$ and $FN=0.10$. Color scaled so blue = $-6$, white = 0, and red = $6$.}
+\vspace{-0.3cm}
+\end{wrapfigure}
 
 \subsection{Regrettable rates: complex biases resulting from self-selection}
 \label{section:rates}
@@ -172,6 +173,25 @@ $$
 So here we see the exact same trade-off as with the rates but on the logarithmic scale.  For small values $\log(1+x) = x$ so the biases are similar.  However, the error is no longer scaled by the rate of change in prevalence $\bar Y_2/\bar Y_1$. Instead the error is scaled by the serial interval $\gamma^{-1} = 1/7$.  Moreover, the error depends not on aggregate prevalence $\bar Y_t$ but fraction of new cases $\bar K_t$.
 
 In Figure XXc, we show the error in this quantity.  The trajectory follows the same as before; however, the errors are....
+
+
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../methods/figs/sir_ratio.png}
+  \caption{A subfigure}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../methods/figs/sir_rt.png}
+  \caption{A subfigure}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{A figure with two subfigures}
+\label{fig:test}
+\end{figure}
 
 \subsection{Clinical trials}
 
@@ -244,9 +264,31 @@ R_{t1} - R_{t2} = \frac{1}{\gamma} \log \left( \frac{1 + e_{1t}}{1+e_{2t}} \righ
 $$
 where $e_{jt}$ is the error associated given in Section XX.  Recall that the error allowed for over-estimation prior to the peak and then under-estimation post-peak.  Here, these errors can mingle in interesting ways.  Consider two countries (A and B) in which the peak occurs 2 weeks prior for country A then country B but other.  Figure XX presents 1 week prior to the peak of A up to one week after the peak for country B.  Data for each country is simulated from an SIR model as described in Section XX.  We see that the errors interact in complex ways.  In week 1, the two countries appear the same; then in week 2, the gap between country A and B enlarges significantly as country A seems to see rapid improvement; then in week 3, country B improves and actually catches up to country A; then in month 4, country A sees rapid improvement while country B appears worse.  We are not claiming this is always the case, and indeed for small enough selection bias and/or large gaps in case-counts such complex behavior will not occur; however, this is simpy to point out how observed information can tell a more complex story than the truth (i.e., country A recovers 1 month prior to country B).
 
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../methods/figs/sir.png}
+  \caption{A subfigure}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../methods/figs/sir_rt_comparison.png}
+  \caption{A subfigure}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{A figure with two subfigures}
+\label{fig:test}
+\end{figure}
+
 \subsection{Estimation of Data Quality}
 
 Comparison of states with similar $f$ and similar testing inclusion protocols.  Not perfect.
+
+\[
+\rho = .004 \Rightarrow \Delta = 0.035 \times \sqrt{\frac{f \cdot (1-f)}{\bar Y \cdot (1 - \bar Y) }} = 0.00224 \Rightarrow M =
+\]
 
 We estimate $\rho$ using old and new methods.  Current SRS in US are weak.  So we just use my back of the envelope calculation. Tests per million as proxy since everyone is doing rationing. Cluster.
 
