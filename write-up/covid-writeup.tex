@@ -192,14 +192,14 @@ So far we have focused on understanding the limitations of using case-count data
 
 At a fixed time, suppose prevalence estimates $\bar y_1$ and $\bar y_2$ are observed for two populations. We can express $\bar y_1 - \bar y_2$ in statistical terms as
 $$
-(\bar Y_1 - \bar Y_2) + \left[ \rho_{I_1, Y_1} \times \sqrt{\frac{1-f_1}{f_1}} \times \sigma_{Y_1}  - \rho_{I_2, Y_2} \times \sqrt{\frac{1-f_2}{f_2}} \times \sigma_{Y_2} \right].
+(\bar Y_1 - \bar Y_2) + \left[ \rho_{I_1, Y_1} \times D_{M_1} \times \sqrt{\frac{1-f_1}{f_1}} \times \sigma_{Y_1}  - \rho_{I_2, Y_2} \times D_{M_2} \times \sqrt{\frac{1-f_2}{f_2}} \times \sigma_{Y_2} \right].
 $$
 The first term is the difference in population prevalence (i.e., the quantity of interest).  If random sampling were performed in each population, $E_{\I} [ \rho_{I_j, Y_j}] = 0$ and so the estimate would be unbiased.  However, the second term represents the complex error that results from selection bias.
 The particular test of interest is $H_0: \bar Y_1 = \bar Y_2$.  Under the null, $\sigma_{Y_1} = \sigma_{Y_2}$.  In classical statistics, we would compute a Z-score:
 $$
 \begin{aligned}
 \frac{\bar y_1 - \bar y_2}{ V_{SRS} (\bar y_1 - \bar y_2) } &=
-\frac{\rho_{I_1, Y_1} \times \sqrt{\frac{1-f_1}{f_1}}  - \rho_{I_2, Y_2} \times \sqrt{\frac{1-f_2}{f_2}} }{ \sqrt{\frac{1}{N_1 -1} \times \frac{1-f_1}{f_1} + \frac{1}{N_2 - 1} \times \frac{1-f_2}{f_2}} }  \\
+\frac{\rho_{I_1, Y_1} \times D_{M_1} \times \sqrt{\frac{1-f_1}{f_1}}  - \rho_{I_2, Y_2} \times D_{M_2} \times \sqrt{\frac{1-f_2}{f_2}} }{ \sqrt{\frac{1}{N_1 -1} \times \frac{1-f_1}{f_1} + \frac{1}{N_2 - 1} \times \frac{1-f_2}{f_2}} }  \\
 &\overset{\star}{=}
 \sqrt{\frac{(N_1-1)(N_2 -1)}{N_1 + N_2}} \left[ \rho_{I_1, Y_1} - \rho_{I_2, Y_2} \right]
 \end{aligned}
@@ -239,10 +239,10 @@ $$
 An alternative is the comparison on the rates of case-count change over time.  Here, for simplicity, we focus on comparing the estimated effective reproductive rate.  We assume the two time-series are aligned so that $t=0$ is the time of first .  This negates the alignment issue and is common in the plots.
 
 While the above issues on $Z$-scores and effective sample size are important, here we highlight a separate issue.  Namely, the interplay of bias when two trajectories when the peaks are slightly off.  We show that the biases can make us think the gap between two similar trajectories is larger than we would like!!!!
-
 $$
-R_{t1} - R_{t2}
+R_{t1} - R_{t2} = \frac{1}{\gamma} \log \left( \frac{1 + e_{1t}}{1+e_{2t}} \right)
 $$
+where $e_{jt}$ is the error associated given in Section XX.  Recall that the error allowed for over-estimation prior to the peak and then under-estimation post-peak.  Here, these errors can mingle in interesting ways.  Consider two countries (A and B) in which the peak occurs 2 weeks prior for country A then country B but other.  Figure XX presents 1 week prior to the peak of A up to one week after the peak for country B.  Data for each country is simulated from an SIR model as described in Section XX.  We see that the errors interact in complex ways.  In week 1, the two countries appear the same; then in week 2, the gap between country A and B enlarges significantly as country A seems to see rapid improvement; then in week 3, country B improves and actually catches up to country A; then in month 4, country A sees rapid improvement while country B appears worse.  We are not claiming this is always the case, and indeed for small enough selection bias and/or large gaps in case-counts such complex behavior will not occur; however, this is simpy to point out how observed information can tell a more complex story than the truth (i.e., country A recovers 1 month prior to country B).
 
 \subsection{Estimation of Data Quality}
 
