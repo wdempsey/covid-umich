@@ -1,4 +1,4 @@
-FP = 0.01; FN = 0.005
+FP = 0.00; FN = 0.000
 bary0 = 0.139
 bary = bary0*(1+FN) - FP*(1-bary0)
 f= 0.001
@@ -18,9 +18,9 @@ error <- function(FP, FN, bary, f, true_error) {
 }
 
 temp = error(FP,FN,bary,f, true_error)
-temp(0.1)
+init = f/bary/2
 
-output = optim(Delta, temp, method = "Brent", lower = 0, upper = f/bary)
+output = optim(init, temp, method = "Brent", lower = 0, upper = f/bary)
 
 f0 = f-output$par * bary
 f1 = f0 + output$par

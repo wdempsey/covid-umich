@@ -34,7 +34,7 @@ out2 <- as.data.frame(out2)
 out1$time <- NULL
 out2$time <- NULL
 ## Show data
-png(filename = "C:/Users/wdem/Documents/GitHub/covid-umich/methods/figs/sir.png",
+png(filename = "C:/Users/Balthazar/Documents/GitHub/covid-umich/methods/figs/sir.png",
     width = 6.5, height = 4, units = "in", res = 1200, pointsize = 12)
 par(mar = c(1.5,2,1,1)+0.1)
 plot(times, out1$I, type = "l", axes = FALSE, bty = "n")
@@ -91,7 +91,7 @@ lines(bias2$r+bias2$bias, col = "red", lty = 2)
 
 ymax = max(bias1$Rt+bias1$logbias, bias1$Rt, bias2$Rt+bias2$logbias, bias2$Rt, na.rm = TRUE)
 ymin = min(bias1$Rt+bias1$logbias, bias1$Rt, bias2$Rt+bias2$logbias, bias2$Rt, na.rm = TRUE)
-png(filename = "C:/Users/wdem/Documents/GitHub/covid-umich/methods/figs/sir_rt_comparison.png",
+png(filename = "C:/Users/Balthazar/Documents/GitHub/covid-umich/methods/figs/sir_rt_comparison.png",
     width = 6.5, height = 4, units = "in", res = 1200, pointsize = 12)
 par(mar = c(1.5,3,0,1)+0.1)
 plot(bias1$Rt, type = "l", ylim = c(0.7, 1.3), axes = FALSE, bty = "n")
@@ -112,7 +112,7 @@ bias3 = bias_fn(M3, bary2, f, FP, FN)
 
 ymax = max(bias3$r+bias3$bias)
 ymin = min(bias3$r+bias3$bias)
-png(filename = "C:/Users/wdem/Documents/GitHub/covid-umich/methods/figs/sir_ratio.png",
+png(filename = "C:/Users/Balthazar/Documents/GitHub/covid-umich/methods/figs/sir_ratio.png",
     width = 6.5, height = 4, units = "in", res = 1200, pointsize = 12)
 plot(bias1$r, type = "l", ylim = c(ymin, ymax), axes = FALSE, bty = "n", xlab = "", ylab = "")
 lines(bias1$r+bias1$bias, lty = 2)
@@ -126,7 +126,7 @@ dev.off()
 
 ymax = max(bias3$Rt+bias3$logbias)
 ymin = min(bias3$Rt+bias3$logbias)
-png(filename = "C:/Users/wdem/Documents/GitHub/covid-umich/methods/figs/sir_rt.png",
+png(filename = "C:/Users/Balthazar/Documents/GitHub/covid-umich/methods/figs/sir_rt.png",
     width = 6.5, height = 4, units = "in", res = 1200, pointsize = 12)
 par(mar = c(1.5,3,1,1)+0.1)
 plot(bias1$Rt, type = "l", ylim = c(ymin, ymax), axes = FALSE, bty = "n")
