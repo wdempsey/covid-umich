@@ -137,6 +137,7 @@ The above argument shows that the effective sample size is affected in a complex
 \centering
 \includegraphics[width = 0.4\textwidth]{../methods/figs/mem_heatmap_article.png}
 \caption{Measurement-error data quality adjustment: relative frequency $f_1/f_0$ (x-axis) against odds ratio (y-axis) for $FP=0.15$ and $FN=0.10$. Color scaled so blue = $-6$, white = 0, and red = $6$.}
+\label{fig:heatmap}
 \vspace{-0.3cm}
 \end{wrapfigure}
 
@@ -180,16 +181,16 @@ In Figure XXc, we show the error in this quantity.  The trajectory follows the s
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../methods/figs/sir_ratio.png}
-  \caption{A subfigure}
+  \caption{Ratio estimator}
   \label{fig:sub1}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../methods/figs/sir_rt.png}
-  \caption{A subfigure}
+  \caption{Effective reproductive rate estimator}
   \label{fig:sub2}
 \end{subfigure}
-\caption{A figure with two subfigures}
+\caption{Potential bias due to self-selection and measurement-error from a deterministic SIR model with $\beta = 1.4$ and $\gamma = 0.2$.  Here we assume $f = 0.02$, $FP = 0.01$, $FN = 0.15$, and use a range of relative sampling fraction $M = f_1/f_0$.}
 \label{fig:test}
 \end{figure}
 
@@ -269,96 +270,98 @@ where $e_{jt}$ is the error associated given in Section XX.  Recall that the err
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../methods/figs/sir.png}
-  \caption{A subfigure}
+  \caption{Fraction of new cases in population}
   \label{fig:sub1}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../methods/figs/sir_rt_comparison.png}
-  \caption{A subfigure}
+  \caption{Effective reproduction rate estimators}
   \label{fig:sub2}
 \end{subfigure}
-\caption{A figure with two subfigures}
+\caption{Left: fraction infected in two SIR models with $\beta = 1.4$ and $0.9$ respectively and $\gamma = 0.2$ with same initial conditions. Right: comparison of $\hat R_t$ across time with $FN = 0.2$, $FP = 0.01$, and $M = 4$.}
 \label{fig:test}
 \end{figure}
 
 \subsection{Estimation of Data Quality}
 
+In prior sections, we have discussed the impact of selection bias and measurement-error on a range of outcomes of interest in COVID-19 research.  Here, we try and address the empirical question of how to estimate the data quality $E_{\I} \left[ \rho_{I,Y} \right]$ in the current context.
+In Meng (2019), estimation of the data quality relied on observing the true outcome.  In election data, for example, we observe the voting distribution and can use this observation as ground truth.  We are not so lucky in the current crisis.  Here, we propose a simple procedure that uses survey samples as noisy but unbiased estimates of the true prevalence. Our goal is less inferential and more to provide a sensitivity analysis that can aid in understanding the amount of information in observational COVID case-count data.
+
+On April 23rd, Andrew Cuomo announced results from a study in New York state.  It found 13.9\% of 3,000 people tested across the state had signs of the virus.  The study did not report sensitivity and specificity; therefore, we take reported measures from the Santa Clara study (cite) \footnote{We recognize the debate regarding its conclusions.  Here we are only using this study for its information regarding measurement-error rates.}.  The reported specificity is $82.8\%$ (95\% CI: 76.0-88.4\%) and sensitivity is $99.5\%$ (95\% CI: 99.2-99.7\%).  This corresponds to a false negative rate of $17.2\%$ (11.6-24.0\%) and false positive rate of $0.5\%$ (0.3 - 0.8\%).  Correcting for these rates we have an estimated prevalence of $15.9\%$ with a range of 14.8\% to 17.0\% using the ranges of the false positive and negative rates.
+
+Figure XXa plots the number of new total and positive tests per day.  Figure XXb plots the fraction of tests that were positiver per day.  In both cases, we see smoothed these plots as the spiky pattern is likely due to testing backlogs.  Given the report was on the 23rd, we suppose for simplicity that the study was run several days prior on the 20th of April. On the 20th, there were $19,654$ tests performed and $617,555$ tests had been performed up to to and including the 19th. The population of New York state is $19,378,102$.   Subtracting off the number of individuals who had already been tested yields a sampling fraction of $f = 0.001$.  The smoothed prevalence estimate on the 20th is 28.3\%.  Adjusting for measurement-error yields an estimate of $32.5\%$.
+
+Here, we assume the New York survey is a simple random sample from the state's population.
 Comparison of states with similar $f$ and similar testing inclusion protocols.  Not perfect.
 
 \[
-\rho = .004 \Rightarrow \Delta = 0.035 \times \sqrt{\frac{f \cdot (1-f)}{\bar Y \cdot (1 - \bar Y) }} = 0.00224 \Rightarrow M =
+\rho D_M = \sqrt{\frac{f}{1-f}} \frac{\text{0.166}}{\sigma_Y} = 1.43 \times 10^{-2} \Rightarrow \Delta = 1.06 \times 10^{-3} \Rightarrow M = 2.29.
 \]
+The range for the CIs is (2.05, 2.54).  We can also perform sensitivity as a function of the false negative and positive rates.  Under these measurement-error ranges, we saw that the impact on the effective reproductive rate estimator was much smaller.  However, for $FP = 0.05$ and $FN = 0.005$ we have $M = 4.31$.  While nothing above is definitive, it points to the interplay of selection bias and measurement-error.  The outlined procedure gives the community tools to understand how sensitivity and specificity impact our estimators and therefore how much we should trust conclusions based on these assumptions.  Under the Santa Clara study estimates of these quantities, while we expect impact, the bias is much smaller than under other estimates.
 
-We estimate $\rho$ using old and new methods.  Current SRS in US are weak.  So we just use my back of the envelope calculation. Tests per million as proxy since everyone is doing rationing. Cluster.
-
-
-\subsection{Stratified setting}
-
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../methods/figs/NY_casecount.png}
+  \caption{NY new cases per day}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../methods/figs/NY_fracpos.png}
+  \caption{NY fraction of new tests positive per day}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{New York COVID-19 reported data }
+\label{fig:test}
+\end{figure}
 
 \section{Stratified sampling: improving precision in low-prevalence environments}
 
-Sampling network is hard.  Sampling high-risk strata is easy.  Simple example.
-DTR and network connectivity is useful for understanding spread and where "testing should go".
+This article argues why random sampling is a powerful tool and the limitations of data obtained through a self-selection process.  Few COVID-19 studies (cite) have been released that aim to build representative samples.  One difficulty in the current crisis is the low prevalence relative to the population in many areas.  Take the recent Santa Clara study, for example.  The key issue with low prevalence is that if the test's specificity is not lower than the prevalence, then the observed data is consistent with zero recovered individuals.
 
-Huge benefits when the rates are very different.
+In such settings, sampling at random is doomed; however, there are solutions to such settings.  Stratify the population into risk categories (based on population density, occupation, age, and other important factors) and perform Neyman allocation (i.e., sample strata $h$ with $P_h \sqrt{\bar Y_h \times (1-\bar Y_h)}$ where $P_h$ is the strata frequency in the population and $\bar Y_h$ the prevalence in this.  Of course, $P_h$ and $\bar Y_h$ are not known a priori; however, if we can get decent esitmates. \textcolor{red}{Huge benefits when the rates are very different.}
+
+One could go further. \textcolor{explain network stuff}.  However, network information is difficult to obtain.  Geographic location, occupation, age and basic demographic information are much easier to obtain and are a good proxy for the latent network connectivity.
+
 
 \section{Decision-making: data versus information.}
 
-Above we point to flaws in using observed data to reason about the
+Having read through the above technical discussions, one may come to the incorrect conclusion that because we are wary of trusting the observational data, we must wait for better data sources in order to act (Ionides cite).  This conclusions mistakes data and information.  Lack of high quality data means we should be skeptical regarding conclusions drawn from these data sources.  There are whole fields dedicated to careful analysis in such settings (e.g., causal inference from observational studies).  Being a data skeptic, does not mean one must wait for hgih quality data to act.  One must wait for high quality information.  Yet, in teh current crisis, we have just that.  Indeed, epidemiologists and public health officials have a strong understanding of the basic facts of pandemics and disease spread.  Social distancing and
+
+Moreover, the risks of interventions to por risk   the data and therefore
+Of course, there are tradeoffs and long-term stay-at-home orders may have negative economic consequences.  This is beyond the scope of the current article.  While not the main thrust of this article, we are well aware that discussions of data quality can sometimes be misinterpreted as claims that we do not have the requisite information to act immediately and decisively.  It is that point that we are refuting.  It is simply not the case.
 
 \section{That which does not break us, makes us stronger (but potentially not smarter)}
 
-A slightly altered version of Nietzsche's famous quote has become a mantra for post-pandemic thinking: \emph{That which which does not break us, makes us stronger}.  While potentially true via viral resistance, it is not clear that governments have yet to learn lessons on pandemic response.
+A slightly altered version of Nietzsche's famous quote has become a mantra for post-pandemic thinking: \emph{that which which does not break us, makes us stronger}.  While a potentially true statement with respect to viral resistance, it is not clear that governments have yet to learn lessons on pandemic response. Governments are pushing increased testing capacity and contact tracing.  Contact tracing is incredibly useful for identifying carriers early and preventing further spreading.  I would argue that, after the current wave, understanding prevalence is also key.  We know that the probability of an outbreak is a function of current prevalence and network connectivity.  Within the SIR framework, there is a critical threshold for  prevalence below which the chance of a full-scale outbreak is near-zero and above the likelihood jumps rapidly (cite).  Therefore, knowing prevalence will help governments determine long-term community-level risk and allow for more targeted interventions -- shutting down only certain locations when necessary. Once we ``return to normal''\footnote{or at least the new normal}, it is clear that testing strategies should include a focus on early detection to help head off future outbreaks.
 
-During the current wave, understanding prevalence is key.  It helps us determine long-term risk for a community and make targeted interventions.  This will allow
-When prevalence is below a certain threshold, we can return to daily life.
-
-Once we ``return to normal''\footnote{or at least the new normal}, it is clear that testing strategies should focus on early detection, heading off future outbreaks.
-\emph{Anyone who wishes to go back to work}.  While laudable, without complete compliance, we may be riddles with selection bias and measurement-error.  This ignores even the practical and ethical quandaries of how to .
-
-What do we do when we are faced with?  We design experiments with our objectives in mind.
-
-(A) Prevalence: Targeted shutdowns
-(B) Risk Detection: Contact tracing and altering
-
-Use prior results to show that ratio estimator under SRS is a good predictor of potential outbreak.
-
-``Disease free''
-
+Governments implicitly argue that increased testing capacity will perform this task.  Without complete compliance, however, our understanding of future outbreaks may be plagued by self-selection bias, compounded by changing sensitivity and specificity rates.  Random testing removes these effect modifiers, giving governments more information to fight the disease.  This is not to say random testing should replace current testing practices; only that the random testing should supplement and will provide valuable information even in small numbers.
 
 \section{Discussion}
 
-In current crisis, data quality is tied to data quantity due to rationing system. \emph{Testing }
-Increasing testing under test rationing lowers correlation.  Example in Michigan and try and find CA and NY numbers.  Then show that this may cause higher FPs (cite antibody studies).
-
-Plot Michigan tests per million and positives.  Next to NY.  Both as of April moved to prioritized sampling for symptomatic individuals.
-
-There is a lot of hidden information in the selection indicator $I_j$.  Up until recently, an individual had to first \emph{want} to be tested, then call their primary health care provider who decided whether they met thresholds for testing
-
-. Currently, we are unaware of reliable information on the number of cases where
-
-In the UU
-We assume that the percentage of tests is rationed according to severity of symptoms.
-
-Note that a person who displays severe symptoms may be COVID negative.  This gives us a sense of the data quality.
-
-\emph{Increasing testing leads to lower correlation only if we see the gap $\Delta$ decrease.  If we just see $f$ }
-
-The CDC reports 413,867 total tests performed in the US as of April 25th.
+There is nothing routine about COVID-19.  The resulting statistical questions are
+, ``routine statistical questions are less common than questionable statistical routines.''
 
 
+In current crisis, data quality is often tied to data quantity due to rationing system.  Increasing testing under test rationing lowers correlation.  There is a lot of hidden information in the selection indicator $I_j$.  Up until recently, an individual had to first \emph{want} to be tested, then call their primary health care provider who decided whether they met thresholds for testing. Currently, we are unaware of reliable information on the number of cases where.
 
-
-Use of these bounds as E-scores.  How bad can it go?
+We show how one can build sensitivity analyses to understand the potential bias in the observational data.  These biases depend significantly on the interaction between self-selection and measurement-error.
 
 Interventions in this area are designed experiments.  Unlike Fischer's null, here the objectives are settings, statisticians.
+
+The CDC reports 413,867 total tests performed in the US as of April 25th.
 
 Account for data quality in models by incorporating auxiliary information.  Perform advanced sensitivity analysis.  Forecasts should be called coutnerfactual forecasts.
 
 Poststratifiers and systematic measurement error.
 
 A critical question is whether there are alternative data streams that may be leveraged to understand the handling of the COVID-19 pandemic in the US.
+
+Extensions of the SIR models can try and capture these issues; however, without strong assumptions on the selection mechanism, the estimates are often not nonparametrically identifiable.  As Cox and Hinckley (XXXX, p. 96) identified, when an issue ``cannot be resolved nonparametrically then it is usually dangerous to resolve it parametrically.'' In the absence of randomized experiments, the best route forward are detailed sensitivity analyses and humility in conclusions drawn from such data sources.
+
 
 \appendix
 
@@ -522,15 +525,12 @@ We expect the correlation to be more on the order
 
 
 
-\section{Quotes}
+% \section{Quotes}
 
-I prefer to think of a statistical sensibility rather than statistical thinking. It’s “less than an agenda but more than an attitude.”  It allows for methodological preference while avoiding dogma. Paired with data analytic humility and I think you have proper “data science”
+% I prefer to think of a statistical sensibility rather than statistical thinking. It’s “less than an agenda but more than an attitude.”  It allows for methodological preference while avoiding dogma. Paired with data analytic humility and I think you have proper “data science”
 
-“Routine statistical questions are less common than questionable statistical routines...” McCullagh (2005).
 
-If an issue can be addressed nonparametrically then it will often be better to tackle it parametrically; however, if it cannot be resolved nonparametrically then it is usually dangerous to resolve it parametrically.” (p.96)
-
-A test of meaningfulness of a possible model for a data-generating process is whether it can be used directly to simulate data.” (p.104).  In our current setting, this most certainly related to simulation while accounting for measruement error.
+% A test of meaningfulness of a possible model for a data-generating process is whether it can be used directly to simulate data.” (p.104).  In our current setting, this most certainly related to simulation while accounting for measruement error.
 
 
 
