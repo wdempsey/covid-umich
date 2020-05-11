@@ -71,7 +71,27 @@ bias_fn <- function(M, bary, f, FP = 0.01, FN = 0.15) {
   
   bias = (lin_term+quad_term) * cur_bary/lag_bary
   
-  Rt = 1+log(cur_bary/lag_bary)/7
+  return(list("r"=cur_bary/lag_bary, "bias" = bias))
+}
+
+logbias_fn <- function(M, bary, f, FP = 0.01, FN = 0.15) {
+  const = (bary*M + (1-bary))
+  f0 = f/const
+  f1 = M*f0
+  Delta = f1 - f0
+  D_M = 1 + FP + FN - Delta * bary/(1-bary) * (FP*(1-bary) + FN * bary)/ (f0 * (1-bary) + f1 * bary)
+  rho = Delta*sqrt(bary*(1-bary))/sqrt(f*(1-f))
+  error = rho*sqrt((1-f)/f) * sqrt(1-bary)/sqrt(bary)*D_M
+  lag_error = error[1:(length(error)-1)]
+  cur_error = error[2:(length(error))]
+  
+  lin_term = cur_error - lag_error
+  quad_term = lag_error^2 - cur_error*lag_error
+  
+  cur_bary = bary[2:length(error)]
+  lag_bary = bary[1:(length(error)-1)]
+  
+  Rt = 1+log(cur_bary/lag_bary)/7 + log(survfrac)
   logbias = log(1+lin_term+quad_term)/7
   
   return(list("r"=cur_bary/lag_bary, "bias" = bias,
