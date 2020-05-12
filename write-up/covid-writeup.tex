@@ -184,15 +184,15 @@ Many well-respected epidemiologists argue that tracking the effective reproducti
 $$
 R_t = 1 + \frac{1}{\gamma} \log \left( \frac{K_t}{K_{t-1}} \right).
 $$
-Of course, we do not observe $K_t$ and $K_{t-1}$ but noisy proxies $y_t$ and $y_{t-1}$, i.e., the observed case-count on day $t$ and $t-1$ respectively. The hope is that $y_t/y_{t-1}$ is a good proxy for $K_t/K_{t-1}$. Let $\hat R_t = 1 + \frac{1}{\gamma} \log \left( y_t / y_{t-1} \right)$ be the estimated effective reproduction number on day $t$.  Under SRS with the same sample size at each step, this is true for sufficiently large sample size.  However, similar to Section~\ref{section:rates}, the proxy has error in both numerator and denominator that may cause issues.  We again wish to express the statistical error of $\hat R_t - R_t$ in useful terms.  We can re-arrange the error decomposition from Section~\ref{section:rates} to show that this error is given by
+Of course, we do not observe $K_t$ and $K_{t-1}$ but noisy proxies $y_t$ and $y_{t-1}$, i.e., the observed case-count on day $t$ and $t-1$ respectively. The hope is that $y_t/y_{t-1}$ is a good proxy for $K_t/K_{t-1}$. However, if we think about estimating number $K_t$ under SRS of new cases among those susceptible on day $t$, the natural estimator is $S_t \bar y_t$.  Unfortunately the number of individuals susceptible on day $t$ is unknown.  Here, we assume that $\hat R_t = 1 + \frac{1}{\gamma} \log \left( \bar y_t / \bar y_{t-1} \right)$ be the estimated effective reproduction number on day $t$.
+This estimator adjusts for sample size variation across days but not the varying population size. The estimator is close in spirit to the estimator derived under assuming the process is fully observed.  Similar to Section~\ref{section:rates}, the proxy has error in both numerator and denominator that may cause issues.  We again wish to express the statistical error of $\hat R_t - R_t$ in useful terms.  We can re-arrange the error decomposition from Section~\ref{section:rates} to show that this error is given by
 $$
 \begin{aligned}
 \frac{1}{\gamma}\log &\bigg( 1 + \bigg[ \rho_{I_t,K_t} D_{M_t} \sqrt{\frac{1-f_t}{f_t}} CV (K_t)  -\rho_{I_{t-1},K_t} D_{M_t} \sqrt{\frac{1-f_t}{f_t}} CV (K_t) \bigg] \\
-&\times \left[ 1 - \rho_{I_t,K_t} D_{M_t} \sqrt{\frac{1-f_t}{f_t}} CV (K_t) \right] \bigg)
+&\times \left[ 1 - \rho_{I_t,K_t} D_{M_t} \sqrt{\frac{1-f_t}{f_t}} CV (K_t) \right] \bigg) - \frac{1}{\gamma} \log \left( \frac{S_t}{S_{t-1}} \right).
 \end{aligned}
 $$
-So here we see the exact same trade-off as with the rates but on the logarithmic scale.  For small values of $x$, we have $\log(1+x) = x$ and so the biases are similar.  However, the error is no longer scaled by the rate of change in prevalence $\bar Y_2/\bar Y_1$. Instead the error is scaled by the serial interval $\gamma^{-1} = 1/7$.  Moreover, the error depends not on aggregate prevalence $\bar Y_t$ but fraction of new cases $\bar K_t$. Figure~\ref{fig:r0-bias} displays the bias for the effective reproductive number and how it is impacted by the relative sampling fraction.  Results are similar to the ratio estimate, but the impact on the underestimation is more severe due to the logarithmic transformation.
-
+So here we see the exact same trade-off as with the rates but on the logarithmic scale.  For small values of $x$, we have $\log(1+x) = x$ and so the biases are similar.  However, the error is no longer scaled by the rate of change in prevalence $\bar Y_2/\bar Y_1$. Instead the error is scaled by the serial interval $\gamma^{-1} = 1/7$.  Moreover, the error depends not on aggregate prevalence $\bar Y_t$ but fraction of new cases $\bar K_t$. The final term is the error due to varying population sizes.  Since $S_t \leq S_{t-1}$, the final term $- \log (S_t/S_{t-1}) \geq 0$. Figure~\ref{fig:r0-bias} displays the bias for the effective reproductive number and how it is impacted by the relative sampling fraction.  Here for simplicity, we assume the fraction of the population that is susceptible remains large and near the total population size.  Under these assumption, the potential bias is equivalent to that for the ratio estimator adjusted to be on the logarithm scale.  We note that changes to this assumption can drastically impact the potential bias.
 
 \begin{figure}
 \centering
@@ -357,7 +357,7 @@ There is nothing routine about COVID-19, including the corresponding statistical
 
 Not only that, in current crisis data quality is often tied to data quantity due to rationing system.  Increasing testing under test rationing lowers correlation.  There is a lot of hidden information in the selection indicator $I_j$.  Indeed, individuals must first seek testing and then call their primary health care provider must decide whether they met thresholds for testing.  Our analysis shows the limitations and caveats that come from analysis of this data in terms of estimation of prevalence, rates of change, and cross-country comparisons.  We show how one can build simple sensitivity analyses to understand the potential bias in case-count data using surveys that will become more prevalent in the next few months.
 
-One potential approach is via model-based extensions of the mentioned SIR models to try and capture both selection bias and measurement-error issues (cite); however, without strong assumptions on the selection mechanism, the estimates are often not nonparametrically identifiable.  As Cox and Hinckley (XXXX, p. 96) write, when an issue ``cannot be resolved nonparametrically then it is usually dangerous to resolve it parametrically.'' In the absence of randomized experiments, the best route forward using any approach are detailed sensitivity analyses and humility in conclusions drawn from such data sources.
+One potential approach is via model-based extensions of the mentioned SIR models to try and capture both selection bias and measurement-error issues (cite); however, without strong assumptions on the selection mechanism, the estimates are often not nonparametrically identifiable.  Indeed, when an issue ``cannot be resolved nonparametrically then it is usually dangerous to resolve it parametrically'' ~\cite[pp. 96]{CoxHink74}. In the absence of randomized experiments, the best route forward using any approach are detailed sensitivity analyses and humility in conclusions drawn from such data sources.
 
 \bibliographystyle{plainnat}
 \bibliography{covid-refs}
@@ -465,6 +465,7 @@ $$
 $$
 
 \subsection{Ratio estimator}
+\label{app:ratio}
 
 Let ${\bf u} = (u_{t-1},u_t) \in \mathbb{R}^2$ and $g({\bf u}) = \frac{u_t}{u_{t-1}}$, i.e., a differentiable function $g:\mathbb{R}^2 \to \mathbb{R}$. Centering a Taylor series expansion of second-order around coordinates $(U_2, U_1) \in \mathbb{R}^2$ yields
 $$
@@ -491,11 +492,21 @@ where the second equality is obtained by plugging in the statistical decompositi
 
 Let
 $$
-\delta_{t} = \rho_{I_t,Y_t} \sqrt{\frac{1-f_t}{f_t}} CV (Y_t)  -\rho_{I_{t-1},Y_{t-1}} \sqrt{\frac{1-f_{t-1}}{f_{t-1}}} CV (Y_{t-1}).
+\delta_t := \bigg[ \rho_{I_t,K_t} D_{M_t} \sqrt{\frac{1-f_t}{f_t}} CV (K_t)  -\rho_{I_{t-1},K_{t-1}} D_{M_{t-1}} \sqrt{\frac{1-f_t}{f_t}} CV (K_{t-1}) \bigg].
 $$
-Then the estimate of the number of new cases on day $t$ is given by
+Then results from Section~\ref{app:ratio} show that the estimate of the number of new cases on day t is given by
 $$
-\frac{S_t \cdot \bar y_t}{S_{t-1} \cdot \bar y_{t-1}} - \frac{K_t}{K_{t-1}}
+\frac{S_t \cdot \bar y_t}{S_{t-1} \cdot \bar y_{t-1}} =
+\frac{K_t}{K_{t-1}} \left( 1 + \delta_t \times \left[ 1 - \rho_{I_{t-1},K_{t-1}} D_{M_{t-1}} \sqrt{\frac{1-f_t}{f_t}} CV (K_{t-1}) \right] \right)
+$$
+Then setting $e_t = \delta_t \times [1 - \rho_{I_{t-1},K_{t-1}} D_{M_{t-1}} \sqrt{\frac{1-f_t}{f_t}} CV (K_{t-1}) ]$, we have
+$$
+\begin{aligned}
+\log \left( \frac{S_t \bar y_t}{S_{t-1} \bar y_{t-1}} \right) - \log \left( \frac{K_t}{K_{t-1}} \right) &= \log (1 + e_t) \\
+\log \left( \frac{\bar y_t}{\bar y_{t-1}} \right) - \log \left( \frac{K_t}{K_{t-1}} \right) &= 1 + e_t - \log \left( \frac{S_t}{S_{t-1}} \right) \\
+1 + \frac{1}{\gamma} \log \left( \frac{\bar y_t}{\bar y_{t-1}} \right) - \left[ 1 + \frac{1}{\gamma} \log \left( \frac{K_t}{K_{t-1}} \right) \right] &= \frac{1}{\gamma} \left[ \log \left( 1 + e_t \right) - \log \left( \frac{S_{t}}{S_{t-1}} \right) \right] \\
+\Rightarrow \hat R_t - R_t &= \frac{1}{\gamma} \left[ \log \left( 1 + e_t \right) - \log \left( \frac{S_{t}}{S_{t-1}} \right) \right]
+\end{aligned}
 $$
 
 
