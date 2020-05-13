@@ -15,8 +15,8 @@ seq_oddsratio = exp(seq(log(0.01), log(50), length.out = 100))
 seq_M = exp(seq(log(0.5),log(20), length.out = 100))
 result = matrix(nrow = length(seq_oddsratio), ncol = length(seq_M))
 result_unadj = matrix(nrow = length(seq_oddsratio), ncol = length(seq_M))
-FP = 0.01
-FN = 0.15
+FP = 0.005
+FN = 0.172
 rho = 0.01
 f = 0.001
 
