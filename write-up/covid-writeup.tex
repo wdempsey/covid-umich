@@ -17,7 +17,7 @@
 \DeclareGraphicsExtensions{.eps, .ps}
 \usepackage{hyperref}
 \usepackage{amsmath, amsthm, amsfonts}
-% \usepackage[margin=1.5in]{geometry}
+\usepackage[margin=1.5in]{geometry}
 
 % \numberwithin{equation}{section}
 % \theoremstyle{plain}
@@ -43,13 +43,13 @@
 % \email{wdem@umich.edu}
 
 \begin{abstract}
-Many statisticians, epidemiologists, economists and data scientists have registered serious reservations regarding the reported coronavirus case-counts. Limited testing capacity across many states has been widely identified as a key driver of suppressed coronavirus case-counts.  Calls for increased testing capacity are well-justified and increasingly frequent.  While expanded testing is a laudable goal, selection bias will impact estimates of disease prevalence and the effective reproduction number until the entire population is sampled.  Moreover, tests are imperfect.  False positive/negative rates interact in complex ways with selection bias.  In this paper, we attempt to clarify this interaction.  Through simple calculations, we demonstrate pitfalls and paradoxes that can arise when considering case-count data in the presence of selection bias and measurement error. The discussion guides several suggestions on how to improve current case-count reporting.
+Many statisticians, epidemiologists, economists and data scientists have registered serious reservations regarding the reported coronavirus case-counts. Limited testing capacity across the country has been widely identified as a key driver of suppressed coronavirus case-counts.  The calls to increase testing capacity are well-justified as they become a more frequent point of discussion in the public sphere.  While expanded testing is a laudable goal, selection bias will impact estimates of disease prevalence and the effective reproduction number until the entire population is sampled.  Moreover, tests are imperfect as false positive/negative rates interact in complex ways with selection bias.  In this paper, we attempt to clarify this interaction.  Through simple calculations, we demonstrate pitfalls and paradoxes that can arise when considering case-count data in the presence of selection bias and measurement error. The discussion guides several suggestions on how to improve current case-count reporting.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
-The World Health Organization has declared the coronavirus disease 2019 (COVID-19) a public health emergency.  As of April 27th, 2020, a total of 2,993,000 cases have been confirmed worldwide.  As of that afternoon, the New York Times reports at least 965,214 people across the United States have tested positive for the virus, and at least 49,465 patients with the virus have died.  Aggressive policies have been put in place across the US with at least 50\% of the US population officially urged as of late April to stay home via state-wide executive actions.
+The World Health Organization has declared the coronavirus disease 2019 (COVID-19) a public health emergency.  As of April 27th, 2020, a total of 2,993,000 cases have been confirmed worldwide.  The New York Times reports at least 965,214 people across the United States have tested positive for the virus, and at least 49,465 patients with the virus have died.  Aggressive policies have been put in place across the US with at least 50\% of the US population officially urged as of late April to stay home via state-wide executive actions.
 
 Despite these steps, the data landscape for understanding COVID-19 remains limited.  Public databases maintained by \href{https://bit.ly/2UqFSuA}{Johns Hopkins University}~\citep{JHU_Lancet} and the \href{https://bit.ly/2vUHfrK}{New York Times}~\cite{NYT} provide incoming county-level information of confirmed cases and deaths.  Statisticians, epidemiologists, economists, and data scientists have used this granular data to forecast COVID-19 case-counts, deaths, and hospitalizations~\citep{Song2020,Ray2020,2020.IHME}.  In many cases, variations on the SIR models have been used to draw inferences about infection rates and intensity.  Parametric inference often uses observed case-count and/or observed COVID-19 related deaths to infer latent trajectories of the pandemic.
 
@@ -100,7 +100,7 @@ This points to a troubling and paradoxical situation: the error relative to SRS 
 \vspace{-0.3cm}
 \end{wrapfigure}
 
-Second, there have been calls for increased testing.  While important, many conflate increased testing capacity with increased quality of testing.  We will discuss this point further in Section \ref{section:testingcomments}.  As of May 8th, the US has performed $8,412,095$ tests in total.  Figure~\ref{fig:ustests} shows the trajectory of testing per day and positive cases per day in the US.  The US population is roughly $328$ million, meaning the fraction sampled is $f = 0.026$.  After smoothing, the empirical prevalence is $9.1\%$ on May 8th.  Supposing COVID-19 positive individuals are $2$ times more likely to get tested than those individuals who are COVID-19 negative, the question is ``What is the sample size from a SRS that would yield equivalent MSE in the estimated prevalence?'' Using the above MSE result, Meng showed the effective sample size is equal to $n_{eff} \leq \frac{1}{E_I [ \rho_{I,Y}^2 ]} \frac{f}{1-f}$.  Under these parameters, the effective sample size is $14$.  Recent proposals~\citep{Siddarth2020} have argued in favor of increasing testing capacity which may reduce the relative sampling rate.  Supposing it drops to $1.2$ then the effective sample size will increase to $299$.  See Appendix~\ref{section:effss} for the mathematical details and calculations in additional scenarios.   The above calculations point to a sad state of affairs, saying that the effective sample size even in best case scenarios is not better than a small random sample from the population.
+Second, there have been calls for increased testing.  While important, many conflate increased testing capacity with increased quality of testing.  We will discuss this point further in Section \ref{section:testingcomments}.  As of May 8th, the US has performed $8,412,095$ tests in total.  Figure~\ref{fig:ustests} shows the trajectory of testing per day and positive cases per day in the US.  The US population is roughly $328$ million, meaning the fraction sampled is $f = 0.026$.  After smoothing, the empirical prevalence is $9.1\%$ on May 8th.  Supposing COVID-19 positive individuals are $2$ times more likely to get tested than those individuals who are COVID-19 negative, the question is ``What is the sample size from a SRS that would yield equivalent MSE in the estimated prevalence?'' Using the above MSE result, Meng showed the effective sample size is equal to $n_{eff} \leq \frac{1}{E_I [ \rho_{I,Y}^2 ]} \frac{f}{1-f}$.  Under these parameters, the effective sample size is $14$.  Recent proposals~\citep{Siddarth2020} have argued in favor of increasing overall testing capacity.  With more tests available, the relative sampling rate may reduce.  Supposing it drops to $1.2$ then the effective sample size will increase to $299$.  See Appendix~\ref{section:effss} for the mathematical details and calculations in additional scenarios.   The above calculations point to a sad state of affairs, saying that the effective sample size even in best case scenarios is not better than a small random sample from the population.
 
 The remainder of this paper aims to build upon these fundamental insights by extending the decomposition in two directions: accounting for  measurement error and the temporal nature of the pandemic.  We then discuss effective sampling methods and data versus decision-making.
 
@@ -112,9 +112,9 @@ First we require some additional notation.  Let $P_j$ be an indicator of measure
 $$
 \bar y_n^\star - \bar Y = \sqrt{\frac{1-f}{f}} \left[ \rho_{I,Y} \times \sigma_Y + \rho_{I,PZ} \times \sigma_{PZ} + \sqrt{\frac{f}{1-f}}  \left( FP - (FP+FN) \bar Y \right) \right] .
 $$
-where $Z = 1-2Y$; see Appendix~\ref{app:imperfect} for the derivation. The first term represents the perfect testing regime, the second term represents the interaction between imperfect testing and selection bias, while the third time represents the bias due to imperfect testing.  From here on, we refer to $\rho_{I,Y}$ as the \emph{true data quality}, and $\rho_{I,PZ}$ as the \emph{observed data quality} that accounts for both selection bias and measurement error.  In the appendix, we show the sign of $\rho_{I,PZ}$ is the opposite of the sign of $\rho_{I,Y}$, which implies that the observed data quality adds error in the opposite direction from the true data quality.
+where $Z = 1-2Y$; see Appendix~\ref{app:imperfect} for the derivation. The first term in the large brackets represents the perfect testing regime; to this end, we refer to $\rho_{I,Y}$ as the \emph{true data quality}.  The second term represents the interaction between imperfect testing and selection bias. The variable $PZ = 1[Y=0,P=1] - 1[Y=1, P=1]$ is non-zero only when $P=1$ (i.e., the outcome is incorrectly reported); to this end, we refer to $\rho_{I,PZ}$ as the \emph{observed data quality} that accounts for both selection bias and measurement error.  In the appendix, we show the sign of $\rho_{I,PZ}$ is the opposite of the sign of $\rho_{I,Y}$, which implies that the observed data quality adds error in the opposite direction from the true data quality.  Finally, the third term represents the bias due to imperfect testing.
 
-We start by considering the first two terms and assess whether the sign of the bias can reverse due to the interaction of measurement error and selection bias.  To do this, we define the sampling rates differential.  Let $f_1 := \pr (I_J = 1 \mid Y_J = 1)$ and $f_0 := \pr(I_J = 1 \mid Y_J = 1)$ be the sampling rates.  Then $\Delta = f_1 - f_0$ is the sampling rate differential.  Using these terms, we can re-express the first two terms as
+We start by considering the first two terms and assess whether the sign of the bias can reverse due to the interaction of measurement error and selection bias.  To do this, we define the sampling rates differential.  Let $f_1 := \pr (I_J = 1 \mid Y_J = 1)$ and $f_0 := \pr(I_J = 1 \mid Y_J = 0)$ be the sampling rates.  Then $\Delta = f_1 - f_0$ is the sampling rate differential.  Using these terms, we can re-express the first two terms as
 $$
 \rho_{I,Y} \times \sigma_Y + \rho_{I,PZ} \times \sigma_{PZ} =
 \rho_{I,Y} \times \sigma_Y \left[ 1 - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right].
@@ -136,14 +136,14 @@ The first term is the same as before but increased by $(1 + FP + FN)$ to account
 
 We next investigate the impact of measurement error on the effective sample size calculation.  The effective sample size can now be bounded by
 $$
-n_{eff} = \frac{f}{1-f} \times \frac{1}{E_{I} \left[ \rho_{I,Y}^2 D_M^2 \right]}.
+n_{eff} \le \frac{f}{1-f} \times \frac{1}{E_{I} \left[ \rho_{I,Y}^2 D_M^2 \right]}.
 $$
 In Section \ref{section:est_dq}, we discuss recent studies that estimate the COVID-19 false positive rate of $0.5$\% and false negative rate $17.2$\%.  Supposing COVID-19 positive individuals are $2$ times more likely to get tested than those individuals who are COVID-19 negative, the effective sample size drops from $14$ to $10$. If the relative sampling fraction drops to $1.2$ then the effective sample size drops from $299$ to $216$.
 
 \begin{wrapfigure}{r}{0.5\textwidth}
 \centering
 \includegraphics[width = 0.4\textwidth]{../methods/figs/mem_heatmap_article.png}
-\caption{measurement error data quality adjustment: relative frequency $f_1/f_0$ (x-axis) against odds ratio (y-axis) for $FP=0.005$ and $FN=0.172$. Color scaled so blue = $-10$, white = $0$, and red = $10$.}
+\caption{Measurement error data quality adjustment: relative frequency $f_1/f_0$ (x-axis) against odds ratio (y-axis) for $FP=0.005$ and $FN=0.172$. Color scaled so blue = $-10$, white = $0$, and red = $10$.}
 \label{fig:heatmap}
 \vspace{-0.3cm}
 \end{wrapfigure}
@@ -212,7 +212,7 @@ So here we see the exact same trade-off as with the rates but on the logarithmic
 \label{fig:rates}
 \end{figure}
 
-\subsection{Clinical trials}
+\subsection{Effect modifiers in COVID-19 clinical trials}
 
 Here we show how selection bias and measurement error can creep into clinical trial analysis. The key concern is whether clinical trials on COVID-19 recruit from the pool of individuals who have tested positive for COVID-19 or whether they sample randomly from the population, test, and then recruit from this subset of tested individuals.  To see this issue, suppose we have an outcome $Y$, a treatment $A$ and an \emph{unobserved} variable $U$.  Suppose treatment is assigned at random, i.e., $A =1$ with probability $50\%$ and $A=0$ with probability $50\%$.  Suppose the conditional mean of the outcome satisfies  $E(Y \mid U, A ) = \beta_0 + \beta_1 A + \beta_2 U + \beta_3 A U$.  Typically, we are interested in the \emph{causal effect} of $A$ on $Y$.  In counterfactual language,
 $$

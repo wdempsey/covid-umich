@@ -1,26 +1,22 @@
-\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
-\BOOKMARK [2][-]{subsection.1.1}{Related work}{section.1}% 2
-\BOOKMARK [2][-]{subsection.1.2}{Outline}{section.1}% 3
-\BOOKMARK [1][-]{section.2}{Analysis of case-count data}{}% 4
-\BOOKMARK [2][-]{subsection.2.1}{Imperfect testing}{section.2}% 5
-\BOOKMARK [2][-]{subsection.2.2}{Regrettable rates}{section.2}% 6
-\BOOKMARK [3][-]{subsubsection.2.2.1}{Estimation of effective reproduction number}{subsection.2.2}% 7
-\BOOKMARK [2][-]{subsection.2.3}{Clinical trials}{section.2}% 8
-\BOOKMARK [2][-]{subsection.2.4}{Cross-country comparisons}{section.2}% 9
-\BOOKMARK [1][-]{section.3}{Testing strategies and population size: a tango}{}% 10
-\BOOKMARK [2][-]{subsection.3.1}{US testing: a ration system}{section.3}% 11
-\BOOKMARK [2][-]{subsection.3.2}{Estimation of Data Quality}{section.3}% 12
-\BOOKMARK [2][-]{subsection.3.3}{Testing increase changes data quality}{section.3}% 13
-\BOOKMARK [2][-]{subsection.3.4}{Stratified setting}{section.3}% 14
-\BOOKMARK [1][-]{section.4}{Brief discussion of model-based approaches}{}% 15
-\BOOKMARK [1][-]{section.5}{Stratified sampling: improving precision in low-prevalence environments}{}% 16
-\BOOKMARK [1][-]{section.6}{Decision-making: data versus information.}{}% 17
-\BOOKMARK [1][-]{section.7}{That which does not break us, makes us stronger \(but potentially not smarter\)}{}% 18
-\BOOKMARK [1][-]{section.8}{Conclusion}{}% 19
-\BOOKMARK [1][-]{appendix.A}{Imperfect testing: derivation}{}% 20
-\BOOKMARK [2][-]{subsection.A.1}{Simple cases}{appendix.A}% 21
-\BOOKMARK [2][-]{subsection.A.2}{Adjusted estimator}{appendix.A}% 22
-\BOOKMARK [2][-]{subsection.A.3}{Estimate of observed data quality}{appendix.A}% 23
-\BOOKMARK [2][-]{subsection.A.4}{Ratio estimator}{appendix.A}% 24
-\BOOKMARK [1][-]{appendix.B}{Derivation for the effective sample size}{}% 25
-\BOOKMARK [1][-]{appendix.C}{Quotes}{}% 26
+\BOOKMARK [1][-]{section.1}{1. Introduction}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{1.1. Outline}{section.1}% 2
+\BOOKMARK [1][-]{section.2}{2. Analysis of case-count data}{}% 3
+\BOOKMARK [2][-]{subsection.2.1}{2.1. Imperfect testing}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.2}{2.2. Regrettable rates: complex biases resulting from self-selection}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.3}{2.3. Estimation of effective reproduction number}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.4}{2.4. Effect modifiers in COVID-19 clinical trials}{section.2}% 7
+\BOOKMARK [1][-]{section.3}{3. Cross-population comparisons}{}% 8
+\BOOKMARK [2][-]{subsection.3.1}{3.1. Prevalence comparisons}{section.3}% 9
+\BOOKMARK [2][-]{subsection.3.2}{3.2. Case count comparisons}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.3}{3.3. Rate comparisons}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.4}{3.4. Estimation of Data Quality}{section.3}% 12
+\BOOKMARK [1][-]{section.4}{4. Stratified sampling: improving precision in low-prevalence environments}{}% 13
+\BOOKMARK [1][-]{section.5}{5. Decision-making: data versus information.}{}% 14
+\BOOKMARK [1][-]{section.6}{6. That which does not break us, makes us stronger \(but potentially not smarter\)}{}% 15
+\BOOKMARK [1][-]{section.7}{7. Discussion}{}% 16
+\BOOKMARK [1][-]{section*.6}{References}{}% 17
+\BOOKMARK [1][-]{appendix.A}{Appendix A. Imperfect testing: derivation}{}% 18
+\BOOKMARK [2][-]{subsection.A.1}{A.1. Estimate of observed data quality}{appendix.A}% 19
+\BOOKMARK [2][-]{subsection.A.2}{A.2. Ratio estimator}{appendix.A}% 20
+\BOOKMARK [2][-]{subsection.A.3}{A.3. Estimation of effective reproduction number}{appendix.A}% 21
+\BOOKMARK [1][-]{appendix.B}{Appendix B. Derivation for the effective sample size}{}% 22
