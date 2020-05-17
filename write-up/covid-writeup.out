@@ -11,12 +11,14 @@
 \BOOKMARK [2][-]{subsection.3.3}{3.3. Rate comparisons}{section.3}% 11
 \BOOKMARK [2][-]{subsection.3.4}{3.4. Estimation of Data Quality}{section.3}% 12
 \BOOKMARK [1][-]{section.4}{4. Stratified sampling: improving precision in low-prevalence environments}{}% 13
-\BOOKMARK [1][-]{section.5}{5. Decision-making: data versus information.}{}% 14
-\BOOKMARK [1][-]{section.6}{6. That which does not break us, makes us stronger \(but potentially not smarter\)}{}% 15
-\BOOKMARK [1][-]{section.7}{7. Discussion}{}% 16
-\BOOKMARK [1][-]{section*.6}{References}{}% 17
-\BOOKMARK [1][-]{appendix.A}{Appendix A. Imperfect testing: derivation}{}% 18
-\BOOKMARK [2][-]{subsection.A.1}{A.1. Estimate of observed data quality}{appendix.A}% 19
-\BOOKMARK [2][-]{subsection.A.2}{A.2. Ratio estimator}{appendix.A}% 20
-\BOOKMARK [2][-]{subsection.A.3}{A.3. Estimation of effective reproduction number}{appendix.A}% 21
-\BOOKMARK [1][-]{appendix.B}{Appendix B. Derivation for the effective sample size}{}% 22
+\BOOKMARK [1][-]{section.5}{5. Discussion}{}% 14
+\BOOKMARK [2][-]{section*.6}{Decision-making: data versus information}{section.5}% 15
+\BOOKMARK [2][-]{section*.7}{High quality information on prevalence.}{section.5}% 16
+\BOOKMARK [2][-]{section*.8}{Data quantity versus quality}{section.5}% 17
+\BOOKMARK [2][-]{section*.9}{Model-based solutions.}{section.5}% 18
+\BOOKMARK [1][-]{section*.10}{References}{}% 19
+\BOOKMARK [1][-]{appendix.A}{Appendix A. Imperfect testing: derivation}{}% 20
+\BOOKMARK [2][-]{subsection.A.1}{A.1. Estimate of observed data quality}{appendix.A}% 21
+\BOOKMARK [2][-]{subsection.A.2}{A.2. Ratio estimator}{appendix.A}% 22
+\BOOKMARK [2][-]{subsection.A.3}{A.3. Estimation of effective reproduction number}{appendix.A}% 23
+\BOOKMARK [1][-]{appendix.B}{Appendix B. Derivation for the effective sample size}{}% 24
