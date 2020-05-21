@@ -1,5 +1,6 @@
 \documentclass[aoas]{amsart}
 
+
 \RequirePackage[OT1]{fontenc}
 
 \usepackage[foot]{amsaddr}
@@ -15,7 +16,6 @@
 \usepackage{wrapfig}
 \usepackage{setspace}
 \DeclareGraphicsExtensions{.eps, .ps}
-\usepackage{hyperref}
 \usepackage{amsmath, amsthm, amsfonts}
 % \usepackage[margin=1.5in]{geometry}
 
@@ -36,6 +36,7 @@
 \def\I{\bf I}
 
 \begin{document}
+
 \title[The Hypothesis of Testing]{The Hypothesis of Testing: Paradoxes arising out of reported coronavirus case-counts} %
 
 \author{Walter Dempsey}
@@ -48,10 +49,12 @@ Many statisticians, epidemiologists, economists and data scientists have registe
 
 \maketitle
 
+
 \section{Introduction}
 The World Health Organization has declared the coronavirus disease 2019 (COVID-19) a public health emergency.  As of April 27th, 2020, a total of 2,993,000 cases have been confirmed worldwide.  The New York Times reports at least 965,214 people across the United States have tested positive for the virus, and at least 49,465 patients with the virus have died.  Aggressive policies have been put in place across the US with at least 50\% of the US population officially urged as of late April to stay home via state-wide executive actions.
 
-Despite these steps, the data landscape for understanding COVID-19 remains limited.  Public databases maintained by \href{https://bit.ly/2UqFSuA}{Johns Hopkins University}~\citep{JHU_Lancet} and the \href{https://bit.ly/2vUHfrK}{New York Times}~\cite{NYT} provide incoming county-level information of confirmed cases and deaths.  Statisticians, epidemiologists, economists, and data scientists have used this granular data to forecast COVID-19 case-counts, deaths, and hospitalizations~\citep{Song2020,Ray2020,2020.IHME}.  In many cases, variations on the SIR models have been used to draw inferences about infection rates and intensity.  Parametric inference often uses observed case-count and/or observed COVID-19 related deaths to infer latent trajectories of the pandemic.
+Despite these steps, the data landscape for understanding COVID-19 remains limited.  Public databases maintained by Johns Hopkins University~\citep{JHU_Lancet} and the New York Times~\cite{NYT} provide incoming county-level information of confirmed cases and deaths.  Statisticians, epidemiologists, economists, and data scientists have used this granular data to forecast COVID-19 case-counts, deaths, and hospitalizations~\citep{Song2020,Ray2020,2020.IHME}.  In many cases, variations on the SIR models have been used to draw inferences about infection rates and intensity.  Parametric inference often uses observed case-count and/or observed COVID-19 related deaths to infer latent trajectories of the pandemic.
+
 
 The goal of this paper is to express reservations at the use of case-counts as a proxy for disease prevalence and intensity as well as its use as direct input into estimation of standard epidemiological models for inference and forecasting.  The reason is straightforward: current models do not account simultaneously for selection bias and measurement error. Selection bias enters due to differences in testing strategies across countries and states.  In the US, for example, limited testing capacity has caused local and state health departments to focus on testing only high-risk populations.  Moreover, testing requires the individual to self-select into asking for a test and then receiving approval by their doctor.  Demands for increased testing capacity, while laudable, ignore the issues of self-selection and measurement error. While increasing testing capacity increases data quantity, there is no guarantee for increased data quality.  We will show that aggressive pushes for ramped up testing capacity that are tied to decreases in data quality may have a mitigated impact  in our ability to estimate quantities of interest such as prevalence and effective reproduction number.
 
@@ -222,7 +225,7 @@ E( Y(A=1) - Y(A=0) ) = E_U ( E_A ( Y(A=1) - Y(A=0) \mid U=u ))
 $$
 Even in a randomized experiment, the question is what the correct value for $E(U)$ is. For COVID-19, the value of interest is the expected value of $U$ in the population of COVID-19 positive individuals.  Due to selection bias, however, the bias in this marginal treatment effect compared to the true marginal effect of interest is $\beta_1 \cdot E_{\I} [ \rho_{I,U} ] \times \sqrt{ \frac{f}{1-f} } \times \sigma_U$.  Selection bias then leads to the estimated effect being biased if $\beta_1 \neq 0$.  Directionality of the bias will depend on the relationship between $U$ and $Y$.  If $U$ is a measure of disease severity, then it could be expected to see $\beta_1 > 0$ and $E_{\I} [ \rho_{I, U} ] >0$.  In such situations, the treatment effect estimates will tend to be overly optimistic as most individuals recruited are potentially higher on the severity index than the population average.  Not only that, but for fixed data quality, the error compared to SRS in terms of effect estimation scales with the population size (i.e., the law of large populations).
 
-Randomization of treatment assignment in clinical trials negates unobserved confounders.  This, however, does not negate effect modifiers.  Therefore, for marginal treatment effects to be interpretable, there must be a well-defined population.  Most often, our main interest is in causal effects on the population of COVID-19 positive.  Randomization within the clinical trial design yields internal validity, but we also need external validity to estimate the correct marginal effect of interest.
+Randomization of treatment assignment in clinical trials negates unobserved confounders.  This, however, does not negate effect modifiers.  Therefore, for marginal treatment effects to be interpretable, there must be a well-defined population.  Most often, our main interest is in causal effects on the population of COVID-19 positive.  Randomization within the clinical trial design yields internal validity, but we also need external validity to estimate the correct marginal effect of interest~\cite{Keiding2016}.
 
 \section{Cross-population comparisons}
 
@@ -575,8 +578,6 @@ $\bar y$ & 1.2 & 1.4 & 1.6 & 1.8 & 2 \\
 
 
 % A test of meaningfulness of a possible model for a data-generating process is whether it can be used directly to simulate data.” (p.104).  In our current setting, this most certainly related to simulation while accounting for measruement error.
-
-
 
 
 \end{document}
