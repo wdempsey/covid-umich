@@ -131,8 +131,6 @@ $$
 $$
 where $\rho_{I_j, Y_j}$ is the data quality, $f_j$ is the sampling fraction, $D_{M_j}$ is the measurement error adjustment, and $CV(Y_j) = \sigma_{Y_j}/\bar Y_j$ is the coefficient of variation on day $j$.  The error magnitude depends on the true rate $\bar Y_{t} / \bar Y_{t-1}$ so a large decrease will have a relatively small error compared to a large increase. The second term represents potential \emph{cancellation} which may occurs when data quality, sampling fraction, measurement error, and prevalence are all constant across time.
 
-% Consider, for example, the state of New York.  Figure~\ref{fig:ny-covid-test} shows the number of tests and positive tests per day in New York state.  Figure~\ref{fig:ny-covid-frac} presents the fraction of tests that were positive per day in New York state.  For cancellation, the expected data qualities need to be uncorrelated and equal. Testing per day suggests it is plausible to assume $\Delta_t$ varies slowly over time.  Figure~\ref{fig:ny-covid-test} shows the number of tests has remained approximately constant recently relative to the NY population size.  Therefore, the assumption that $f_t$ varies slowly in time is reasonable. Finally, the assumption that the imperfect testing adjustment is constant is reasonable as no new testing procedures have been reported.
-
 Figure~\ref{fig:ratio-bias} displays the trajectory of the true ratio and the potential biased estimators under an SIR model~\cite{Pastor2001,Newman2002,Parshani2010} for the epidemic dynamics, with state evolution given by
 $$
 \begin{aligned}
