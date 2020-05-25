@@ -8,7 +8,6 @@
 \usepackage{natbib}
 %\bibliographystyle{apalike}
 
-
 \usepackage{tchdr}
 \boldshortcuts
 
@@ -284,7 +283,7 @@ While the above issues on $Z$-scores and effective sample size are important, he
 $$
 R_{t1} - R_{t2} = \frac{1}{\gamma} \log \left( \frac{1 + e_{1t}}{1+e_{2t}} \right)
 $$
-where $e_{jt}$ is the error associated given in Section \ref{section:r0-estimation}.  Recall that the error allowed for over-estimation prior to the peak and then under-estimation post-peak.  Here, these errors can mingle in interesting ways.  Consider two countries (A and B) in which the peak occurs 2 weeks prior for country A then country B but other.  Figure~\ref{fig:comparison} presents such a comparison where each country's disease trajectory follows an SIR model as described in Section~\ref{section:rates} with different parameters.  Figure \ref{fig:eff} shows how the errors interact in complex ways.  First, the gap is correctly estimated; then the gap is over-estimated as country A sees a rapid rise in cases; then the gap is even more over-estimated as country A improves and the rate is under-estimated while country B sees a rapid increase in their case-count and their rate is over-estimated; then country A's rate is correctly estimated while country B's rate is under-estimated as it sees improvement in infection rates; finally, the gap disappears.  We are not claiming this will always be the case, and indeed for small enough selection bias and/or large gaps in case-counts such complex behaviour will not occur; however, this is simply to point out how observed information can tell a more complex story than the truth (i.e., country A recovers 1 month prior to country B).
+where $e_{jt}$ is the error associated given in Section \ref{section:r0-estimation}.  Recall that the error allowed for over-estimation prior to the peak and then under-estimation post-peak.  Here, these errors can mingle in interesting ways.  Consider two countries (A and B) in which the peak occurs 2 weeks prior for country A than country B.  Figure~\ref{fig:comparison} presents such a comparison where each country's disease trajectory follows an SIR model as described in Section~\ref{section:rates} with different parameters.  Figure \ref{fig:eff} shows how the errors interact in complex ways.  First, the gap is correctly estimated; then the gap is over-estimated as country A sees a rapid rise in cases; then the gap is even more over-estimated as country A improves and the rate is under-estimated while country B sees a rapid increase in their case-count and their rate is over-estimated; then country A's rate is correctly estimated while country B's rate is under-estimated as it sees improvement in infection rates; finally, the gap disappears.  We are not claiming this will always be the case, and indeed for small enough selection bias and/or large gaps in case-counts such complex behaviour will not occur; however, this is simply to point out how observed information can tell a more complex story than the truth (i.e., country A recovers 1 month prior to country B).
 
 \begin{figure}
 \centering
