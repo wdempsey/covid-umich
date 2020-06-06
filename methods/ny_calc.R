@@ -1,4 +1,4 @@
-FP = 0.00; FN = 0.000
+FP = 0.005; FN = 0.172
 bary0 = 0.139
 bary = bary0*(1+FN) - FP*(1-bary0)
 f= 0.001
