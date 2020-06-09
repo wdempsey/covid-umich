@@ -60,7 +60,9 @@ bias_fn <- function(M, bary, f, FP = 0.01, FN = 0.15) {
   f0 = f/const
   f1 = M*f0
   Delta = f1 - f0
-  D_M = 1 + FP + FN - Delta * bary/(1-bary) * (FP*(1-bary) + FN * bary)/ (f0 * (1-bary) + f1 * bary)
+  D_M1 = 1 - Delta * bary/(1-bary) * (FP*(1-bary) + FN * bary)/ (f0 * (1-bary) + f1 * bary)
+  D_M2 = 1 - Delta * bary/(1-bary) * (FP*(1-bary) + FN * bary)/ (f0 * (1-bary) + f1 * bary)
+  D_M = D_M1 * D_M2
   rho = Delta*sqrt(bary*(1-bary))/sqrt(f*(1-f))
   error = rho*sqrt((1-f)/f) * sqrt(1-bary)/sqrt(bary)*D_M
   lag_error = error[1:(length(error)-1)]
