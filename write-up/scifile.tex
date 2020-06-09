@@ -207,9 +207,9 @@ We thank covidtracking.com for providing open-access to state case-count data.
 
 Let $P_j$ be an indicator of measurement error, equal to $1$ when we incorrectly measure the outcome and $0$ when we observe the true outcome. We suppose this is a stochastic variable where $\pr(P_j = 1 \mid Y_j = 1) =: FN$ is the false-negative rate and $\pr(P_j = 1 \mid Y_j = 0) =: FP$ is the false-positive rate.  If individual $j$ is selected (i.e., $I_j = 1$) then the observed outcome can be written as $Y_j^{\star} = Y_j(1-P_j) + (1-Y_j) P_j$.
 
-\subsection*{Imperfect testing: derivation}
+\paragraph*{Derivations for imperfect testing framework.}
 \label{app:imperfect}
-We considered the mean estimator
+We start by considering the empirical mean estimator under imperfect testing,
 $$
 \bar y_n^\star = \frac{\sum_{j=1}^N Y_j^\star I_j}{\sum_{j=1}^N I_j} = \frac{\sum_{i=1}^N  I_j Y_j^\star }{\sum_{j=1}^N  I_j } = \frac{\sum_{i=1}^N  I_j \left[ Y_j (1-P_j) + (1-Y_j) P_j \right]}{\sum_{j=1}^N  I_j }
 $$
@@ -247,9 +247,9 @@ E_J [P_J Z_J ] &= E_J [ E_J [ P_J Z_J \mid Y_J ] ] \\
 $$
 Combining these yields:
 $$
-\bar y_n^\star - \bar Y = \sqrt{\frac{1-f}{f}} \left[\rho_{I,Y} \sigma_Y + \rho_{I, PZ} \sigma_{PZ} + \sqrt{\frac{f}{1-f}} \left( FP - (FP+FN) \bar Y \right) \right]
+\bar y_n^\star - \bar Y = \sqrt{\frac{1-f}{f}} \left(\rho_{I,Y} \sigma_Y + \rho_{I, PZ} \sigma_{PZ} \right) + \left( FP - (FP+FN) \bar Y \right)
 $$
-We see the final term is given by $FP (1-\bar Y) - FN \bar Y$.  This motivates the adjusted estimate
+We see the final term is given by $FP (1-\bar Y) - FN \bar Y$ is the bias associated with using the unadjusted prevalence estimate $\bar y_n^\star$.  This motivates an adjusted estimate
 $$
 \tilde y_n^{(0)} = \bar y_n^\star - FP (1- \bar y_n^\star ) + FN \bar y_n^\star
 = \bar y_n^\star (1 + FN + FP) - FP.
@@ -263,7 +263,7 @@ $$
  =& \Psi + (FN + FP) \Psi + (FN + FP) (FP - (FP+FN) \bar Y).
  \end{aligned}
 $$
-Now define $\tilde y_n^{(1)} = \tilde y_n^{(0)} + (FN+FP)  ( (FN+FP) \bar y_n - FP)$.  Deriving the error $\tilde y_n^{(1)} - \bar Y$, we have
+The final term is a (smaller) bias term and so we propose another adjusted estimator $\tilde y_n^{(1)} = \tilde y_n^{(0)} + (FN+FP)  ( (FN+FP) \bar y_n^\star - FP)$, with associated error $\tilde y_n^{(1)} - \bar Y$ given by
 $$
 \begin{aligned}
  &(\bar y_n^{(0)} - \bar Y) + (FN+FP)  ( (FN+FP) \bar y_n^\star - FP)\\
@@ -271,7 +271,7 @@ $$
   =& \Psi + (FN + FP) \Psi + (FN + FP)^2 \Psi + (FN+FP)^2 (FP - (FP+FN) \bar Y).
  \end{aligned}
 $$
-Recursively defining  $\tilde y_n^{(t)} = \tilde y_n^{(t-1)} + (FN+FP)  ( (FN+FP) \bar y_n - FP)$ for $t=1,2,\ldots$ where $\tilde y_n^{(0)} = \bar y_n^\star$.  Then
+This motivates recursively defining estimators $\tilde y_n^{(t)} = \tilde y_n^{(t-1)} + (FN+FP)  ( (FN+FP) \bar y_n - FP)$ for $t=1,2,\ldots$ where $\tilde y_n^{(0)} = \bar y_n^\star$.  Then
 $$
 \tilde y_n^{(t)} = \bar y_n^\star \sum_{s=0}^{t+1} (FP+FN)^s - FP \sum_{s=0}^{t} (FP+FN)^s
 $$
@@ -279,19 +279,28 @@ and the associated error at iteration $t$ given by
 $$
 \Psi \sum_{s=0}^t (FN+FP)^s = \Psi \frac{1 - (FN+FP)^t}{1 - (FN+FP)}.
 $$
-Define
+We can then get an estimator with no residual bias term by taking the limit as $t$ goes to infinity; that is, define
 $$
-\tilde y = \lim_{t \to \infty} \tilde y_n^{(t)} = \frac{\bar y_n^\star - FP}{1 -(FN+FP)}.
+\tilde y_n = \lim_{t \to \infty} \tilde y_n^{(t)} = \frac{\bar y_n^\star - FP}{1 -(FN+FP)}.
 $$
-The associated error can be expressed as $\frac{\Psi}{1-(FN+FP)}$.
+Then the associated error $\tilde y_n - \bar Y$ can be expressed as $\frac{\Psi}{1-(FN+FP)}$.
 
-\subsubsection*{Estimate of observed data quality}
+\paragraph*{Model-based derivation of $\tilde y$.}
+The estimator $\tilde y$ was derived as a limit of a process that removes the residual bias term at each step.  Here we consider a model-based explanation.  Let $\theta = \pr( Y = 1)$ and $\phi = \pr( \text{test is positive})$.  Given a known false negative (FN) and false positive (FP) rates, we have
+$$
+\begin{aligned}
+\phi &= \theta \cdot (1-FN) + (1-\theta) \cdot FP = \theta (1-FN-FP) + FP \\
+\Rightarrow \theta &= \frac{\phi - FP}{1-FN-FP}.
+\end{aligned}
+$$
+Thus, the estimator $\tilde y$ is also the appropriate estimator under a model-based approach.  While the derivation here is more straightforward, the derivation in the prior section provides a simple formula for the associated error $\tilde y_n - \bar Y$ and gives a novel connection between the empirical estimator $\bar y_n^\star$ and the adjusted estimator $\tilde y_n$ without reference to the model-based approach.
 
+\paragraph*{Simplifying $\Psi$.}
 For the binary outcome $Y$, we have $\sigma_Y = \sqrt{\bar Y (1-\bar Y)}$. Moreover,
 $$
 \begin{aligned}
-V_J(P_J Z_J) &= E_J[(P_J Z_J)^2] - E[P] E[Z] \\
-&= E[P] - E[P] (1 - 2 \bar Y) = 2 \bar Y E_J [ P_J ] \\
+V_J(P_J Z_J) &= E_J[(P_J Z_J)^2] - E_J[P_J] E_J[Z_J] \\
+&= E_J[P_J] - E_J[P_J] (1 - 2 \bar Y) = 2 \bar Y E_J [ P_J ] \\
 &= 2 \bar Y \left( FP (1-\bar Y) + FN \bar Y \right) \\
 \Rightarrow \sigma_{PZ} &= \sqrt{ 2 \bar Y \left( FP (1-\bar Y) + FN \cdot  \bar Y \right) }
 \end{aligned}
