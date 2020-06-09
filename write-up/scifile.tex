@@ -13,6 +13,7 @@
 \usepackage{graphicx}
 \usepackage{times}
 \usepackage{amsmath,amsthm,amsfonts}
+\usepackage{hyperref}
 
 % The preamble here sets up a lot of new/revised commands and
 % environments.  It's annoying, but please do *not* try to strip these
@@ -98,13 +99,13 @@ The goal of this paper is to express reservations at the use of case-counts as a
 
 We start by considering estimation of COVID-19 prevalence using imperfect case-count data. Let $N$ denote the population size.  At a fixed time, let $Y_j$ denote COVID-19 status for the $j$th individual in the population, $j=1,\ldots, N$. To start, the dynamic nature of the outbreak and recoverability of individuals are ignored.  As in survey methodology~\cite{Cochran77}, we treat COVID-19 status as a fixed but unknown quantity of interest. Let $I_j \in \{0,1\}$ be an indicator that the individual was selected for testing. COVID-19 prevalence is equal to the population average $\bar Y = \sum_{j=1}^N Y_j/N = N_1/N$ where $N_1$ is the number of COVID-19 positive individuals in the population.  Suppose $n$ tests are performed and the values $y_1, \ldots, y_n$ are observed with $\sum_{i=1}^n y_i = n_1$.
 
-Tests are imperfect.  COVID-19 testing is no exception.  Imperfect testing means a selected individual's observed COVID-19 status may not be the same as their true status. Here we assume the false positive rate (FP) and false negative rate (FN) are known. In this paper, we consider the estimator $\tilde y_n = (\bar y_n - FP)/(1-(FP+FN))$ where $\bar y = n^{-1} \sum_{i=1}^n y_i$ is the proportion of positive tests. This estimator is unbiased under simple random sampling (SRS); see the supplementary materials for a derivation and discussion of the proposed estimator. To understand the impact of selection bias and imperfect testing, we derive the following statistical decomposition of the error between $\tilde y_n$ and $\bar Y$:
+Tests are imperfect.  COVID-19 testing is no exception.  Imperfect testing means a selected individual's observed COVID-19 status may not be the same as their true status. Here we assume the false positive rate (FP) and false negative rate (FN) are known. In this paper, we consider the estimator $\tilde y_n = (\bar y_n - FP)/(1-(FP+FN))$ where $\bar y_n = n^{-1} \sum_{i=1}^n y_i$ is the proportion of positive tests in the sample. This estimator is unbiased under simple random sampling (SRS); see the supplementary materials for a derivation and discussion of the proposed estimator. To understand the impact of selection bias and imperfect testing, we derive the following statistical decomposition of the error between $\tilde y_n$ and $\bar Y$:
 \begin{equation}
 \label{eq:error}
 \rho_{I,Y} \times \sqrt{\frac{1-f}{f}} \times \sigma_{Y}
 \times \underbrace{\left[ 1 - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right] \times \frac{1}{1-(FP+FN)}}_{D_M},
 \end{equation}
-where $f=n/N$ is the sampling fraction, $f_1=n_1/N_1$ and $f_0=n_0/N_0=(n-n_1)/(N-N_1)$ are sampling fractions for COVID-19 positive and negative individuals respectively, and $\Delta = f_1 - f_0$ is the sampling rate differential.  See the supplementary materials for the derivation. This extends work by \cite{Meng2018} to account for imperfect testing. The first term represents \emph{data quality}, the second \emph{data quantity}, and the third \emph{problem difficulty}.  The final term represents the \emph{imperfect testing adjustment} which is a complex function of the sampling rate differential, the odds ratio, and the ratio of measurement error interaction with prevalence and sampling rates interaction with prevalence. Figure~\ref{fig:heatmap} shows that $D_M$, as a function of the relative frequency ($f_1/f_0$) and odds ratio, can be both positive and negative as well as a range of magnitudes~\cite{Beesley2020,Beesley2019,Smeden2019}. Under perfect testing, $D_M = 1$ so the relation between estimation and selection bias is simple, e.g., COVID-19 positive individuals more likely to receive test implies upward bias in prevalence estimates and vice versa. When tests are imperfect, this simple relationship no longer holds.
+where $f=n/N$ is the sampling fraction, $f_1=n_1/N_1$ and $f_0=n_0/N_0=(n-n_1)/(N-N_1)$ are sampling fractions for COVID-19 positive and negative individuals respectively, and $\Delta = f_1 - f_0$ is the sampling rate differential.  See the supplementary materials for the derivation. This extends work by \cite{Meng2018} to account for imperfect testing. The first term represents \emph{data quality}, the second \emph{data quantity}, and the third \emph{problem difficulty}.  The final term represents the \emph{imperfect testing adjustment} which is a complex function of the sampling rate differential, the odds ratio, and the ratio of measurement error interaction with prevalence and sampling rates interaction with prevalence. Figure~\ref{fig:heatmap} shows that $D_M$, as a function of the relative frequency ($f_1/f_0$) and odds ratio, can be both positive and negative as well as a range of magnitudes~\cite{Beesley2020,Beesley2019,Smeden2019}. Under perfect testing, $D_M = 1$ so the relation between estimation and selection bias is simple, e.g., COVID-19 positive individuals more likely to receive test implies upward bias in prevalence estimates. When tests are imperfect, this simple relationship no longer holds.
 
 Comparing the mean-squared error (MSE) under a selection mechanism $\I$ with imperfect testing and SRS with perfect testing, we see that
 $$
@@ -116,7 +117,7 @@ A key question is ``What is the (effective) sample size from a SRS with perfect 
 $$
 \frac{f}{1-f} \times \frac{1}{E_{\I} \left[ \rho_{I,Y}^2 D_M^2 \right]}.
 $$
-As of May 8th, the US has performed $8,412,095$ tests.  The US population is roughly $328$ million, so $f = 0.066$.  The empirical prevalence is $9.5\%$ on May 8th. A recent study estimates a false positive and negative rate for antibody testing at $0.5$\% and $17.2$\% respectively \cite{Bendavid2020}. Supposing COVID-19 positive individuals are $2$ times more likely to get tested, then the effective sample size is $89$.  Recent proposals~\cite{Siddarth2020} have argued for increased testing capacity, which may likely reduce the relative sampling rate.  If the relative sampling rate drops to $1.2$ then the effective sample size will increase to $1879$.  Thus the effective sample size even in optimistic scenarios is equivalent to a small random sample from the population.  Finally, increased testing capacity may also come at the cost of increases in false positive and negative rates.  Consider the case where $f$ increases from $0.05$ to $0.1$ and the increase is associated with the false negative rate rising from $5\%$ to $20$\%.  Then the effective sample size increases by a factor of $1.76$ rather than the expected $4$ fold increase.
+As of May 8th, the US has performed $8,412,095$ tests.  The US population is roughly $328$ million, so $f = 0.066$.  The empirical prevalence is $9.5\%$ on May 8th. A recent study estimates a false positive and negative rate for antibody testing at $0.5$\% and $17.2$\% respectively \cite{Bendavid2020}. Supposing COVID-19 positive individuals are $2$ times more likely to get tested, then the effective sample size is $89$.  Recent proposals~\cite{Siddarth2020} have argued for increased testing capacity, which may likely reduce the relative sampling rate.  If the relative sampling rate drops to $1.2$ then the effective sample size will increase to $1879$.  Thus the effective sample size even in optimistic scenarios is equivalent to a small random sample from the population.  Moreover, increased testing capacity may also come at the cost of increases in false positive and negative rates.  Consider the case where $f$ increases from $0.05$ to $0.1$ and the increase is associated with the false negative rate rising from $5\%$ to $20$\%.  Then the effective sample size increases by a factor of $1.76$ rather than the expected $4$ fold increase.
 
 \paragraph*{Regrettable rates.}
 
@@ -139,10 +140,10 @@ $$
 \frac{\partial R_t}{\partial t} = - \gamma I_t \\
 \end{aligned}
 $$
-where $S_t$ is the number of susceptible individuals, $I_t$ is the number of infected individuals, and $R_t$ is the number of removed (recovered or deceased) individuals at time $t$.  In terms of bias, the rate is overestimated prior to the peak and underestimated afterwards.  From a decision making perspective, such biases have a substantial impact.  First, the overestimation may give lawmakers and governors more leverage in proposing aggressive actions that reduce prevalence.  Of course, the analysis supports the argument that the estimates based on available data may be pessimistic. What is missing in the current public health discourse is that the bias direction of the prevalence estimate is non-constant over time.   Underestimation post-peak puts pressure on lawmakers and governors to prematurely relax social distancing measures.  Moreover, it appears that the peak time is the easiest to estimate in terms of having minimal error using available data.  Note, however, that the standard errors will be large due to small effective sample sizes.
+where $S_t$ is the number of susceptible individuals, $I_t$ is the number of infected individuals, and $R_t$ is the number of removed (recovered or deceased) individuals at time $t$.  In terms of bias, the rate is overestimated prior to the peak and underestimated afterwards; the bias increases dramatically when the relative fraction exceeds $2$.  From a decision making perspective, such biases have a substantial impact.  First, the overestimation may give lawmakers and governors more leverage in proposing aggressive actions that reduce prevalence.  Of course, the analysis supports the argument that the estimates based on available data may be pessimistic. What is missing in the current public health discourse is that the bias direction of the prevalence estimate is non-constant over time.   Underestimation post-peak puts pressure on lawmakers and governors to prematurely relax social distancing measures.  Moreover, it appears that the peak time is the easiest to estimate in terms of having minimal error using available data.  Note, however, that the standard errors will be large due to small effective sample sizes.
 
 \paragraph*{Estimation of effective reproduction number.}
-Many epidemiologists argue that tracking the effective reproduction number $R_t$ is the only way to manage through the crisis~\cite{Gabriel2020}.  Under a Poisson likelihood, a simple relation between the trajectory of new cases and the effective reproduction number can be derived \cite{Bettencourt2008}.  In particular, under an SIR model the number of case counts on day $t$, denoted $K_t$, is Poisson distributed with rate $K_{t-1} \exp \left( \frac{1}{\gamma} (R_t - 1) \right)$ where $K_{t-1} = Y_{t-1}-Y_{t-2}$ is the number of new cases on day $t-1$ and $\gamma$ is the serial interval, which is approximately $7$ days for COVID-19~\cite{Sanche2020}.  Using this relation, a moment-based estimator is given by
+Many epidemiologists argue that tracking the effective reproduction number $R_t$ is the only way to manage through the crisis~\cite{Gabriel2020}.  Under a Poisson likelihood, a simple relation between the trajectory of new cases and the effective reproduction number can be derived \cite{Bettencourt2008}.  In particular, under an SIR model the number of case counts on day $t$, denoted $K_t$, is Poisson distributed with rate $K_{t-1} \exp \left( \gamma (R_t - 1) \right)$ where $K_{t-1} = Y_{t-1}-Y_{t-2}$ is the number of new cases on day $t-1$ and $\gamma$ is the serial interval, which is approximately $7$ days for COVID-19~\cite{Sanche2020}.  Using this relation, a moment-based estimator is given by
 $$
 R_t = 1 + \frac{1}{\gamma} \log \left( \frac{K_t}{K_{t-1}} \right).
 $$
@@ -182,7 +183,7 @@ Clinical trials that recruit individuals who have tested positive for COVID-19 w
 
 \paragraph*{Model-based solutions.}
 
-One can extend the SIR model to account for selection bias and measurement error. Without strong assumptions on the selection mechanism, however, the estimates are often not identifiable.  When an issue ``cannot be resolved nonparametrically then it is usually dangerous to resolve it parametrically''\cite{CoxHink74}. Absent random sampling, the best route forward is careful sensitivity analyses and humility in data-driven conclusions.
+One can extend the SIR model to account for selection bias and measurement error. Without strong assumptions on the selection mechanism, however, the estimates are often not identifiable.  When an issue ``cannot be resolved nonparametrically then it is usually dangerous to resolve it parametrically''\cite{CoxHink74}. Absent random sampling, the best route forward for all data analyses is careful associated sensitivity analyses and humility in data-driven conclusions.
 
 % \bibliography{scibib}
 \bibliographystyle{Science}
@@ -199,6 +200,8 @@ We thank covidtracking.com for providing open-access to state case-count data.
 %Note that the reference numbering continues from the main text to the SM.
 % In the example below, Refs. 4-10 were cited only in the SM.
 \section*{Supplementary materials}
+
+All relevant code can be found at \url{https://github.com/wdempsey/covid-umich}.
 
 \subsection*{Technical details}
 
@@ -387,7 +390,7 @@ $$
 &= \frac{\bar Y_t}{\bar Y_{t-1}} \bigg[ \rho_{I_t,Y_t} \sqrt{\frac{1-f_t}{f_t}} CV (Y_t)  -\rho_{I_{t-1},Y_{t-1}} \sqrt{\frac{1-f_{t-1}}{f_{t-1}}} CV (Y_{t-1}) \bigg] \left[ 1 - \rho_{I_{t-1},Y_{t-1}} \sqrt{\frac{1-f_{t-1}}{f_{t-1}}} CV (Y_{t-1}) \right]
 \end{aligned}
 $$
-where the second equality is obtained by plugging in the statistical decomposition of the error for both time points and the coefficient of variation being defined as $CV(Y) := \sigma_Y/\mu_Y$.  Under measurement error, the extra terms $D_{2}$ and $D_1$ can be inserted in the correct locations.
+where the second equality is obtained by plugging in the statistical decomposition of the error for both time points and the coefficient of variation being defined as $CV(Y) := \sigma_Y/\mu_Y$.  Under measurement error, the extra terms $D_{t}$ and $D_{t-1}$ can be inserted in the correct locations.
 
 \subsubsection*{Estimation of effective reproduction number}
 
@@ -395,7 +398,7 @@ Let
 $$
 \delta_t := \bigg[ \rho_{I_t,K_t} D_{M_t} \sqrt{\frac{1-f_t}{f_t}} CV (K_t)  -\rho_{I_{t-1},K_{t-1}} D_{M_{t-1}} \sqrt{\frac{1-f_t}{f_t}} CV (K_{t-1}) \bigg].
 $$
-Then results from Section~\ref{app:ratio} show that the estimate of the number of new cases on day t is given by
+Then the previous sections derivation shows that the estimate of the number of new cases on day t is given by
 $$
 \frac{S_t \cdot \bar y_t}{S_{t-1} \cdot \bar y_{t-1}} =
 \frac{K_t}{K_{t-1}} \left( 1 + \delta_t \times \left[ 1 - \rho_{I_{t-1},K_{t-1}} D_{M_{t-1}} \sqrt{\frac{1-f_t}{f_t}} CV (K_{t-1}) \right] \right)

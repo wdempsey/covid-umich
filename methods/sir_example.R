@@ -47,7 +47,7 @@ dev.off()
 
 ## Setup for bias plots
 f = 0.02
-M = 4
+M = 4 
 days = 1:365
 FP = 0.005; FN = 0.172
 bary1_new = -diff(out1$S)
@@ -61,7 +61,7 @@ bias_fn <- function(M, bary, f, FP = 0.01, FN = 0.15) {
   f1 = M*f0
   Delta = f1 - f0
   D_M1 = 1 - Delta * bary/(1-bary) * (FP*(1-bary) + FN * bary)/ (f0 * (1-bary) + f1 * bary)
-  D_M2 = 1 - Delta * bary/(1-bary) * (FP*(1-bary) + FN * bary)/ (f0 * (1-bary) + f1 * bary)
+  D_M2 = 1/(1-FP-FN)
   D_M = D_M1 * D_M2
   rho = Delta*sqrt(bary*(1-bary))/sqrt(f*(1-f))
   error = rho*sqrt((1-f)/f) * sqrt(1-bary)/sqrt(bary)*D_M
@@ -88,15 +88,6 @@ bias1_new = bias_fn(M, bary1_new, f)
 bias2_all = bias_fn(M, bary2_all, f)
 bias2_new = bias_fn(M, bary2_new, f)
 
-## Ratio Comparison: Use All for Prevalence
-
-ymax = max(bias1_all$r+bias1_all$bias, bias1_all$r, bias2_all$r+bias2_all$bias, bias2_all$r)
-ymin = min(bias1_all$r+bias1_all$bias, bias1_all$r, bias2_all$r+bias2_all$bias, bias2_all$r)
-plot(bias1_all$r, type = "l", ylim = c(ymin, ymax))
-lines(bias1_all$r+bias1_all$bias, lty = 2)
-lines(bias2_all$r, col = "red")
-lines(bias2_all$r+bias2_all$bias, col = "red", lty = 2)
-
 ## Ratio Comparison: Use New for Fraction of New Cases
 ymax = max(bias1_new$Rt+bias1_new$logbias, bias1_new$Rt, bias2_new$Rt+bias2_new$logbias, bias2_new$Rt, na.rm = TRUE)
 ymin = min(bias1_new$Rt+bias1_new$logbias, bias1_new$Rt, bias2_new$Rt+bias2_new$logbias, bias2_new$Rt, na.rm = TRUE)
@@ -115,7 +106,7 @@ mtext("Time", side = 1, line = 1, cex = 0.75)
 dev.off()
 
 ## Same curve, just different M value
-M1 = 3; M2 = 4; M3 = 5
+M1 = 2; M2 = 3; M3 = 4
 bias1 = bias_fn(M1, bary2_all, f, FP, FN)
 bias2 = bias_fn(M2, bary2_all, f, FP, FN)
 bias3 = bias_fn(M3, bary2_all, f, FP, FN)
