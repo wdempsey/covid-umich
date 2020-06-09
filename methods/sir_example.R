@@ -49,7 +49,7 @@ dev.off()
 f = 0.02
 M = 4
 days = 1:365
-FP = 0.01; FN = 0.1
+FP = 0.005; FN = 0.172
 bary1_new = -diff(out1$S)
 bary1_all = out1$I
 bary2_new = -diff(out2$S)
