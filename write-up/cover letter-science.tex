@@ -1,0 +1,256 @@
+\documentclass[11pt]{article}\usepackage{epsfig}\usepackage{setspace}%\usepackage{txfonts}
+%\doublespacing
+\usepackage{graphicx,psfrag}\setlength{\parindent}{20pt}\setlength{\parskip}{.35cm}\topmargin = 0in\textheight = +9in\oddsidemargin = 0in
+\evensidemargin = 0in
+\textwidth = 6.5in
+\usepackage{amssymb}\usepackage{amsmath}\usepackage{amsthm}\usepackage{makeidx}\pagestyle{empty}
+\def\struckint{\mathop{%
+\def\mathpalette##1##2{\mathchoice{##1\displaystyle##2}%
+ {##1\textstyle##2}{##1\scriptstyle##2}{##1\scriptscriptstyle##2}}%
+\mathpalette
+{\vbox\bgroup\baselineskip0pt\lineskiplimit-1000pt\lineskip-1000pt
+\halign\bgroup\hfill$}
+{##$\hfill\cr{\intop}\cr\diagup\cr\egroup\egroup}%
+}\limits}
+
+%\usepackage[T1]{fontenc}
+%\usepackage[adobe-utopia]{mathdesign}
+%\usepackage[T1]{fontenc}
+%\usepackage{fourier}
+%\usepackage{times}
+%\usepackage{times}
+%\usepackage{epsf}
+%\usepackage{times}
+%\usepackage{amsmath}
+%\usepackage{amstext}
+%\usepackage{paralist}
+%\usepackage{amsthm}
+%\usepackage{amssymb}
+\setlength{\textwidth}{6in}
+\setlength{\textheight}{9in}
+\setlength{\topmargin}{0in}
+\setlength{\evensidemargin}{.25in}
+\setlength{\oddsidemargin}{.25in}
+%\defaultleftmargin{4.0em}{3.0em}{2.2em}{1.7em}
+
+
+%\startlocaldefs
+\def\Rn{\mathop{\mathbf{R}_n}\nolimits}
+\def\Rm{\mathop{\mathbf{R}_m}\nolimits}
+\def\Rmn{\mathop{\mathbf{R}_{m,n}}\nolimits}
+\def\Dn{\mathop{\mathbf{D}_n}\nolimits}
+\def\Dm{\mathop{\mathbf{D}_m}\nolimits}
+\def\Dmn{\mathop{\mathbf{D}_{m,n}}\nolimits}
+
+\def\inf{\mathop{\rm inf}\nolimits}
+\def\sup{\mathop{\rm sup}\nolimits}
+\def\comp{\mathop{\rm c}\nolimits}
+\def\per{\mathop{\rm per}\nolimits}
+\def\Exp{\mathop{\rm Exp}\nolimits}
+\def\Ewens{\mathop{\rm Ewens}\nolimits}
+\def\ESF{\mathop{\rm ESF}\nolimits}
+\def\ERG{\mathop{\rm ERG}\nolimits}
+\def\Gibbs{\mathop{\rm Gibbs}\nolimits}
+\def\VERG{\mathop{\rm VERG}\nolimits}
+\def\Frag{\mathop{\rm Frag}\nolimits}
+\def\Coag{\mathop{\rm Coag}\nolimits}
+\def\cp{\mathop{\rm CP}\nolimits}
+\def\cutpaste{\mathop{\mbox{Cut}-\mbox{Paste}}\nolimits}
+\def\Disp{\mathop{\rm Disp}\nolimits}
+\def\Unif{\mathop{\rm Unif}\nolimits}
+\def\DM{\mathop{\rm DM}\nolimits}
+\def\PD{\mathop{\rm PD}\nolimits}
+\def\GEM{\mathop{\rm GEM}\nolimits}
+\def\PE{\mathop{\rm Pitman\mbox{-}Yor}\nolimits}
+\def\ER{\mathop{\rm ER}\nolimits}
+\def\dom{\mathop{\rm dom}\nolimits}
+\def\cod{\mathop{\rm cod}\nolimits}
+\def\pr{\mathop{\rm pr}\nolimits}
+\def\rest{\mathop{\bf rest}\nolimits}
+\def\dr{\mathop{\bf dr}\nolimits}
+\def\catC{\mathop{\bf C}\nolimits}
+\def\catD{\mathop{\bf D}\nolimits}
+\def\cate{\mathop{\mathcal{E}}\nolimits}
+\def\catf{\mathop{\mathcal{F}}\nolimits}
+\def\catg{\mathop{\mathcal{G}}\nolimits}
+\def\operatorn{\mathop{\mathcal{O}_n}\nolimits}
+\def\operatorN{\mathop{\mathcal{O}_{\infty}}\nolimits}
+\def\partitions{\mathop{\mathcal{P}}\nolimits}
+\def\kpartitions{\mathop{\mathcal{P}}^{(k)}\nolimits}
+\def\intervalpartitions{\mathop{\mathcal{P}_{\mbox{I}}}\nolimits}
+\def\masspartition{\mathop{\Delta^{\downarrow}}\nolimits}
+\def\masspartitionk{\mathop{\Delta_k^{\downarrow}}\nolimits}
+\def\integerpartitions{\mathop{\mathcal{P}_n}\nolimits}
+\def\integerpartitionsk{\mathop{\mathcal{P}_n^{(k)}}\nolimits}
+\def\kintegerpartitions{\mathop{\mathcal{P}_{n,k}}\nolimits}
+\def\partitionsk{\mathop{\mathcal{P}^{(k)}}\nolimits}
+\def\partitionk{\mathop{\mathcal{P}^{(k)}}\nolimits}
+\def\partitionsNk{\mathop{\mathcal{P}_{[\infty]:k}}\nolimits}
+\def\partitionsn{\mathop{\mathcal{P}_{[n]}}\nolimits}
+\def\partitionsnk{\mathop{\mathcal{P}_{[n]:k}}\nolimits}
+\def\partitionsj{\mathop{\mathcal{P}_{\mathbb{N}:j}}\nolimits}
+\def\partitionsneut{\mathop{\mathcal{P}_{\mathbb{N}:j}^{0}}\nolimits}
+\def\partitionsnneut{\mathop{\mathcal{P}_{[nj]:j}^{0}}\nolimits}
+\def\partitionsnneutk{\mathop{\mathcal{P}_{[nj]:j}^{0|(k)}}\nolimits}
+\def\partitionsnj{\mathop{\mathcal{P}_{[nj]:j}}\nolimits}
+\def\partitionsN{\mathop{\mathcal{P}_{\infty}}\nolimits}
+\def\matrixnk{\mathop{\mathcal{K}_{[n]:k}}\nolimits}
+\def\matrixNk{\mathop{\mathcal{K}_{[\infty]:k}}\nolimits}
+\def\labelednk{\mathop{\mathcal{L}_{[n]:k}}\nolimits}
+\def\labeledNk{\mathop{\mathcal{L}_{[\infty]:k}}\nolimits}
+\def\klabelednk{\mathop{\mathcal{L}^k_{[n]:k}}\nolimits}
+\def\klabeledNk{\mathop{\mathcal{L}^k_{[\infty]:k}}\nolimits}
+\def\diag{\mathop{\rm diag}\nolimits}
+\def\partitionsnjk{\mathop{\mathcal{P}_{[nj]:j}^{(k)}}\nolimits}
+\def\paintboxnu{\mathop{\varrho_{\nu}}\nolimits}
+\def\paintboxs{\mathop{\varrho_s}\nolimits}
+\def\symmetric{\mathop{\mathcal{S}}\nolimits}
+\def\symmetrick{\mathop{\mathrm{Sym}_{k}}\nolimits}
+
+\def\finite{\mathop{\subset_{f}}\nolimits}
+
+\def\symmetricn{\mathop{\mathrm{Sym}_{n}}\nolimits}
+\def\symmetricnk{\mathop{\mathcal{S}^k_{n}}\nolimits}
+
+\def\tree{\mathop{\mathbf{t}}\nolimits}
+\def\treesquot{\mathop{\mathcal{T}^{\approx}}\nolimits}
+\def\treesnquot{\mathop{\mathcal{T}^{\approx}_n}\nolimits}
+\def\trees{\mathop{\mathcal{T}}\nolimits}
+\def\treesN{\mathop{\mathcal{T}_\infty}\nolimits}
+\def\treesNk{\mathop{\mathcal{T}_{[\infty]:k}}\nolimits}
+\def\wtreesnk{\mathop{\mathcal{T}_{[n]:k}^{*}}\nolimits}
+\def\wtreesN{\mathop{\mathcal{T}_{[\infty]}^{*}}\nolimits}
+\def\wtreesNk{\mathop{\mathcal{T}_{[\infty]:k}^{*}}\nolimits}
+
+\def\treesn{\mathop{\mathcal{T}_{[n]}}\nolimits}
+\def\treesk{\mathop{\mathcal{T}^{(k)}}\nolimits}
+\def\treesnk{\mathop{\mathcal{T}_{[n]:k}}\nolimits}
+
+\def\shapesNk{\mathop{\mathcal{S}_{[\infty]:k}}\nolimits}
+\def\shapesnk{\mathop{\mathcal{S}_{[n]:k}}\nolimits}
+
+\def\weightedtrees{\mathop{\bar{\mathcal{T}}}\nolimits}
+\def\weightedtreesn{\mathop{\bar{\mathcal{T}}_n}\nolimits}
+\def\weightedtreesk{\mathop{\bar{\mathcal{T}}^{(k)}}\nolimits}
+\def\weightedtreesnk{\mathop{\bar{\mathcal{T}}_n^{(k)}}\nolimits}
+\def\kpartitionsn{\mathop{\bar{\mathcal{P}}^{(k)}_{[n]}}\nolimits}
+\def\kpartitionk{\mathop{\bar{\mathcal{P}}_{\mathrm{m}}^{(k)}}\nolimits}
+\def\unrootedn{\mathop{\mathcal{UT}_n}\nolimits}
+\def\posmatn{\mathop{\mathbb{M}^+_n}\nolimits}
+\def\stochk{\mathop{\mathcal{S}_k}}
+\def\simplexk{\mathop{\Delta_k}\nolimits}
+\def\ksimplexk{\mathop{\Delta^k_k}\nolimits}
+\def\doublystochasticn{\mathop{\mathcal{DS}_n}\nolimits}
+\def\graphsn{\mathop{\mathcal{G}_n}\nolimits}
+\def\UnGraphs{\mathop{\mathbf{UnGraphs}}\nolimits}
+\def\hypergraphsn{\mathop{\mathcal{H}_n}\nolimits}
+\def\HyperGraphs{\mathop{\mathbf{HyperGraphs}}\nolimits}
+\def\anc{\mathop{\mbox{anc}}\nolimits}
+\def\root{\mathop{\textsc{root}}\nolimits}
+\def\pa{\mathop{\mbox{pa}}\nolimits}
+\def\frag{\mathop{\mbox{frag}}\nolimits}
+\def\MRCA{\mathop{\mbox{MRCA}}\nolimits}
+
+\def\rp{\mathop{\mbox{rp}}\nolimits}
+\def\part{\mathop{\mbox{Part}}\nolimits}
+\def\subdot{\hbox{\bf.}}
+\def\MonSets{\mathop{\mathbf{MonSets}}\nolimits}
+\def\mon{\mathop{\mbox{Mon}}\nolimits}
+\def\MonSetsn{\mathop{\mathbf{Mon_{[n]}}}\nolimits}
+\def\im{\mathop{\mbox{im}}\nolimits}
+\def\set{\mathop{\mbox{Set}}\nolimits}
+\def\graph{\mathop{\mbox{Graph}}\nolimits}
+\def\emm{\mathop{[m]}\nolimits}
+\def\mk{\mathop{[mk]}\nolimits}
+\def\nk{\mathop{[nk]}\nolimits}
+\def\emmk{\mathop{[m]^k}\nolimits}
+\def\ennk{\mathop{[n]^k}\nolimits}
+\def\ell{\mathop{[l]}\nolimits}
+\def\equalinlaw{\mathop{=_{\mathcal{L}}}\nolimits}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{example}[thm]{Example}
+\newtheorem{conj}[thm]{Conjecture}
+\newtheorem{rmk}[thm]{Remark}%\endlocaldefs
+
+\begin{document}
+
+
+         % and the secondary ams number(s) in the second bracket
+         % e.g. \ams{60E20}{49G03;49F10}
+%\begin{keyword}[class=AMS]
+%\kwd[Primary ]{}
+%\kwd{}
+%\kwd[; secondary ]{}
+%\end{keyword}
+
+%\begin{keyword}
+%\kwd{}
+%\kwd{}
+%\end{keyword}
+
+
+
+% AOS,AOAS: If there are supplements please fill:
+%\begin{supplement}[id=suppA]
+%  \sname{Supplement A}
+%  \stitle{Title}
+%  \slink[url]{http://lib.stat.cmu.edu/aoas/???/???}
+%  \sdescription{Some text}
+%\end{supplement}
+
+\noindent {Editorial Board, {\em Science}}
+
+
+\noindent \today
+
+\noindent Dear Editors,
+
+Kindly find enclosed the Report titled ``Statistical paradoxes in coronavirus case-counts: selection bias, measurement error, and the COVID-19 pandemic,'' by Walter Dempsey.
+
+The report contains novel empirical findings and an investigation of statistical paradoxes arising from the analysis of reported coronavirus case-counts that are being used by governments to guide policies and decision making.
+We have discovered an estimator and statistical decomposition of the associated error that shows the 8.4 million tests conducted in the US provides information on COVID-19 prevalence equivalent to a simple random sample of size 89.
+Analogous decompositions for the rate of change in prevalence and the effective reproduction number are used to demonstrate how the magnitude and sign of estimation bias varies over time, a bias which has strong policy implications.
+Overall, our findings demonstrate the statistical limitations of increased testing in the presence of selection bias and measurement error as well as how easy it is for researchers analysing reported coronavirus case-counts to not only fool themselves but be confident in their incorrect conclusions.
+The work presents an important advance in the statistical understanding of the COVID-19 pandemic that will interest the broad readership of {\em Science}.
+
+\noindent The contact address of the author is given below.
+
+\noindent Sincerely,\\
+%\begin{figure}[!h]
+%\includegraphics[scale=0.2]{HC.png}
+%\end{figure}
+
+% \begin{table}[!h]
+% \begin{tabular}{l}
+\noindent Walter Dempsey\\
+University of Michigan\\
+M4057 SPH II \\
+1415 Washington Heights \\
+Ann Arbor, MI 48109, USA\\
+wdem@umich.edu
+% \end{tabular}
+% \end{table}
+
+
+
+
+
+
+
+\end{document}
+
+\noindent Harry Crane\\
+Department of Statistics \& Biostatistics\\
+Rutgers, the State University of New Jersey\\
+110 Frelinghuysen Road\\
+Hill Center, Room 501\\
+Piscataway, NJ 08854, USA\\
+hcrane@stat.rutgers.edu\\
+(848) 445-7645
+
+\noindent Walter Dempsey\\
