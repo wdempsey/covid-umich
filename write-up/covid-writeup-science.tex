@@ -118,13 +118,13 @@ A key question is ``What is the (effective) sample size from a SRS with perfect 
 $$
 \frac{f}{1-f} \times \frac{1}{E_{\I} \left[ \rho_{I,Y}^2 D_M^2 \right]}.
 $$
-As of May 8th, the US has performed $8,412,095$ tests.  The US population is roughly $328$ million, so $f = 0.066$.  The empirical prevalence is $9.5\%$ on May 8th. A recent study estimates a false positive and negative rate for antibody testing at $0.5$\% and $17.2$\% respectively \cite{Bendavid2020}. Supposing COVID-19 positive individuals are $2$ times more likely to get tested, then the effective sample size is $89$.  Recent proposals~\cite{Siddarth2020} have argued for increased testing capacity, which may likely reduce the relative sampling rate.  If the relative sampling rate drops to $1.2$ then the effective sample size will increase to $1879$.  Thus the effective sample size even in optimistic scenarios is equivalent to a small random sample from the population.  Moreover, increased testing capacity may also come at the cost of increases in false positive and negative rates.  Consider the case where $f$ increases from $0.05$ to $0.1$ and the increase is associated with the false negative rate rising from $5\%$ to $20$\%.  Then the effective sample size increases by a factor of $1.76$ rather than the expected $4$ fold increase.
+As of June 10th, the US has performed $21,474,531$ tests.  The US population is roughly $312$ million, so $f = 0.069$.  The cumulative empirical prevalence is $9.3\%$ on May 8th. A recent study estimates a false positive and negative rate for antibody testing at $0.5$\% and $17.2$\% respectively \cite{Bendavid2020}. Supposing COVID-19 positive individuals are $2$ times more likely to get tested, then the effective sample size is $92$.  Recent proposals~\cite{Siddarth2020} have argued for increased testing capacity, which may likely reduce the relative sampling rate.  If the relative sampling rate drops to $1.2$ then the effective sample size will increase to $1950$.  Thus the effective sample size even in optimistic scenarios is equivalent to a small random sample from the population.  Moreover, increased testing capacity may also come at the cost of increases in false positive and negative rates.  Consider the case where $f$ increases from $0.05$ to $0.1$ and the increase is associated with the false negative rate rising from $5\%$ to $20$\%.  Then the effective sample size increases by a factor of $1.76$ rather than the expected $4$ fold increase.
 
 \paragraph*{Regrettable rates.}
 
 The prior analysis demonstrates the limited information regarding COVID-19 prevalence in observational case-count data.  Scientists, however, may claim that daily observed case-counts simply undercount daily total cases by a constant multiple over time.  If true then the ratio of case-counts at consecutive times may be a good estimate of the true change in prevalence, helping scientists understand the disease trajectory.  In this section, we demonstrate how selection bias and imperfect testing impact such estimates.
 
-Let $\bar Y_{t-1}$ and $\bar Y_{t}$ denote the prevalence on two consecutive days and consider the estimator $r = \bar y_t / \bar y_{t-1}$.  Using a second-order Taylor series approximation, the error between ${\bar y_t}/{\bar y_{t-1}}$ and ${\bar Y_{t}}/{\bar Y_{t-1}}$ can be expressed approximately as
+Let $\bar Y_{t-1}$ and $\bar Y_{t}$ denote the prevalence on two consecutive days and consider the estimator $r = \tilde y_t / \tilde y_{t-1}$.  Using a second-order Taylor series approximation, the error between ${\tilde y_t}/{\tilde y_{t-1}}$ and ${\bar Y_{t}}/{\bar Y_{t-1}}$ can be expressed approximately as
 $$
 \begin{aligned}
 \frac{\bar Y_t}{\bar Y_{t-1}} &\times \bigg[ \rho_{I_t,Y_t} D_{M_t} \sqrt{\frac{1-f_t}{f_t}} CV (Y_t)  -\rho_{I_{t-1},Y_{t-1}} D_{M_{t-1}} \sqrt{\frac{1-f_{t-1}}{f_{t-1}}} CV (Y_{t-1}) \bigg] \\
@@ -148,7 +148,7 @@ Many epidemiologists argue that tracking the effective reproduction number $R_t$
 $$
 R_t = 1 + \frac{1}{\gamma} \log \left( \frac{K_t}{K_{t-1}} \right).
 $$
-Of course, we do not observe $K_t$ and $K_{t-1}$.  Under SRS of new cases among those susceptible on day $t$, the natural estimator is $S_t \bar y_t$.  Unfortunately the number of susceptible individuals on day $t$ is unknown.  Here, we study the estimator $\hat R_t = 1 + \frac{1}{\gamma} \log \left( \bar y_t / \bar y_{t-1} \right)$. We can again express the statistical error of $\hat R_t - R_t$ in useful terms as follows
+Of course, we do not observe $K_t$ and $K_{t-1}$.  Under SRS of new cases among those susceptible on day $t$, the natural estimator is $S_t \tilde y_t$.  Unfortunately the number of susceptible individuals on day $t$ is unknown.  Here, we study the estimator $\hat R_t = 1 + \frac{1}{\gamma} \log \left( \tilde y_t / \tilde y_{t-1} \right)$. We can again express the statistical error of $\hat R_t - R_t$ in useful terms as follows
 $$
 \begin{aligned}
 \frac{1}{\gamma}\log &\bigg( 1 + \bigg[ \rho_{I_t,K_t} D_{M_t} \sqrt{\frac{1-f_t}{f_t}} CV (K_t)  -\rho_{I_{t-1},K_{t-1}} D_{M_{t-1}} \sqrt{\frac{1-f_{t-1}}{f_{t-1}}} CV (K_{t-1}) \bigg] \\
@@ -196,10 +196,12 @@ One can extend the SIR model to account for selection bias and measurement error
 \section*{Acknowledgments}
 We thank covidtracking.com for providing open-access to state case-count data.
 
-%Here you should list the contents of your Supplementary Materials -- below is an example.
-%You should include a list of Supplementary figures, Tables, and any references that appear only in the SM.
-%Note that the reference numbering continues from the main text to the SM.
-% In the example below, Refs. 4-10 were cited only in the SM.
+% %Here you should list the contents of your Supplementary Materials -- below is an example.
+% %You should include a list of Supplementary figures, Tables, and any references that appear only in the SM.
+% %Note that the reference numbering continues from the main text to the SM.
+% % In the example below, Refs. 4-10 were cited only in the SM.
+% \newpage
+
 \section*{Supplementary materials}
 
 All relevant code can be found at \url{https://github.com/wdempsey/covid-umich}.
@@ -512,7 +514,6 @@ Randomization of treatment assignment in clinical trials negates unobserved conf
 % submit figures as separate files according to the Art Department's
 % instructions.
 
-
 \clearpage
 
 \begin{figure}[!th]
@@ -602,23 +603,3 @@ Randomization of treatment assignment in clinical trials negates unobserved conf
 % be submitted separately.
 
 \end{document}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
