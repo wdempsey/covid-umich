@@ -95,6 +95,9 @@ Most states provide additional demographic data.
 
 We focus on strata built on age, race, and sex.  Only have marginal information!
 
+% https://www.regenstrief.org/covid-dashboard/
+%
+
 \subsection{US COVID-19 diagnostic and antibody testing}
 
 There are two types of tests.  The first is
@@ -123,12 +126,15 @@ On April 28th, 2020, the criteria expanded to include any Indiana resident with 
 On June 15, 2020, ISDH lifted all restrictions and testing expanded to include anyone in Indiana who wants to be tested for coronavirus.
 % https://www.indystar.com/story/news/health/2020/06/12/indiana-says-anyone-who-wants-coronavirus-test-can-get-one/3179151001/
 
+
+
 \subsection{Probabilistic samples}
 
 Indiana random sample description (see paper for more details)
 
 Among 15,495 randomly selected persons, 3,695 participated of whom 3,629 had at least one test result available.
 
+Once a person showed up to our mobile testing sites, they were given both a PCR swab test that looks for current infections and an antibody blood test that looks for evidence of past infection.
 
 
 \section{Analysis of case-count data}
@@ -241,36 +247,69 @@ This implies a similar trade-off as before but on the logarithmic scale.  The er
 
 \section{Doubly robust estimation}
 
-When presented with non-probability samples, one can often reduce bias in two ways.  First, one may model the propensity for self-selection and use inverse probability weighting (IPW)~(cite: Elliott) techniques to adjust for selection bias.  Unlike in causal inference~(cite: Robins) where the observational data permits direct estimation of propensities, one does not observe those who decide not to be  part of the .  Instead, we need auxiliary information.  Here, we leverage US census and the Indiana random testing demographic information to adjust the propensities.
+The prior section focused on the negative consequences.
 
-First generate the counts per cell using raking on the marginal summary statistics.  Suppose the selection indicator could be modeled parametrically and depends only on the strata $P($
+The question is "What can be done".
 
-Start by using raking to get the ``number'' of individuals per strata.
-\begin{rmk}[Raking]
-All we get is testing demographic data.  Indiana provides.  Checked and it is often available upon digging.  Demographic data allows us to build stratified estimators.  We start by assuming that $d_k$ is the number of individuals in each strata is known.
-\end{rmk}
+Here we present a technique for combining epidemilogical forecasts, IPW built using auxiliary information, and measurement-error corrections to generate 'doubly robust' estimates of the prevalence (true case count).
 
+We provide an appropriate extension of the statistical decomposition.
+Remark that the robustness is under certain assumptions which we know are likely false; therefore, we are interested in
 
-Suppose we wanted to fit a logistic regression with the outcome being the selection indicator $Y_i$ given the strata information, coded as $X_i \in [K]$ for simplicity.
+\subsection{Selection propensity estimation}
+
+With non-probability samples, one can often reduce bias in two ways.  First, one may model the propensity for self-selection and use inverse probability weighting (IPW)~(cite: Elliott) techniques to adjust for selection bias.  In causal inference~(cite: Robins), given certain ignorability assumptions, the observational data permits direct estimation of treatment propensity.  In the COVID-19 context, one does not observe those who decide not to be tested.  In order to estimate selection propensities, one instead needs auxiliary information.  Here we present two methods for propensity estimation -- the first leveraging population-level summary statistics and the second leveraging the probability sample.
+
+Let $X_j$ denote a vector of covariates for the $j$th individual in the population, $j=1,\ldots,N$.  Suppose the selection indicator $I_j$ is a Bernoulli random variable that depends only on these covariates, i.e., $P(I_j = 1 \mid X_j = x) = \pi (x; \theta)$.  Maximum likelihood estimation follows by maximizing
+\begin{equation}
+\label{eq:propensity}
+\sum_{i=1}^N R_i \log \left( \frac{\pi (X_i; \theta)}{1-\pi(X_i; \theta)} \right) + \sum_{i=1}^N \log \left( 1 - \pi (X_i; \theta) \right).
+\end{equation}
+The first sum only involves individuals observed in the nonprobability sample.
+The second sum is over the entire population.  Maximimum likelihood estimation therefore requires knowledge of covariate information for every individual in the population.  Typically, this is not possible.  We next present two options that are possible for analysis of selection propensities using only publically available COVID-19 case count data.
+
+\subsubsection{Auxiliary information through population-level summary statistics}
+
+For COVID-19 case-count data, the only covariate information provided by state and local governments are summary statistics for those factors discussed in Section XX -- age, sex, race, and (potentially) co-morbities.  These are discrete factors and therefore define a stratification of the population; then we can write $X_i \in \{1,\ldots,K\}$ to denote the individual belongs to strata $k$. One strata, for example, could be defined as anyone who is greater than or equal to 60 years of age, male, and white.
 $$
-\sum_{i=1}^N R_i \log \left( \pi (X_i; \theta) \right) + (1-R_i) \log \left( 1 - \pi (X_i; \theta) \right)
-= \sum_{i=1}^N R_i \log \left( \frac{\pi (X_i; \theta)}{1-\pi(X_i; \theta)} \right) + \sum_{i=1}^N \log \left( 1 - \pi (X_i; \theta) \right)
+\sum_{k=1}^K d_k \log \left( \frac{\pi (k; \theta)}{1-\pi(k; \theta)} \right) + \sum_{k=1}^K N_k \log \left( 1 - \pi (k; \theta) \right).
 $$
-The first term involves quantities observed in the nonprobability sample and can be re-expressed as sums over the strata.  The second term, however, depends on the entire population.  We can re-write this as a sum over strata as well $\sum_{k=1}^K N_k \log \left( 1- \pi_k \right)$ where $N_k$ is the number of individuals in strata $k$.  The strata totals may be available from Census information. Alternatively, one could use the probability sample to construct a design-unbiased estimator of this quantity $\sum_k N \cdot \tilde d_k/n \log ( 1- \pi_k )$ where $\tilde d_k$ is the number of observations in strata $k$ in the random sample.  Under the assumptoin that $\pi_k < 1$, this leads to two potential estimators
+where $d_k$ and $N_k$ are the number of individuals in the nonprobabilistic sample and in the entire population respectively in the $k$th strata, $k=1,\ldots K$.
+
+Maximum likelihood estimation then requires knowledge of $N_k$, which is feasible when population-level summary statistics are available.  The US Census, for example, can provide marginal summary statistics for the distribution of age, sex, and race in Indiana state.  For co-morbitities such as hypertension, diabetes, and chronic obstructive pulmonary disease (COPD).
+Unfortunately the joint distribution is not provided.  To circumvent this, we employ the standard technique of raking (cite: paper) to generate estimates $\hat N_k$ for the strata information.  Estimation can then be performed by using standard algorithms such as the Newton-Rhapson methods.  In the particular instance that the selection propensity is estimated non-parametrically then the resulting weight can be computed exactly and is given by $\hat P(I_j = 1 \mid X_j = k) = \hat \pi_k = d_k/\hat N_k$.
+
+\subsubsection{Auxiliary information through probability samples}
+
+(cite: Chen)
+Currently US testing does not collect additional covariate information; however, this need not be the case.  Recommendation XX below states that additional covariate information should be collected from nonprobabilistic samples.  If this were the case, we could not longer rely on population-level summary statistics so an alternative is required.
+
+Here, we assume access to a probability sample from the same population on which the outcome and exact same set of covariates are measured.  Let $\tilde R_i$ be an indicator that the individual was included in the probability sample and $\tilde W_i$ be the probability of inclusion for the $i$th individual (i.e., equal to $n/N$ for a simple random sample of size $n$). The probability sample is used to construct a design-unbiased estimator of the second term
 $$
-\hat \pi_k^{(1)} = \frac{d_k}{N_k}, \quad \hat \pi_k^{(2)} = \frac{d_k}{N} \frac{n}{\tilde d_k}.
+\sum_{i=1}^N R_i \log \left( \frac{\pi (X_i; \theta)}{1-\pi(X_i; \theta)} \right)  + \sum_{i=1}^N \tilde R_i \tilde W_i \log ( 1 - \pi (X_i; \theta)).
 $$
-The assumptionWe start by assuming that $\pi_k < 1$ for all $k$.  This is not true (need to deal with very bad symptoms cases). We unfortunately don't have $\tilde d_k$ nor $d_k$, but we can try and get these into using standard techniques (raking).
+Taking the expecation of the second term with respect to the sampling design yields the second term in~\eqref{eq:propensity}.  Recall Indiana's probabilistic sample was a stratified random sampling design; therefore, the weights will depend on strata (i.e., 10 strata for each public health preparadness district)
+
+In the simple stratified case with a non-parametric selection propensity, the weight is given by estimator of the
+quantity $\sum_k N \cdot \tilde d_k/n \log ( 1- \pi_k )$ where $\tilde d_k$ is the number of observations in strata $k$ in the random sample.
+
+\subsubsection{An IPW estimator}
+
+Given the
+
+Then our new estimator is
+$$
+\bar y_n^\star
+= \frac{1}{1-FP-FN} \cdot \frac{1}{N} \sum_{i=1}^n \frac{y_i - FP}{\pi (x_i; \hat \theta)}
+= \frac{1}{1-FP-FN} \sum_{k=1}^K \frac{d_k}{N \pi_k} (\bar y_k - FP).
+$$
+where $k$ indexes the strata and $d_k$ is the number of samples in strata $k$.
+
+This is not true (need to deal with very bad symptoms cases).
 
 Simplest case we have Age $<40$ in the random sample is $1,017$ and we have $13+17.3+15.2 = 45\% \times 1,002,038$ tests so $450917.1$ tests. Then $N = 6.85$ million while $n = 3658$ leading to $\pi_k = 0.24$.
 
 
-
-Then our new estimator is
-$$
-\frac{1}{1-FP-FN} \sum_{k} d_k (\tilde y - FP) / \pi_k.
-$$
-where $k$ indexes the strata and $d_k$ is the number of samples in strata $k$.
 
 \subsection{Statistical decomposition of error}
 
@@ -281,11 +320,14 @@ $$
 
 We can act like this is now $\rho_{I,\tilde Y}$ is $O(N^{-1})$ but this is most likely not the case; doing so, is an assumption that we "got something right".  But the random sample has response bias and coverage issues as well.  Therefore, we suspect it won't fix everything.  In section XX, we will try and estimate the expecation of this quanitty after the fact; this will allow us to assess effective sample size and build corresponding CIs.
 
-
+In Section XX, we estimate $\rho_{I,Y}$ and $\rho_{\tilde I, Y}$ to see the impact of IPW.
 
 \subsection{Model-based estimation}
 
 We circle back and add in a SEIR model with measurement-error.  We can correct for selection bias two through simple rules (see Song and Mukherjee and others for more complex alternatives).  With such limited data we can only predict total counts and use the demographics as is to be representative.  This yields estimates at $\hat y_k$
+
+
+\subsection{Doubly robust estimation}
 
 $$
 \sum_{k} P_k \hat y_k + \frac{1}{N} \sum_{i=1}^N I_i \frac{(Y_i - FP)/(1-FP-FN) - \hat y}{\pi_{K_i}}
@@ -324,9 +366,6 @@ $$
 Z_n = \frac{\bar y_1 - \bar y_2}{ \frac{1-f}{f} \sigma_y \sqrt{ \frac{1}{n_{1,eff} - 1} + \frac{1}{n_{2,eff} - 1}}}
 $$
 allows us to build Z-scores that account for the true sample size.  While still not perfect, this allows us to build Z-scores that are not overly confident due to selection bias and measurement error.  See Section~\ref{section:est_dq} for discussion of how to estimate data quality.
-
-
-\section{Alternative estimators}
 
 \subsection{Rate comparisons}
 
