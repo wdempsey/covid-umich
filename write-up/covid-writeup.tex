@@ -79,7 +79,9 @@ Epi forecasting
 
 \subsection{Objectives and outline}
 
-This article discusses the relationship between three statistical concepts: selection bias, measurement error, and the too often forgotten population size. We clarify mathematically why the situation is much more complex than it first appears.  Through simple mathematical arguments, we clarify five important issues related to COVID-19 case-count analysis.  First, we show that unadjusted prevalence rates are (unsurprisingly) biased when tests are imperfect. What is surprising is that the direction and magnitude of the bias can vary substantially and interacts with the sampling fraction.  Next we show that data quality for adjusted prevalence rates includes an additional term in the error decomposition that captures the interplay among measurement error, selection bias, and prevalence.  Third, we show that daily trends in rate of positive tests is equally problematic even if testing rates and selection protocols are held constant.  We show that the rate of change in COVID-19 observed case-counts overestimates the true rate of change prior to the peak time and underestimates it immediately after.  This implies a data scientist analyzing observed rates will be (on average) overly pessimistic in the early stages of the pandemic, and overly optimistic subsequent to the peak times.  We show that estimates of the effective reproduction number may be similarly impacted.  Fourth, we show that cross-country comparisons are difficult at best with population size, sampling fraction, and data quality all interacting to impact null hypothesis testing.  Fifth, we discuss a sensitivity analysis method for estimating data quality and its use in understanding the potential biases in COVID-19 case-count analyses.  We then end the paper with a discussion of the benefits of randomized testing and use of auxiliary information to improve over simple random sampling.
+This article discusses the relationship between three statistical concepts: selection bias, measurement error, and the too often forgotten population size. We clarify mathematically why the situation is much more complex than it first appears.  Through simple mathematical arguments, we clarify five important issues related to COVID-19 case-count analysis.  First, we show that unadjusted prevalence rates are (unsurprisingly) biased when tests are imperfect. What is surprising is that the direction and magnitude of the bias can vary substantially and interacts with the sampling fraction.  Next we show that data quality for adjusted prevalence rates includes an additional term in the error decomposition that captures the interplay among measurement error, selection bias, and prevalence.  Third, we show that daily trends in rate of positive tests is equally problematic even if testing rates and selection protocols are held constant.  We show that the rate of change in COVID-19 observed case-counts overestimates the true rate of change prior to the peak time and underestimates it immediately after.  This implies a data scientist analyzing observed rates will be (on average) overly pessimistic in the early stages of the pandemic, and overly optimistic subsequent to the peak times.  We show that estimates of the effective reproduction number may be similarly impacted.  Fourth, we show that cross-country comparisons are difficult at best with population size, sampling fraction, and data quality all interacting to impact null hypothesis testing.  Fifth, we discuss a sensitivity analysis method for estimating data quality and its use in understanding the potential biases in COVID-19 case-count analyses.  {\bf We then end the paper with a discussion of the benefits of randomized testing and use of auxiliary information to improve over simple random sampling. NEED TO MAKE CLEAR THAT WE CAN MAKE USE OF RANDOM SAMPLING TO IMPROVE INFERENCE FROM NONPROB SAMPLES}
+
+
 
 \section{COVID-19 data}
 
@@ -154,6 +156,7 @@ The first term represents \emph{data quality}, the second \emph{data quantity}, 
 The key issue with selective testing is that $E_{\I} [ \rho_{I,Y} ] \neq 0$.  Meng identified this as the fundamental issue that can lead to paradoxes in the analysis of big data. The remainder of this paper aims to build upon this fundamental work by extending the decomposition in two directions: accounting for measurement error and the temporal nature of the pandemic.  We then discuss effective sampling methods and their importance in the current pandemic.
 
 \subsection{Imperfect testing}
+\label{section:imperfecttesting}
 
 Tests are imperfect.  COVID-19 testing is no exception. Here we investigate the interplay between imperfect testing and selection bias.  In discussions of inaccurate testing, the standard assumption is measurement error leads to parameter attenuation.  When paired with selection bias, however, the two sources of error become entangled, and resulting errors can become magnified, muted, or even switch signs.
 
@@ -245,20 +248,16 @@ This implies a similar trade-off as before but on the logarithmic scale.  The er
 \label{fig:rates}
 \end{figure}
 
-\section{Doubly robust estimation}
+\section{Potential improvements to prevalence estimation}
 
-The prior section focused on the negative consequences.
-
-The question is "What can be done".
-
-Here we present a technique for combining epidemilogical forecasts, IPW built using auxiliary information, and measurement-error corrections to generate 'doubly robust' estimates of the prevalence (true case count).
-
-We provide an appropriate extension of the statistical decomposition.
-Remark that the robustness is under certain assumptions which we know are likely false; therefore, we are interested in
+The prior section presented negative consequences of analysing the measurement-error adjusted prevalence from observed case-count data.  This raises the immediate question as to whether prevalence estimators can be improved using publicly available data.  In this section, we consider two directions. First, we use auxiliary information to build selection propensities and consider an inverse probability weighting (IWP) estimator.
+We extend the statistical error decomposition to the weighted setting.
+Second, we consider an extension of compartmental models from infectious disease epidemiology that adjust for selection bias and measurement-error as model-based forecasts of prevalence.
+We then combine these epidemiological forecasts, selection propensities, and measurement-error corrections to generate \emph{doubly robust} prevalence estimators. We provide an appropriate extension of the statistical error decomposition and compare to the other prior decompositions. The proposed method and corresponding statistical error decompositions guide our recommendations in Section XX.
 
 \subsection{Selection propensity estimation}
 
-With non-probability samples, one can often reduce bias in two ways.  First, one may model the propensity for self-selection and use inverse probability weighting (IPW)~(cite: Elliott) techniques to adjust for selection bias.  In causal inference~(cite: Robins), given certain ignorability assumptions, the observational data permits direct estimation of treatment propensity.  In the COVID-19 context, one does not observe those who decide not to be tested.  In order to estimate selection propensities, one instead needs auxiliary information.  Here we present two methods for propensity estimation -- the first leveraging population-level summary statistics and the second leveraging the probability sample.
+With non-probability samples, one can often reduce bias in two ways.  First, one may model the propensity for self-selection and use inverse probability weighting (IPW)~(cite: Elliott) techniques to adjust for selection bias.  In causal inference~(cite: Robins), given certain ignorability assumptions, the observational data permits direct estimation of treatment propensity.  In the COVID-19 context, one does not observe those who decide not to be tested.  In order to estimate selection propensities, one instead needs auxiliary information.  Here we present two methods for propensity estimation -- use of population-level summary statistics and use of a probability sample.
 
 Let $X_j$ denote a vector of covariates for the $j$th individual in the population, $j=1,\ldots,N$.  Suppose the selection indicator $I_j$ is a Bernoulli random variable that depends only on these covariates, i.e., $P(I_j = 1 \mid X_j = x) = \pi (x; \theta)$.  Maximum likelihood estimation follows by maximizing
 \begin{equation}
@@ -288,35 +287,24 @@ Here, we assume access to a probability sample from the same population on which
 $$
 \sum_{i=1}^N R_i \log \left( \frac{\pi (X_i; \theta)}{1-\pi(X_i; \theta)} \right)  + \sum_{i=1}^N \tilde R_i \tilde W_i \log ( 1 - \pi (X_i; \theta)).
 $$
-Taking the expecation of the second term with respect to the sampling design yields the second term in~\eqref{eq:propensity}.  Recall Indiana's probabilistic sample was a stratified random sampling design; therefore, the weights will depend on strata (i.e., 10 strata for each public health preparadness district)
+Taking the expecation of the second term with respect to the sampling design yields the second term in~\eqref{eq:propensity}.  Recall Indiana's probabilistic sample was a stratified random sampling design; therefore, the weights will depend on strata (i.e., 10 strata for each public health preparadness district).  Under simple random sampling and non-parametric selection propensity on a stratification variable, the weight is given by estimator of the $\hat \pi_k = (d_k / \tilde d_k) (n / N)$ where $\tilde d_k$ is the number of observations in strata $k$ in the random sample.
 
-In the simple stratified case with a non-parametric selection propensity, the weight is given by estimator of the
-quantity $\sum_k N \cdot \tilde d_k/n \log ( 1- \pi_k )$ where $\tilde d_k$ is the number of observations in strata $k$ in the random sample.
-
-\subsubsection{An IPW estimator}
-
-Given the
-
-Then our new estimator is
+\subsubsection{An IPW estimator and statistical error decomposition.}
+Given a selection propensity, define a weight~$W(x) = \pi (x; \hat \theta)^{-1}$. Then the IPW estimator adjusted for measurement error is given by
 $$
 \bar y_n^\star
-= \frac{1}{1-FP-FN} \cdot \frac{1}{N} \sum_{i=1}^n \frac{y_i - FP}{\pi (x_i; \hat \theta)}
-= \frac{1}{1-FP-FN} \sum_{k=1}^K \frac{d_k}{N \pi_k} (\bar y_k - FP).
+= \frac{1}{1-FP-FN} \cdot \frac{\sum_{i=1}^n w(x_i) (y_i - FP)}{\pi (x_i; \hat \theta)}
+\stackrel{(2)}{=} \frac{1}{1-FP-FN} \sum_{k=1}^K \frac{d_k}{N \pi_k} (\bar y_k - FP),
 $$
-where $k$ indexes the strata and $d_k$ is the number of samples in strata $k$.
+where the second equality (2) is under the assumption that $x_i$ is a stratification variable with $k$ indexing the strata and $d_k$ is the number of samples in strata $k$. Under simple random sampling with one strata~$\hat \pi_k = n/N$ and we recover the estimator $\tilde y_n$ from Section~\ref{section:imperfecttesting}.
 
-This is not true (need to deal with very bad symptoms cases).
-
-Simplest case we have Age $<40$ in the random sample is $1,017$ and we have $13+17.3+15.2 = 45\% \times 1,002,038$ tests so $450917.1$ tests. Then $N = 6.85$ million while $n = 3658$ leading to $\pi_k = 0.24$.
-
-
-
-\subsection{Statistical decomposition of error}
-
-For $i=1,\ldots,N$ let $\tilde Y_i = (Y_i - FP)/ (1- FP -FN)$ and $\tilde I_i = I_i / \pi_{K_i}$.  Then the error can now be expressed as:
+Let $\tilde I_j = I_j / (N \cdot \pi (X_j; \theta)) := I_j W_j$ for $j=1,\ldots,N$.  Then we can express $\bar y_n^\star$ as a weighted estimator $(1-FP-FN)^{-1} \sum_{i=1}^n $Then the error when comparing weighted estimator~$\bar y_n^\star$ to the true prevalence $\bar Y$ can be expressed as:
 $$
-\rho_{\tilde I, Y} \times \sqrt{\frac{1-f+ CV^2_W}{f}} \sigma_{Y} \times D_M
+\rho_{\tilde I, Y} \times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y} \times \underbrace{\left[ 1 - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right] \times \frac{1}{1-(FP+FN)}}_{D_M} \times \frac{E_J[\tilde I_J]}{N}
 $$
+where $CV_W$ is the coefficient of variation (i.e., standard deviation/mean) of $W_J$ given $R_J = 1$.  See Appendix XX for the derivation.
+
+Interestingly, the impact of measurement-error on data quality is unchanged when considering a weighted estimand.  Similar to~\cite{Meng2018}, the data quality index....
 
 We can act like this is now $\rho_{I,\tilde Y}$ is $O(N^{-1})$ but this is most likely not the case; doing so, is an assumption that we "got something right".  But the random sample has response bias and coverage issues as well.  Therefore, we suspect it won't fix everything.  In section XX, we will try and estimate the expecation of this quanitty after the fact; this will allow us to assess effective sample size and build corresponding CIs.
 
@@ -324,8 +312,11 @@ In Section XX, we estimate $\rho_{I,Y}$ and $\rho_{\tilde I, Y}$ to see the impa
 
 \subsection{Model-based estimation}
 
-We circle back and add in a SEIR model with measurement-error.  We can correct for selection bias two through simple rules (see Song and Mukherjee and others for more complex alternatives).  With such limited data we can only predict total counts and use the demographics as is to be representative.  This yields estimates at $\hat y_k$
+Until now, this paper focused primarily on selection bias in coronavirus case-count data from a purely statistical perspective.  Here, we extend the approach to whether it is possible bring in simple models from infectious diease epidemiology.  Our goal is simply an estimate of $\bar y_k$, the prevalence in strata $k$.
 
+We rely heavily on recently available software~\cite{Song2020} for estimation of such models.
+
+We circle back and add in a SEIR model with measurement-error.  We can correct for selection bias two through simple rules (see Song and Mukherjee and others for more complex alternatives).  With such limited data we can only predict total counts and use the demographics as is to be representative.  This yields estimates at $\hat y_k$ for each strata.
 
 \subsection{Doubly robust estimation}
 
@@ -333,6 +324,16 @@ $$
 \sum_{k} P_k \hat y_k + \frac{1}{N} \sum_{i=1}^N I_i \frac{(Y_i - FP)/(1-FP-FN) - \hat y}{\pi_{K_i}}
 $$
 where $P_k$ is the population fraction in strata $k$. This estimator is ``doubly-robust'' in the sense that it is robust to either the SIR or the propensities being correctly specified.  Setting $\pi_i = n/N$ and $\hat y_k = 0$ yields the estimator $(\bar y_n - FP)/(1-FP-FN)$.
+
+Corresponding standard errors are
+$$
+\text{Var} (\bar y_{DR}^\star) =
+$$
+See Appendix XX for a derivation.
+
+{\bf where to describe difference from Chen}.
+
+Remark that the robustness is under certain assumptions which we know are likely false; therefore, we are interested in
 
 Trying to decompose this error we start by recognizing $\frac{1}{N} \sum_{i=1}^N Y_i = \sum_k P_k \bar Y_k$.  Then we can concern ourselves with the per strata errors:
 $$
@@ -398,8 +399,32 @@ where $e_{jt}$ is the error associated given in Section \ref{section:r0-estimati
 \section{Applications to binary outcome and the COVID-19 pandemic.}
 
 
+\subsection{COVID-19 active infection prevalence in Indiana}
+
+We have a small non-random sample to supplement and get these; then use raking on the larger study.  Appendix XX presents the marginal distributions for the non-random sample per
+
+Heuristically, one may suppose that asymptomatic individuals are less likely to select.  This is born out.
+
+This is not true (need to deal with very bad symptoms cases).
+
+Simplest case we have Age $<40$ in the random sample is $1,017$ and we have $13+17.3+15.2 = 45\% \times 1,002,038$ tests so $450917.1$ tests. Then $N = 6.85$ million while $n = 3658$ leading to $\pi_k = 0.24$.
+
+
+\begin{rmk}[Use of second nonrandom sample]
+The key issue with selection bias is whether the individual is displaying symptoms and had contact with someone who was COVID+.  These are not captured by the
+
+In random sample, $44.2$\% of individuals who tested positive for SARS-CoV-2 positive individuals reported no symptoms during the 2 weeks before testing.
+
+In nonrandom sample, $20.2$\% of individuals who tested positive for SARS-CoV-2 reported no symptoms during the 2 weeks before testing.
+
+\end{rmk}
+
+
+
 \subsection{Estimation of Data Quality}
 \label{section:est_dq}
+
+SEROPREVALENCE (i.e., used to be infected).  We can attempt to estimate using our methods and assume non-overlapping samples.  Then back out the correlation.
 
 We next consider estimation of data quality $E_{\I} \left[ \rho_{I,Y} \right]$. In \cite{Meng2018}, estimation relied on observing the true outcome (i.e., election vote totals), which  is not possible in the current crisis.  Here, we propose using surveys as noisy but unbiased estimates of the true prevalence. Our goal is not inferential. Instead, we aim to build sensitivity analyses that can aid in understanding the amount of information in observational COVID case-count data.
 
@@ -465,7 +490,7 @@ COLLECT COVARIATE INFORMATION (even aggregate) and provide it in accessible form
 
 - Easy access to history of testing requirements
 - Smaller random samples over time (at least as testing and prevalence changes drastically) to assess selection changes
-- Record symptom/asymptomatic status!
+- Record symptom/asymptomatic status and COVID contact.  If not for all, then for at least some we need these covariates!!!!!
 
 \subsection*{Systematic data collection and reporting}
 
