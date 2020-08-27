@@ -102,9 +102,14 @@ We focus on strata built on age, race, and sex.  Only have marginal information!
 
 \subsection{US COVID-19 diagnostic and antibody testing}
 
+(Watch MICHAEL MINA VIDEO again)
 There are two types of tests.  The first is
 
 When an individual is infected with SARS-CoV-2 there is a
+
+When someone becomes infected, there will be an incubation period which may last between two to five days (cite: NPR) before the indivudal turn son the molecular/viral test.  Very quickly the viral load will be high.
+
+Seven days post-symptom, the individual starts producing anti-bodies and so the seroprevalance test may be positive. A week later lasting a
 
 During the first two days, an infected individual will not
 An infected individual will
@@ -287,20 +292,20 @@ Here, we assume access to a probability sample from the same population on which
 $$
 \sum_{i=1}^N R_i \log \left( \frac{\pi (X_i; \theta)}{1-\pi(X_i; \theta)} \right)  + \sum_{i=1}^N \tilde R_i \tilde W_i \log ( 1 - \pi (X_i; \theta)).
 $$
-Taking the expecation of the second term with respect to the sampling design yields the second term in~\eqref{eq:propensity}.  Recall Indiana's probabilistic sample was a stratified random sampling design; therefore, the weights will depend on strata (i.e., 10 strata for each public health preparadness district).  Under simple random sampling and non-parametric selection propensity on a stratification variable, the weight is given by estimator of the $\hat \pi_k = (d_k / \tilde d_k) (n / N)$ where $\tilde d_k$ is the number of observations in strata $k$ in the random sample.
+Taking the expectation of the second term with respect to the sampling design yields the second term in~\eqref{eq:propensity}.  Recall Indiana's probabilistic sample was a stratified random sampling design; therefore, the weights will depend on strata (i.e., 10 strata for each public health preparedness district).  Under simple random sampling and non-parametric selection propensity on a stratification variable, the weight is given by estimator of the $\hat \pi_k = (d_k / \tilde d_k) (n / N)$ where $\tilde d_k$ is the number of observations in strata $k$ in the random sample.
 
 \subsubsection{An IPW estimator and statistical error decomposition.}
-Given a selection propensity, define a weight~$W(x) = \pi (x; \hat \theta)^{-1}$. Then the IPW estimator adjusted for measurement error is given by
+Given a selection propensity, define the inverse probability weight~$w(x) = \pi (x; \hat \theta)^{-1}$. Then the IPW estimator adjusted for measurement error is given by
 $$
 \bar y_n^\star
-= \frac{1}{1-FP-FN} \cdot \frac{\sum_{i=1}^n w(x_i) (y_i - FP)}{\pi (x_i; \hat \theta)}
-\stackrel{(2)}{=} \frac{1}{1-FP-FN} \sum_{k=1}^K \frac{d_k}{N \pi_k} (\bar y_k - FP),
+= \frac{1}{1-FP-FN} \cdot \frac{\sum_{i=1}^n w(x_i) (y_i - FP)}{\sum_{i=1}^n w (x_i)}
+\stackrel{(2)}{=} \frac{1}{1-FP-FN} \sum_{k=1}^K \frac{d_k w_k}{w} (\bar y_k - FP),
 $$
-where the second equality (2) is under the assumption that $x_i$ is a stratification variable with $k$ indexing the strata and $d_k$ is the number of samples in strata $k$. Under simple random sampling with one strata~$\hat \pi_k = n/N$ and we recover the estimator $\tilde y_n$ from Section~\ref{section:imperfecttesting}.
+where the second equality (2) is under the assumption that $x_i$ is a stratification variable with $k$ indexing the strata, $w_k$ is the weight and $d_k$ is the number of samples in strata $k$, and $w = \sum_{k=1}^K d_k w_k$. Under simple random sampling with one strata~$\hat \pi_k = n/N$ and we recover the estimator $\tilde y_n$ from Section~\ref{section:imperfecttesting}.
 
-Let $\tilde I_j = I_j / (N \cdot \pi (X_j; \theta)) := I_j W_j$ for $j=1,\ldots,N$.  Then we can express $\bar y_n^\star$ as a weighted estimator $(1-FP-FN)^{-1} \sum_{i=1}^n $Then the error when comparing weighted estimator~$\bar y_n^\star$ to the true prevalence $\bar Y$ can be expressed as:
+Let $\tilde I_j = I_j  \cdot W(X_j)$ for $j=1,\ldots,N$.  Then the error when comparing weighted estimator~$\bar y_n^\star$ to the true prevalence $\bar Y$ can be expressed as:
 $$
-\rho_{\tilde I, Y} \times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y} \times \underbrace{\left[ 1 - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right] \times \frac{1}{1-(FP+FN)}}_{D_M} \times \frac{E_J[\tilde I_J]}{N}
+\rho_{\tilde I, Y} \times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y} \times \underbrace{\left[ 1 - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right] \times \frac{1}{1-(FP+FN)}}_{D_M}
 $$
 where $CV_W$ is the coefficient of variation (i.e., standard deviation/mean) of $W_J$ given $R_J = 1$.  See Appendix XX for the derivation.
 
@@ -312,26 +317,38 @@ In Section XX, we estimate $\rho_{I,Y}$ and $\rho_{\tilde I, Y}$ to see the impa
 
 \subsection{Model-based estimation}
 
-Until now, this paper focused primarily on selection bias in coronavirus case-count data from a purely statistical perspective.  Here, we extend the approach to whether it is possible bring in simple models from infectious diease epidemiology.  Our goal is simply an estimate of $\bar y_k$, the prevalence in strata $k$.
+So far the focus has primarily been on selection bias in coronavirus case-count data from a purely survey sampling perspective.  Here, we consider  compartmental model approaches from infectious disease epidemiology.  Our primary objective is a model-based forecast of strata-level prevalence $\bar y_k$ using data up to but not including the current time.
 
-We rely heavily on recently available software~\cite{Song2020} for estimation of such models.
+Here, we present briefly a basic epidemiological state-space model -- the susceptible, infected, and removed (recovered and death) model, or SIR model.
+The SIR model was originally proposed by (cite: Osthus, Forecasting seasonal influenza with a state-space sir model) with only one-dimensional time series of infected proportions. We refer the reader to Chapters 9-12 of [30] for a substantive introduction to state-space models.
+
+More advanced versions of the SIR model can be used to make epidemiological forecasts.  Here, we focus on the SIER model due to availability of existing software.  We rely heavily on recently available software~\cite{Song2020} for estimation of such models.
+
+The current prediction does not (A)
 
 We circle back and add in a SEIR model with measurement-error.  We can correct for selection bias two through simple rules (see Song and Mukherjee and others for more complex alternatives).  With such limited data we can only predict total counts and use the demographics as is to be representative.  This yields estimates at $\hat y_k$ for each strata.
 
-\subsection{Doubly robust estimation}
+\subsection{Doubly robust estimation.}
+Two methods have been presented.  The first uses IPW to adjust for differential selection into the
 
+Rather than relying on either independently, here we show how to combine these.
+$$
+\sum_{i=1}^N \mu (x_i; \hat \beta) + \frac{1}{\sum_{i=1}^n w(x_i)}
+$$
+
+There are again two options.  In the first,
 $$
 \sum_{k} P_k \hat y_k + \frac{1}{N} \sum_{i=1}^N I_i \frac{(Y_i - FP)/(1-FP-FN) - \hat y}{\pi_{K_i}}
 $$
 where $P_k$ is the population fraction in strata $k$. This estimator is ``doubly-robust'' in the sense that it is robust to either the SIR or the propensities being correctly specified.  Setting $\pi_i = n/N$ and $\hat y_k = 0$ yields the estimator $(\bar y_n - FP)/(1-FP-FN)$.
+
+In the second, we rely on
 
 Corresponding standard errors are
 $$
 \text{Var} (\bar y_{DR}^\star) =
 $$
 See Appendix XX for a derivation.
-
-{\bf where to describe difference from Chen}.
 
 Remark that the robustness is under certain assumptions which we know are likely false; therefore, we are interested in
 
@@ -340,6 +357,7 @@ $$
 \left( P_k - \frac{n_k}{N \pi_k} \right) \hat y_k + \frac{n_k}{N \pi_k} \frac{\bar y_k - FP}{1-FP-FN}
 $$
 
+{\bf where to describe difference from Chen. (1) weight normalized, (2) use aux info from multiple sources and use raking, (3) use a epi model rather than covariate pred model}.
 
 \section{Cross-population comparisons}
 So far we have focused on understanding the limitations of using case-count data to understand population quantities of interest for a \emph{single} population.  Many are interested in cross-population comparisons to contrast the impact of countries' mitigation policies.  Many pieces in the media as well as academic articles have plots of case-count over time aligned by time of first known case.  Others have claimed such comparisons unfair due to unequal population sizes and instead plotted case-count per million.  In this section, we focus on the statistical issues relevant to such comparisons.
