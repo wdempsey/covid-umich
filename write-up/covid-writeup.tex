@@ -102,29 +102,37 @@ In Section~\ref{section:discussion}, a series of recommendations are provided th
 
 Coronavirus case-count data refers to the number of positive tests performed on each day.  Figure~\ref{fig:ny-covid} plots (dotted orange line) the number of reported confirmed COVID-19 cases per day in the state of Indiana.  Departments of Health in each state also typically report the total number of reported tests per day.  On August 5th, 2020, for example, there were 1075 total daily positive cases and 11,663 total daily tests.  Public databases maintained by \href{https://bit.ly/2UqFSuA}{Johns Hopkins University} and the \href{https://bit.ly/2vUHfrK}{New York Times} provide incoming county-level information of confirmed cases and deaths.
 
-Many states provide aggregate demographic information on those who requested a test as well as those who tested positive for SARS-CoV-2. Indiana's \href{https://www.coronavirus.in.gov/2393.htm}{COVID-19 dashboard}, for instance, provides statewide demographics for age, gender, ethnicity, and race.  The demographic information is based on cumulative testing.  Daily versions cannot be easily reconstructed from available public data.  In addition, the Regenstrief Institute provides additional comorbidity information among those who tested positive for COVID-19 in the state of Indiana, including hypertension, diabetes, and chronic obstructive pulmonary disease (COPD). These comprise the main set of covariate information available from public sources for Indiana. Similar demographic information is likely available for other states.
+Many states provide aggregate demographic information on those who requested a test as well as those who tested positive for SARS-CoV-2. Indiana's \href{https://www.coronavirus.in.gov/2393.htm}{COVID-19 dashboard}, for instance, provides statewide demographics for age, gender, ethnicity, and race.  The demographic information is based on cumulative testing.  Daily versions cannot be easily reconstructed from available public data.  In addition, the Regenstrief Institute provides additional comorbidity information among those who tested positive for COVID-19 in the state of Indiana, including hypertension, diabetes, and chronic obstructive pulmonary disease (COPD). These comprise the main set of covariate information available from public sources for Indiana. Similar demographic information is likely available for other states.co
 % https://www.regenstrief.org/covid-dashboard/
 %
 
 \subsection{Viral and antibody testing}
 \label{section:testinginfo}
 
-(Watch MICHAEL MINA VIDEO again)
+Here we briefly describe the difference between COVID-19 molecular and serological tests as well as the relationship between COVID-19 testing and the infection and immune response time frame. These distinctions will be useful later in the paper when discussing different random sample tests.
+
+When an individual is infected with SARS-CoV-2, there will typically be an incubation period which may last between two to five days (cite: NPR) before the viral load is high enough to be detected.  A molecular test refers to tests that look increased viral load in the patient (such as RT-PCR or antigen tests).  These are tests such that if someone has an active infection, a positive result is expected after the incubation period.  A test with perfect sensitivity will come back positive for the next few weeks (cite: wlos).  At that point, the viral load will decrease and a molecular test with perfect specificity will come back negative.
+
+Serological (or antibody) tests look for an immunological response to the virus.  A week or so after an individual is infected with SARS-CoV-2, the individual will start producing antibodies.  At this point, a serological test with perfect sensitivity will come back positive.  This test provides evidence of past infection while the molecular test provides evidence of an \emph{active} infection.
+
+While an individual may test positive on a molecular test for several weeks, it is important to note that the transmissibility o fth
+This is particularly important for epidemiological forecasts build from compartmental models.
+
+
+Recent systematic reviews have indicated, however, that  (cite:  NEJM)
 There are two types of tests.  The first is
+
 
 When an individual is infected with SARS-CoV-2 there is a
 
 A viral test such as the RT-PCR
 
-When someone becomes infected, there will be an incubation period which may last between two to five days (cite: NPR) before the indivudal turn son the molecular/viral test.  Very quickly the viral load will be high.
+
 
 Seven days post-symptom, the individual starts producing anti-bodies and so the seroprevalance test may be positive. A week later lasting a
 
-During the first two days, an infected individual will not
-An infected individual will
 
 %https://www.npr.org/sections/goatsandsoda/2020/05/31/865932474/should-i-get-tested-for-coronavirus-just-for-the-heck-of-it
- test positive three to five days after exposure, the individual enters the stage at which detection is possible
 
 
 We focus on US COVID-19 testing.
