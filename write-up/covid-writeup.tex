@@ -211,12 +211,11 @@ $$
 where $\rho_{I_j, Y_j}$ is the data quality, $f_j$ is the sampling fraction, $D_{M_j}$ is the measurement error adjustment, and $CV(Y_j) = \sigma_{Y_j}/Y_j$ is the coefficient of variation on day $j$.  See Appendix~\ref{app:ratio} for the derivation. The error magnitude depends on the true rate $\bar Y_{t} / \bar Y_{t-1}$ so a large decrease will have a relatively small error compared to a large increase. The second term represents potential \emph{cancellation} which may occur when data quality, sampling fraction, measurement error, and prevalence are all constant across time.
 
 Figure~\ref{fig:ratio-bias} displays the trajectory of the true ratio and the potential biased estimators under an SIR model~\citep{Pastor2001,Newman2002,Parshani2010} for the epidemic dynamics, with state evolution given by
-$$
-\begin{aligned}
+\begin{equation}
+\label{eq:sir}
 \frac{\partial S_t}{\partial t} &= - \beta S_t I_t N^{-1}; \quad
 \frac{\partial I_t}{\partial t} = \beta S_t I_t N^{-1} - \gamma I_t; \quad
 \frac{\partial R_t}{\partial t} = - \gamma I_t \\
-\end{aligned}
 $$
 where $S_t$ is the number of susceptible individuals, $I_t$ is the number of infected individuals, and $R_t$ is the number of removed (recovered or deceased) individuals at time $t$.  In terms of bias, the rate is overestimated prior to the peak and underestimated afterwards; the bias increases dramatically when the relative fraction exceeds $2$.  From a decision making perspective, such biases have a substantial impact.  First, the overestimation may give lawmakers and governors more leverage in proposing aggressive actions that reduce prevalence.  Of course, the analysis supports the argument that the estimates based on available data may be pessimistic. What is missing in the current public health discourse is that the bias direction of the prevalence estimate is non-constant over time.   Underestimation post-peak puts pressure on lawmakers and governors to prematurely relax social distancing measures.  Moreover, it appears that the peak time is the easiest to estimate in terms of having minimal error using available data.  Note, however, that the standard errors will be large due to small effective sample sizes.
 
@@ -319,22 +318,37 @@ In Section XX, we estimate $\rho_{I,Y}$ and $\rho_{\tilde I, Y}$ to see the impa
 
 So far the focus has primarily been on selection bias in coronavirus case-count data from a purely survey sampling perspective.  Here, we consider  compartmental model approaches from infectious disease epidemiology.  Our primary objective is a model-based forecast of strata-level prevalence $\bar y_k$ using data up to but not including the current time.
 
-Here, we present briefly a basic epidemiological state-space model -- the susceptible, infected, and removed (recovered and death) model, or SIR model.
-The SIR model was originally proposed by (cite: Osthus, Forecasting seasonal influenza with a state-space sir model) with only one-dimensional time series of infected proportions. We refer the reader to Chapters 9-12 of [30] for a substantive introduction to state-space models.
+Here, we present briefly a basic epidemiological state-space model -- the susceptible, infected, and removed (recovered and death) model, or SIR model. The SIR model was originally proposed by (cite: Osthus, Forecasting seasonal influenza with a state-space sir model) with only one-dimensional time series of infected proportions. We refer the reader to Chapters 9-12 of [30] for a substantive introduction to state-space models.
+
+Here we follow closely the description from~\cite{Song2020}. Let $Y_t^I$ and $Y_t^R$ denote the proportion of currently infected (i.e., would test positive given a RT-PCR test with 100\% sensitivity) and removed cases (i.e., including both recovered cases and deaths) at time $t$.  Assume the two-dimensional process follows
+$$
+\theta_t \mid \theta_{t-1}; \tau \sim \text{Dirichlet} \left(\kappa f(\theta_{t-1}, \beta, \gamma) \right)
+$$
+where $\kappa$ scales the variance of the Dirichlet distribution and $f(\cdot)$ is a function that determines infection dynamics.  Here, we assume the classical infectious disease SIR model as given by~\eqref{eq:sir} with $(S_t,I_t, R_t)$ replaced by $(\theta_t^S, \theta_t^I, \theta_t^R)$.  \cite{Song2020}
+
+A key concern with the proposed model is lack of . We could address this by using IPW methods but this would mimic Section XX and therefore lead to potentially similar results.  Instead, we opt to follow (cite: HDSR) and model death data.  This avoids the selection bias problem by instead trying to back)
+
+$$
+D_t \mid p, \theta, \nu \sim \text{Poisson} \left( p \sum_{t=1}^r \nu_t \theta_{(r-t)} \right)
+$$
+
+Unlike in (cite: HDRS), we are interested in predictions of case-counts.  We split deaths into $<60$ and $>60$, using two different IFR's to back out the counts for each subset.  Then we recombine
 
 More advanced versions of the SIR model can be used to make epidemiological forecasts.  Here, we focus on the SIER model due to availability of existing software.  We rely heavily on recently available software~\cite{Song2020} for estimation of such models.
 
-The current prediction does not (A)
 
-We circle back and add in a SEIR model with measurement-error.  We can correct for selection bias two through simple rules (see Song and Mukherjee and others for more complex alternatives).  With such limited data we can only predict total counts and use the demographics as is to be representative.  This yields estimates at $\hat y_k$ for each strata.
+We can correct for selection bias two through simple rules (see Song and Mukherjee and others for more complex alternatives).  With such limited data we can only predict total counts and use the demographics as is to be representative.  This yields estimates at $\hat y_k$ for each strata.
+
+Alternative forecasts are
 
 \subsection{Doubly robust estimation.}
-Two methods have been presented.  The first uses IPW to adjust for differential selection into the
+Two methods have been presented.  The first uses IPW to adjust for differential selection.  The second uses epidemiological forecasts based on SIR models.  Rather than relying solely on either approach, here we show how to combine forecasting and inverse-probability weighting by building a \emph{doubly robust} approach (cite: Robins, etc), which is a common approach for causal inference from observational data.  In the survey literature, if the weights are known, the approach is referred to as model-assisted estimation.  Recent work by (cite: Chen) extends the classical survey approach to non-probability samples.  Here, we do the same.  We reserve comparison of our approach with (citE: Chen) after introducing the method.
 
-Rather than relying on either independently, here we show how to combine these.
+We define the doubly-robust estimator as
 $$
-\sum_{i=1}^N \mu (x_i; \hat \beta) + \frac{1}{\sum_{i=1}^n w(x_i)}
+\bar y_{n}^{(DR)} = \frac{1}{N} \sum_{i=1}^N \mu (x_i; \hat \beta) + \frac{1}{\sum_{i=1}^n w(x_i)} \sum_{j=1}^N I_j w(x_i) (Y_i - \mu(x_i; \hat \beta)).
 $$
+If the model is correct, then $\bar y_{n}^DR - \bar Y_N$ will be zero.  If the inverse-probability weights
 
 There are again two options.  In the first,
 $$
