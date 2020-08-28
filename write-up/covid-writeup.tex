@@ -67,9 +67,9 @@ has become the focal point of everyday life; yet the data landscape for understa
 
 This paper has two main objectives.  The first objective is to express reservations at the use of case-counts as a proxy for disease prevalence and in estimation of standard epidemiological models for inference and forecasting.  The reason is straightforward: observed case-count data is plagued by selection bias and measurement error. Through simple calculations, we will demonstrate that the information gained from increasing testing capacity is limited in the presence of selection bias and when testing inaccuracies persist.  In particular, the millions of tests in the US have a small effective sample size when compared to random sampling.
 
-Due to monetary and time constraints, random testing may be performed infrequently.  As of August 28, 2020, Indiana is the only state to conduct statewide random sample testing, which was collected from April 25--29, 2020.  Such infrequent random testing may be insufficient to understand the trajectory of infectious disease prevalence which may change rapidly over time.  Therefore, while random testing is preferred, governments, researchers, and policy makers continue to look toward the coronavirus case-counts to understand the impact of COVID-19 on the population and make data-informed decisions.
+Due to monetary and time constraints, random testing may be performed infrequently.  As of August 28, 2020, Indiana is the only state to conduct a statewide random sample testing, which was collected from April 25--29, 2020.  Infrequent random testing may be insufficient to understand the trajectory of infectious diseases which change rapidly over time.  Therefore, while random testing may be preferable in theory, in practice governments, researchers, and policy makers continue to use coronavirus case-counts to understand the impact of COVID-19 on the population and make data-informed decisions.
 
-The second objective is to demonstrate how random samples provide necessary auxiliary information to address selection bias in coronavirus case-count data.  Random samples are used in estimation of selection propensities which are then employed in an inverse-probability weighting scheme to construct adjusted estimators of disease prevalence.  A doubly robust extension allows researchers to combine these estimates with epidemiological forecasts based on compartmental models common in the study .  While we demonstrate improvements over simple estimates of disease prevalence, we highlight how selection bias may persist.
+The second objective is to demonstrate how random samples provide necessary auxiliary information to address selection bias in coronavirus case-count data.  Random samples provide the necessary covariate information from a representative sample from the population to estimate selection propensities. These propensities are then used in an inverse-probability weighting scheme to construct estimators of disease prevalence that attempt to control for selection bias.  A doubly robust extension allows researchers to combine these estimates with epidemiological forecasts based on compartmental models that are common in the study of infectious diseases (cite: book).  While we demonstrate improvements over simple estimates of disease prevalence, we highlight how selection bias may persist.
 
 \subsection{Related work.}
 
@@ -87,41 +87,34 @@ These forcasts are often used to estimate effective reproduction number.  They c
 
 This article discusses the relationship between three statistical concepts: selection bias, measurement error, and population size.
 
-In Section XX, we present simple mathematical arguments to show that unadjusted prevalence rates are (unsurprisingly) biased when tests are imperfect. What is surprising is that the direction and magnitude of the bias can vary substantially and interacts with the sampling fraction.  We show that the rate of change in COVID-19 observed case-counts overestimates the true rate of change prior to the peak time and underestimates it immediately after.  This implies a data scientist analyzing observed rates will be (on average) overly pessimistic in the early stages of the pandemic, and overly optimistic subsequent to the peak times.  We show that estimates of the effective reproduction number may be similarly impacted.
+In Section~\ref{section:data}, we summarize the publicly available data on COVID-19.  We highlight how testing information is collected as well as demographic and comorbidity information.  In Section~\ref{section:testinginfo}, we briefly summarize COVID-19 testing.  We clarify the different between viral and antibody testing.  For viral testing, we briefly discuss the reasons behind measurement-error in RT-PCR tests including test timing and sample collection techniques.
 
-In Section XX, we present the doubly robust estimation method for combining epidemiological forecasts with nonprobability and probability samples to estimate prevalence
+In Section~\ref{section:casecount}, we present simple mathematical arguments to show that unadjusted prevalence rates are (unsurprisingly) biased when tests are imperfect. What is surprising is that the direction and magnitude of the bias can vary substantially and interacts with the sampling fraction.  We show that the rate of change in COVID-19 observed case-counts overestimates the true rate of change prior to the peak time and underestimates it immediately after.  This implies a data scientist analyzing observed rates will be (on average) overly pessimistic in the early stages of the pandemic, and overly optimistic subsequent to the peak times.  We show that estimates of the effective reproduction number may be similarly impacted.
 
-  Fourth, we show that cross-country comparisons are difficult at best with population size, sampling fraction, and data quality all interacting to impact null hypothesis testing.  Fifth, we discuss a sensitivity analysis method for estimating data quality and its use in understanding the potential biases in COVID-19 case-count analyses.
+In Section~\ref{section:improvedcasecount}, we present a doubly robust estimation method for combining epidemiological forecasts with inverse-probability weighting methods to estimate prevalence.  Weight estimation requires auxiliary information provided by random samples.  A statistical error decomposition illustrates a trade-off in use of weights: a potential increase in data quality but a reduction in data quantity.
 
-In Section XX, we apply the derived IPW and doubly-robust estimation methods to the case study of Indiana statewide prevalence from March 1st until August 27th.  We estimate the data quality for IPW estimates using the random sample on April 28th.
+In Section~\ref{section:applications}, the IPW and doubly-robust estimation methods are applied to the case study of Indiana statewide prevalence from March 1st until August 27th.  We estimate data quality for IPW estimates using the random sample on April 28th.  We then discuss a sensitivity analysis method for estimating data quality and its use in understanding the potential biases in COVID-19 case-count analyses by analysing New York statewide prevalence and comparing to the results from their statewide random testing on April 23rd.  Both demonstrate improvements over simple prevalence estimation but that data quality is not of the same order as random sampling.  In Section~\ref{section:crosspop}, the case study results are used to suggest cross-country comparisons are difficult at best with population size, sampling fraction, and data quality all interacting to impact hypothesis testing.
 
-In Section XX, we provide a series of recommendations to help improve statistical inference in settings with large nonprobability samples from a stochastic process where small random sampling over time is possible.
-
-
+In Section~\ref{section:discussion}, a series of recommendations are provided that aim to help improve statistical inference in settings with large nonprobability samples from a stochastic process where small random sampling over time is possible.
 
 \section{COVID-19 data}
+\label{section:data}
 
-In this paper, we start with case-count data as reported by US state governments (cites).  Figure~\ref{fig:ny-covid}
+Coronavirus case-count data refers to the number of positive tests performed on each day.  Figure~\ref{fig:ny-covid} plots (dotted orange line) the number of reported confirmed COVID-19 cases per day in the state of Indiana.  Departments of Health in each state also typically report the total number of reported tests per day.  On August 5th, 2020, for example, there were 1075 total daily positive cases and 11,663 total daily tests.  Public databases maintained by \href{https://bit.ly/2UqFSuA}{Johns Hopkins University} and the \href{https://bit.ly/2vUHfrK}{New York Times} provide incoming county-level information of confirmed cases and deaths.
 
-Case-count data
-
-Generally available public data (COVID trackers).
-
-COVID trackers tend to provide basic information.  From the JHU dashboard,
-
-Most states provide additional demographic data.
-
-We focus on strata built on age, race, and sex.  Only have marginal information!
-
+Many states provide aggregate demographic information on those who requested a test as well as those who tested positive for SARS-CoV-2. Indiana's \href{https://www.coronavirus.in.gov/2393.htm}{COVID-19 dashboard}, for instance, provides statewide demographics for age, gender, ethnicity, and race.  The demographic information is based on cumulative testing.  Daily versions cannot be easily reconstructed from available public data.  In addition, the Regenstrief Institute provides additional comorbidity information among those who tested positive for COVID-19 in the state of Indiana, including hypertension, diabetes, and chronic obstructive pulmonary disease (COPD). These comprise the main set of covariate information available from public sources for Indiana. Similar demographic information is likely available for other states.
 % https://www.regenstrief.org/covid-dashboard/
 %
 
-\subsection{US COVID-19 diagnostic and antibody testing}
+\subsection{Viral and antibody testing}
+\label{section:testinginfo}
 
 (Watch MICHAEL MINA VIDEO again)
 There are two types of tests.  The first is
 
 When an individual is infected with SARS-CoV-2 there is a
+
+A viral test such as the RT-PCR
 
 When someone becomes infected, there will be an incubation period which may last between two to five days (cite: NPR) before the indivudal turn son the molecular/viral test.  Very quickly the viral load will be high.
 
@@ -174,7 +167,7 @@ $$
 $$
 The first term represents \emph{data quality}, the second \emph{data quantity}, and the third \emph{problem difficulty}. The term $\rho_{I,Y}$ is the empirical correlation between the population values~$\{ Y_j \}_{j=1}^N$ and the selection values $\{ I_j \}_{j=1}^N$.  Under simple random sampling, $E_{\I} [ \rho_{I,Y} ] = 0$, where the expectation is with respect to the selection mechanism~$\I$, so there is no bias.  The SRS variance formula above shows that $E_{\I} [ \rho_{I,Y}^2 ]  = 1/(N-1)$.
 
-The key issue with selective testing is that $E_{\I} [ \rho_{I,Y} ] \neq 0$.  Meng identified this as the fundamental issue that can lead to paradoxes in the analysis of big data. The remainder of this paper aims to build upon this fundamental work by extending the decomposition in two directions: accounting for measurement error and the temporal nature of the pandemic.  We then discuss effective sampling methods and their importance in the current pandemic.
+% The key issue with selective testing is that $E_{\I} [ \rho_{I,Y} ] \neq 0$.  Meng identified this as the fundamental issue that can lead to paradoxes in the analysis of big data. The remainder of this paper aims to build upon this fundamental work by extending the decomposition in two directions: accounting for measurement error and the temporal nature of the pandemic.  We then discuss effective sampling methods and their importance in the current pandemic.
 
 \subsection{Imperfect testing}
 \label{section:imperfecttesting}
@@ -269,6 +262,7 @@ This implies a similar trade-off as before but on the logarithmic scale.  The er
 \end{figure}
 
 \section{Potential improvements to prevalence estimation}
+\label{section:improvedcasecount}
 
 The prior section presented negative consequences of selection-bias and measurement error when estimating prevalence from observed case-count data.  This raises the immediate question whether prevalence estimators can be improved using publicly available data.  In this section, we consider two directions. First, we use auxiliary information to build selection propensities and consider an inverse probability weighting (IWP) estimator.
 We extend the statistical error decomposition to the weighted setting.
@@ -379,7 +373,32 @@ $$
 
 {\bf where to describe difference from Chen. (1) weight normalized, (2) use aux info from multiple sources and use raking, (3) use a epi model rather than covariate pred model}.
 
+\section{Applications to binary outcome and the COVID-19 pandemic.}
+\label{section:applications}
+
+\subsection{COVID-19 active infection prevalence in Indiana}
+
+We have a small non-random sample to supplement and get these; then use raking on the larger study.  Appendix XX presents the marginal distributions for the non-random sample per
+
+Heuristically, one may suppose that asymptomatic individuals are less likely to select.  This is born out.
+
+This is not true (need to deal with very bad symptoms cases).
+
+Simplest case we have Age $<40$ in the random sample is $1,017$ and we have $13+17.3+15.2 = 45\% \times 1,002,038$ tests so $450917.1$ tests. Then $N = 6.85$ million while $n = 3658$ leading to $\pi_k = 0.24$.
+
+
+\begin{rmk}[Use of second nonrandom sample]
+The key issue with selection bias is whether the individual is displaying symptoms and had contact with someone who was COVID+.  These are not captured by the
+
+In random sample, $44.2$\% of individuals who tested positive for SARS-CoV-2 positive individuals reported no symptoms during the 2 weeks before testing.
+
+In nonrandom sample, $20.2$\% of individuals who tested positive for SARS-CoV-2 reported no symptoms during the 2 weeks before testing.
+
+\end{rmk}
+
+
 \section{Cross-population comparisons}
+\label{section:crosspop}
 So far we have focused on understanding the limitations of using case-count data to understand population quantities of interest for a \emph{single} population.  Many are interested in cross-population comparisons to contrast the impact of countries' mitigation policies.  Many pieces in the media as well as academic articles have plots of case-count over time aligned by time of first known case.  Others have claimed such comparisons unfair due to unequal population sizes and instead plotted case-count per million.  In this section, we focus on the statistical issues relevant to such comparisons.
 
 \subsection{Prevalence comparisons}
@@ -434,31 +453,6 @@ where $e_{jt}$ is the error associated given in Section \ref{section:r0-estimati
 \label{fig:comparison}
 \end{figure}
 
-\section{Applications to binary outcome and the COVID-19 pandemic.}
-
-
-\subsection{COVID-19 active infection prevalence in Indiana}
-
-We have a small non-random sample to supplement and get these; then use raking on the larger study.  Appendix XX presents the marginal distributions for the non-random sample per
-
-Heuristically, one may suppose that asymptomatic individuals are less likely to select.  This is born out.
-
-This is not true (need to deal with very bad symptoms cases).
-
-Simplest case we have Age $<40$ in the random sample is $1,017$ and we have $13+17.3+15.2 = 45\% \times 1,002,038$ tests so $450917.1$ tests. Then $N = 6.85$ million while $n = 3658$ leading to $\pi_k = 0.24$.
-
-
-\begin{rmk}[Use of second nonrandom sample]
-The key issue with selection bias is whether the individual is displaying symptoms and had contact with someone who was COVID+.  These are not captured by the
-
-In random sample, $44.2$\% of individuals who tested positive for SARS-CoV-2 positive individuals reported no symptoms during the 2 weeks before testing.
-
-In nonrandom sample, $20.2$\% of individuals who tested positive for SARS-CoV-2 reported no symptoms during the 2 weeks before testing.
-
-\end{rmk}
-
-
-
 \subsection{Estimation of Data Quality}
 \label{section:est_dq}
 
@@ -494,7 +488,8 @@ We can perform a sensitivity analysis by considering the range of false negative
 
 
 
-\section{Discussion.}
+\section{Discussion}
+\label{section:discussion}
 There is nothing routine about COVID-19, including the corresponding statistical questions.  The goal of this paper was to point out questionable statistical routines.  Precision in reported case-count data gives the illusion of information when what what is needed is quantification of uncertainty. Selection bias leads data analysts to feel certain about incorrect conclusions.  We end with a brief discussion of important related topics.
 
 \subsection*{Additional biases and measurement-error}
@@ -533,6 +528,15 @@ COLLECT COVARIATE INFORMATION (even aggregate) and provide it in accessible form
 \subsection*{Systematic data collection and reporting}
 
 I would say this is important but JHU is not enough; see above for benefits of random sampling to augment and improve decision making.
+
+\subsection*{Frequency and turnaround time}
+
+This supposes no selection bias.
+
+
+
+
+What is your goal?  "get people who are currently sick off the street." Then test frequently and often.  But we dont live in a mandatory testing environment (nor is it currently capable).  Random testing is one way to improve upone current practice whiel we wait for that
 
 \bibliographystyle{plainnat}
 \bibliography{covid-refs}
