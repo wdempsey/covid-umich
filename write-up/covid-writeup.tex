@@ -55,7 +55,7 @@
 % \email{wdem@umich.edu}
 
 \begin{abstract}
-  Coronavirus case-counts have influenced governments on their policies and decision making, while researchers have used them to drive their forecast models and predictions. Throughout this, many have also cited limited testing as the key driver of weak information on the COVID-19 pandemic. The calls to increase testing capacity are well-justified as they become a more frequent point of discussion in the public sphere. While expanded testing is a laudable goal, selection bias will impact estimates of disease prevalence and the effective reproduction number until the entire population is sampled. Moreover, tests are imperfect as false positive/negative rates interact in complex ways with selection bias. Indeed, measurement error and selection bias are the two greatest problems limiting our understanding of the current COVID-19 pandemic; neither can be fully addressed by increased testing capacity. In this paper, we attempt to clarify this point. Through simple calculations, we demonstrate pitfalls and paradoxes that can arise when considering case-count data in the presence of selection bias and measurement error.  \textcolor{red}{Need to update}
+  Coronavirus case-counts have influenced governments on their policies and decision making, while researchers have used them to drive their forecast models and predictions. Throughout this, many have also cited limited testing as the key driver of weak information on the COVID-19 pandemic. The calls to increase testing capacity are well-justified as they become a more frequent point of discussion in the public sphere. While expanded testing is a laudable goal, selection bias will impact estimates of active infection rate and the effective reproduction number until the entire population is sampled. Moreover, tests are imperfect. Test sensitivity and specificity interact in complex ways with selection bias. Indeed, measurement error and selection bias are the two greatest problems limiting our understanding of the current COVID-19 pandemic; neither can be fully addressed by increased testing capacity. In this paper, we attempt to clarify this point. Through simple calculations, we demonstrate pitfalls and paradoxes that can arise when considering case-count data in the presence of selection bias and measurement error.  \textcolor{red}{Need to update}
 \end{abstract}
 
 \maketitle
@@ -97,30 +97,47 @@ In Section~\ref{section:applications}, the IPW and doubly-robust estimation meth
 
 In Section~\ref{section:discussion}, a series of recommendations are provided that aim to help improve statistical inference in settings with large nonprobability samples from a stochastic process where small random sampling over time is possible.
 
-\section{COVID-19 data}
+\section{COVID-19 testing and data}
 \label{section:data}
 
-Coronavirus case-count data refers to the number of positive tests performed on each day.  Figure~\ref{fig:ny-covid} plots (dotted orange line) the number of reported confirmed COVID-19 cases per day in the state of Indiana.  Departments of Health in each state also typically report the total number of reported tests per day.  On August 5th, 2020, for example, there were 1075 total daily positive cases and 11,663 total daily tests.  Public databases maintained by \href{https://bit.ly/2UqFSuA}{Johns Hopkins University} and the \href{https://bit.ly/2vUHfrK}{New York Times} provide incoming county-level information of confirmed cases and deaths.
+In this section we provide the necessary background to understand COVID-19 diagnostic and serologic testing, their respective scientific uses in managing the pandemic, and the corresponding data streams.
 
-Many states provide aggregate demographic information on those who requested a test as well as those who tested positive for SARS-CoV-2. Indiana's \href{https://www.coronavirus.in.gov/2393.htm}{COVID-19 dashboard}, for instance, provides statewide demographics for age, gender, ethnicity, and race.  The demographic information is based on cumulative testing.  Daily versions cannot be easily reconstructed from available public data.  In addition, the Regenstrief Institute provides additional comorbidity information among those who tested positive for COVID-19 in the state of Indiana, including hypertension, diabetes, and chronic obstructive pulmonary disease (COPD). These comprise the main set of covariate information available from public sources for Indiana. Similar demographic information is likely available for other states.co
-% https://www.regenstrief.org/covid-dashboard/
-%
-
-\subsection{Viral and antibody testing}
+\subsection{Diagnostic versus serologic testing}
 \label{section:testinginfo}
 
-Here we briefly describe the difference between COVID-19 molecular and serological tests as well as the relationship between COVID-19 testing and the infection and immune response time frame. These distinctions will be useful later in the paper when discussing different random sample tests.
+% We start with a brief description of the difference between COVID-19 molecular and serological tests as well as the relationship between COVID-19 testing, the infection, and immune response time frame. These distinctions will be useful later in the paper when discussing different random sample tests.
 
-When an individual is infected with SARS-CoV-2, there will typically be an incubation period which may last between two to five days (cite: NPR) before the viral load is high enough to be detected.  A molecular test refers to tests that look increased viral load in the patient (such as RT-PCR or antigen tests).  These are tests such that if someone has an active infection, a positive result is expected after the incubation period.  A test with perfect sensitivity will come back positive for the next few weeks (cite: wlos).  At that point, the viral load will decrease and a molecular test with perfect specificity will come back negative.
+When an individual is infected with SARS-CoV-2, there will typically be an incubation period which may last between two to five days (cite: NPR) before the viral load is high enough to be detected.  A \emph{molecular test} refers to tests that aim to detect increased viral load (e.g., RT-PCR or antigen tests).  If someone has an active infection, then after the incubation period a molecular test with perfect sensitivity will yield a positive result for the next few weeks (cite: wlos).  After that, the viral load will decrease and a molecular test with perfect specificity will come back negative.
+
+While an infected individual may yield a positive molecular test for several weeks, they will likely stop transmitting the disease after the first few days after infection, meaning a positive molecular test does not imply transmissibility. This is of particular importance for epidemiological forecasts built from population-level data and impacts our model choice in Section~\ref{section:modelbased}.
+
+Molecular tests are referred to as diagnostic tests.
 
 Serological (or antibody) tests look for an immunological response to the virus.  A week or so after an individual is infected with SARS-CoV-2, the individual will start producing antibodies.  At this point, a serological test with perfect sensitivity will come back positive.  This test provides evidence of past infection while the molecular test provides evidence of an \emph{active} infection.
 
-While an individual may test positive on a molecular test for several weeks, it is important to note that the transmissibility o fth
-This is particularly important for epidemiological forecasts build from compartmental models.
+
+Seroprevalence studies are useful for disease surveillance.
+
+To date, however, the number of seroprevalance surveys are limited.
+
+See XX for further discussion.
+
+Rapid and frequent molecular testing is cited as a key component (citEe: OECD and others) in effective strategies to identify active infections and prevent further spread.  ,
+
+Significant logistic and capacity constraints have
 
 
-Recent systematic reviews have indicated, however, that  (cite:  NEJM)
-There are two types of tests.  The first is
+
+Our primary goal is to estimate accurately estimate the fraction of active infections in the population.
+
+This is the most relevant
+Secondary goals include estimation of rates of change and the effective reproduction number which are also useful in policy making.
+
+
+Alternatively,
+Such testing would result in higher detection rates.
+Will these results be reported to local authorities.
+If not, selection bias in who uses these tests and then reports the results is likely to matter.
 
 
 When an individual is infected with SARS-CoV-2 there is a
@@ -131,9 +148,23 @@ A viral test such as the RT-PCR
 
 Seven days post-symptom, the individual starts producing anti-bodies and so the seroprevalance test may be positive. A week later lasting a
 
+\subsection{COVID-19 case counts, viral testing counts, and deaths}
+\label{section:testinginfo}
+
+Coronavirus case-count data refers to the number of positive diagnostic tests performed on each day.  Figure~\ref{fig:ny-covid} plots (dotted orange line) the number of reported confirmed COVID-19 cases per day in the state of Indiana.  Departments of Health in each state also typically report the total number of reported tests per day.  On August 5th, 2020, for example, there were 1075 total daily positive cases and 11,663 total daily tests.  Public databases maintained by \href{https://bit.ly/2UqFSuA}{Johns Hopkins University} and the \href{https://bit.ly/2vUHfrK}{New York Times} provide incoming county-level information of confirmed cases and deaths.
+
+{\bf key point: WHAT IS THE GOAL OF CASE COUNT DATA? WHAT IS THE GOAL OF SEROPREVALENCE STUDIES?  are we using it for that reason. cse count data is colelcted as part of surveillance programs wehre teh goal is to identify and isolate active infections.  However, many people are trying to use these to udnerstand the disease.  This is our issue.}
+
+
+Many states provide aggregate demographic information on those who requested a test as well as those who tested positive for SARS-CoV-2. Indiana's \href{https://www.coronavirus.in.gov/2393.htm}{COVID-19 dashboard}, for instance, provides statewide demographics for age, gender, ethnicity, and race.  The demographic information is based on cumulative testing.  Daily versions cannot be easily reconstructed from available public data.  In addition, the Regenstrief Institute provides additional comorbidity information among those who tested positive for COVID-19 in the state of Indiana, including hypertension, diabetes, and chronic obstructive pulmonary disease (COPD). These comprise the main set of covariate information available from public sources for Indiana. Similar demographic information is likely available for other states.co
+% https://www.regenstrief.org/covid-dashboard/
+%
+
+
 
 %https://www.npr.org/sections/goatsandsoda/2020/05/31/865932474/should-i-get-tested-for-coronavirus-just-for-the-heck-of-it
 
+\subsubsection{Molecular testing restrictions in Indiana}
 
 We focus on US COVID-19 testing.
 
@@ -331,6 +362,7 @@ We can act like this is now $\rho_{I,\tilde Y}$ is $O(N^{-1})$ but this is most 
 In Section XX, we estimate $\rho_{I,Y}$ and $\rho_{\tilde I, Y}$ to see the impact of IPW.
 
 \subsection{Model-based estimation}
+\label{section:modelbased}
 
 So far the focus has primarily been on selection bias in coronavirus case-count data from a purely survey sampling perspective.  Here, we consider  compartmental model approaches from infectious disease epidemiology.  Our primary objective is a model-based forecast of strata-level prevalence $\bar y_k$ using data up to but not including the current time.
 
