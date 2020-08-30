@@ -149,16 +149,11 @@ On April 28th, 2020, the criteria expanded to include any Indiana resident with 
 On June 15, 2020, ISDH lifted all restrictions and testing expanded to include anyone in Indiana who wants to be tested for coronavirus.
 % https://www.indystar.com/story/news/health/2020/06/12/indiana-says-anyone-who-wants-coronavirus-test-can-get-one/3179151001/
 
+\subsection{Probabilistic sample in Indiana}
 
+Between April 25--29, 2020, Indiana conducted statewide random sample testing (both molecular and serological) of persons ages $\geq 12$ years to assess prevalence of active infection and presence of antibodies to SARS-CoV-2 (cite: Indiana report). A stratified random sampling design was conducted using Indiana’s 10 public health preparedness districts as sampling strata. 15,495 participants were contacted resulting in a final sample size of 3,658. The same demographic data as provided by ISDH for Indian molecular testing data was included (e.g., summary statistics on age, sex, and race). Participants in the probability sample were also asked if they experienced any COVID-19 compatible symptoms during the past 2 weeks or had shared a household with someone who had a positive test result for SARS-CoV-2.
 
-\subsection{Probabilistic samples}
-
-Indiana random sample description (see paper for more details)
-
-Among 15,495 randomly selected persons, 3,695 participated of whom 3,629 had at least one test result available.
-
-Once a person showed up to our mobile testing sites, they were given both a PCR swab test that looks for current infections and an antibody blood test that looks for evidence of past infection.
-
+During May 2--3, 2020, an additional nonrandom sample of 898 individuals was also collected.  In this paper, the nonrandom sample is used to assess whether the cumulative summary statistics are appropriate in constructing the inverse-probability weights as well as in constructing appropriate weights using symptom information.
 
 \section{Analysis of case-count data}
 \label{section:casecount}
@@ -271,9 +266,7 @@ This implies a similar trade-off as before but on the logarithmic scale.  The er
 \section{Potential improvements to prevalence estimation}
 \label{section:improvedcasecount}
 
-The prior section presented negative consequences of selection-bias and measurement error when estimating prevalence from observed case-count data.  This raises the immediate question whether prevalence estimators can be improved using publicly available data.  In this section, we consider two directions. First, we use auxiliary information to build selection propensities and consider an inverse probability weighting (IWP) estimator.
-We extend the statistical error decomposition to the weighted setting.
-Second, we consider an extension of compartmental models from infectious disease epidemiology using death data to try and avoid selection bias.  After adjusting for measurement-error, this leads to a model-based forecasts of prevalence. We then combine these epidemiological forecasts, selection propensities, and measurement-error corrections to generate \emph{doubly robust} prevalence estimators. We provide an appropriate extension of the statistical error decomposition. The method and statistical error decompositions guide our recommendations in Section XX.
+The prior section presented negative consequences of selection-bias and measurement error when estimating infection prevalence from observed case-count data.  This raises the immediate question whether prevalence estimators can be improved.  In this section, we consider two directions. First, we use publicly available auxiliary information to build selection propensities and consider an inverse probability weighting (IWP) estimator. We extend the statistical error decomposition to the weighted setting. Second, we consider an extension of compartmental models from infectious disease epidemiology using death data to try and avoid selection bias.  After adjusting for measurement-error, this leads to a model-based forecasts of prevalence. We then combine these epidemiological forecasts, selection propensities, and measurement-error corrections to generate \emph{doubly robust} prevalence estimators. We provide an appropriate extension of the statistical error decomposition. The method and statistical error decompositions guide our recommendations in Section XX.
 
 \subsection{Selection propensity estimation}
 
