@@ -91,7 +91,7 @@ In Section~\ref{section:data}, we summarize the publicly available data on COVID
 
 In Section~\ref{section:casecount}, we present simple mathematical arguments to show that unadjusted prevalence rates are (unsurprisingly) biased when tests are imperfect. What is surprising is that the direction and magnitude of the bias can vary substantially and interacts with the sampling fraction.  We show that the rate of change in COVID-19 observed case-counts overestimates the true rate of change prior to the peak time and underestimates it immediately after.  This implies a data scientist analyzing observed rates will be (on average) overly pessimistic in the early stages of the pandemic, and overly optimistic subsequent to the peak times.  We show that estimates of the effective reproduction number may be similarly impacted.
 
-In Section~\ref{section:improvedcasecount}, we present a doubly robust estimation method for combining epidemiological forecasts with inverse-probability weighting methods to estimate prevalence.  Weight estimation requires auxiliary information provided by random samples.  A statistical error decomposition illustrates a trade-off in use of weights: a potential increase in data quality but a reduction in data quantity.
+In Section~\ref{section:improvedcasecount}, we present a doubly robust estimation method for combining epidemiological forecasts with inverse-probability weighting methods to estimate prevalence.  Weight estimation requires auxiliary information provided by random samples.  A statistical error decomposition illustrates a trade-off in use of weights: a potential increase in data quality but a reduction in effective data quantity.
 
 In Section~\ref{section:applications}, the IPW and doubly-robust estimation methods are applied to the case study of Indiana statewide prevalence from March 1st until August 27th.  We estimate data quality for IPW estimates using the random sample on April 28th.  We then discuss a sensitivity analysis method for estimating data quality and its use in understanding the potential biases in COVID-19 case-count analyses by analysing New York statewide prevalence and comparing to the results from their statewide random testing on April 23rd.  Both demonstrate improvements over simple prevalence estimation but that data quality is not of the same order as random sampling.  In Section~\ref{section:crosspop}, the case study results are used to suggest cross-country comparisons are difficult at best with population size, sampling fraction, and data quality all interacting to impact hypothesis testing.
 
@@ -107,54 +107,25 @@ In this section we provide the necessary background to understand COVID-19 diagn
 
 % We start with a brief description of the difference between COVID-19 molecular and serological tests as well as the relationship between COVID-19 testing, the infection, and immune response time frame. These distinctions will be useful later in the paper when discussing different random sample tests.
 
-When an individual is infected with SARS-CoV-2, there will typically be an incubation period which may last between two to five days (cite: NPR) before the viral load is high enough to be detected.  A \emph{molecular test} refers to tests that aim to detect increased viral load (e.g., RT-PCR or antigen tests).  If someone has an active infection, then after the incubation period a molecular test with perfect sensitivity will yield a positive result for the next few weeks (cite: wlos).  After that, the viral load will decrease and a molecular test with perfect specificity will come back negative.
+After an individual is infected with SARS-CoV-2, there is an incubation period which lasts between two to five days (cite: NPR) before the viral load is high enough to be detected.  A \emph{molecular test} refers to diagnostic tests that aim to detect increased viral load (e.g., RT-PCR or antigen tests).  If someone has an active infection then after the incubation period a molecular test with perfect sensitivity will yield a positive result for the next few weeks (cite: wlos).  After that, the viral load will decrease and a molecular test with perfect specificity will come back negative. While an infected individual may yield a positive molecular test for several weeks, they will likely stop transmitting the disease within a few days of infection, meaning a positive molecular test does not imply transmissibility.
 
-While an infected individual may yield a positive molecular test for several weeks, they will likely stop transmitting the disease after the first few days after infection, meaning a positive molecular test does not imply transmissibility. This is of particular importance for epidemiological forecasts built from population-level data and impacts our model choice in Section~\ref{section:modelbased}.
+A molecular test conducted on an infected individual may return a negative result.  Such false negatives are very strongly associated with when the test is conducted.  In the incubation phase, most molecular tests will return a false negative result.  Molecular tests are most sensitive when the viral loads are highest which occurs during the first few days of transmissibility (cite: ).   Moreover, most molecular tests are performed via nasopharyngeal swab (cite: NEJM).  Specimen collection by swab is known to impact false negative/positive rates regardless of test timing.   Systematic reviews suggest that 70\% sensitivity and 95\% specificity are reasonable estimates for current RT-PCR tests (cite: NEJM).
 
-Molecular tests are referred to as diagnostic tests.
+The primary goal is of molecular tests is in diagnosis of active infections in the population.  Such diagnostic tests generate important information about the presence of SARS-Cov-2 in the population, and help scientists and policy-makers understand patterns of transmission and propagation. Rapid and frequent molecular testing is cited as a key component (citEe: OECD and others) in effective strategies to identify active infections and prevent systemic outbreaks.  There has been work on developing faster, cheaper testing options (cite: Mina) that can be used at-home as well as group testing (citE: Mina); however, these developments are beyond the scope of this paper.  Here we consider the current system of testing which involves both self-selection into testing and historical limits on who was able to receive diagnostic tests due to limited testing capacity.
 
-Serological (or antibody) tests look for an immunological response to the virus.  A week or so after an individual is infected with SARS-CoV-2, the individual will start producing antibodies.  At this point, a serological test with perfect sensitivity will come back positive.  This test provides evidence of past infection while the molecular test provides evidence of an \emph{active} infection.
+\emph{Serological tests} look for an immunological response to the virus.  A week or so after an individual is infected with SARS-CoV-2, the individual will start producing antibodies.  At this point, a serological test with perfect sensitivity will come back positive.  This test provides evidence of past infection while the molecular test provides evidence of an \emph{active} infection.
 
+To better estimate SARS-CoV-2 immunity in a population, seroprevalence studies that generate a probabilistic population sample and perform serological tests on the sample can be collected.  These studies are useful for disease surveillance. When the number of active infections in a population are low, serological surveys are cheaper and more accurate than molecular tests and are more useful in detecting outbreaks (cite: Mina). To date, the CDC has conducted ten large-scale geographic serological surveys with three rounds.  While population-based sampling strategies provide a more representative nationwide sample, they are very time intensive and expensive.  Here we consider whether non-probability diagnostic testing can be used in estimation of prevalence of immunity.
 
-Seroprevalence studies are useful for disease surveillance.
-
-To date, however, the number of seroprevalance surveys are limited.
-
-See XX for further discussion.
-
-Rapid and frequent molecular testing is cited as a key component (citEe: OECD and others) in effective strategies to identify active infections and prevent further spread.  ,
-
-Significant logistic and capacity constraints have
-
-
-
-Our primary goal is to estimate accurately estimate the fraction of active infections in the population.
-
-This is the most relevant
-Secondary goals include estimation of rates of change and the effective reproduction number which are also useful in policy making.
-
-
-Alternatively,
-Such testing would result in higher detection rates.
-Will these results be reported to local authorities.
-If not, selection bias in who uses these tests and then reports the results is likely to matter.
-
-
-When an individual is infected with SARS-CoV-2 there is a
-
-A viral test such as the RT-PCR
-
-
-
-Seven days post-symptom, the individual starts producing anti-bodies and so the seroprevalance test may be positive. A week later lasting a
-
-\subsection{COVID-19 case counts, viral testing counts, and deaths}
+\subsection{Publicly available data on COVID-19}
 \label{section:testinginfo}
 
-Coronavirus case-count data refers to the number of positive diagnostic tests performed on each day.  Figure~\ref{fig:ny-covid} plots (dotted orange line) the number of reported confirmed COVID-19 cases per day in the state of Indiana.  Departments of Health in each state also typically report the total number of reported tests per day.  On August 5th, 2020, for example, there were 1075 total daily positive cases and 11,663 total daily tests.  Public databases maintained by \href{https://bit.ly/2UqFSuA}{Johns Hopkins University} and the \href{https://bit.ly/2vUHfrK}{New York Times} provide incoming county-level information of confirmed cases and deaths.
+In this paper, our primary goal is to accurately estimate the active infection rate in the population over time using \emph{publicly available} test results.  Secondary goals include estimation of rates of change in these quantities and the effective reproduction number (cite:) which characterize the infectious disease spread.  A final goal is using these estimates to characterize prevalence of immunity in the general population.  As previously stated, these quantities are fundamental to public health policy and general critical information on presence and transmission of SARS-CoV-2 as well as the impact of public health  interventions.
 
-{\bf key point: WHAT IS THE GOAL OF CASE COUNT DATA? WHAT IS THE GOAL OF SEROPREVALENCE STUDIES?  are we using it for that reason. cse count data is colelcted as part of surveillance programs wehre teh goal is to identify and isolate active infections.  However, many people are trying to use these to udnerstand the disease.  This is our issue.}
+% {\bf key point: WHAT IS THE GOAL OF CASE COUNT DATA? WHAT IS THE GOAL OF SEROPREVALENCE STUDIES?  are we using it for that reason. cse count data is colelcted as part of surveillance programs wehre teh goal is to identify and isolate active infections.  However, many people are trying to use these to udnerstand the disease.  This is our issue.}
 
+
+Coronavirus case-count data refers to the number of positive molecular tests performed on each day.  Figure~\ref{fig:ny-covid} plots (dotted orange line) the number of reported confirmed COVID-19 cases per day in the state of Indiana.  Total number of COVID-19 diagnostic tests performed per day is also reported (Figure~\ref{fig:ny-covid}, dotted blue line). On August 5th, 2020, for example, there were 1075 total daily positive cases and 11,663 total daily tests.  Public databases maintained by \href{https://bit.ly/2UqFSuA}{Johns Hopkins University} and the \href{https://bit.ly/2vUHfrK}{New York Times} provide accessible incoming county-level information of confirmed cases and deaths.
 
 Many states provide aggregate demographic information on those who requested a test as well as those who tested positive for SARS-CoV-2. Indiana's \href{https://www.coronavirus.in.gov/2393.htm}{COVID-19 dashboard}, for instance, provides statewide demographics for age, gender, ethnicity, and race.  The demographic information is based on cumulative testing.  Daily versions cannot be easily reconstructed from available public data.  In addition, the Regenstrief Institute provides additional comorbidity information among those who tested positive for COVID-19 in the state of Indiana, including hypertension, diabetes, and chronic obstructive pulmonary disease (COPD). These comprise the main set of covariate information available from public sources for Indiana. Similar demographic information is likely available for other states.co
 % https://www.regenstrief.org/covid-dashboard/
@@ -379,6 +350,9 @@ $$
 D_t \mid p, \theta, \nu \sim \text{Poisson} \left( p \sum_{t=1}^r \nu_t \theta_{(r-t)} \right)
 $$
 Fully Bayesian algorithms that combine (cite: Song) and (cite: Johndrow) can be derived.  Here, we focus on the deterministic case-count and resulting SIR model due to availability of existing software~\cite{Song2020} for estimation of such models. Unlike in (cite: HDRS), we are interested in predictions of case-counts.  We split deaths into $<60$ and $>60$, using two different IFR's to back out the counts for each subset and then split these among the sub-populations using the raking weights.  This yields estimates at $\hat y_k$ for each strata.
+
+This is of particular importance for epidemiological forecasts built from population-level data and impacts our model choice in Section~\ref{section:modelbased}.
+{\bf Check if SIR models account for this?}
 
 \subsection{Doubly robust estimation.}
 Two methods have been presented.  The first uses IPW to adjust for differential selection.  The second uses epidemiological forecasts based on SIR models.  Rather than relying solely on either approach, here we show how to combine forecasting and inverse-probability weighting by building a \emph{doubly robust} approach (cite: Robins, etc), which is a common approach for causal inference from observational data.  In the survey literature, if the weights are known, the approach is referred to as model-assisted estimation.  Recent work by (cite: Chen) extends the classical survey approach to non-probability samples.  Here, we do the same.  We reserve comparison of our approach with (citE: Chen) after introducing the method.
