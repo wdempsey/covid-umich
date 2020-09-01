@@ -6,6 +6,7 @@
 % \usepackage{biblatex}
 \usepackage{natbib}
 %\bibliographystyle{apalike}
+\usepackage{multirow}
 
 \usepackage{tchdr}
 \boldshortcuts
@@ -55,7 +56,7 @@
 % \email{wdem@umich.edu}
 
 \begin{abstract}
-  Coronavirus case-counts have influenced governments on their policies and decision making, while researchers have used them to drive their forecast models and predictions. Throughout this, many have also cited limited testing as the key driver of weak information on the COVID-19 pandemic. The calls to increase testing capacity are well-justified as they become a more frequent point of discussion in the public sphere. While expanded testing is a laudable goal, selection bias will impact estimates of active infection rate and the effective reproduction number until the entire population is sampled. Moreover, tests are imperfect. Test sensitivity and specificity interact in complex ways with selection bias. Indeed, measurement error and selection bias are the two greatest problems limiting our understanding of the current COVID-19 pandemic; neither can be fully addressed by increased testing capacity. In this paper, we attempt to clarify this point. Through simple calculations, we demonstrate pitfalls and paradoxes that can arise when considering case-count data in the presence of selection bias and measurement error.  \textcolor{red}{Need to update}
+  Coronavirus case-count data has influenced government policies and drives many epidemiological forecasts. Limited testing is cited as the key driver behind minimal information on the COVID-19 pandemic. While expanded testing is laudable, measurement error and selection bias are the two greatest problems limiting our understanding of the current COVID-19 pandemic; neither can be fully addressed by increased testing capacity. In this paper, we demonstrate their impact on estimation of point prevalence and the effective reproduction number. We show that estimates based on the millions of molecular tests in the US has the same mean square error as a genuine small simple random sample.  To address this, a procedure is presented that combines case-count data with small random samples over time to estimate selection propensities based on key covariate information. We then combine these selection propensities with epidemiological forecast models using death-only data to construct a \emph{doubly-robust} estimation method that accounts for both measurement-error and selection bias.  This method is then applied this to the United States's only statewide random molecular sample collected from April 25--29th in Indiana.  We end with a series of recommendations based on the proposed methodology.
 \end{abstract}
 
 \maketitle
@@ -65,27 +66,26 @@
 The World Health Organization has declared the coronavirus disease 2019 (COVID-19) a public health emergency.  As of August 28th, 2020, over 24.5 million cases have been confirmed worldwide with 5.95 million cases and over 180 thousand confirmed deaths across the United States. This pandemic
 has become the focal point of everyday life; yet the data landscape for understanding COVID-19 remains limited.  Public databases~\citep{JHU_Lancet,NYT} provide incoming county-level information of confirmed cases and deaths.  Statisticians, epidemiologists, economists, and data scientists have used this granular data to forecast COVID-19 case-counts, deaths, and hospitalizations~\citep{Giordano2020,Song2020,Ray2020,2020.IHME,Wang2020.03,JTD36385}.
 
-This paper has two main objectives.  The first objective is to express reservations at the use of case-counts as a proxy for disease prevalence and in estimation of standard epidemiological models for inference and forecasting.  The reason is straightforward: observed case-count data is plagued by selection bias and measurement error. Through simple calculations, we will demonstrate that the information gained from increasing testing capacity is limited in the presence of selection bias and when testing inaccuracies persist.  In particular, the millions of tests in the US have a small effective sample size when compared to random sampling.
+This paper has two main objectives.  The first objective is to express reservations at the use of case-counts as a proxy for disease prevalence and in estimation of standard epidemiological models for inference and forecasting.  The reason is straightforward: observed case-count data is plagued by selection bias and measurement error. Through simple calculations, we will demonstrate that the information gained from increasing testing capacity is limited in the presence of selection bias and when testing inaccuracies persist.  In particular, the millions of tests in the US have a small effective sample size when compared to random sampling. These calculations demonstrate the importance of COVID-19 government-led data collection including random samples over time from the population.
 
-Due to monetary and time constraints, random testing may be performed infrequently.  As of August 28, 2020, Indiana is the only state to conduct a statewide random sample testing, which was collected from April 25--29, 2020.  Infrequent random testing may be insufficient to understand the trajectory of infectious diseases which change rapidly over time.  Therefore, while random testing may be preferable in theory, in practice governments, researchers, and policy makers continue to use coronavirus case-counts to understand the impact of COVID-19 on the population and make data-informed decisions.
+Due to monetary and time constraints, random testing may be performed infrequently.  As of August 28, 2020, Indiana is the only state to conduct a statewide random sample testing\footnote{This is the only random sample to collect both seroprevalence and diagnostic testing results. The CDC has conducted several seroprevalence studies. See Section~\ref{section:testinginfo} for further discussion.}, which was collected from April 25--29, 2020.  Infrequent random testing may be insufficient to understand the trajectory of infectious diseases which change rapidly over time.  Therefore, while random testing may be preferable in theory, in practice governments, researchers, and policy makers continue to use coronavirus case-counts to understand the impact of COVID-19 on the population and make data-informed decisions.
 
-The second objective is to demonstrate how random samples provide necessary auxiliary information to address selection bias in coronavirus case-count data.  Random samples provide the necessary covariate information from a representative sample from the population to estimate selection propensities. These propensities are then used in an inverse-probability weighting scheme to construct estimators of disease prevalence that attempt to control for selection bias.  A doubly robust extension allows researchers to combine these estimates with epidemiological forecasts based on compartmental models that are common in the study of infectious diseases (cite: book).  While we demonstrate improvements over simple estimates of disease prevalence, we highlight how selection bias may persist.
+The second objective is to demonstrate how random samples provide necessary auxiliary information to address selection bias in coronavirus case-count data.  Random samples provide the necessary covariate information from a representative sample from the population to estimate selection propensities. These propensities are then used in an inverse-probability weighting scheme to construct estimators of disease prevalence that attempt to control for selection bias.  A doubly robust extension allows researchers to combine these estimates with epidemiological forecasts based on compartmental models that are common in the study of infectious diseases (cite: book).  While we demonstrate improvements over simple estimates of disease prevalence, we highlight how selection bias may persist and impact uncertainty quantification.
 
 \subsection{Related work.}
 
-Meng
+This article discusses the relationship between three statistical concepts: selection bias, measurement error, and population size.  We build on the work of \cite{Meng2018} who studied an error decomposition to understand the relationship between selection bias and population size.  In particular, we quantify the interaction between measurement-error and selection bias.  The sign and magnitude of the statistical decomposition can change drastically; the impact on the effective sample size can therefore be quite large.
 
-Model-assisted surveys.
+After demonstrating the limitations of case-count analysis when compared to random sampling, we then assess whether their is potential for combining the \emph{nonprobability samples} (cite: nonprob, Elliott) with random samples from the population.  (cite: Chen) considered combining nonprobability and probability samples.  Here, we also rely on  samples
 
-Combining nonprob and prob samples
+A key issue is also that the random sampling will occur over time, potentially infrequently compared to the nonprobability sample.   Here
+We then provide an extension of the statistical error decomposition
 
-The coronavirus research literature has exploded. One large component of the volume of research is epidemiological forecasting.  Here we focus on
-These forcasts are often used to estimate effective reproduction number.  They can also be used to estimate the   estimating prevalence and true case count,
+The coronavirus research literature has exploded. One large component of the volume of research is epidemiological forecasting.
+These forecast models are often also used to estimate the effective reproduction number.  We extend (cite: Johndrow) to handle the more complex SIR dynamics and covariate information.
 
 
 \subsection{Outline}
-
-This article discusses the relationship between three statistical concepts: selection bias, measurement error, and population size.
 
 In Section~\ref{section:data}, we summarize the publicly available data on COVID-19.  We highlight how testing information is collected as well as demographic and comorbidity information.  In Section~\ref{section:testinginfo}, we briefly summarize COVID-19 testing.  We clarify the different between viral and antibody testing.  For viral testing, we briefly discuss the reasons behind measurement-error in RT-PCR tests including test timing and sample collection techniques.
 
@@ -136,18 +136,21 @@ Many states also provide aggregate demographic information on those who requeste
 
 %https://www.npr.org/sections/goatsandsoda/2020/05/31/865932474/should-i-get-tested-for-coronavirus-just-for-the-heck-of-it
 
-\subsubsection{Molecular testing restrictions in Indiana}
+\subsubsection{Testing restrictions and public health policy in Indiana}
 
 Due to limited testing capacity, many US states have instituted restrictions on who can request a molecular test at a given time.
 %https://www.coronavirus.in.gov/
 As of August 30th, 2020, a repository of the history of testing requirements does not exist.  Early on, limited testing meant that only those at high risk were allowed to be tested (i.e., symptomatic or high risk populations); as testing capacity expanded, these restrictions were gradually lifted.
 
-Here, we focus on reconstructing the testing restriction history for the state of Indiana. As of May 12th, 2020, the Indiana State Department of Health (ISDH) laboratory was testing high-risk individuals for COVID-19. Any symptomatic individual could receive a tested.  Moreover there were key factors for people who can be tested regardless of symptom status: over the age of 65, diabetic, high-blood pressure, obesity, pregnancy, and minority populations at greater risk of severe illness.
+Here, we focus on reconstructing the testing restriction history for the state of Indiana. As of May 12th, 2020, the Indiana State Department of Health (ISDH) laboratory was testing high-risk individuals for COVID-19. Any symptomatic individual could receive a test.  Moreover there were key factors for people who can be tested regardless of symptom status: over the age of 65, diabetic, high-blood pressure, obesity, pregnancy, and minority populations at greater risk of severe illness.
 % https://www.indystar.com/story/news/health/2020/05/12/coronavirus-testing-indiana-who-should-get-tested/3110592001/
 On April 28th, 2020, the criteria expanded to include any Indiana resident with virus symptoms, people in close contact with those who have tested positive and residents of congregant communities.
 % https://www.wishtv.com/news/medical/indiana-opens-up-covid-19-testing-to-more-hoosiers/
 On June 15, 2020, ISDH lifted all restrictions and testing expanded to include anyone in Indiana who wants to be tested for coronavirus.
 % https://www.indystar.com/story/news/health/2020/06/12/indiana-says-anyone-who-wants-coronavirus-test-can-get-one/3179151001/
+
+On March 23, 2020, Indiana's governor issues a \emph{stay at home} order effective March 26th through April 5th.  The order was extended until April 30th. On May 1st, 2020, a five-stage plan for gradual reopening was announced by Governon Holcomb -- See XX for exact details (cite: plan).  Stage two went from May 4th to May 21st; stage three went from May 22nd to June 13th; stage 4 went from June 12th to July 3rd; stage 4.5 began on July 4th and will continue until September 25th; stage 5's start time has yet to be determined.  Such  policies target reduction in active infection rates. In this paper, we incorporate Indiana's public health policy in our construction of epidemiological forecasts in Section~\ref{section:modelbased}.
+
 
 \subsection{Probabilistic sample in Indiana}
 
@@ -299,7 +302,7 @@ Here, we assume access to a probability sample from the same population on which
 $$
 \sum_{i=1}^N R_i \log \left( \frac{\pi (X_i; \theta)}{1-\pi(X_i; \theta)} \right)  + \sum_{i=1}^N \tilde R_i \tilde W_i \log ( 1 - \pi (X_i; \theta)).
 $$
-Taking the expectation of the second term with respect to the sampling design yields the second term in~\eqref{eq:propensity}.  Recall Indiana's probabilistic sample was a stratified random sampling design; therefore, the weights will depend on strata (i.e., 10 strata for each public health preparedness district).  Under simple random sampling and non-parametric selection propensity on a stratification variable, the weight is given by estimator of the $\hat \pi_k = (d_k / \tilde d_k) (n / N)$ where $\tilde d_k$ is the number of observations in strata $k$ in the random sample.
+Taking the expectation of the second term with respect to the sampling design yields the second term in~\eqref{eq:propensity}.  Under simple random sampling and non-parametric selection propensity on a stratification variable, the weight is given by estimator of the $\hat \pi_k = (d_k / \tilde d_k) (n / N)$ where $\tilde d_k$ is the number of observations in strata $k$ in the random sample.
 
 \subsubsection{An IPW estimator and statistical error decomposition.}
 Given a selection propensity, define the inverse probability weight~$w(x) = \pi (x; \hat \theta)^{-1}$. Then the IPW estimator adjusted for measurement error is given by
@@ -322,6 +325,12 @@ We can act like this is now $\rho_{I,\tilde Y}$ is $O(N^{-1})$ but this is most 
 
 In Section XX, we estimate $\rho_{I,Y}$ and $\rho_{\tilde I, Y}$ to see the impact of IPW.
 
+\subsubsection{Time-varying weights and random sampling}
+
+Suppose we have two random samples at times $t$ and $t+k$ (i.e., $k$ days apart).
+
+
+
 \subsection{Model-based estimation}
 \label{section:modelbased}
 
@@ -339,7 +348,7 @@ A key concern with the proposed model is lack of . We could address this by usin
 $$
 D_t \mid p, \theta, \nu \sim \text{Poisson} \left( p \sum_{t=1}^r \nu_t \theta_{(r-t)} \right)
 $$
-Fully Bayesian algorithms that combine (cite: Song) and (cite: Johndrow) can be derived.  Here, we focus on the deterministic case-count and resulting SIR model due to availability of existing software~\cite{Song2020} for estimation of such models. Unlike in (cite: HDRS), we are interested in predictions of case-counts.  We split deaths into $<60$ and $>60$, using two different IFR's to back out the counts for each subset and then split these among the sub-populations using the raking weights.  This yields estimates at $\hat y_k$ for each strata.
+Fully Bayesian algorithms that combine (cite: Song) and (cite: Johndrow) can be derived.  Here, we focus on the deterministic case-count and resulting SIR model due to availability of existing software~\cite{Song2020} for estimation of such models. Unlike in (cite: HDRS), we are interested in predictions of case-counts.  We split deaths into $<60$ and $>60$, using two different IFR's to back out the counts for each subset and then split these among the sub-populations using the raking weights.  This yields estimates at $\hat y_k$ for each strata.  We use $p$ as 0.6 from the
 
 This is of particular importance for epidemiological forecasts built from population-level data and impacts our model choice in Section~\ref{section:modelbased}.
 {\bf Check if SIR models account for this?}
@@ -381,6 +390,37 @@ $$
 \label{section:applications}
 
 \subsection{COVID-19 active infection prevalence in Indiana}
+
+Here we consider estimation of the active infection rate in Indiana.  We start with IPW estimation.  Table .
+
+The report does not include
+
+\begin{table}[!th]
+\begin{tabular}{c | c | l l | l | l l }
+& & \multicolumn{2}{c}{Total Tests} &  & \multicolumn{2}{c}{Positive Tests} \\
+\cline{3-4} \cline{6-7}
+& & NonRandom & Random & Census & NonRandom & Random \\ \hline
+\multirow{2}{*}{Sex$^\star$} & Female & 57\% & 55\% & 49\% & 53\% & - \\
+& Male & 43 & 45 & 51 & 47 & -  \\ \hline
+\multirow{3}{*}{Age$^\star$} & $<40$ & 47 & 28 & 53 & 47\\
+& $40-59$ & 28 & 36 & 25 & 30\\
+& $\geq 60$ & 25 & 36 & 22 & 13\\ \hline
+\multirow{2}{*}{Race$^\star$} & White & 60 & 98 & 85 & 50\\
+& Nonwhite & 21 & 8 & 15 & 50 \\ \hline
+\multirow{2}{*}{Symptoms$^{\star \star}$} & Yes & - & - & - \\
+& No & - & - & - \\ \hline
+\multirow{2}{*}{Contact$^{\star \star}$} & Yes & 11 & 1 & - \\
+& No & 89 & 99 & - \\ \hline
+\end{tabular}
+\caption{Temp \\
+$\star$: ISDH case-count nonrandom sample \\
+$\star\star$: May 2--3 nonrandom sample
+}
+\end{table}
+
+1. Unknown assumed MAR for Race, Gender, and Age
+2. 20\% are asymptomatic (so 78\% + 22\% (20\%) showed no symptoms)
+
 
 We have a small non-random sample to supplement and get these; then use raking on the larger study.  Appendix XX presents the marginal distributions for the non-random sample per
 
