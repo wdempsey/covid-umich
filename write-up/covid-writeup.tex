@@ -306,10 +306,10 @@ Maximum likelihood estimation then requires knowledge of $N_k$, which is feasibl
 
 Currently, US testing does not collect additional covariate information such as symptom information; however, this need not be the case moving forward.  Recommendation XX below states that additional covariate information should be collected from nonprobabilistic samples.  If this were the case, population-level summary statistics are no longer sufficient for selection propensity estimation so an alternative source of auxiliary information is required.
 
-Here, we assume access to a probability sample from the same population on which the outcome and exact same set of covariates are measured.  Let $\tilde R_i$ be an indicator that the individual was included in the probability sample and $\tilde W_i$ be the probability of inclusion for the $i$th individual (i.e., equal to $n/N$ for a simple random sample of size $n$). The probability sample is used to construct a design-unbiased estimator of the second term
+Here, we assume access to a probability sample from the same population on which the outcome and exact same set of covariates are measured.  Let $\tilde I_j$ be an indicator that the individual was included in the probability sample and $\tilde W_j$ be the probability of inclusion for the $j$th individual (i.e., equal to $n/N$ for a simple random sample of size $n$). The probability sample is used to construct a design-unbiased estimator of the second term
 \begin{equation}
 \label{eq:auxinfoprob}
-\sum_{i=1}^N R_i \log \left( \frac{\pi (X_i; \theta)}{1-\pi(X_i; \theta)} \right)  + \sum_{i=1}^N \tilde R_i \tilde W_i \log ( 1 - \pi (X_i; \theta)).
+\sum_{j=1}^N I_j \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right)  + \sum_{i=1}^N \tilde I_j \tilde W_j \log ( 1 - \pi (X_j; \theta)).
 \end{equation}
 Taking the expectation of the second term with respect to the sampling design yields the second term in~\eqref{eq:propensity}.  This was proposed by~\cite{Chen2019} when covariates were observed on a random sample from the population. Here, we only observe strata information.  Under simple random sampling and non-parametric selection propensity on a stratification variable, the weight is given by estimator of the $\hat \pi_k = (d_k / \tilde d_k) (n / N)$ where $\tilde d_k$ is the number of observations in strata $k$ in the random sample.
 
@@ -335,18 +335,24 @@ $\sqrt{1 + \frac{CV_W^2}{1-f}} \geq 1$.  Hence, if the data quality does not inc
 
 As demonstrated in the derivation of IPW approach, if the weights are correctly specified then the $E_{\bf R} [ \rho_{\tilde I (X), Y} ] = 0$ and therefore $\rho_{\tilde I(X), Y} = O(N^{-1})$; however, if the weights are not correctly specified then the data quality index is unlikely to inversely scale with population size.  Indeed, Horvitz-Thompson estimators are sensitity to errors in the estimated weights.  Low selection propensity imply large weights which can have deleterious impacts by certain observations dominating estimation. Interestingly, the impact of measurement-error on data quality is unchanged when considering a weighted estimand.  Similar to~\cite{Meng2018}, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from an IPW estimator is likely to put too much confidence in the sheer size of the data.  In section XX, random sampled outcomes are used to assess effective sample sizes and adjust corresponding CIs.
 
-\subsubsection{Time-varying weights and infrequent random sampling}
+\subsubsection{Time-varying propensities and adjustments for application to COVID-19}
 
-Here we extend the IPW approach by~\cite{Chen2019} to this temporal setting by considering the joint likelihood
+In prior sections on selection propensity estimation, we ignored the dynamic nature of the outbreak.  Here we extend the IPW approach by~\cite{Chen2019} to the temporal setting by considering the joint likelihood
 \begin{equation}
 \label{eq:tvpropensity}
-\sum_{t=1}^T \left[ \sum_{j=1}^N I_{j,t} \log \left( \frac{\pi_t (X_{j,t}; \theta)}{1-\pi(X_{j,t}; \theta)} \right) + \sum_{j=1}^N \log \left( 1 - \pi_t (X_{j,t}; \theta) \right) \right].
+\sum_{t=1}^T \left[ \sum_{j=1}^N I_{j,t} \log \left( \frac{\pi_t (X_{j,t}; \theta)}{1-\pi_t(X_{j,t}; \theta)} \right) + \sum_{j=1}^N \log \left( 1 - \pi_t (X_{j,t}; \theta) \right) \right]
 \end{equation}
-{\bf $I_{j,t}$ will strongly depend on the selection history. So $X_{j,t}$ can contain features of past such as testing and symptom onset}
+where $t=1,\ldots,T$ are the sequence of days on which case-count data is reported.  Here, $I_{j,t}$ denotes self-selection into testing on day $t$, which is highly correlated with prior testing and results, i.e., $I_{j,t^\prime}$ and $Y_{j,t^\prime}$ for $t^\prime < t$.  For example, an individual who tests positive on day $t$ is unlikely to seek testing on subsequent days.  Moreover, an individual in a high prevalence area may be more likely to seek out testing.  Here, we assume that the covariate vector $X_{j,t}$ contains all features of past relevant for selection.
+
+Suppose sufficiently large random samples are collected at each time $t =1,\ldots,T$.  Then the pseudo-likelihood can be re-written as in~\eqref{eq:auxinfoprob}, but with one term for each time point.  For COVID-19, there are three issues with this approach.  First, large random samples are not available at every time.  Second, only cumulative demographics are available for  covariate information is  the necessary covariate information is typically only available at a subset of times. Third, random samples from a potentially biased Facebook survey are available upon request. These ask if individuals have been tested
 
 
-Suppose random samples are collected at each time $t =1,\ldots,T$.  Then the pseudo-likelihood can be re-written as in~\eqref{eq:auxinfoprob}, but with one term for each time point.  In practice, covariate information is available on the nonprobability sample at each time $t=1,\ldots,T$; however, random samples and therefore the necessary covariate information is typically only available at a subset of times. Here, we briefly discuss a non-parametric kernel approach.
+To address
+Here, we briefly discuss a non-parametric kernel approach.
 
+large random samples
+
+covariate information is available on the nonprobability sample at each time $t=1,\ldots,T$;
 
 
 $$
@@ -362,6 +368,9 @@ Where $dF_t$ is the associated measure at time~$t$
 
 We could estimate separately if we had 1 random sample at each.  But perhaps it is better to smooth across; especially
 
+\begin{rmk}[Cumulative demographics]
+Most states only report cumulative demographic information.
+\end{rmk}
 
 \subsection{Model-based estimation}
 \label{section:modelbased}
