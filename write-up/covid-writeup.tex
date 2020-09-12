@@ -337,18 +337,22 @@ As demonstrated in the derivation of IPW approach, if the weights are correctly 
 
 \subsubsection{Time-varying propensities and adjustments for application to COVID-19}
 
-In prior sections on selection propensity estimation, we ignored the dynamic nature of the outbreak.  Here we extend the IPW approach by~\cite{Chen2019} to the temporal setting by considering the joint likelihood
+In prior sections on selection propensity estimation, we ignored the dynamic nature of the outbreak.  Here we extend the IPW approach to the temporal setting by considering the joint likelihood
 \begin{equation}
 \label{eq:tvpropensity}
 \sum_{t=1}^T \left[ \sum_{j=1}^N I_{j,t} \log \left( \frac{\pi_t (X_{j,t}; \theta)}{1-\pi_t(X_{j,t}; \theta)} \right) + \sum_{j=1}^N \log \left( 1 - \pi_t (X_{j,t}; \theta) \right) \right]
 \end{equation}
 where $t=1,\ldots,T$ are the sequence of days on which case-count data is reported.  Here, $I_{j,t}$ denotes self-selection into testing on day $t$, which is highly correlated with prior testing and results, i.e., $I_{j,t^\prime}$ and $Y_{j,t^\prime}$ for $t^\prime < t$.  For example, an individual who tests positive on day $t$ is unlikely to seek testing on subsequent days.  Moreover, an individual in a high prevalence area may be more likely to seek out testing.  Here, we assume that the covariate vector $X_{j,t}$ contains all features of past relevant for selection.
 
-Suppose sufficiently large random samples are collected at each time $t =1,\ldots,T$.  Then the pseudo-likelihood can be re-written as in~\eqref{eq:auxinfoprob}, but with one term for each time point.  For COVID-19, there are three issues with this approach.  First, large random samples are not available at every time.  Second, only cumulative demographics are available for  covariate information is  the necessary covariate information is typically only available at a subset of times. Third, random samples from a potentially biased Facebook survey are available upon request. These ask if individuals have been tested
+As the necessary covariates (e.g., symptom status, prior testing, COVID-19 exposure) go beyond demographic information, random sampling approaches are required.  If sufficiently large random samples are collected at each time $t =1,\ldots,T$, then the pseudo-likelihood can be re-written as in~\eqref{eq:auxinfoprob}, but with one term for each time point.  For COVID-19, there are two key issues with this approach.  First, large probabilistic samples are not available at every time.  Second, only cumulative demographics on case counts are available from states' department of health\footnote{Historical daily demographic data can be requested via FOIA, but such requests take months to complete -- as the author has learned through sweat and tears.}.  Moreover, key covariate information such as symptom status is not reported (and potentially not recorded) by states' department of health.
 
+To address these issues, we rely on two additional sources of data.  First, the Facebook symptom survey collects symptom data on a random subset of the Facebook population.  Use of these random samples lead to questions of target population coverage (i.e., not all Hoosiers have Facebook); however, such data fills in the gaps for symptom information.  While the Facebook survey also asks if individuals have been tested, exact date of testing is not recorded; therefore, the survey's use as a resource for understanding COVID-19 testing is limited.  To address this, we rely on COVID-19 hospitalization data to estimate a relative fraction of cases that display symptoms.
 
-To address
-Here, we briefly discuss a non-parametric kernel approach.
+Specific weight calculations and adjustments are deferred to Section~\ref{section:applications}. Here, we briefly discuss a non-parametric kernel approach.  We start by using considering a pseudo-likelihood
+\begin{equation}
+\label{eq:tvpropensity}
+\sum_{t=1}^T \left[ \sum_{j=1}^N I_{j,t} I^{(2)}_{j,t} W_{j,t} \log \left( \frac{\pi_t (X_{j,t}; \theta)}{1-\pi_t(X_{j,t}; \theta)} \right) + \sum_{j=1}^N \tilde W_{j,t} \tilde I_{j,t} \log \left( 1 - \pi_t (X_{j,t}; \theta) \right) \right]
+\end{equation}
 
 large random samples
 
