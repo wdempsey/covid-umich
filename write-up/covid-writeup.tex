@@ -466,12 +466,12 @@ The report does not include
 \multirow{2}{*}{Sex$^\star$} & Female & 57\% & 55\% & 49\% & 53\% & - \\
 & Male & 43 & 45 & 51 & 47 & -  \\ \hline
 \multirow{3}{*}{Age$^\star$} & $<40$ & 47 & 28 & 53 & 47\\
-& $40-59$ & 28 & 36 & 25 & 30\\
+& $40-59$ & 28 & 36 & 25 & 3 0\\
 & $\geq 60$ & 25 & 36 & 22 & 13\\ \hline
 \multirow{2}{*}{Race$^\star$} & White & 60 & 98 & 85 & 50\\
 & Nonwhite & 21 & 8 & 15 & 50 \\ \hline
-\multirow{2}{*}{Symptoms$^{\star \star}$} & Yes & - & - & - \\
-& No & - & - & - \\ \hline
+\multirow{2}{*}{Symptoms$^{\star \star}$} & Yes & 62 & 43 & - & 83 & 62 \\
+& No & 38 & 57 & - & 17 & 38  \\ \hline
 \multirow{2}{*}{Contact$^{\star \star}$} & Yes & 11 & 1 & - \\
 & No & 89 & 99 & - \\ \hline
 \end{tabular}
@@ -480,6 +480,25 @@ $\star$: ISDH case-count nonrandom sample \\
 $\star\star$: May 2--3 nonrandom sample
 }
 \end{table}
+
+% Random sample
+% Symptom 0, Test 0 2040
+% Symptom 0, Test 1 18
+% Symptom 1, Test 0 1518
+% Symptom 1, Test 1 29
+% Total symptom 1; (1518+29)/3605 = 43
+% Pos test symptom 1; (29)/(29+18) = 62
+
+% Avg 100 COVID-19 hospitalizations in state in that time
+% 650 cases
+% percent of cases in nonrandom sample with symptoms = 184/(184+37) = 83%
+% Then 83% * 650 = 540 symptomatic cases
+% 100/540 = 19% of symptomatic cases were hospitalized
+
+% Example: prior to April 28th, only symptoms and a few others
+% 04/11: around 500 cases
+% 04/11: 117 hospitalizations -> 615 cases
+
 
 1. Unknown assumed MAR for Race, Gender, and Age
 2. 20\% are asymptomatic (so 78\% + 22\% (20\%) showed no symptoms)
@@ -601,6 +620,9 @@ We can perform a sensitivity analysis by considering the range of false negative
 
 \section{Discussion}
 \label{section:discussion}
+
+{\bf Our goal with surveillance is to identify areas of weakness; but selection bias is an issue!}
+
 There is nothing routine about COVID-19, including the corresponding statistical questions.  The goal of this paper was to point out questionable statistical routines.  Precision in reported case-count data gives the illusion of information when what what is needed is quantification of uncertainty. Selection bias leads data analysts to feel certain about incorrect conclusions.  We end with a brief discussion of important related topics.
 
 \subsection*{Additional biases and measurement-error}
