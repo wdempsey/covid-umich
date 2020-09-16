@@ -464,26 +464,29 @@ The report does not include
 
 \begin{table}[!th]
 \begin{tabular}{c | c | l l | l | l l }
-& & \multicolumn{2}{c}{Total Tests} &  & \multicolumn{2}{c}{Positive Tests} \\
+& & \multicolumn{2}{c}{Total Tests} & US & \multicolumn{2}{c}{Positive Test Rate}\\
 \cline{3-4} \cline{6-7}
 & & NonRandom & Random & Census & NonRandom & Random \\ \hline
-\multirow{2}{*}{Sex$^\star$} & Female & 57\% & 55\% & 49\% & 53\% & - \\
-& Male & 43 & 45 & 51 & 47 & -  \\ \hline
-\multirow{3}{*}{Age$^\star$} & $<40$ & 47 & 28 & 53 & 47\\
-& $40-59$ & 28 & 36 & 25 & 3 0\\
-& $\geq 60$ & 25 & 36 & 22 & 13\\ \hline
-\multirow{2}{*}{Race$^\star$} & White & 60 & 98 & 85 & 50\\
-& Nonwhite & 21 & 8 & 15 & 50 \\ \hline
-\multirow{2}{*}{Symptoms$^{\star \star}$} & Yes & 62 & 43 & - & 83 & 62 \\
-& No & 38 & 57 & - & 17 & 38  \\ \hline
-\multirow{2}{*}{Contact$^{\star \star}$} & Yes & 11 & 1 & - \\
+\multirow{2}{*}{Sex} & Female & 58\% & 55\% & 51\% & 21.7\% & 1.42\% \\
+& Male & 42 & 45 & 49 & 24.2 & 2.13 \\ \hline
+\multirow{3}{*}{Age} & $<40$ & 40 & 28 & 53 & 29.7 & 1.71 \\
+& $40-59$ & 41 & 36 & 25 & 24.9 & 2.09 \\
+& $\geq 60$ & 19 & 36 & 22 & 6.7 & 0.92 \\ \hline
+\multirow{2}{*}{Race} & White & 23 & 92 & 87 \\
+& Nonwhite & 77 & 8 & 13 \\ \hline
+\multirow{2}{*}{Symptom} & Yes & 62 & 43 & - &  \\
+& No & 38 & 57 & - & \\ \hline
+\multirow{2}{*}{Contact} & Yes & 11 & 1 & - \\
 & No & 89 & 99 & - \\ \hline
+\multirow{2}{*}{Prior test} & Yes & 6 & 1 & - \\
+& No & 94 & 99 & - \\ \hline
 \end{tabular}
-\caption{Temp \\
-$\star$: ISDH case-count nonrandom sample \\
-$\star\star$: May 2--3 nonrandom sample
-}
+\caption{Temp}
 \end{table}
+
+Average between May 2nd and 3rd is 11.7\% statewide.  So we need to adjust all these estimates down and then re-weight.
+
+
 
 % Random sample
 % Symptom 0, Test 0 2040
