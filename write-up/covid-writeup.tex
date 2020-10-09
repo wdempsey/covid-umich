@@ -150,17 +150,18 @@ On March 23, 2020, Indiana's governor issues a \emph{stay at home} order effecti
 
 \subsection{Probabilistic samples in Indiana}
 
-Between April 25--29, 2020, Indiana conducted statewide random sample testing (both molecular and serological) of persons ages $\geq 12$ years to assess prevalence of active infection and presence of antibodies to SARS-CoV-2 (cite: Indiana report). A stratified random sampling design was conducted using Indiana’s 10 public health preparedness districts as sampling strata. 15,495 participants were contacted resulting in a final sample size of 3,658. The same demographic data as provided by ISDH for Indian molecular testing data was included (e.g., summary statistics on age, sex, and race). Participants in the probability sample were also asked if they experienced any COVID-19 compatible symptoms during the past 2 weeks or had shared a household with someone who had a positive test result for SARS-CoV-2.
-
-During May 2--3, 2020, an additional nonrandom sample of 898 individuals was also collected.  In this paper, the nonrandom sample is used to assess whether the cumulative summary statistics are appropriate in constructing the inverse-probability weights as well as in constructing appropriate weights using symptom information.
+Between April 25--29, 2020, Indiana conducted statewide random sample testing (both molecular and serological) of persons ages $\geq 12$ years to assess prevalence of active infection and presence of antibodies to SARS-CoV-2 (cite: Indiana report). A stratified random sampling design was conducted using Indiana’s 10 public health preparedness districts as sampling strata. 15,495 participants were contacted resulting in a final sample size of 3,658. The same demographic data as provided by ISDH for Indian molecular testing data was included (e.g., summary statistics on age, sex, and race). Participants in the probability sample were also asked if they experienced any COVID-19 compatible symptoms during the past 2 weeks or had shared a household with someone who had a positive test result for SARS-CoV-2. During May 2--3, 2020, an additional nonrandom sample of 898 individuals was also collected.  In this paper, the nonrandom sample is used to assess whether the cumulative summary statistics are appropriate in constructing the inverse-probability weights as well as in constructing appropriate weights using symptom information.
 
 \subsubsection{Facebook/CMU symptom survey.}
-Finally, since XX, Facebook has conducted random sample testing ().  In particular, the COVID Symptom tracker provides an estimate of the number of individuals who have experienced any COVID-19 compatible symptoms.
+Since April 2020, Facebook has started randomly showing an opt-in symptom survey to its users.  The survey is run by health researchers at Carnegie Mellon University. Data collected includes basic demographic information and if the respondent has symptoms such as fever, coughing, shortness of breath, or loss of smell which are associated with COVID-19.  The survey defines an individual as displaying \emph{COVID-like symptoms} if they exhibit a fever along with a cough, or shortness of breath, or difficulty breathing.  Figure~\ref{fig:fbsymptoms} displays nonparametric regression estimates of the fraction of individuals within age and gender strata.
 
-Symptom report is a key covariate to understand.
-
-So its poststratification but are we sure the FB people reflect..
-
+\begin{figure}[!th]
+\centering
+\includegraphics[width = 0.9\textwidth]{../methods/figs/fbcovid19symptoms.png}
+\caption{Reported rate of COVID-like symptoms in strata.  Daily rates were estimated using weighted method on each day separately and then smoothed over time using local-linear nonparametric regression.}
+\label{fig:fbsymptoms}
+\vspace{-0.3cm}
+\end{figure}
 
 
 \section{Analysis of case-count data}
@@ -481,9 +482,13 @@ Test & No & 93.9 & 98.6 & - & 21.6 & 1.3 \\ \hline
 \label{tab:indiana}
 \end{table}
 
-We correct the nonrandom sample to match the Indiana state-wide prevalence.
+Comparison to April 20th-25th using Fb data
+\begin{itemize}
+\item Fever: {\bf FB} = [0.017, 0.020, 0.024], {\bf Random}: 0.018
+\item Cough: {\bf FB} = [0.142, 0.148, 0.154], {\bf Random}: 0.149
+\item Shortness: {\bf FB} = [0.058, 0.060, 0.062], {\bf Random}: 0.062
+\end{itemize}
 
-$66.4 * 0.17 + 15.6 * 0.83 = XX = 11.7 * c $
 
 \begin{subsubsection}{Time-varying doubly-robust prevalence estimation}
 
