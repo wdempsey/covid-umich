@@ -1,4 +1,4 @@
-\documentclass[11pt]{amsart}
+\documentclass[12pt]{amsart}
 
 \RequirePackage[OT1]{fontenc}
 
@@ -294,13 +294,13 @@ The second sum is over the entire population.  Maximum likelihood estimation the
 \subsubsection{Auxiliary information through population-level summary statistics}
 \label{subsec:auxsum}
 
-For COVID-19 case-count data, the only covariate information provided by state and local governments are summary statistics for those factors discussed in Section~\ref{section:testinginfo} -- age, sex, race, and (potentially) comorbidities.  These are discrete factors and therefore define a stratification of the population. Then $X_j = k \in \{1,\ldots,K\}$ denotes the $j$th individual belongs to strata $k$ and the likelihood can be re-written as
+For COVID-19 case-count data, the only covariate information provided by state and local governments are summary statistics for those factors discussed in Section~\ref{section:testinginfo} -- age, sex,  and race.  These are discrete factors and therefore define a stratification of the population. Then $X_j = k \in \{1,\ldots,K\}$ denotes the $j$th individual belongs to strata $k$ and the likelihood can be re-written as
 $$
 \sum_{k=1}^K d_k \log \left( \frac{\pi (k; \theta)}{1-\pi(k; \theta)} \right) + \sum_{k=1}^K N_k \log \left( 1 - \pi (k; \theta) \right).
 $$
 where $d_k$ and $N_k$ are the number of individuals in the nonprobabilistic sample and in the entire population respectively in the $k$th strata, $k=1,\ldots K$.
 
-Maximum likelihood estimation then requires knowledge of $N_k$, which is feasible when population-level summary statistics are available.  The US Census, for example, can provide marginal summary statistics for the distribution of age, sex, and race in Indiana state.  For comorbidities such as hypertension, diabetes, and chronic obstructive pulmonary disease (COPD) the Indiana State Department of Health releases summary statistics. Typically  joint distribution is not publicly available.  Here, we employ the standard survey technique of raking~\citep{deville1993} to generate estimates $\hat N_k$ for each strata.  Estimation can then be performed by using standard algorithms such as Newton-Rhapson.  If the selection propensity is estimated non-parametrically then the resulting weight can be computed exactly and is given by $\hat P(I_j = 1 \mid X_j = k) = \hat \pi_k = d_k/\hat N_k$.
+Maximum likelihood estimation then requires knowledge of $N_k$, which is feasible when population-level summary statistics are available.  The US Census, for example, can provide marginal summary statistics for the distribution of age, sex, and race in Indiana state.  Typically  joint distribution is not publicly available.  Here, we employ the standard survey technique of raking~\citep{deville1993} to generate estimates $\hat N_k$ for each strata.  Estimation can then be performed by using standard algorithms such as Newton-Rhapson.  If the selection propensity is estimated non-parametrically then the resulting weight can be computed exactly and is given by $\hat P(I_j = 1 \mid X_j = k) = \hat \pi_k = d_k/\hat N_k$.
 
 \subsubsection{Auxiliary information through probability samples}
 \label{subsec:auxprob}
@@ -354,7 +354,7 @@ where $t=1,\ldots,T$ are the sequence of days on which case-count data is report
 
 As the necessary covariates (e.g., symptom status, prior testing, COVID-19 exposure) go beyond demographic information, random sampling approaches are required.  If sufficiently large random samples are collected at each time $t =1,\ldots,T$, then the pseudo-likelihood can be re-written as in~\eqref{eq:auxinfoprob}, but with one term for each time point.  For COVID-19, there are two key issues with this approach.  First, large probabilistic samples are not available at every time.  Second, only cumulative demographics on case counts are available from states' department of health\footnote{Historical daily demographic data can be requested via FOIA, but such requests take months to complete -- as the author has learned through sweat and tears.}.  Moreover, key covariate information such as symptom status is not reported (and potentially not recorded) by states' department of health.
 
-To address these issues, we rely on two additional sources of data.  First, the Facebook symptom survey collects symptom data on a random subset of the Facebook population.  Use of these random samples lead to questions of target population coverage (i.e., not all Hoosiers have Facebook); however, such data fills in the gaps for symptom information.  While the Facebook survey also asks if individuals have been tested, exact date of testing is not recorded; therefore, the survey's use as a resource for understanding COVID-19 testing is limited.  To address this, we rely on COVID-19 hospitalization data to estimate a relative fraction of cases that display symptoms.
+To address these issues, we rely on the Facebook symptom survey. Daily random surveys provide adequate covariate information; however, the daily estimates vary substantially while we expect  while we expect to
 
 Specific weight calculations and adjustments are deferred to Section~\ref{section:applications}. Here, we briefly discuss a non-parametric kernel approach.  We start by considering a time-varying version of equation~\eqref{eq:auxinfoprob2}
 % \begin{equation}
