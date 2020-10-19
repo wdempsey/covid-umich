@@ -277,7 +277,7 @@ This implies a similar trade-off as before but on the logarithmic scale.  The er
 \section{Potential improvements to prevalence estimation}
 \label{section:improvedcasecount}
 
-The prior section presented negative consequences of selection-bias and measurement error when estimating infection prevalence from observed case-count data.  This raises the immediate question whether prevalence estimators can be improved.  In this section, we consider two directions. First, we use publicly available auxiliary information to build selection propensities and consider an inverse probability weighting (IPW) estimator. We extend the statistical error decomposition to the weighted setting. Second, we consider an extension of compartmental models from infectious disease epidemiology using death data to try and avoid selection bias.  After adjusting for measurement-error, this leads to a model-based forecasts of prevalence. We then combine these epidemiological forecasts, selection propensities, and measurement-error corrections to generate \emph{doubly robust} prevalence estimators. We provide an appropriate extension of the statistical error decomposition. The method and statistical error decompositions guide our recommendations in Section~\ref{section:discussion}.
+The prior section presented negative consequences of selection-bias and measurement error when estimating infection prevalence from observed case-count data.  This raises the immediate question whether prevalence estimators can be improved.  In this section, we consider two directions. First, we use publicly available auxiliary information to build selection propensities and consider an inverse probability weighting (IPW) estimator. We then extend the statistical error decomposition to the weighted setting. Second, we consider an extension of compartmental models from infectious disease epidemiology using death data.  After adjusting for measurement-error, this leads to an alternative, model-based forecast of prevalence. We then combine these epidemiological forecasts, selection propensities, and measurement-error corrections to generate \emph{doubly robust} prevalence estimators. We provide an appropriate extension of the statistical error decomposition. The method and statistical error decompositions guide our recommendations in Section~\ref{section:discussion}.
 
 \subsection{Selection propensity estimation}
 
@@ -319,67 +319,56 @@ Equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected f
 \label{eq:auxinfoprob2}
 \sum_{j=1}^N I_j I_j^{(2)} W_j^{(2)} \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right)  + \sum_{i=1}^N \tilde I_j \tilde W_j \log ( 1 - \pi (X_j; \theta)).
 \end{equation}
-Here, $I_j^{(2)}$ is an indicator that the individual is in the probability subsample and $W_j^{(2)}$ is the probability of inclusion.  The estimate no relies on random sampling in both the first and second term.
+Here, $I_j^{(2)}$ is an indicator that the individual is in the probability subsample and $W_j^{(2)}$ is the probability of inclusion.  The estimate now relies on random sampling in both the first and second term.
 
 \subsubsection{An IPW estimator and statistical error decomposition.}
 
 Selection propensities can be constructed to use both types of auxiliary information (i.e., combine Sections~\ref{subsec:auxsum} and~\ref{subsec:auxprob}). Given a selection propensity, define the inverse probability weight~$w(x) = \pi (x; \hat \theta)^{-1}$. Then the IPW estimator adjusted for measurement error is given by
-$$
+\begin{equation}
+\label{eq:ipwest}
 \bar y_n^\star
 = \frac{1}{1-FP-FN} \cdot \frac{\sum_{i=1}^n w(x_i) (y_i - FP)}{\sum_{i=1}^n w (x_i)}
 \stackrel{(2)}{=} \frac{1}{1-FP-FN} \sum_{k=1}^K \frac{d_k w_k}{w} (\bar y_k - FP),
-$$
-where the second equality (2) is under the assumption that $x_i$ is a stratification variable with $k$ indexing the strata, $w_k$ is the weight and $d_k$ is the number of samples in strata $k$, and $w = \sum_{k=1}^K d_k w_k$. Under simple random sampling with one strata~$\hat \pi_k = n/N$ and we recover the estimator $\tilde y_n$ from Section~\ref{section:imperfecttesting}.
+\end{equation}
+where equality (2) is under the assumption that $x_i$ is a stratification variable with $k$ indexing the strata, $w_k$ is the weight and $d_k$ is the number of samples in strata $k$, and $w = \sum_{k=1}^K d_k w_k$. Under simple random sampling with one strata~$\hat \pi_k = n/N$ and we recover the estimator $\tilde y_n$ from Section~\ref{section:imperfecttesting}.
 
 Let $\tilde I_j (X_j) = I_j  \cdot W(X_j)$ for $j=1,\ldots,N$.  Then the error when comparing weighted estimator~$\bar y_n^\star$ to the true prevalence $\bar Y$ can be expressed as:
 \begin{equation}
 \label{eq:statdecomp2}
 \rho_{\tilde I (X), Y} \times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y} \times \underbrace{\left[ 1 - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right] \times \frac{1}{1-(FP+FN)}}_{D_M}
 \end{equation}
-where $CV_W$ is the coefficient of variation (i.e., standard deviation/mean) of $W_J$ given $R_J = 1$, and $\rho_{\tilde I(X), Y}$ is the empirical correlation which here depends on covariate distribution.  See Appendix XX for the derivation.
+where $CV_W$ is the coefficient of variation (i.e., standard deviation/mean) of $W_J$ given $I_J = 1$, and $\rho_{\tilde I(X), Y}$ is the empirical correlation which here depends on covariate distribution.  See Appendix XX for the derivation.
 
 Comparing~\eqref{eq:statdecomp2} to~\eqref{eq:statdecomp} shows that weighting impacts the estimation error in two ways.  First, there is a negative impact on the data quantity component; taking the ratio of these quantities yields
 $\sqrt{1 + \frac{CV_W^2}{1-f}} \geq 1$.  Hence, if the data quality does not increase (i.e., $| \rho_{\tilde I (X), Y} | = | \rho_{I,Y}|$ ) then weighting increases the error magnitude.  Note this relative error increase depends on the fraction of population sampled $f$, implying that for large samples there is a larger potential increase in the error if the weights do not improve data quality.
 
-As demonstrated in the derivation of IPW approach, if the weights are correctly specified then the $E_{\bf R} [ \rho_{\tilde I (X), Y} ] = 0$ and therefore $\rho_{\tilde I(X), Y} = O(N^{-1})$; however, if the weights are not correctly specified then the data quality index is unlikely to inversely scale with population size.  Indeed, Horvitz-Thompson estimators are sensitity to errors in the estimated weights.  Low selection propensity imply large weights which can have deleterious impacts by certain observations dominating estimation. Interestingly, the impact of measurement-error on data quality is unchanged when considering a weighted estimand.  Similar to~\cite{Meng2018}, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from an IPW estimator is likely to put too much confidence in the sheer size of the data.  In section XX, random sampled outcomes are used to assess effective sample sizes and adjust corresponding CIs.
+As demonstrated in the derivation of IPW approach, if the weights are correctly specified then the $E_{\bf R} [ \rho_{\tilde I (X), Y} ] = 0$ and therefore $\rho_{\tilde I(X), Y} = O(N^{-1})$; however, if the weights are not correctly specified then the data quality index is unlikely to inversely scale with population size.  Indeed, Horvitz-Thompson estimators are sensitive to errors in the estimated weights.  Low selection propensity imply large weights which can have deleterious impacts by certain observations dominating estimation. Interestingly, the impact of measurement-error on data quality is unchanged when considering a weighted estimand.  Similar to~\cite{Meng2018}, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from an IPW estimator are likely to put too much confidence in the sheer size of the data.  In section XX, independent random samples are used to assess effective sample sizes and adjust corresponding CIs.
 
-\subsubsection{Time-varying propensities and adjustments for application to COVID-19}
+\subsubsection{Time-varying propensities}
 
 In prior sections on selection propensity estimation, we ignored the dynamic nature of the outbreak.  Here we extend the IPW approach to the temporal setting by considering the joint likelihood
 \begin{equation}
 \label{eq:tvpropensity}
 \sum_{t=1}^T \left[ \sum_{j=1}^N I_{j,t} \log \left( \frac{\pi_t (X_{j,t}; \theta)}{1-\pi_t(X_{j,t}; \theta)} \right) + \sum_{j=1}^N \log \left( 1 - \pi_t (X_{j,t}; \theta) \right) \right]
 \end{equation}
-where $t=1,\ldots,T$ are the sequence of days on which case-count data is reported.  Here, $I_{j,t}$ denotes self-selection into testing on day $t$, which is highly correlated with prior testing and results, i.e., $I_{j,t^\prime}$ and $Y_{j,t^\prime}$ for $t^\prime < t$.  For example, an individual who tests positive on day $t$ is unlikely to seek testing on subsequent days.  Moreover, an individual in a high prevalence area may be more likely to seek out testing.  Here, we assume that the covariate vector $X_{j,t}$ contains all features of past relevant for selection.
+where $t=1,\ldots,T$ are the days when case-count data is reported.  Here, $I_{j,t}$ denotes self-selection into testing on day $t$, which is highly correlated with prior testing and results.  For example, an individual who tests positive is unlikely to seek testing on subsequent days.  Moreover, an individual in a high prevalence area may be more likely to seek out testing.  Here, we assume that the covariate vector $X_{j,t}$ contains all features of past relevant for selection.
 
-As the necessary covariates (e.g., symptom status, prior testing, COVID-19 exposure) go beyond demographic information, random sampling approaches are required.  If sufficiently large random samples are collected at each time $t =1,\ldots,T$, then the pseudo-likelihood can be re-written as in~\eqref{eq:auxinfoprob}, but with one term for each time point.  For COVID-19, there are two key issues with this approach.  First, large probabilistic samples are not available at every time.  Second, only cumulative demographics on case counts are available from states' department of health\footnote{Historical daily demographic data can be requested via FOIA, but such requests take months to complete -- as the author has learned through sweat and tears.}.  Moreover, key covariate information such as symptom status is not reported (and potentially not recorded) by states' department of health.
-
-To address these issues, we rely on the Facebook symptom survey. Daily random surveys provide adequate covariate information; however, the daily estimates vary substantially while we expect  while we expect to
-
-Specific weight calculations and adjustments are deferred to Section~\ref{section:applications}. Here, we briefly discuss a non-parametric kernel approach.  We start by considering a time-varying version of equation~\eqref{eq:auxinfoprob2}
-% \begin{equation}
-% \label{eq:tvpropensity}
-% \sum_{t=1}^T \left[ \sum_{j=1}^N I_{j,t} I^{(2)}_{j,t} W_{j,t} \log \left( \frac{\pi_t (X_{j,t}; \theta)}{1-\pi_t(X_{j,t}; \theta)} \right) + \sum_{j=1}^N \tilde W_{j,t} \tilde I_{j,t} \log \left( 1 - \pi_t (X_{j,t}; \theta) \right) \right]
-% \end{equation}
-that accounts for random sampling from within the non-random sample.  Note random samples may be quite small at each time while we expect $\pi_t(x;\theta)$ to be a smooth function of time; therefore, we introduce a non-parametric approach to estimation of the selection propensity at time~$t$,
+As   necessary covariates go beyond demographic information, random sampling approaches as discussed in Section~\ref{subsec:auxprob} are required.  If sufficiently large random samples are collected at each time $t =1,\ldots,T$, then the pseudo-likelihood can be re-written as in~\eqref{eq:auxinfoprob} and propensities estimated separately per time point.  Unfortunately for COVID-19, large probabilistic samples are not available at every time within a given region.  For simplicity, here we discuss a non-parametric kernel-based approach where the selection propensity at time~$t$, denoted $\hat \theta_t$, maximizes the smoothed pseudo-likelihood
 $$
-\sum_{t^\prime=1}^T K_h(|t^\prime - t|) \left[ \sum_{j=1}^N I_{j,t^\prime} I^{(2)}_{j,t^\prime} W_{j,t^\prime} \log \left( \frac{\pi_t (X_{j,t^\prime}; \theta)}{1-\pi_t(X_{j,t^\prime}; \theta)} \right) + \sum_{j=1}^N \tilde W_{j,t^\prime} \tilde I_{j,t^\prime} \log \left( 1 - \pi_t (X_{j,t^\prime}; \theta) \right) \right]
+\sum_{t^\prime=1}^T K_h(|t^\prime - t|) \left[ \sum_{j=1}^N I_{j,t^\prime} \log \left( \frac{\pi_t (X_{j,t^\prime}; \theta)}{1-\pi_t(X_{j,t^\prime}; \theta)} \right) + \sum_{j=1}^N \tilde W_{j,t^\prime} \tilde I_{j,t^\prime} \log \left( 1 - \pi_t (X_{j,t^\prime}; \theta) \right) \right]
 $$
-where $K_h$ is a kernel function with tunable parameter $h$. Under simple random sampling of equal size~$\tilde n$ from a fixed population size~$N$ at each time, and s, and non-parametric selection propensity on a stratification variable, the weight is given by estimator of the
+where $K_h$ is a kernel function with tunable parameter $h$. Under simple random sampling of equal size~$\tilde n$ from a fixed population size~$N$ at each time and non-parametric selection propensity on a stratification variable, the weight is given by estimator of the
 $$
-\hat \pi_{k,t} = \frac{n}{N} \times \frac{\sum_{t^\prime=1}^T K(|t^\prime - t|) \frac{n_t}{m} \hat d_{k,t^\prime}}{\sum_{t^\prime=1}^T \tilde d_{k,t^\prime}}
+\hat \pi_{k,t} = \frac{n}{N} \times \frac{\sum_{t^\prime=1}^T K_h(|t^\prime - t|) \hat d_{k,t^\prime}}{\sum_{t^\prime=1}^T K_h(|t^\prime - t|) \tilde d_{k,t^\prime}}
 $$
-where $\tilde d_k$ is the number of observations in strata $k$ in the random sample.
-
+where $\tilde d_k$ is the number of observations in strata $k$ in the random sample. Given $\pi (x;\hat \theta_t)$, the prevalence estimator $\bar y_{n,t}^\star$ is given by~\ref{eq:ipwest}.
 
 \subsection{Model-based estimation}
 \label{section:modelbased}
 
-To this point, the primary focus of this paper has been on selection bias in coronavirus case-count data from a survey sampling perspective.  Here, we consider compartmental model approaches from infectious disease epidemiology.  Our primary objective is a model-based forecast of strata-level prevalence $\bar y_k$.
+Up to this point, the primary focus of this paper has been on selection bias in coronavirus case-count data from a survey sampling perspective.  Here, we consider compartmental model approaches from infectious disease epidemiology.  Our primary objective is a model-based forecast of strata-level prevalence $\bar y_k$. To do this, an extension of a standard epidemiological state-space model -- the susceptible, infected, and removed (recovered and death) model, or SIR model -- is presented.
 
-Here, we present briefly a basic epidemiological state-space model -- the susceptible, infected, and removed (recovered and death) model, or SIR model. The probabilistic SIR model was originally proposed by~\cite{Osthus2017} with only one-dimensional time series of infected proportions; this formulation was extended by~\cite{Song2020} to model coronavirus case-counts. Given the weights built in
-
-Let $i_t$ and $Y_t^R$ denote the proportion of currently infected (i.e., would test positive given a RT-PCR test with 100\% sensitivity) and removed cases (i.e., including both recovered cases and deaths) at time $t$.  Let $\theta_t = (s_t, e_t, i_t^{(T)}, i_t^{(NT)}, r_t)$ where
+Let $s_t$, $e_t$, $i_t^{(T)}$, $i^{(NT)}$, and $r_t$ denote the proportion of survivors, exposed, currently transmitting and not trasmitting infected, and removed cases (i.e., including both recovered cases and deaths) at time $t$.  Suppose $K$ strata such that the proportions are defined per strata, i.e., $s_t = (s_{1,t},\ldots, s_{K,t})$ is the proportion of survivors in each strata. Let $\theta_t = (s_t, e_t, i_t^{(T)}, i_t^{(NT)}, r_t)$ denote the vector
 
 Assume the two-dimensional process follows
 $$
