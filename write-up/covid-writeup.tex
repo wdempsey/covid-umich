@@ -332,6 +332,19 @@ Selection propensities can be constructed to use both types of auxiliary informa
 \end{equation}
 where equality (2) is under the assumption that $x_i$ is a stratification variable with $k$ indexing the strata, $w_k$ is the weight and $d_k$ is the number of samples in strata $k$, and $w = \sum_{k=1}^K d_k w_k$. Under simple random sampling with one strata~$\hat \pi_k = n/N$ and we recover the estimator $\tilde y_n$ from Section~\ref{section:imperfecttesting}.
 
+\begin{lemma}[IPW Variance]
+\label{lemma:ipw}
+Under assumptions, variance is given by:
+$$
+V_{IPW} =
+$$
+An estimator is given by
+$$
+\hat V_{IPW} =
+$$
+\end{lemma}
+
+Lemma~\ref{}
 Let $\tilde I_j (X_j) = I_j  \cdot W(X_j)$ for $j=1,\ldots,N$.  Then the error when comparing weighted estimator~$\bar y_n^\star$ to the true prevalence $\bar Y$ can be expressed as:
 \begin{equation}
 \label{eq:statdecomp2}
@@ -366,52 +379,41 @@ where $\tilde d_k$ is the number of observations in strata $k$ in the random sam
 \subsection{Model-based estimation}
 \label{section:modelbased}
 
-Up to this point, the primary focus of this paper has been on selection bias in coronavirus case-count data from a survey sampling perspective.  Here, we consider compartmental model approaches from infectious disease epidemiology.  Our primary objective is a model-based forecast of strata-level prevalence $\bar y_k$. To do this, an extension of a standard epidemiological state-space model -- the susceptible, infected, and removed (recovered and death) model, or SIR model -- is presented.
+Up to this point, the primary focus of this paper has been on selection bias in coronavirus case-count data from a survey sampling perspective.  Here, we consider compartmental model approaches from infectious disease epidemiology.  Our primary objective is a model-based forecast of strata-level prevalence $\bar y_k$. To do this, an extension of a standard epidemiological state-space model -- the susceptible, infected, and removed (recovered and death) model, or SIR model -- is presented. Here we consider the probabilistic SIR model was originally proposed by~\cite{Osthus2017} with only one-dimensional time series of infected proportions; this formulation was extended by~\cite{Song2020} to model coronavirus case-counts.
 
-Let $s_t$, $e_t$, $i_t^{(T)}$, $i^{(NT)}$, and $r_t$ denote the proportion of survivors, exposed, currently transmitting and not trasmitting infected, and removed cases (i.e., including both recovered cases and deaths) at time $t$.  Suppose $K$ strata such that the proportions are defined per strata, i.e., $s_t = (s_{1,t},\ldots, s_{K,t})$ is the proportion of survivors in each strata. Let $\theta_t = (s_t, e_t, i_t^{(T)}, i_t^{(NT)}, r_t)$ denote the vector
-
-Assume the two-dimensional process follows
+Let $s_t$, $e_t$, $i_t^{(T)}$, $i^{(NT)}$, and $r_t$ denote the proportion of survivors, exposed, currently transmitting and not trasmitting infected, and removed cases (i.e., including both recovered cases and deaths) at time $t$.  Suppose $K$ strata such that the proportions are defined per strata, i.e., $s_t = (s_{1,t},\ldots, s_{K,t})$ is the proportion of survivors in each strata. Let $\theta_t = (s_t, e_t, i_t^{(T)}, i_t^{(NT)}, r_t)$, then we assume the process is governed by the following Markov model:
 $$
 \theta_t \mid \theta_{t-1}; \tau \sim \text{Dirichlet} \left(\kappa f(\theta_{t-1}, \beta, \gamma) \right)
 $$
-where $\kappa$ scales the variance of the Dirichlet distribution and $f(\cdot)$ is a function that determines infection dynamics.  Here, we assume the classical infectious disease SIR model as given by~\eqref{eq:sir} with $(S_t,I_t, R_t)$ replaced by $(\theta_t^S, \theta_t^I, \theta_t^R)$.  \cite{Song2020}
+where $\kappa$ scales the variance of the Dirichlet distribution and $f(\cdot)$ is a function that determines infection dynamics.  Here, we extend the SIR dynamics to account for strata-level dynamics
 \begin{align*}
-\frac{\partial s_t}{\partial t} &= - \beta s_t i^{(T)}_t; \quad \frac{\partial e_t}{\partial t} = \beta s_t i^{(T)}_t - \sigma e_t; \quad \\
+\frac{\partial s_t}{\partial t} &= - s_t \circ (B \, i^{(T)}_t); \quad \frac{\partial e_t}{\partial t} = s_t \circ (B \, i^{(T)}_t) - \sigma e_t; \quad \\
 \frac{\partial i^{(T)}_t}{\partial t} &= \sigma e_t - \beta_2 i^{(T)}; \quad
 \frac{\partial i^{(NT)}_t}{\partial t} = \beta_2 i^{(NT)}  - \gamma i^{(NT)}; \quad \\
 \frac{\partial r_t}{\partial t} &= - \gamma i^{(NT)}_t
 \end{align*}
-where $S_t$ is the number of susceptible individuals, $I_t$ is the number of infected individuals, and $R_t$ is the number of removed (recovered or deceased) individuals at time $t$.
+where $B \in \mathbb{R}^{K \times K}$ and $\circ$ denotes elementwise product of vectors.  The matrix $B$ allows for strata-specific infection dynamics with the SIR model being recovered if $B_{k,\cdot} = \beta$ for each $k \in [K]$.  Following~\cite{Song2020}, we employ Runge-Kutta (RK4) approximations for discretization; see Appendix XX for details.
 
-
-A key concern with the proposed model is lack of . We could address this by using IPW methods but this would mimic Section XX and therefore lead to potentially similar results.  Instead, we opt to follow (cite: HDSR) and model death data.
+Selection bias in case count data could be direcly addressed by extending the above compartmental model.  Here, we instead opt to bring in a different source of information by considering COVID-19 death data.  Let $D_{k,r}$ denote the number of individuals who pass away on day $r$ from strata $k$ and $\nu_{k,t}$ to denote the number of new infections on day $t$ in the $k$th strata.  Then
 $$
-D_t \mid p, \theta, \nu \sim \text{Poisson} \left( p \sum_{t=1}^r \nu_t \theta_{(r-t)} \right)
+D_{k,r} \mid p, \theta, \nu \sim \text{Poisson} \left( \sum_{t=1}^r p_{k} \nu_{k,t} \theta_{(r-t)} \right)
 $$
-Fully Bayesian algorithms that combine (cite: Song) and (cite: Johndrow) can be derived.  Here, we focus on the deterministic case-count and resulting SIR model due to availability of existing software~\cite{Song2020} for estimation of such models. Unlike in (cite: HDRS), we are interested in predictions of case-counts.  We split deaths into $<60$ and $>60$, using two different IFR's to back out the counts for each subset and then split these among the sub-populations using the raking weights.  This yields estimates at $\hat y_k$ for each strata.  We use $p$ as 0.6 from the
-
-
-This is of particular importance for epidemiological forecasts built from population-level data and impacts our model choice in Section~\ref{section:modelbased}.
-{\bf Check if SIR models account for this?}
+where $p_{k}$ is the infection fatality rate for the $k$th strata.  This extends prior analysis of death data~\cite{Johndrow2020} by allowing the infection fatality rate to depend on age.  Indeed,~\cite{Levin2020} demonstrate that ``the estimated IFR is close to zero for children and younger adults but rises exponentially with age, reaching 0.4\% at age 55, 1.4\% at age 65, 4.6\% at age 75, and 15\% at age 85.'' For conciseness, parameter choices and inference are discussed in depth in Appendix XX.
 
 \subsection{Doubly robust estimation.}
-Two methods have been presented.  The first uses IPW to adjust for differential selection.  The second uses epidemiological forecasts based on SIR models.  Rather than relying solely on either approach, here we show how to combine forecasting and inverse-probability weighting by building a \emph{doubly robust} approach (cite: Robins, etc), which is a common approach for causal inference from observational data.  In the survey literature, if the weights are known, the approach is referred to as model-assisted estimation.  Recent work by (cite: Chen) extends the classical survey approach to non-probability samples.  Here, we do the same.  We reserve comparison of our approach with (citE: Chen) after introducing the method.
+Rather than relying solely on IPW or epidemiological forecasts, here we combine forecasting and inverse-probability weighting by extending recent work by~\cite{Chen2019} to account time-varying propensities, measurement-error and random subsampling of nonprobability samples. In this context, the doubly-robust estimator is given by
+$$
+\bar y_{n}^{(DR)} = \frac{1}{1 - FP - FN} \left[ \frac{1}{N} \sum_{j=1}^N \hat P_k \hat \mu (x_i) + \frac{1}{\sum_{i=1}^n w(x_i)} \sum_{j=1}^N I_j w(x_i) (Y_i - \hat \mu_k ) \right] - FP.
+$$
+where $x_i$ is the strata information for individual $i$. This estimator is ``doubly-robust'' because it is robust to either the model-based forecasts or the propensities being correctly specified.  Setting $\pi_i = n/N$ and $\mu(x_i; \hat \beta) = 0$ we again recover the estimator $\tilde y_n$ from Section~\ref{section:imperfecttesting}.
 
-We define the doubly-robust estimator as
+The key issue with a doubly-robust estimator is the strata information is not observed for every individual in the population. Here, we again use auxiliary information through population-level summary statistics and probability samples and consider the estimator
 $$
-\bar y_{n}^{(DR)} = \frac{1}{1 - FP - FN} \left[ \frac{1}{N} \sum_{i=1}^N \mu (x_i; \hat \beta) + \frac{1}{\sum_{i=1}^n w(x_i)} \sum_{j=1}^N I_j w(x_i) (Y_i - \mu(x_i; \hat \beta)) \right] - FP.
+\frac{1}{1-FP-FN} \left[ \sum_{i=1}^N \hat P_k \hat \mu_k + \sum_{i=1}^n \frac{w_i}{w} \left(y_i - \hat \mu (x_i; \theta) \right) \right] - FP.
 $$
-This estimator is ``doubly-robust'' in the sense that it is robust to either the SIR or the propensities being correctly specified.  Setting $\pi_i = n/N$ and $\mu(x_i; \hat \beta) = 0$ we again recover the estimator $\tilde y_n$ from Section~\ref{section:imperfecttesting}.
+where $\hat P_k$ is the estimated fraction in strata $k$.
 
-The key issue with a doubly-robust estimator (cite: guy from Chen who assumes) is we again don't observe $X_j$ for each $j=1,\ldots,N$. There are again two options.  If we rely on auxiliary information through population-level summary statistics, we have
-$$
-\frac{1}{1 - FP - FN} \left[ \sum_{k} P_k \hat y_k + \sum_{k=1}^K \frac{d_k w_k}{w} (\bar y_k - \hat y_k) \right] - FP
-$$
-where $P_k$ is the population fraction in strata $k$ and $\hat y_k = \mu(k; \hat \beta)$. Alternatively, we can use auxiliary information through probability samples
-$$
-\frac{1}{1-FP-FN} \left[ \frac{1}{N} \sum_{i=1}^N \tilde R_i \tilde W_i \mu (X_i; \hat \theta) + \sum_{i=1}^n \frac{w_i}{w} \left(y_i - \mu(x_i; \hat \beta)\right) \right] - FP.
-$$
-
+\subsection{Variance estimator and error decomposition}
 A plug-in estimator for the variance
 $$
 \text{Var} (\bar y_{DR}^\star) =
@@ -426,6 +428,8 @@ $$
 $$
 
 {\bf where to describe difference from Chen. (1) weight normalized, (2) use aux info from multiple sources and use raking, (3) use a epi model rather than covariate pred model}.
+
+
 
 \section{Applications to binary outcome and the COVID-19 pandemic.}
 \label{section:applications}
