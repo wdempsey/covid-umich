@@ -283,29 +283,18 @@ The prior section presented negative consequences of selection-bias and measurem
 
 With non-probability samples, one can reduce bias by modelling the self-selection propensity and use inverse probability weighting (IPW)~\citep{Elliott2017} techniques to adjust for selection bias.  In causal inference~\citep{Hernan2020}, under certain assumptions, the observational data permits direct estimation of treatment propensity.  In the COVID-19 context, one does not observe those who decide not to be tested.  In order to estimate selection propensities, one needs auxiliary information.
 
-To see this mathematically, let $X_j$ denote a vector of covariates for the $j$th individual in the population, $j=1,\ldots,N$.  For simplicity, the dynamic nature of the outbreak and recoverability of individuals is ignored for now. Suppose the selection indicator $I_j$ is a Bernoulli random variable that depends only on these covariates, i.e., $P(I_j = 1 \mid X_j = x) = \pi (x; \theta)$.  Maximum likelihood estimation follows by maximizing
+To see this mathematically, let $X_j$ denote a vector of covariates for the $j$th individual in the population, $j=1,\ldots,N$.  For simplicity, the dynamic nature of the outbreak and recoverability of individuals is ignored for now. Suppose the selection indicator $I_j$ is a Bernoulli random variable that depends only on these covariates, i.e., $P(I_j = 1 \mid X_j = x) = \pi (x; \theta)$. For COVID-19 case-count data, the only covariate information provided by state and local governments are summary statistics for those factors discussed in Section~\ref{section:testinginfo} -- age, sex,  and race.  These are discrete factors and therefore define a stratification of the population.  Currently, US testing does not collect additional covariate information such as symptom information; however, this need not be the case moving forward.  Recommendation XX below states that additional covariate information should be collected from nonprobabilistic samples.
+
+Maximum likelihood estimation follows by maximizing
 \begin{equation}
 \label{eq:propensity}
 \sum_{j=1}^N I_j \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right) + \sum_{j=1}^N \log \left( 1 - \pi (X_j; \theta) \right).
 \end{equation}
 The first sum only involves individuals observed in the nonprobability sample.
-The second sum is over the entire population.  Maximum likelihood estimation therefore requires knowledge of covariate information for every individual in the population.  Typically, this is not possible.  Here we present two methods for propensity estimation -- use of population-level summary statistics and use of a probability sample.
-
-\subsubsection{Auxiliary information through population-level summary statistics}
-\label{subsec:auxsum}
-
-For COVID-19 case-count data, the only covariate information provided by state and local governments are summary statistics for those factors discussed in Section~\ref{section:testinginfo} -- age, sex,  and race.  These are discrete factors and therefore define a stratification of the population. Then $X_j = k \in \{1,\ldots,K\}$ denotes the $j$th individual belongs to strata $k$ and the likelihood can be re-written as
-$$
-\sum_{k=1}^K d_k \log \left( \frac{\pi (k; \theta)}{1-\pi(k; \theta)} \right) + \sum_{k=1}^K N_k \log \left( 1 - \pi (k; \theta) \right).
-$$
-where $d_k$ and $N_k$ are the number of individuals in the nonprobabilistic sample and in the entire population respectively in the $k$th strata, $k=1,\ldots K$.
-
-Maximum likelihood estimation then requires knowledge of $N_k$, which is feasible when population-level summary statistics are available.  The US Census, for example, can provide marginal summary statistics for the distribution of age, sex, and race in Indiana state.  Typically  joint distribution is not publicly available.  Here, we employ the standard survey technique of raking~\citep{deville1993} to generate estimates $\hat N_k$ for each strata.  Estimation can then be performed by using standard algorithms such as Newton-Rhapson.  If the selection propensity is estimated non-parametrically then the resulting weight can be computed exactly and is given by $\hat P(I_j = 1 \mid X_j = k) = \hat \pi_k = d_k/\hat N_k$.
+The second sum is over the entire population.  Maximum likelihood estimation therefore requires knowledge of covariate information for every individual in the population.  Typically, this is not possible.  Here we present a method that uses auxiliary information obtained from probability samples as well as probability subsamples from the self-selected population.
 
 \subsubsection{Auxiliary information through probability samples}
 \label{subsec:auxprob}
-
-Currently, US testing does not collect additional covariate information such as symptom information; however, this need not be the case moving forward.  Recommendation XX below states that additional covariate information should be collected from nonprobabilistic samples.  If this were the case, population-level summary statistics are no longer sufficient for selection propensity estimation so an alternative source of auxiliary information is required.
 
 Here, we assume access to a probability sample from the same population on which the outcome and exact same set of covariates are measured.  Let $\tilde I_j$ be an indicator that the individual was included in the probability sample and $\tilde W_j$ be the probability of inclusion for the $j$th individual (i.e., equal to $n/N$ for a simple random sample of size $n$). The probability sample is used to construct a design-unbiased estimator of the second term
 \begin{equation}
@@ -359,9 +348,12 @@ Assuming the selection propensity model is correctly specificed, then under the 
 \label{lemma:ipw}
 Under regularity assumptions specified in the Appendix, we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (n^{-1/2})$ (check)  and $\text{var} (\hat y_{n,t}) = V_{t}^{(IPW)} + o (n^{-1})$ (check) where:
 $$
-V_t^{(IPW)} = \frac{1}{N^2} \sum_{i=1}^N (1 - \pi_{i,t}) \pi_{i,t} \left( \right) + b_1^\top D b_1 + \tilde b_2^\top D_2 b_2.
+V_t^{(IPW)} = \frac{1}{N^2} \sum_{t^\prime = 1}^T \sum_{i=1}^N (1 - \pi_{i,t}) \pi_{i,t} \left( \frac{y_{i,t} - \mu_t}{\pi_{i,t}} -  \right) + b_{1,t}^\top D b_1 + \tilde b_2^\top D_2 b_2.
 $$
-where $b_1 = $, $b_2 = $, $D_1 = N^{-2} V_p ()$, $D_2 = N^{-2} V_p$, and $V_{p,1}$ denotes the design-based variance under the probability sampling designs.
+where
+$$
+b_{1,t} = \left[ \sum_{t^\prime=1}^T K_h (|t-t^\prime|)\sum_{j=1}^N (1-\pi_{i,t}) (y_{i,t^\prime} - \mu_{t^\prime}) x_{i,t^\prime}) \right] \left[ N^{-1} \sum_{t^\prime=1^T} K_h (|t-t^\prime|)\sum_{j=1}^N (1-\pi_{i,t} (y_{i,t^\prime} - \mu_{t^\prime}) x_{i,t^\prime})\right] $$,
+$b_2 = $, $D_1 = N^{-2} V_p ()$, $D_2 = N^{-2} V_p$, and $V_{p,1}$ denotes the design-based variance under the probability sampling designs.
 
 A plug-in estimator is given by
 $$
