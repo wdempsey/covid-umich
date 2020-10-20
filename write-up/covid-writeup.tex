@@ -18,17 +18,17 @@
 \usepackage{amsmath, amsthm, amsfonts}
 % \usepackage[margin=1.5in]{geometry}
 
-% \numberwithin{equation}{section}
-% \theoremstyle{plain}
-% \newtheorem{theorem}{Theorem}[section]
-% \newtheorem{example}{Example}
-% \newtheorem{remark}{Remark}
-% \newtheorem{corollary}[theorem]{Corollary}
-% \newtheorem{criterion}[theorem]{Criterion}
-% \newtheorem{definition}[theorem]{Definition}
-% \newtheorem{exercise}[theorem]{Exercise}
-% \newtheorem{lemma}[theorem]{Lemma}
-% \newtheorem{proposition}[theorem]{Proposition}
+\numberwithin{equation}{section}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
 
 \setlength{\textwidth}{6.5in}
 \setlength{\textheight}{8.5in}
@@ -321,7 +321,7 @@ Equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected f
 \end{equation}
 Here, $I_j^{(2)}$ is an indicator that the individual is in the probability subsample and $W_j^{(2)}$ is the probability of inclusion.  The estimate now relies on random sampling in both the first and second term.
 
-\subsubsection{An IPW estimator and statistical error decomposition.}
+\subsubsection{An IPW estimator}
 
 Selection propensities can be constructed to use both types of auxiliary information (i.e., combine Sections~\ref{subsec:auxsum} and~\ref{subsec:auxprob}). Given a selection propensity, define the inverse probability weight~$w(x) = \pi (x; \hat \theta)^{-1}$. Then the IPW estimator adjusted for measurement error is given by
 \begin{equation}
@@ -331,31 +331,6 @@ Selection propensities can be constructed to use both types of auxiliary informa
 \stackrel{(2)}{=} \frac{1}{1-FP-FN} \sum_{k=1}^K \frac{d_k w_k}{w} (\bar y_k - FP),
 \end{equation}
 where equality (2) is under the assumption that $x_i$ is a stratification variable with $k$ indexing the strata, $w_k$ is the weight and $d_k$ is the number of samples in strata $k$, and $w = \sum_{k=1}^K d_k w_k$. Under simple random sampling with one strata~$\hat \pi_k = n/N$ and we recover the estimator $\tilde y_n$ from Section~\ref{section:imperfecttesting}.
-
-\begin{lemma}[IPW Variance]
-\label{lemma:ipw}
-Under assumptions, variance is given by:
-$$
-V_{IPW} =
-$$
-An estimator is given by
-$$
-\hat V_{IPW} =
-$$
-\end{lemma}
-
-Lemma~\ref{}
-Let $\tilde I_j (X_j) = I_j  \cdot W(X_j)$ for $j=1,\ldots,N$.  Then the error when comparing weighted estimator~$\bar y_n^\star$ to the true prevalence $\bar Y$ can be expressed as:
-\begin{equation}
-\label{eq:statdecomp2}
-\rho_{\tilde I (X), Y} \times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y} \times \underbrace{\left[ 1 - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right] \times \frac{1}{1-(FP+FN)}}_{D_M}
-\end{equation}
-where $CV_W$ is the coefficient of variation (i.e., standard deviation/mean) of $W_J$ given $I_J = 1$, and $\rho_{\tilde I(X), Y}$ is the empirical correlation which here depends on covariate distribution.  See Appendix XX for the derivation.
-
-Comparing~\eqref{eq:statdecomp2} to~\eqref{eq:statdecomp} shows that weighting impacts the estimation error in two ways.  First, there is a negative impact on the data quantity component; taking the ratio of these quantities yields
-$\sqrt{1 + \frac{CV_W^2}{1-f}} \geq 1$.  Hence, if the data quality does not increase (i.e., $| \rho_{\tilde I (X), Y} | = | \rho_{I,Y}|$ ) then weighting increases the error magnitude.  Note this relative error increase depends on the fraction of population sampled $f$, implying that for large samples there is a larger potential increase in the error if the weights do not improve data quality.
-
-As demonstrated in the derivation of IPW approach, if the weights are correctly specified then the $E_{\bf R} [ \rho_{\tilde I (X), Y} ] = 0$ and therefore $\rho_{\tilde I(X), Y} = O(N^{-1})$; however, if the weights are not correctly specified then the data quality index is unlikely to inversely scale with population size.  Indeed, Horvitz-Thompson estimators are sensitive to errors in the estimated weights.  Low selection propensity imply large weights which can have deleterious impacts by certain observations dominating estimation. Interestingly, the impact of measurement-error on data quality is unchanged when considering a weighted estimand.  Similar to~\cite{Meng2018}, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from an IPW estimator are likely to put too much confidence in the sheer size of the data.  In section XX, independent random samples are used to assess effective sample sizes and adjust corresponding CIs.
 
 \subsubsection{Time-varying propensities}
 
@@ -375,6 +350,37 @@ $$
 \hat \pi_{k,t} = \frac{n}{N} \times \frac{\sum_{t^\prime=1}^T K_h(|t^\prime - t|) \hat d_{k,t^\prime}}{\sum_{t^\prime=1}^T K_h(|t^\prime - t|) \tilde d_{k,t^\prime}}
 $$
 where $\tilde d_k$ is the number of observations in strata $k$ in the random sample. Given $\pi (x;\hat \theta_t)$, the prevalence estimator $\bar y_{n,t}^\star$ is given by~\ref{eq:ipwest}.
+
+\subsubsection{Asymptotics and a statistical error decomposition}
+
+Assuming the selection propensity model is correctly specificed, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:ipw} shows that the IPW estimator is  consistent and calculates the estimator's variance:
+
+\begin{lemma}[IPW Variance] \normalfont
+\label{lemma:ipw}
+Under regularity assumptions specified in the Appendix, we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (n^{-1/2})$ (check)  and $\text{var} (\hat y_{n,t}) = V_{t}^{(IPW)} + o (n^{-1})$ (check) where:
+$$
+V_t^{(IPW)} = \frac{1}{N^2} \sum_{i=1}^N (1 - \pi_{i,t}) \pi_{i,t} \left( \right) + b_1^\top D b_1 + \tilde b_2^\top D_2 b_2.
+$$
+where $b_1 = $, $b_2 = $, $D_1 = N^{-2} V_p ()$, $D_2 = N^{-2} V_p$, and $V_{p,1}$ denotes the design-based variance under the probability sampling designs.
+
+A plug-in estimator is given by
+$$
+V_t^{(IPW)} = \frac{1}{N^2} \sum_{i=1}^N I_{j,t} (1 - \pi_{i,t}) \left( \right) + \hat b_{1,t}^\top \hat D_t  \hat b_{1,t} + \tilde \hat b_{2,t}^\top \hat D_{2,t}  \hat b_{2,t}.
+$$
+
+\end{lemma}
+
+Let $\tilde I_j (X_j) = I_j  \cdot W(X_j)$ for $j=1,\ldots,N$.  Then the error when comparing weighted estimator~$\bar y_n^\star$ to the true prevalence $\bar Y$ can be expressed as:
+\begin{equation}
+\label{eq:statdecomp2}
+\rho_{\tilde I (X), Y} \times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y} \times \underbrace{\left[ 1 - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right] \times \frac{1}{1-(FP+FN)}}_{D_M}
+\end{equation}
+where $CV_W$ is the coefficient of variation (i.e., standard deviation/mean) of $W_J$ given $I_J = 1$, and $\rho_{\tilde I(X), Y}$ is the empirical correlation which here depends on covariate distribution.  See Appendix XX for the derivation.
+
+Comparing~\eqref{eq:statdecomp2} to~\eqref{eq:statdecomp} shows that weighting impacts the estimation error in two ways.  First, there is a negative impact on the data quantity component; taking the ratio of these quantities yields
+$\sqrt{1 + \frac{CV_W^2}{1-f}} \geq 1$.  Hence, if the data quality does not increase (i.e., $| \rho_{\tilde I (X), Y} | = | \rho_{I,Y}|$ ) then weighting increases the error magnitude.  Note this relative error increase depends on the fraction of population sampled $f$, implying that for large samples there is a larger potential increase in the error if the weights do not improve data quality.
+
+As demonstrated in Lemma~\ref{lemma:ipw}, if the propensity model is correctly specified then the $E_{\bf R} [ \rho_{\tilde I (X), Y} ] = 0$ and therefore $\rho_{\tilde I(X), Y} = O(N^{-1})$; however, if the weights are not correctly specified then the data quality index is unlikely to inversely scale with population size.  Indeed, Horvitz-Thompson estimators are sensitive to errors in the estimated weights.  Low selection propensity imply large weights which can have deleterious impacts by certain observations dominating estimation. Interestingly, the impact of measurement-error on data quality is unchanged when considering a weighted estimand.  Similar to~\cite{Meng2018}, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from an IPW estimator are likely to put too much confidence in the sheer size of the data.  In section XX, independent random samples are used to assess effective sample sizes and adjust corresponding CIs.
 
 \subsection{Model-based estimation}
 \label{section:modelbased}
