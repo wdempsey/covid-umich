@@ -7,6 +7,7 @@
 \usepackage{natbib}
 %\bibliographystyle{apalike}
 \usepackage{multirow}
+\usepackage{enumitem}
 
 \usepackage{tchdr}
 \boldshortcuts
@@ -123,7 +124,7 @@ In this paper, our primary goal is accurate estimates of the population-level ac
 % {\bf key point: WHAT IS THE GOAL OF CASE COUNT DATA? WHAT IS THE GOAL OF SEROPREVALENCE STUDIES?  are we using it for that reason. cse count data is colelcted as part of surveillance programs wehre teh goal is to identify and isolate active infections.  However, many people are trying to use these to udnerstand the disease.  This is our issue.}
 
 
-Coronavirus case-count data refers to the number of positive molecular tests performed on each day.  Figure~\ref{fig:ny-covid} plots (dotted orange line) the number of reported confirmed COVID-19 cases per day in the state of Indiana.  Total number of COVID-19 diagnostic tests performed per day is also reported (Figure~\ref{fig:ny-covid}, dotted blue line). On August 5th, 2020, for example, there were 1075 total daily positive cases and 11,663 total daily tests.  Public databases maintained by \href{https://bit.ly/2UqFSuA}{Johns Hopkins University} and the \href{https://bit.ly/2vUHfrK}{New York Times} provide accessible incoming county-level information of confirmed cases and deaths.
+Coronavirus case-count data refers to the number of positive molecular tests performed on each day.  Figure~XX plots (dotted orange line) the number of reported confirmed COVID-19 cases per day in the state of Indiana.  Total number of COVID-19 diagnostic tests performed per day is also reported (Figure~XX, dotted blue line). On August 5th, 2020, for example, there were 1075 total daily positive cases and 11,663 total daily tests.  Public databases maintained by \href{https://bit.ly/2UqFSuA}{Johns Hopkins University} and the \href{https://bit.ly/2vUHfrK}{New York Times} provide accessible incoming county-level information of confirmed cases and deaths.
 
 Many states also provide aggregate demographic information on those who requested a test as well as those who tested positive for SARS-CoV-2. Indiana's \href{https://www.coronavirus.in.gov/2393.htm}{COVID-19 dashboard}, for instance, provides statewide demographics for age, gender, ethnicity, and race.  The demographic information is based on cumulative testing.  In addition, the Regenstrief Institute provides additional comorbidity information among those who tested positive for COVID-19 in the state of Indiana, including hypertension, diabetes, and chronic obstructive pulmonary disease (COPD) summary statistics. These comprise the main set of covariate information available from public sources for Indiana. Similar demographic information is likely available for other states.
 % https://www.regenstrief.org/covid-dashboard/
@@ -332,7 +333,7 @@ Let $\tilde I_j (X_j) = I_j  \cdot W(X_j)$ for $j=1,\ldots,N$.  Then the error w
 where $CV_W$ is the coefficient of variation (i.e., standard deviation/mean) of $W_J$ given $I_J = 1$, $\rho_{\tilde I(X), Y}$ is the empirical correlation which here depends on covariate distribution, $\tilde f_k = E[ W_J I_J \mid Y_j = k]$ for $k=0,1$, and $\tilde \Delta = \tilde f_1 - \tilde f_0$.  See Appendix~\ref{app:ipwderivation} for the derivation.
 
 Comparing~\eqref{eq:statdecomp2} to~\eqref{eq:statdecomp} shows that weighting impacts the estimation error in three ways.  First, there is a negative impact on the data quantity component; taking the ratio of these quantities yields
-$\sqrt{1 + \frac{CV_W^2}{1-f}} \geq 1$.  Hence, if the data quality does not increase (i.e., $| \rho_{\tilde I (X), Y} | = | \rho_{I,Y}|$ ) then weighting increases the error magnitude.  Note this relative error increase depends on the fraction of population sampled $f$, implying that for large samples there is a larger potential increase in the error if the weights do not improve data quality. Third, the impact of measurement-error on data quality is changed when considering a weighted estimand. {\red state that it may switch sign!als}
+$\sqrt{1 + \frac{CV_W^2}{1-f}} \geq 1$.  Hence, if the data quality does not increase (i.e., $| \rho_{\tilde I (X), Y} | = | \rho_{I,Y}|$ ) then weighting increases the error magnitude.  Note this relative error increase depends on the fraction of population sampled $f$, implying that for large samples there is a larger potential increase in the error if the weights do not improve data quality. Third, the impact of measurement-error on data quality is changed when considering a weighted estimand. In particular, weighting may result in $\text{sgn}(\Delta) \neq \text{sgn} (\tilde \Delta)$ which implies the impact of measurement-error may be in a different direction.
 
 As demonstrated in Lemma~\ref{lemma:ipw}, if the propensity model is correctly specified then the $E_{\bf R} [ \rho_{\tilde I (X), Y} ] = 0$ and therefore $\rho_{\tilde I(X), Y} = O(N^{-1})$; however, if the weights are not correctly specified then the data quality index is unlikely to inversely scale with population size.  Indeed, Horvitz-Thompson estimators are sensitive to errors in the estimated weights.  Low selection propensity imply large weights which can have deleterious impacts by certain observations dominating estimation.   Similar to~\cite{Meng2018}, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from an IPW estimator are likely to put too much confidence in the sheer size of the data.
 
@@ -361,8 +362,9 @@ where $K_h$ is a kernel function with tunable parameter $h$. Given $\pi (x;\hat 
 
 Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:ipw} shows that the IPW estimator is  consistent and calculates the estimator's variance.  In Lemma~\ref{lemma:ipw}, sensitivity and specificity are not assumed known.  Instead, we suppose that these are estimated using a pseudo-likelihood on a random sample from the population whose size is chosen so the resulting estimated sensitivity and specificity have desired levels of uncertainty.  See Appendix~\ref{app:asympderivations} for additional details.
 
-\begin{lemma}[IPW Variance] \normalfont
+\begin{lemma}[Variance of IPW estimator] \normalfont
 \label{lemma:ipw}
+\textcolor{red}{Must check.}
 The estimates~$\mu_t := \bar y_{n,t}^\star$ and $\hat \pi_{j,t}$
 are solutions to the following set of estimating equations
 $$
@@ -426,8 +428,9 @@ $$
 $$
 where $\tilde I_j$ indicates an individual is included in the random sample and $\tilde W_j$ is the associated weight for that unit. Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:dr} shows that the IPW estimator is  consistent and calculates the estimator's variance. See Appendix~\ref{app:asympderivations} for additional details.
 
-\begin{lemma}[DR Variance] \normalfont
+\begin{lemma}[Variance of doubly-robust estimator] \normalfont
 \label{lemma:dr}
+\textcolor{red}{Must fix.}
 The estimates~$\mu_t := \bar y_{n,t}^\star$ and $\hat \pi_{j,t}$
 are solutions to the following set of estimating equations
 $$
@@ -445,25 +448,32 @@ where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appen
 \end{lemma}
 
 
-\section{Applications to binary outcome and the COVID-19 pandemic.}
+\section{COVID-19 active infection prevalence in Indiana}
 \label{section:applications}
-
-What are the propensity measures of importance:
-\begin{itemize}
-	\item Symptom
-	\item Demographics
-	\item Prior testing (have you been tested before)
-	\item Prevalence (overall worry)
-\end{itemize}
-There is no good data on individual prior testing so we will ignore.
-
-{\bf Combines death, case count with covariate info, symptoms from Fb,  }
-
-\subsection{COVID-19 active infection prevalence in Indiana}
 
 % For COVID-19 case-count data, the only covariate information provided by state and local governments are summary statistics for those factors discussed in Section~\ref{section:testinginfo} -- age, sex,  and race.  These are discrete factors and therefore define a stratification of the population.  Currently, US testing does not collect additional covariate information such as symptom information; however, this need not be the case moving forward.  Recommendation XX below states that additional covariate information should be collected from nonprobabilistic samples.
 
-Here we consider estimation of the active infection rate in Indiana.  Table~\ref{tab:indiana} summarizes data from a random sample from April 25--29th as well as a nonrandom sample obtained between May 2--3 in racial/ethnic minority communities. The nonrandom sample is therefore not a random subsample of the overall case-counts; however, this data provides important supplementary covariate information.  Namely, the samples collected included covariate information on (1) prior symptoms, (2) COVID-19 positive individual in household, and (3) prior COVID-19 positive test. To account for the nonrandom sample being from high risk areas, we adjust estimates to match the statewide positivity rate of 11.7\% between May 1--2. These adjusted rates are presented in parentheses in Table~\ref{tab:indiana}.
+Here we consider estimation of the active infection rate in Indiana. We consider five sources of data:
+\begin{itemize}[leftmargin=*]
+\item {\bf Testing data}:  Each day, the number of tests performed and number of positive tests are reported, with counts broken out jointly by age, gender, and racial demographic information.  Figure~\ref{fig:in-cases} plots the number of COVID-19 positive cases based on testing date by age.
+
+\begin{figure}
+\centering
+\begin{subfigure}{.45\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../methods/figs/indianacasecounts.png}
+  \caption{Indiana case-counts per day}
+  \label{fig:in-cases}
+\end{subfigure}
+\begin{subfigure}{.45\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../methods/figs/indianadeaths.png}
+  \caption{Indiana death-counts per day}
+  \label{fig:in-deaths}
+\end{subfigure}
+\end{figure}
+
+\item {\bf Random/Nonrandom statewide sample}: Table~\ref{tab:indiana} summarizes data from a random sample from April 25--29th as well as a nonrandom sample obtained between May 2--3 in racial/ethnic minority communities (cite). The nonrandom sample is not a random subsample of the overall case-counts; however, this data provides important supplementary covariate information.  Namely, the samples collected included covariate information on (1) prior symptoms, (2) COVID-19 positive individual in household, and (3) prior COVID-19 positive test. To account for the nonrandom sample being from high risk areas, we adjust estimates to match the statewide positivity rate of 11.7\% between May 1--2. These adjusted rates are presented in parentheses in Table~\ref{tab:indiana}.
 
 
 \begin{table}[th]
@@ -473,38 +483,100 @@ Here we consider estimation of the active infection rate in Indiana.  Table~\ref
 & & NonRandom & Random & Census & NonRandom & Random \\ \hline
 \multirow{2}{*}{Sex} & Female & 58.2 & 55.0 & 50.7 & 21.7 (11.2) & 1.4 \\
 & Male & 41.8 & 45.0 & 49.3 & 24.2 (12.4) & 2.1 \\ \hline
-\multirow{3}{*}{Age} & $<40$ & 39.4 & 28.0 & 52.7 & 29.7 & 1.7 \\
-& $40-59$ & 41.1 & 36.0 & 25.2 & 24.9 & 2.1 \\
-& $\geq 60$ & 19.5 & 36.0 & 22 & 6.7 & 0.9 \\ \hline
-\multirow{2}{*}{Race} & White & 23.1 & 92.0 & 86.9 & 19.5 & 1.5 \\
-& Nonwhite & 76.9 & 8.0 & 13.1 & 25.0 & 3.4 \\ \hline
-Hispanic & Hispanic & 44.1 & 2.0 & 7.1 & 37.6 & 6.9 \\
-Origin & Non-Hispanic & 55.9 & 98.0 & 92.9 & 13.0 & 1.3 \\ \hline
-\multirow{2}{*}{Fever} & Yes & 17.0 & 1.8 & - & 66.4 & 4.5 \\
-& No & 83.0 & 98.2 & - & 15.6 & 1.3 \\ \hline
-Household & Yes & 10.8 & 1.4 & - & 46.1 & 24.4 \\
+\multirow{3}{*}{Age} & $<40$ & 39.4 & 28.0 & 52.7 & 29.7 (15.0) & 1.7 \\
+& $40-59$ & 41.1 & 36.0 & 25.2 & 24.9 (12.5) & 2.1 \\
+& $\geq 60$ & 19.5 & 36.0 & 22 & 6.7 (3.4) & 0.9 \\ \hline
+\multirow{2}{*}{Race} & White & 23.1 & 92.0 & 86.9 & 19.5 (9.6) & 1.5 \\
+& Nonwhite & 76.9 & 8.0 & 13.1 & 25.0 (12.3) & 3.4 \\ \hline
+% Hispanic & Hispanic & 44.1 & 2.0 & 7.1 & 37.6 & 6.9 \\
+% Origin & Non-Hispanic & 55.9 & 98.0 & 92.9 & 13.0 & 1.3 \\ \hline
+\multirow{2}{*}{Fever} & Yes & 17.0 & 1.8 & - & 66.4 (32.1) & 4.5 \\
+& No & 83.0 & 98.2 & - & 15.6 (7.5) & 1.3 \\ \hline
+Household & Yes & 10.8 & 1.4 & - & 46.1 & 29.4 \\
 $+$ Case & No & 89.2 & 98.6 & - & 21.6 & 1.3 \\ \hline
-Prior $+$ & Yes & 6.1 & 1.6 & - & 39.2 & 24.4 \\
+Prior $+$ & Yes & 6.1 & 1.4 & - & 39.2 & 24.4 \\
 Test & No & 93.9 & 98.6 & - & 21.6 & 1.3 \\ \hline
 \end{tabular}
 \caption{Estimated point prevalence of active infection with SARS-CoV-2 by demographics in Indiana.}
 \label{tab:indiana}
 \end{table}
 
-Comparison to April 20th-25th using Fb data
-\begin{itemize}
-\item Fever: {\bf FB} = [0.017, 0.020, 0.024], {\bf Random}: 0.018
-\item Cough: {\bf FB} = [0.142, 0.148, 0.154], {\bf Random}: 0.149
-\item Shortness: {\bf FB} = [0.058, 0.060, 0.062], {\bf Random}: 0.062
+\item {\bf Facebook symptom survey}: We extract daily symptom surveys completed by individuals on Facebook who identify as living in Indiana.  We collect age, sex, and demographic information as well as COVID-19 related symptoms, which Facebook defines as having (1) a fever and cough, (2) shortness of breath, \emph{or} (3) difficulty breathing. To assess potential bias, we compare the random sample from Indiana to the Facebook symptom survey data collected from April 20th to April 25th.  Table~\ref{tab:comparison} demonstrates minimal bias in the Facebook symptom survey.
+\begin{table}
+\centering
+\begin{tabular}{c | c c c | c}
+& \multicolumn{3}{c}{Facebook} & Random \\ \cline{2-5}
+& Lower CI & Estimate & Upper CI & Estimate \\ \hline
+Fever &  0.017 & 0.020 & 0.024 & 0.018 \\
+Cough &  0.142 & 0.148 & 0.154 & 0.149 \\
+Shortness & 0.058 & 0.060 & 0.062 & 0.062 \\ \hline
+\end{tabular}
+\caption{Comparison of Facebook symptom survey and random sample demonstrates minimal bias.}
+\label{tab:comparison}
+\end{table}
+
+% \item {\bf Hospitalization data}: On each day, we observe the number of individuals who are COVID-19 positive that visited a hospital on that day.  Unfortunately, hospitalization data is not broken out by age, gender, and racial demographic information.  Instead, we rely on combining Facebook data to calculate the fraction of those who sought the hospital per week in each strata. We then use this to figure out how many individuals per strata were hospitalized and then back out how many
+
+\item {\bf Death data}: On each day, we observe the number of deaths due to COVID-19 reported on that day, with deaths broken out jointly by age, gender, and racial demographic information.  Figure~\ref{fig:in-deaths} plots the cumulative number of COVID-19 related deaths over time by age group.
 \end{itemize}
 
 
-\subsubsection{Time-varying doubly-robust prevalence estimation}
+\subsection{Inverse-probability weighting approach}
+
+We start with using Table~\ref{tab:indiana} to compute IPW weights.  The random sample is $n=3,658$.  Here, we demonstrate how to compute the weight for a particular strata.  For example, the strata defined as Male, 40--59, White, has a Fever, no household cases, and no prior tests has a weight proportional to
+$$
+\frac{\left( 0.493 \times 0.252 \times 0.869 \times 0.018 \right)}{\left(0.418 \times 0.411 \times 0.231 \times 0.17 \right)} = 0.628
+$$
+Using these weights and the adjusted strata-level prevalence estimates, the IPW estimate is $7.7$.
+
+
+
+\subsubsection{Time-varying IPW estimator}
+
+
+
+
+
+
+\subsection{Model-based estimation}
+
+\subsection{Doubly robust estimation}
 
 
 \begin{rmk}[Use of symptom-to-hospitalization ratio to estimate symptom subgroup size]
 
 \end{rmk}
+
+
+SEROPREVALENCE (i.e., used to be infected).  We can attempt to estimate using our methods and assume non-overlapping samples.  Then back out the correlation.
+
+We next consider estimation of data quality $E_{\I} \left[ \rho_{I,Y} \right]$. In \cite{Meng2018}, estimation relied on observing the true outcome (i.e., election vote totals), which  is not possible in the current crisis.  Here, we propose using surveys as noisy but unbiased estimates of the true prevalence. Our goal is not inferential. Instead, we aim to build sensitivity analyses that can aid in understanding the amount of information in observational COVID case-count data.
+
+On April 23rd, Governor Andrew Cuomo announced results from a study in New York state.  It found 13.9\% of 3,000 people tested across the state had signs of the virus.  The study did not report sensitivity and specificity; therefore, we take reported measures from the Santa Clara study~\citep{Bendavid2020}.  The reported specificity is $82.8\%$ (95\% CI: 76.0-88.4\%) and sensitivity is $99.5\%$ (95\% CI: 99.2-99.7\%).  This corresponds to a false negative rate of $17.2\%$ (11.6-24.0\%) and false positive rate of $0.5\%$ (0.3 - 0.8\%).  The estimated prevalence is then $16.3\%$ with a range of 15.0\% to 18.0\%. For simplicity, we assume the study was conducted on April 20th. On the 20th, $19,654$ tests were performed. The population of New York is $19,378,102$.   Subtracting off the $617,555$ tests that had already performed yields a sampling fraction of $f = 0.001$.  The smoothed prevalence estimate is 28.4\%.  Adjusting for imperfect testing yields an estimate of $33.9\%$.
+
+Under the assumption that the survey is a SRS from New York, the error is $17.6$\%.  Using~\eqref{eq:error}, we construct an estimate of the relative sampling rate as follows
+\[
+\rho D_M = \sqrt{\frac{f}{1-f}} \frac{\text{0.176}}{\sigma_Y} = 1.07 \times 10^{-2} \Rightarrow \Delta = 1.07 \times 10^{-3} \Rightarrow M = 2.3.
+\]
+We can perform a sensitivity analysis by considering the range of false negative and positive rates from~\cite{Bendavid2020}, which leads to a range for $M$ of $(2.21, 2.38)$.  Therefore, the impact on bias of $\hat R_t$ appears moderate.  If $FP = 0.05$ and $FN = 0.005$, then the relative sampling rate increases to $M=3.04$.  This simple tool helps us understand how sensitivity and specificity impact biases and  therefore how much we should trust conclusions based on these assumptions.
+
+% \begin{figure}
+% \centering
+% \begin{subfigure}{.5\textwidth}
+%   \centering
+%   \includegraphics[width=.9\linewidth]{../methods/figs/NY_casecount.png}
+%   \caption{NY new cases per day}
+%   \label{fig:ny-covid-test}
+% \end{subfigure}%
+% \begin{subfigure}{.5\textwidth}
+%   \centering
+%   \includegraphics[width=.9\linewidth]{../methods/figs/NY_fracpos.png}
+%   \caption{NY fraction of new tests positive per day}
+%   \label{fig:ny-covid-frac}
+% \end{subfigure}
+% \caption{New York COVID-19 reported data}
+% \label{fig:ny-covid}
+% \end{figure}
 
 
 \section{Cross-population comparisons}
@@ -562,41 +634,6 @@ where $e_{jt}$ is the error associated given in Section \ref{section:r0-estimati
 \caption{Left: fraction infected in two SIR models with $\beta = 1.2$ and $0.9$ respectively and $\gamma = 0.15$ with same initial conditions. Right: comparison of $\hat R_t$ across time with $FN = 0.172$, $FP = 0.005$, and $M = 4$.}
 \label{fig:comparison}
 \end{figure}
-
-\subsection{Estimation of Data Quality}
-\label{section:est_dq}
-
-SEROPREVALENCE (i.e., used to be infected).  We can attempt to estimate using our methods and assume non-overlapping samples.  Then back out the correlation.
-
-We next consider estimation of data quality $E_{\I} \left[ \rho_{I,Y} \right]$. In \cite{Meng2018}, estimation relied on observing the true outcome (i.e., election vote totals), which  is not possible in the current crisis.  Here, we propose using surveys as noisy but unbiased estimates of the true prevalence. Our goal is not inferential. Instead, we aim to build sensitivity analyses that can aid in understanding the amount of information in observational COVID case-count data.
-
-On April 23rd, Governor Andrew Cuomo announced results from a study in New York state.  It found 13.9\% of 3,000 people tested across the state had signs of the virus.  The study did not report sensitivity and specificity; therefore, we take reported measures from the Santa Clara study~\citep{Bendavid2020}.  The reported specificity is $82.8\%$ (95\% CI: 76.0-88.4\%) and sensitivity is $99.5\%$ (95\% CI: 99.2-99.7\%).  This corresponds to a false negative rate of $17.2\%$ (11.6-24.0\%) and false positive rate of $0.5\%$ (0.3 - 0.8\%).  The estimated prevalence is then $16.3\%$ with a range of 15.0\% to 18.0\%. For simplicity, we assume the study was conducted on April 20th. On the 20th, $19,654$ tests were performed. The population of New York is $19,378,102$.   Subtracting off the $617,555$ tests that had already performed yields a sampling fraction of $f = 0.001$.  The smoothed prevalence estimate is 28.4\%.  Adjusting for imperfect testing yields an estimate of $33.9\%$.
-
-Under the assumption that the survey is a SRS from New York, the error is $17.6$\%.  Using~\eqref{eq:error}, we construct an estimate of the relative sampling rate as follows
-\[
-\rho D_M = \sqrt{\frac{f}{1-f}} \frac{\text{0.176}}{\sigma_Y} = 1.07 \times 10^{-2} \Rightarrow \Delta = 1.07 \times 10^{-3} \Rightarrow M = 2.3.
-\]
-We can perform a sensitivity analysis by considering the range of false negative and positive rates from~\cite{Bendavid2020}, which leads to a range for $M$ of $(2.21, 2.38)$.  Therefore, the impact on bias of $\hat R_t$ appears moderate.  If $FP = 0.05$ and $FN = 0.005$, then the relative sampling rate increases to $M=3.04$.  This simple tool helps us understand how sensitivity and specificity impact biases and  therefore how much we should trust conclusions based on these assumptions.
-
-\begin{figure}
-\centering
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{../methods/figs/NY_casecount.png}
-  \caption{NY new cases per day}
-  \label{fig:ny-covid-test}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{../methods/figs/NY_fracpos.png}
-  \caption{NY fraction of new tests positive per day}
-  \label{fig:ny-covid-frac}
-\end{subfigure}
-\caption{New York COVID-19 reported data}
-\label{fig:ny-covid}
-\end{figure}
-
-
 
 \section{Discussion}
 \label{section:discussion}
