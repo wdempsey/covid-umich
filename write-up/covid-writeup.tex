@@ -1,4 +1,4 @@
-\documentclass[12pt]{amsart}
+\documentclass[11pt]{amsart}
 
 \RequirePackage[OT1]{fontenc}
 
@@ -41,8 +41,8 @@
 
 
 \usepackage{setspace}
-% \onehalfspacing
-\doublespacing
+\onehalfspacing
+% \doublespacing
 
 
 \def\pr{\text{pr}}
@@ -58,21 +58,23 @@
 % \email{wdem@umich.edu}
 
 \begin{abstract}
-  Coronavirus case-count data has influenced government policies and drives many epidemiological forecasts. Limited testing is cited as the key driver behind minimal information on the COVID-19 pandemic. While expanded testing is laudable, measurement error and selection bias are the two greatest problems limiting our understanding of the current COVID-19 pandemic; neither can be fully addressed by increased testing capacity. In this paper, we demonstrate their impact on estimation of point prevalence and the effective reproduction number. We show that estimates based on the millions of molecular tests in the US has the same mean square error as a small simple random sample.  To address this, a procedure is presented that combines case-count data with random samples over time to estimate selection propensities based on key covariate information. We then combine these selection propensities with epidemiological forecast models using death-only data to construct a \emph{doubly-robust} estimation method that accounts for both measurement-error and selection bias.  This method is then applied to estimate Indiana's prevalence using case-count, hospitalization, and death data with cumulative demographic information, the United States's only statewide random molecular sample collected from April 25--29th, and Facebook's COVID-19 symptom survey.  We end with a series of recommendations based on the proposed methodology.
+  Coronavirus case-count data has influenced government policies and drives many epidemiological forecasts. Limited testing is cited as the key driver behind minimal information on the COVID-19 pandemic. While expanded testing is laudable, measurement error and selection bias are the two greatest problems limiting our understanding of the current COVID-19 pandemic; neither can be fully addressed by increased testing capacity. In this paper, we demonstrate their impact on estimation of point prevalence and the effective reproduction number. We show that estimates based on the millions of molecular tests in the US has the same mean square error as a small simple random sample.  To address this, a procedure is presented that combines case-count data and random samples over time to estimate selection propensities based on key covariate information. We then combine these selection propensities with epidemiological forecast models using death-only data to construct a \emph{doubly-robust} estimation method that accounts for both measurement-error and selection bias.  This method is then applied to estimate Indiana's prevalence using case-count, hospitalization, and death data with cumulative demographic information, the United States's only statewide random molecular sample collected from April 25--29th, and Facebook's COVID-19 symptom survey.  We end with a series of recommendations based on the proposed methodology.
 \end{abstract}
 
 \maketitle
 
 
 \section{Introduction}
-The World Health Organization has declared the coronavirus disease 2019 (COVID-19) a public health emergency.  As of August 28th, 2020, over 24.5 million cases have been confirmed worldwide with 5.95 million cases and over 180 thousand confirmed deaths across the United States. This pandemic
+The World Health Organization has declared the coronavirus disease 2019 (COVID-19) a public health emergency.  \textcolor{red}{As of August 28th, 2020, over 24.5 million cases have been confirmed worldwide with 5.95 million cases and over 180 thousand confirmed deaths across the United States.} This pandemic
 has become the focal point of everyday life; yet the data landscape for understanding COVID-19 remains limited.  Public databases~\citep{JHU_Lancet,NYT} provide incoming county-level information of confirmed cases and deaths.  Statisticians, epidemiologists, economists, and data scientists have used this granular data to forecast COVID-19 case-counts, deaths, and hospitalizations~\citep{Giordano2020,Song2020,Ray2020,2020.IHME,Wang2020.03,JTD36385}.
 
-This paper has two main objectives.  The first objective is to express reservations at the use of case-counts as a proxy for disease prevalence and in estimation of standard epidemiological models for inference and forecasting.  The reason is straightforward: observed case-count data is plagued by selection bias and measurement error. Through simple calculations, we will demonstrate that the information gained from increasing testing capacity is limited in the presence of selection bias and when testing inaccuracies persist.  In particular, the millions of tests in the US have a small effective sample size when compared to random sampling. These calculations demonstrate the importance of probabilistic sampling designs  over time for estimation of point prevalence and effective reproduction number.
+This paper has two main objectives.  The first objective is to express reservations at the use of case-counts as a proxy for disease prevalence and in estimation of standard epidemiological models for inference and forecasting.  The reason is straightforward: observed case-count data is plagued by selection bias and measurement error. Through a series of calculations, we will demonstrate that the information gained from increasing testing capacity is limited in the presence of selection bias and when testing inaccuracies persist.  In particular, the millions of tests in the US have a small effective sample size when compared to random sampling. These calculations demonstrate the importance of probabilistic sampling designs  over time for estimation of point prevalence and effective reproduction number.
 
-Due to monetary and time constraints, random testing may be performed infrequently.  As of August 28, 2020, Indiana is the only state to conduct a statewide random sample testing\footnote{This is the only random sample to collect both seroprevalence and diagnostic testing results. The CDC has conducted several seroprevalence studies. See Section~\ref{section:testinginfo} for further discussion.}, which was collected from April 25--29, 2020.  Infrequent random testing may be insufficient to understand the trajectory of infectious diseases which change rapidly over time.  Therefore, while random testing may be preferable in theory, in practice governments, researchers, and policy makers continue to use coronavirus case-counts to understand the impact of COVID-19 on the population and make data-informed decisions.
+Due to monetary and time constraints, random testing may be performed infrequently.  \textcolor{red}{As of August 28, 2020}, Indiana is the only state to conduct a statewide random sample testing\footnote{This is the only random sample to collect both seroprevalence and diagnostic testing results. The CDC has conducted several seroprevalence studies. See Section~\ref{section:testinginfo} for further discussion.}, which was collected from April 25--29, 2020.  Infrequent random testing may be insufficient to understand the trajectory of infectious diseases which change rapidly over time.  Therefore, while random testing may be preferable in theory, in practice governments, researchers, and policy makers continue to use coronavirus case-counts to understand the impact of COVID-19 on the population and make data-informed decisions.
 
-The second objective is to demonstrate how random samples provide necessary auxiliary information to address selection bias in coronavirus case-count data.  Random samples provide the necessary covariate information from a representative sample from the population to estimate selection propensities. These propensities are then used in an inverse-probability weighting scheme to construct estimators of disease prevalence that attempt to control for selection bias.  A doubly robust extension allows researchers to combine these estimates with epidemiological forecasts based on compartmental models that are common in the study of infectious diseases~\cite{Hao2020,Song2020,Ray2020,Johndrow2020}.  While we demonstrate improvements over simple estimates of disease prevalence, we highlight how selection bias may persist and impact uncertainty quantification.
+The second objective is to demonstrate how random samples provide necessary auxiliary information to address selection bias in coronavirus case-count data.  Random samples provide the necessary covariate information from a representative sample from the population to estimate selection propensities. These propensities are then used in an inverse-probability weighting scheme to construct estimators of disease prevalence that attempt to control for selection bias.  A doubly robust extension allows researchers to combine these estimates with epidemiological forecasts based on compartmental models that are common in the study of infectious diseases~\cite{Hao2020,Song2020,Ray2020,Johndrow2020}.
+% Hospitalization Gelman
+While we demonstrate improvements over simple estimates of disease prevalence, we highlight how selection bias may persist and impact uncertainty quantification.
 
 \subsection{Related work.}
 
@@ -105,11 +107,11 @@ In this section we provide the necessary background to understand COVID-19 diagn
 
 % We start with a brief description of the difference between COVID-19 molecular and serological tests as well as the relationship between COVID-19 testing, the infection, and immune response time frame. These distinctions will be useful later in the paper when discussing different random sample tests.
 
-After an individual is infected with SARS-CoV-2, there is an incubation period which lasts between two to five days (cite: NPR) before the viral load is high enough to be detected.  A \emph{molecular test} refers to diagnostic tests that aim to detect increased viral load (e.g., RT-PCR or antigen tests).  If someone has an active infection then after the incubation period a molecular test with perfect sensitivity will yield a positive result for the next few weeks (cite: wlos).  After that, the viral load will decrease and a molecular test with perfect specificity will come back negative. While an infected individual may yield a positive molecular test for several weeks, they will likely stop transmitting the disease within a few days of infection, meaning a positive molecular test does not imply transmissibility.
+After an individual is infected with SARS-CoV-2, there is an incubation period which lasts between two to five days (cite: NPR) before the viral load is high enough to be detected.  A \emph{molecular test} refers to any diagnostic test that aims to detect increased viral load (e.g., RT-PCR or antigen tests).  If someone has an active infection then after the incubation period a molecular test with perfect sensitivity will yield a positive result for the next few weeks (cite: wlos).  After that, the viral load will decrease and a molecular test with perfect specificity will come back negative. While an infected individual may yield a positive molecular test for several weeks, they will likely stop transmitting the disease within a few days of infection, meaning a positive molecular test does not imply transmissibility.
 
 A molecular test conducted on an infected individual may return a negative result.  Such false negatives are very strongly associated with when the test is conducted.  In the incubation phase, most molecular tests will return a false negative result.  Molecular tests are most sensitive when the viral loads are highest which occurs during the first few days of transmissibility (cite: that guy ).   Moreover, most molecular tests are performed via nasopharyngeal swab.  Specimen collection by swab is known to impact false negative/positive rates regardless of test timing.   Systematic reviews suggest that 70\% sensitivity and 95\% specificity are reasonable estimates for current RT-PCR tests~\cite{Woloshin2020}.
 
-The primary goal is of molecular tests is in diagnosis of active infections in the population.  Such diagnostic tests generate important information about the presence of SARS-Cov-2 in the population, and help scientists and policy-makers understand patterns of transmission and propagation. Rapid and frequent molecular testing is cited as a key component (citEe: OECD and others) in effective strategies to identify active infections and prevent systemic outbreaks.  There has been work on developing faster, cheaper testing options (cite: Mina) that can be used at-home as well as group testing (citE: Mina); however, these developments are beyond the scope of this paper.
+The primary goal of molecular tests is diagnosis of active infections in the population.  Such diagnostic tests generate important information about the presence of SARS-Cov-2 in the population, and help scientists and policy-makers understand patterns of transmission and propagation. Rapid and frequent molecular testing is cited as a key component (citEe: OECD and others) in effective strategies to identify active infections and prevent systemic outbreaks.  There has been work on developing faster, cheaper testing options (cite: Mina) that can be used at-home as well as group testing (citE: Mina); however, these developments are beyond the scope of this paper.
 % Here we consider the current system of testing which involves both self-selection into testing and historical limits on who was able to receive diagnostic tests due to limited testing capacity.
 
 \emph{Serological tests} look for an immunological response to the virus.  A week or so after an individual is infected with SARS-CoV-2, the individual will start producing antibodies.  At this point, a serological test with perfect sensitivity will come back positive.  This test provides evidence of past infection while the molecular test provides evidence of an \emph{active} infection.
@@ -358,6 +360,19 @@ where $K_h$ is a kernel function with tunable parameter $h$. Given $\pi (x;\hat 
 % $$
 % where $\tilde d_k$ is the number of observations in strata $k$ in the random sample.
 
+\subsubsection{Uncertain sensitivity and specificity}
+
+For prevalence there is some
+
+For
+
+For seroprevalence, \cite{Bendavid2020} report
+
+
+
+, which leads to a range for $M$ of $(2.21, 2.38)$.  Therefore, the impact on bias of $\hat R_t$ appears moderate.  If $FP = 0.05$ and $FN = 0.005$, then the relative sampling rate increases to $M=3.04$.  This simple tool helps us understand how sensitivity and specificity impact biases and  therefore how much we should trust conclusions based on these assumptions.
+
+
 \subsubsection{Asymptotics}
 
 Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:ipw} shows that the IPW estimator is  consistent and calculates the estimator's variance.  In Lemma~\ref{lemma:ipw}, sensitivity and specificity are not assumed known.  Instead, we suppose that these are estimated using a pseudo-likelihood on a random sample from the population whose size is chosen so the resulting estimated sensitivity and specificity have desired levels of uncertainty.  See Appendix~\ref{app:asympderivations} for additional details.
@@ -527,7 +542,22 @@ We start with using Table~\ref{tab:indiana} to compute IPW weights.  The random 
 $$
 \frac{\left( 0.493 \times 0.252 \times 0.869 \times 0.018 \right)}{\left(0.418 \times 0.411 \times 0.231 \times 0.17 \right)} = 0.628
 $$
-Using these weights and the adjusted strata-level prevalence estimates, the IPW estimate is $7.7$.
+Using the constructed weights and the adjusted strata-level prevalence estimates, the IPW estimate under no measurement-error is $7.7$, a decrease of four percentage points from the observed prevalence of $11.7$. Using Table~\ref{tab:indiana} to compute weights requires the assumption of independence among factors.  To alleviate this, we compute weights using Facebook's survey data collected in Indiana over that window of time; the resulting IPW estimate under no measurement-error is
+
+The study did not report sensitivity and specificity; therefore, we take the suggested measures from~\cite{Woloshin2020} which report 70\% sensitivity is a reasonable estimates and~\cite{Cohen2020} which report 97.6\% specificity.  This corresponds to a false negative rate of $30\%$ and false positive rate of $2.4\%$.  Therefore, the IPW estimate accounting for measurement-error is $7.7\%$.  To account for uncertainty in
+
+Indiana's population as of 2019 was $6.732$ million.  Subtracting off the $617,555$ tests that had already performed yields a sampling fraction of $f = 0.001$.  The smoothed prevalence estimate is 28.4\%.  Adjusting for imperfect testing yields an estimate of $33.9\%$.
+
+
+
+For this estimate, we consider estimation of data quality $E_{\I} \left[ \rho_{\tilde I(X),Y} \right]$. In \cite{Meng2018}, estimation relied on observing the true outcome (i.e., election vote totals), which is not possible in the current crisis.  Here, we use the random sample as a noisy but unbiased estimate of the true prevalence. Our goal is not inferential. Instead, we aim to build sensitivity analyses that can aid in understanding the amount of information in observational COVID case-count data.
+
+
+Under the assumption that the survey is a SRS from New York, the error is $17.6$\%.  Using~\eqref{eq:error}, we construct an estimate of the relative sampling rate as follows
+\[
+\rho D_M = \sqrt{\frac{f}{1-f}} \frac{\text{0.176}}{\sigma_Y} = 1.07 \times 10^{-2} \Rightarrow \Delta = 1.07 \times 10^{-3} \Rightarrow M = 2.3.
+\]
+We can perform a sensitivity analysis by considering the range of false negative and positive rates from~\cite{Bendavid2020}, which leads to a range for $M$ of $(2.21, 2.38)$.  Therefore, the impact on bias of $\hat R_t$ appears moderate.  If $FP = 0.05$ and $FN = 0.005$, then the relative sampling rate increases to $M=3.04$.  This simple tool helps us understand how sensitivity and specificity impact biases and  therefore how much we should trust conclusions based on these assumptions.
 
 
 
@@ -541,24 +571,6 @@ Using these weights and the adjusted strata-level prevalence estimates, the IPW 
 \subsection{Model-based estimation}
 
 \subsection{Doubly robust estimation}
-
-
-\begin{rmk}[Use of symptom-to-hospitalization ratio to estimate symptom subgroup size]
-
-\end{rmk}
-
-
-SEROPREVALENCE (i.e., used to be infected).  We can attempt to estimate using our methods and assume non-overlapping samples.  Then back out the correlation.
-
-We next consider estimation of data quality $E_{\I} \left[ \rho_{I,Y} \right]$. In \cite{Meng2018}, estimation relied on observing the true outcome (i.e., election vote totals), which  is not possible in the current crisis.  Here, we propose using surveys as noisy but unbiased estimates of the true prevalence. Our goal is not inferential. Instead, we aim to build sensitivity analyses that can aid in understanding the amount of information in observational COVID case-count data.
-
-On April 23rd, Governor Andrew Cuomo announced results from a study in New York state.  It found 13.9\% of 3,000 people tested across the state had signs of the virus.  The study did not report sensitivity and specificity; therefore, we take reported measures from the Santa Clara study~\citep{Bendavid2020}.  The reported specificity is $82.8\%$ (95\% CI: 76.0-88.4\%) and sensitivity is $99.5\%$ (95\% CI: 99.2-99.7\%).  This corresponds to a false negative rate of $17.2\%$ (11.6-24.0\%) and false positive rate of $0.5\%$ (0.3 - 0.8\%).  The estimated prevalence is then $16.3\%$ with a range of 15.0\% to 18.0\%. For simplicity, we assume the study was conducted on April 20th. On the 20th, $19,654$ tests were performed. The population of New York is $19,378,102$.   Subtracting off the $617,555$ tests that had already performed yields a sampling fraction of $f = 0.001$.  The smoothed prevalence estimate is 28.4\%.  Adjusting for imperfect testing yields an estimate of $33.9\%$.
-
-Under the assumption that the survey is a SRS from New York, the error is $17.6$\%.  Using~\eqref{eq:error}, we construct an estimate of the relative sampling rate as follows
-\[
-\rho D_M = \sqrt{\frac{f}{1-f}} \frac{\text{0.176}}{\sigma_Y} = 1.07 \times 10^{-2} \Rightarrow \Delta = 1.07 \times 10^{-3} \Rightarrow M = 2.3.
-\]
-We can perform a sensitivity analysis by considering the range of false negative and positive rates from~\cite{Bendavid2020}, which leads to a range for $M$ of $(2.21, 2.38)$.  Therefore, the impact on bias of $\hat R_t$ appears moderate.  If $FP = 0.05$ and $FN = 0.005$, then the relative sampling rate increases to $M=3.04$.  This simple tool helps us understand how sensitivity and specificity impact biases and  therefore how much we should trust conclusions based on these assumptions.
 
 % \begin{figure}
 % \centering
@@ -695,6 +707,8 @@ What is your goal?  "get people who are currently sick off the street." Then tes
 
 \newpage
 \appendix
+
+\section{Reproducible code}
 
 All relevant code can be found at \url{https://github.com/wdempsey/covid-umich}.
 
@@ -1269,6 +1283,55 @@ N^{-2} \bigg[ &(1-FP-FN)^{-2} \sum_{j=1}^N \zeta_{t,j}^2 \frac{(1-\pi_{j,t})}{\p
 
 \section{Model-based estimation: parameter choices and inference}
 \label{app:modelbased}
+
+Following~\cite{Song2020}, the fourth-order Runge-Kutta (RK4) method gives an approximation to the proposed SEIR model in equation XX as follows:
+
+$$
+f(\theta_{t-1}, \beta, \gamma) = \left(
+\begin{array}{c}
+\theta_{t-1}^{S} + \frac{1}{6} \left[ k_{t-1}^{S_1} + 2 k_{t-1}^{S_2} + 2 k_{t-1}^{S_3} + k_{t-1}^{S_4} \right] \\
+\theta_{t-1}^{E} + \frac{1}{6} \left[ k_{t-1}^{E_1} + 2 k_{t-1}^{E_2} + 2 k_{t-1}^{E_3} + k_{t-1}^{E_4} \right] \\
+\theta_{t-1}^{I^{(T)}} + \frac{1}{6} \left[ k_{t-1}^{I_1^{(T)}} + 2 k_{t-1}^{I_2^{(T)}} + 2 k_{t-1}^{I_3^{(T)}} + k_{t-1}^{I_4^{(T)}} \right] \\
+\theta_{t-1}^{I^{(NT)}} + \frac{1}{6} \left[ k_{t-1}^{I_1^{(NT)}} + 2 k_{t-1}^{I_2^{(NT)}} + 2 k_{t-1}^{I_3^{(NT)}} + k_{t-1}^{I_4^{(NT)}} \right] \\
+\theta_{t-1}^{R} + \frac{1}{6} \left[ k_{t-1}^{R_1} + 2 k_{t-1}^{R_2} + 2 k_{t-1}^{R_3} + k_{t-1}^{R_4} \right] \\
+\end{array}
+\right)
+$$
+where
+\begin{align*}
+k_t^{S_1} &= - s_t \circ (B i_t^{(T)}) \\
+k_t^{S_2} &= - (s_t + 0.5 k_t^{S_1}) \circ (B (i_t^{(T)} + 0.5 k_t^{I_1}) \\
+k_t^{S_3} &= - (s_t + 0.5 k_t^{S_2}) \circ (B i_t^{(T)} + 0.5 k_t^{I_2}) \\
+k_t^{S_4} &= - (s_t + k_t^{S_3}) \circ (B i_t^{(T)} + k_t^{I_3}),
+\end{align*}
+and
+\begin{align*}
+k_t^{E_1} &= s_t \circ (B i_t^{(T)}) - \sigma e_t \\
+k_t^{E_2} &= (s_t + 0.5 k_t^{S_1}) \circ (B (i_t^{(T)} + 0.5 k_t^{I_1}) - \sigma (e_t + 0.5 k_t^{e_1}) \\
+k_t^{E_3} &= (s_t + 0.5 k_t^{S_2}) \circ (B (i_t^{(T)} + 0.5 k_t^{I_2}) - \sigma (e_t + 0.5 k_t^{e_2}) \\
+k_t^{E_4} &= (s_t + k_t^{S_3}) \circ (B (i_t^{(T)} + k_t^{I_4}) - \sigma (e_t + k_t^{E_3}) \\
+\end{align*}
+and
+\begin{align*}
+k_t^{I_1^{(T)}} &= \sigma e_t - \beta_2 i^{(T)} \\
+k_t^{I_2^{(T)}} &= \sigma (e_t + 0.5 k_t^{E_1}) - \beta_2 (i^{(T)} + 0.5 k_t^{I_1^{(T)}}) \\
+k_t^{I_3^{(T)}} &= \sigma (e_t + 0.5 k_t^{E_2}) - \beta_2 (i^{(T)} + 0.5 k_t^{I_2^{(T)}}) \\
+k_t^{I_4^{(T)}} &= \sigma (e_t + k_t^{E_3}) - \beta_2 (i^{(T)} + k_t^{I_3^{(T)}}),
+\end{align*}
+and
+\begin{align*}
+k_t^{I_1^{(NT)}} &= \beta_2 i^{(T)} - \gamma i^{(NT)} \\
+k_t^{I_2^{(NT)}} &= \beta_2 (i^{(T)} + 0.5 k_t^{I_1^{(T)}}) - \gamma (i^{(NT)} + 0.5 k_t^{I_1^{(NT)}})\\
+k_t^{I_3^{(NT)}} &= \beta_2 (i^{(T)} + 0.5 k_t^{I_2^{(T)}}) - \gamma (i^{(NT)} + 0.5 k_t^{I_2^{(NT)}})\\
+k_t^{I_4^{(NT)}} &= \beta_2 (i^{(T)} + k_t^{I_3^{(T)}}) - \gamma (i^{(NT)} + k_t^{I_3^{(NT)}}) ,
+\end{align*}
+and
+\begin{align*}
+k_t^{R_1} &= - \gamma i_t^{(NT)} \\
+k_t^{R_2} &= - \gamma (i^{(NT)} + 0.5 k_t^{I_1^{(NT)}}) \\
+k_t^{R_3} &= - \gamma (i^{(NT)} + 0.5 k_t^{I_2^{(NT)}}) \\
+k_t^{R_4} &= - \gamma (i^{(NT)} + k_t^{I_3^{(NT)}}) \\
+\end{align*}
 
 
 \end{document}
