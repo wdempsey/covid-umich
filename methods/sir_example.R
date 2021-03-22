@@ -1,3 +1,6 @@
+## Potential bias due to self-selection and measurement error 
+## from a deterministic SIR mode
+
 ## Load deSolve package
 library(deSolve)
 
