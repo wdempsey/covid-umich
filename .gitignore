@@ -120,3 +120,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+## Extensions
+.pdf
+.bbl
+.blg
+.aux
