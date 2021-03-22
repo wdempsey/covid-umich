@@ -20,6 +20,7 @@ lib/
 lib64/
 literature/
 parts/
+reviews/
 sdist/
 var/
 wheels/
@@ -107,8 +108,8 @@ venv.bak/
 .ropeproject
 
 # R files
-.RData
-.Rhistory
+*.RData
+*.Rhistory
 
 # mkdocs documentation
 /site
@@ -122,7 +123,9 @@ dmypy.json
 .pyre/
 
 ## Extensions
-.pdf
-.bbl
-.blg
-.aux
+*.pdf
+*.bbl
+*.blg
+*.aux
+*.synctex.gz
+*.out
