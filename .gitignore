@@ -106,6 +106,10 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
+# R files
+.RData
+.Rhistory
+
 # mkdocs documentation
 /site
 
