@@ -109,4 +109,4 @@ for(all_row in 1:nrow(all_data)) {
 }
 
 
-saveRDS(complete_data,"./data/fb_weeklycomplete.RDS")
+saveRDS(complete_data,"../data/fb_weeklycomplete.RDS")
