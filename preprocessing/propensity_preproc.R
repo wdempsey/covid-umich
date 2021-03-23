@@ -1,3 +1,12 @@
+## Building a combined dataset
+
+library("lubridate")
+
+fb_data = read.csv("../data/fb_indiana_data.csv")
+indiana_data = readRDS("../data/weeklycoviddata.RDS")
+all_data = readRDS("../data/fb_weekly.RDS")
+
+
 ## How do we match ages?
 ## FB <--> INDIANA
 ## 18-24 (1) <--> 0-19 and 20-29.
@@ -38,7 +47,7 @@ for(row in 1:nrow(indiana_data_with_fever)){
   if(sum(fb_temp$weight_gottested) == 0) {
     fb_temp_alltimes = all_data[all_data$age == tempfb_age & all_data$gender == tempfb_gender,]
     fb_temp = aggregate(weight_gottested~fever, fb_temp_alltimes, sum)
-    fb_temp$feverselection = aggtemp$weight_gottested/sum(aggtemp$weight_gottested)
+    fb_temp$feverselection = fb_temp$weight_gottested/sum(fb_temp$weight_gottested)
   }
   if(nrow(fb_temp) == 0) {
     temp$covid_tests = (temp$fever == FALSE)*temp$covid_tests
@@ -53,7 +62,7 @@ for(row in 1:nrow(indiana_data_with_fever)){
   indiana_data_with_fever[row,] = temp
 }
 
-saveRDS(indiana_data_with_fever, "data/weeklycoviddata_withfever.RDS")
+saveRDS(indiana_data_with_fever, "../data/weeklycoviddata_withfever.RDS")
 
 
 ## Facebook data

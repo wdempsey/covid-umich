@@ -1,3 +1,9 @@
+## Inputs:
+## (1) Cleaned Facebook Data
+## (2) Cleaned Weekly Indiana Data
+## Outputs:
+## (1) Collaping down to FEVER only
+
 library("lubridate")
 
 fb_data = read.csv("../data/fb_indiana_data.csv")
