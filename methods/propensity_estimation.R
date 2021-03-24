@@ -14,8 +14,8 @@ model = ~ 1 + fever + ethnicity + race + as.factor(gender)
 indiana_X = model.matrix(model, indiana_data)
 fb_X = model.matrix(model, fb_data)
 
-current_week = 30
-current_year = 2020
+current_week = 45
+current_year = 2021
 
 indiana_distance <- function(row) {
   rowyear = year(row[1])
@@ -50,7 +50,7 @@ fb_distance <- function(row) {
 kernelweight <- function(distance) {
   kw2 <- function(row) {
     dis = distance(row)
-    h = sqrt(-1/(2*log(0.01))) # Set a deterministic bandwidth for now
+    h = sqrt(-1/(2*log(0.75))) # Set a deterministic bandwidth for now
     kernel = exp(-dis^2/(2*h^2))
     return(kernel)
     }
@@ -94,4 +94,4 @@ irls <- function(fb_X, indiana_X, indiana_data, fb_data, max.iter = 20, min.tol 
   return(current_theta)
 }
 
-irls(fb_X, indiana_X, indiana_data, fb_data)
+current_estimated_theta = irls(fb_X, indiana_X, indiana_data, fb_data)
