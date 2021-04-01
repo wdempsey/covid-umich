@@ -53,6 +53,6 @@ for (week in weeksin2021) {
   all_data = rbind(all_data, agg_temp)
 }
 
-saveRDS(all_data, file = "data/fb_weekly.RDS")
+saveRDS(all_data, file = "../data/fb_weekly.RDS")
 
 

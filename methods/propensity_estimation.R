@@ -1,21 +1,7 @@
 ## Bring in libraries
 library(lubridate)
 
-## Brining in complete FB and Indiana data
-
-indiana_data = readRDS("../data/weeklycoviddata_withfever.RDS")
-fb_data = readRDS("../data/fb_weeklycomplete.RDS")
-
-## Build \pi(x; \theta)
-## Logistic regression with no interactions
-
-## First term can be precomputed given design matrix
-model = ~ 1 + fever + ethnicity + race + as.factor(gender)
-indiana_X = model.matrix(model, indiana_data)
-fb_X = model.matrix(model, fb_data)
-
-current_week = 45
-current_year = 2021
+## Define Functions
 
 indiana_distance <- function(row) {
   rowyear = year(row[1])
@@ -86,12 +72,42 @@ irls <- function(fb_X, indiana_X, indiana_data, fb_data, max.iter = 20, min.tol 
     
     old_theta = current_theta
     current_theta = current_theta + solve(hessian, first_term - second_term)
-    print(current_theta)
+    # print(current_theta)
     tol = old_theta - current_theta
-    print(max(abs(tol)))
+    # print(max(abs(tol)))
     if(max(abs(tol)) < min.tol){break}
   }
   return(current_theta)
 }
 
-current_estimated_theta = irls(fb_X, indiana_X, indiana_data, fb_data)
+
+
+## Brining in complete FB and Indiana data
+
+indiana_data = readRDS("../data/weeklycoviddata_withfever.RDS")
+fb_data = readRDS("../data/fb_weeklycomplete.RDS")
+
+## Build \pi(x; \theta)
+## Logistic regression with no interactions
+
+## First term can be precomputed given design matrix
+model = ~ 1 + fever + ethnicity + race + as.factor(gender)
+indiana_X = model.matrix(model, indiana_data)
+fb_X = model.matrix(model, fb_data)
+
+weeks = c(25:53,1:5)
+years = c(rep(2020, length = length(c(25:53))),rep(2021, length = length(1:5)))
+results = matrix(nrow = length(weeks), ncol = 2+ncol(fb_X))
+
+for(i in 1:length(weeks)) {
+  print(paste("On week", weeks[i], "in year", years[i]))
+  current_week = weeks[i]
+  current_year = years[i]
+  current_estimated_theta = irls(fb_X, indiana_X, indiana_data, fb_data)  
+  results[i,] = c(current_week, current_year, as.vector(current_estimated_theta))
+}
+
+results = data.frame(results)
+names(results) = c("week", "year", "Intercept", "feverTRUE", "NotHoL", "raceAA", "raceOther", "raceWhite", "genderF")
+
+saveRDS(results, "../data/smoothedpropensities.RDS")

@@ -94,7 +94,77 @@ for(n in 1:2) {
   NR_array_test[,,,,,n] = NR_array_test[,,,,,n] * truemu/hatmu
 }
 
-sum(NR_array_test * weights)
+haty_nomem = sum(NR_array_test * weights)
+
+FP = 0.05
+FN = 0.30
+
+haty = (haty_nomem - FP)/(1-FP-FN)
+
+### Alternative using FB numbers
+
+fb_agg_weights = readRDS("data/fb_agg_weights.RDS")
+fb_agg_weights$altfever = (fb_agg_weights$fever == FALSE)*2 + (fb_agg_weights$fever == TRUE)*1
+
+fb_weights = fb_R_array_rate = fb_NR_array_rate = array(0,dim = c(2,3,2,2))
+
+for (i in 1:2) {
+  for (j in 1:3) {
+    for (k in 1:2) {
+      for (l in 1:2) {
+        numer = fb_agg_weights$frac[fb_agg_weights$gender == i & fb_agg_weights$altage == j & fb_agg_weights$altfever == l] * R_rate[['race']][k]
+        denom = NR_rate[['sex']][i] * NR_rate[['age']][j] * NR_rate[['race']][k] * NR_rate[['fever']][l]
+        fb_weights[i,j,k,l] = numer/denom
+        fb_R_array_rate[i,j,k,l] = numer
+        fb_NR_array_rate[i,j,k,l] = denom
+      }
+    }
+  }
+}
+
+fb_weights = fb_weights/sum(fb_weights)
+
+## GET THE ARRAY OF TEST RATES FOR FB EXAMPLE
+fb_NR_array_test = array(0,dim=c(2,3,2,2))
+fb_NR_array_test[,,,] = overall_test
+colnames = c('sex', 'age', 'race', 'fever')
+
+for(i in 1:2) {
+  hatmu = sum(fb_NR_array_test[i,,,] * fb_NR_array_rate[i,,,]/sum(fb_NR_array_rate[i,,,]))
+  truemu = NR_test[['sex']][i]
+  fb_NR_array_test[i,,,] = fb_NR_array_test[i,,,] * truemu/hatmu
+}
+for(j in 1:3) {
+  hatmu = sum(fb_NR_array_test[,j,,] * fb_NR_array_rate[,j,,]/sum(fb_NR_array_rate[,j,,]))
+  truemu = NR_test[['age']][j]
+  fb_NR_array_test[,j,,] = fb_NR_array_test[,j,,] * truemu/hatmu
+}
+for(k in 1:2) {
+  hatmu = sum(fb_NR_array_test[,,k,] * fb_NR_array_rate[,,k,]/sum(fb_NR_array_rate[,,k,]))
+  truemu = NR_test[['race']][k]
+  fb_NR_array_test[,,k,] = fb_NR_array_test[,,k,] * truemu/hatmu
+}
+for(l in 1:2) {
+  hatmu = sum(fb_NR_array_test[,,,l] * fb_NR_array_rate[,,,l]/sum(fb_NR_array_rate[,,,l]))
+  truemu = NR_test[['fever']][l]
+  fb_NR_array_test[,,,l] = fb_NR_array_test[,,,l] * truemu/hatmu
+}
+
+
+fb_haty_nomem = sum(fb_NR_array_test * fb_weights)
+ 
+FP = 0.05
+FN = 0.30
+
+fb_haty = (fb_haty_nomem - FP)/(1-FP-FN)
+
+
+print(paste("Hat y with no MEM =", round(haty_nomem,3)))
+print(paste("Hat y with MEM =", round(haty,3)))
+
+
+print(paste("FB-based hat y with no MEM =", round(fb_haty_nomem,3)))
+print(paste("FB-based hat y with MEM =", round(fb_haty,3)))
 
 
 ## CASE COUNT DATA PLOT
