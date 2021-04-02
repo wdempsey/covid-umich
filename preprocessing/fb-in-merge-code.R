@@ -31,17 +31,19 @@ for (week in weeksin2020) {
   temp = subset(temp, !is.na(weight_gottested))
   agg_temp = aggregate(weight_gottested ~ gender+ age + fever, temp, sum)
   agg_temp2 = aggregate(weight ~ gender+ age + fever, temp, sum)
-  # agg_temp3 = aggregate(weight_postested ~ gender+ age + fever, temp, sum)
-  # agg_temp$posweight = 0
-  # for(row in 1:nrow(agg_temp)) {
-  #   which_row = which(agg_temp3$gender == agg_temp[row,1] & agg_temp3$age == agg_temp[row,2] & agg_temp3$fever == agg_temp[row,3])
-  #   if(length(which_row) == 0) {
-  #     agg_temp$posweight == agg_temp3$weight_postested[row]
-  #   }
-  # }  
+  agg_temp3 = aggregate(weight_postested ~ gender+ age + fever, temp, sum)
+  total_weightpostested = sum(temp$weight_postested)
+  agg_temp$posweight = NA
+  for(row in 1:nrow(agg_temp)) {
+   which_row = which(agg_temp3$gender == agg_temp[row,1] & agg_temp3$age == agg_temp[row,2] & agg_temp3$fever == agg_temp[row,3])
+    if(length(which_row) > 0) {
+      agg_temp$posweight[row] = agg_temp3$weight_postested[row]
+    }
+  }
   agg_temp$weight = agg_temp2$weight
   agg_temp$weight_gottested = agg_temp$weight_gottested/sum(agg_temp$weight_gottested) * total_weightgottested * addweight
   agg_temp$weight = agg_temp$weight/sum(agg_temp$weight) * total_weight * addweight
+  agg_temp$posweight = agg_temp$posweight/sum(agg_temp$posweight) * total_weightpostested * addweight
   agg_temp$week = rep(week, nrow(agg_temp))
   agg_temp$year = rep(2020, nrow(agg_temp))
   all_data = rbind(all_data, agg_temp)
