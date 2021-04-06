@@ -25,8 +25,8 @@ for(i in 1:length(data_files)) {
   day_df$symptoms = (day_df$fever & day_df$cough) | day_df$shortness | day_df$diffbreath
   
   ### WAVE 3 Testing Info (only on symptomatic people)
-  wave4_included = any(is.element(state_temp$wave ,4))
-  if(!wave4_included) {
+  wave456_included = any(state_temp$wave >=4)
+  if(!wave456_included) {
     day_df$gottested = as.numeric(is.element(state_temp$B5, c(1,2,3)))
     day_df$postest =  as.numeric(is.element(state_temp$B5, c(1)))
     day_df$negtest =  as.numeric(is.element(state_temp$B5, c(2)))
@@ -38,7 +38,7 @@ for(i in 1:length(data_files)) {
   
   day_df$gender = state_temp$D1 # 1 = MALE, 2 = Female, 3 = Non-binary, 4 = Self-Describe, 5 = Prefer not to answer
   day_df$age = state_temp$D2 #  18-24 years (1), 25-34 years (2), 35-44 years (3), 45-54 years (4), 55-64 years (5), 65-74 years (6), 75 years or older (7)
-  if(!wave4_included) {
+  if(!wave456_included) {
     day_df$hospital = state_temp$B6
   } else{
     day_df$hospital = grepl("4", state_temp$B7) | grepl("5", state_temp$B7) | grepl("6", state_temp$B7)

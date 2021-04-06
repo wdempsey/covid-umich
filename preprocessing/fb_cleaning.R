@@ -25,7 +25,7 @@ for(i in 1:length(data_files)) {
   day_df$symptoms = (day_df$fever & day_df$cough) | day_df$shortness | day_df$diffbreath
   
   ### WAVE 3 Testing Info (only on symptomatic people)
-  wave4_included = any(is.element(indiana_temp$wave ,4))
+  wave456_included = any(state_temp$wave >=4)
   if(!wave4_included) {
     day_df$gottested = as.numeric(is.element(indiana_temp$B5, c(1,2,3)))
     day_df$postest =  as.numeric(is.element(indiana_temp$B5, c(1)))
