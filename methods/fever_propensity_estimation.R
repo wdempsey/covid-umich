@@ -27,7 +27,7 @@ kernelweight <- function(distance) {
     h = sqrt(-1/(2*log(0.75))) # Set a deterministic bandwidth for now
     kernel = exp(-dis^2/(2*h^2))
     return(kernel)
-    }
+  }
   return(kw2)
 }
 
@@ -37,7 +37,7 @@ compute_probs <- function(X, theta) {
 
 irls <- function(current_week, current_year, fb_X, fb_data, 
                  max.iter = 20, min.tol = 1e-10) {
-
+  
   fb_dist = fb_distance(current_week, current_year)
   weights = apply(fb_data, 1, kernelweight(fb_dist))
   weighted_fever = weights*fb_data$weightfever
@@ -72,14 +72,13 @@ irls <- function(current_week, current_year, fb_X, fb_data,
 
 
 ## Brining in complete FB and Indiana data
-
 fb_data_got = readRDS("../data/fb_weeklycomplete_got.RDS")
 
 ## Build \pi(x; \theta)
 ## Logistic regression with no interactions
 
 ## First term can be precomputed given design matrix
-model = ~ -1+as.factor(gender)
+model = ~ -1+as.factor(gender)+as.factor(age)
 fb_X = model.matrix(model, fb_data_got)
 
 weeks = c(14:53,1:5)
@@ -96,7 +95,8 @@ for(i in 1:length(weeks)) {
 }
 
 results = data.frame(results)
-names(results) = c("week", "year", "gender1", "gender2")
+names(results) = c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
+                   "55to64", "65to74", "75plus")
 
 saveRDS(results, "../data/smoothedfeverpropensities_got.RDS")
 
@@ -108,7 +108,7 @@ fb_data_pos = readRDS("../data/fb_weeklycomplete_pos.RDS")
 ## Logistic regression with no interactions
 
 ## First term can be precomputed given design matrix
-model = ~ -1+as.factor(gender)
+model = ~ -1+as.factor(gender)+as.factor(age)
 fb_X = model.matrix(model, fb_data_pos)
 
 weeks = c(14:53,1:5)
@@ -125,6 +125,7 @@ for(i in 1:length(weeks)) {
 }
 
 results = data.frame(results)
-names(results) = c("week", "year", "gender1", "gender2")
+names(results) = c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
+                   "55to64", "65to74", "75plus")
 
 saveRDS(results, "../data/smoothedfeverpropensities_pos.RDS")

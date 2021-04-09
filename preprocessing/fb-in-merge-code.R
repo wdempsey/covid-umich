@@ -36,13 +36,13 @@ weeksin2021 = 1:5
 
 for (week in weeksin2021) {
   addweight = 7/weekweight$day[weekweight$week == week]
-  temp = fb_data[week(fb_data$date) == week & year(fb_data$date) == 2020,]
+  temp = fb_data[week(fb_data$date) == week & year(fb_data$date) == 2021,]
   temp = subset(temp, is.element(gender, c(1,2)))
   total_weight = sum(temp$weight)
   agg_temp = aggregate(weight ~ gender+ age + fever, temp, sum)
   agg_temp$weight = agg_temp$weight/sum(agg_temp$weight) * total_weight * addweight
   agg_temp$week = rep(week, nrow(agg_temp))
-  agg_temp$year = rep(2020, nrow(agg_temp))
+  agg_temp$year = rep(2021, nrow(agg_temp))
   all_data = rbind(all_data, agg_temp)
 }
 

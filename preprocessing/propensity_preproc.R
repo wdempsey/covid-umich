@@ -5,6 +5,12 @@ library("lubridate")
 fb_data = read.csv("../data/fb_indiana_data.csv")
 indiana_data = readRDS("../data/weeklycoviddata.RDS")
 all_data = readRDS("../data/fb_weekly.RDS")
+propensities_got = readRDS("../data/smoothedfeverpropensities_got.RDS")
+propensities_pos = readRDS("../data/smoothedfeverpropensities_pos.RDS")
+
+names(propensities_pos) = names(propensities_got) = 
+  c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
+    "55to64", "65to74", "75plus")
 
 
 ## How do we match ages?
@@ -38,27 +44,29 @@ levels(indiana_data$age) = 1:8
 indiana_to_fb_gender = c(1,2)
 levels(indiana_data$gender) = c(2,1)
 
+construct_design <- function(gender, age) {
+  basex =rep(0,8)
+  basex[gender] = 1
+  basex[2+age] = 1
+  basex
+}
+
+expit <- function(x, beta){
+  1/(1+exp(-x%*%t(beta)))
+}
+
 for(row in 1:nrow(indiana_data_with_fever)){
   temp = indiana_data_with_fever[row,]
   tempfb_age = indiana_to_fb_ages[temp$age]
   tempfb_gender = indiana_to_fb_gender[temp$gender]
-  fb_temp = all_data[all_data$age == tempfb_age & all_data$gender == tempfb_gender & all_data$week == week(temp$startdate) & all_data$year == year(temp$startdate),]
-  fb_temp$feverselection = fb_temp$weight_gottested/sum(fb_temp$weight_gottested)  
-  if(sum(fb_temp$weight_gottested) == 0) {
-    fb_temp_alltimes = all_data[all_data$age == tempfb_age & all_data$gender == tempfb_gender,]
-    fb_temp = aggregate(weight_gottested~fever, fb_temp_alltimes, sum)
-    fb_temp$feverselection = fb_temp$weight_gottested/sum(fb_temp$weight_gottested)
-  }
-  if(nrow(fb_temp) == 0) {
-    temp$covid_tests = (temp$fever == FALSE)*temp$covid_tests
-    temp$covid_counts = (temp$fever == FALSE)*temp$covid_counts
-  } else if(nrow(fb_temp) == 1) {
-    temp$covid_tests = (fb_temp$fever == temp$fever)*temp$covid_tests
-    temp$covid_counts = (fb_temp$fever == temp$fever)*temp$covid_counts
-  } else{
-    temp$covid_tests = fb_temp$feverselection[fb_temp$fever == temp$fever]*temp$covid_tests
-    temp$covid_counts = fb_temp$feverselection[fb_temp$fever == temp$fever]*temp$covid_counts
-  }
+  tempx = construct_design(tempfb_age, tempfb_gender)
+  tempbeta_got = propensities_got[propensities_got$week == week(temp$startdate) & propensities_got$year == year(temp$startdate),3:10]
+  tempbeta_pos = propensities_pos[propensities_pos$week == week(temp$startdate) & propensities_pos$year == year(temp$startdate),3:10]
+  probfever_got = expit(tempx, tempbeta_got)
+  probfever_pos = expit(tempx, tempbeta_pos)
+  temp$covid_tests = temp$covid_tests * ( (temp$fever == TRUE) * probfever_got + (temp$fever == FALSE) * (1-probfever_got))
+  temp$covid_counts = temp$covid_counts * ( (temp$fever == TRUE) * probfever_pos + (temp$fever == FALSE) * (1-probfever_pos))
+  temp$covid_posrate = temp$covid_counts/temp$covid_tests
   indiana_data_with_fever[row,] = temp
 }
 
