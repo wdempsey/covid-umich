@@ -14,7 +14,7 @@ weekweight = aggregate(day ~ week, fb_data, function(x){length(unique(x))})
 ## Build weekly version of FB data first
 
 weeksin2020 = 14:53
-all_data_got = all_data_pos = data.frame(gender = rep(0,0), age = rep(0,0), fever = rep(0,0), 
+all_data_neg = all_data_pos = data.frame(gender = rep(0,0), age = rep(0,0), fever = rep(0,0), 
                       weight_gottested = rep(0,0), weight = rep(0,0), week = rep(0,0),
                       year = rep(0,0))
 
@@ -28,16 +28,16 @@ for (week in weeksin2020) {
   temp = subset(temp, is.element(gender, c(1,2)))
   temp$weightfever = temp$weight * temp$fever
   temp = subset(temp, !is.na(weightfever))
-  total_weight = sum(temp$weight[temp$gottested ==1])
-  total_weightfever = sum(temp$weightfever[temp$gottested ==1])
-  agg_temp = aggregate(weightfever ~ gender+ age, subset(temp, gottested == 1), sum)
-  agg_temp2 = aggregate(weight ~ gender+ age, subset(temp, gottested == 1), sum)
+  total_weight = sum(temp$weight[temp$gottested ==1 & temp$postest == 0], na.rm = TRUE)
+  total_weightfever = sum(temp$weightfever[temp$gottested ==1 & temp$postest == 0], na.rm = TRUE)
+  agg_temp = aggregate(weightfever ~ gender+ age, subset(temp, gottested == 1 & postest == 0), sum)
+  agg_temp2 = aggregate(weight ~ gender+ age, subset(temp, gottested == 1 & postest == 0), sum)
   agg_temp$weight = agg_temp2$weight
   agg_temp$weightfever = agg_temp$weightfever/sum(agg_temp$weightfever) * total_weightfever * addweight
   agg_temp$weight = agg_temp$weight/sum(agg_temp$weight) * total_weight * addweight
   agg_temp$week = rep(week, nrow(agg_temp))
   agg_temp$year = rep(2020, nrow(agg_temp))
-  all_data_got = rbind(all_data_got, agg_temp)
+  all_data_neg = rbind(all_data_neg, agg_temp)
   
   total_weight = sum(temp$weight[temp$postest ==1], na.rm = TRUE)
   total_weightfever = sum(temp$weightfever[temp$postest ==1], na.rm = TRUE)
@@ -60,10 +60,10 @@ for (week in weeksin2021) {
   temp = subset(temp, is.element(gender, c(1,2)))
   temp$weightfever = temp$weight * temp$fever
   temp = subset(temp, !is.na(weightfever))
-  total_weight = sum(temp$weight[temp$gottested ==1])
-  total_weightfever = sum(temp$weightfever[temp$gottested ==1])
-  agg_temp = aggregate(weightfever ~ gender+ age, subset(temp, gottested == 1), sum)
-  agg_temp2 = aggregate(weight ~ gender+ age, subset(temp, gottested == 1), sum)
+  total_weight = sum(temp$weight[temp$gottested ==1 & temp$postest == 0], na.rm = TRUE)
+  total_weightfever = sum(temp$weightfever[temp$gottested ==1 & temp$postest == 0], na.rm = TRUE)
+  agg_temp = aggregate(weightfever ~ gender+ age, subset(temp, gottested == 1 & postest == 0), sum)
+  agg_temp2 = aggregate(weight ~ gender+ age, subset(temp, gottested == 1 & postest == 0), sum)
   agg_temp$weight = agg_temp2$weight
   agg_temp$weightfever = agg_temp$weightfever/sum(agg_temp$weightfever) * total_weightfever * addweight
   agg_temp$weight = agg_temp$weight/sum(agg_temp$weight) * total_weight * addweight
@@ -83,10 +83,11 @@ for (week in weeksin2021) {
   all_data_pos = rbind(all_data_pos, agg_temp)
 }
 
-aggregate(weight~week, all_data_got, sum)
+
+#aggregate(weight~week, all_data_pos, sum)
 
 
-saveRDS(all_data_got, file = "../data/fb_alldata_weekly_got.RDS")
+saveRDS(all_data_neg, file = "../data/fb_alldata_weekly_neg.RDS")
 saveRDS(all_data_pos, file = "../data/fb_alldata_weekly_pos.RDS")
 
 

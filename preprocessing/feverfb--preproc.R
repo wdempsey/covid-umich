@@ -2,7 +2,7 @@
 
 library("lubridate")
 
-all_data_got = readRDS("../data/fb_alldata_weekly_got.RDS")
+all_data_neg = readRDS("../data/fb_alldata_weekly_got.RDS")
 all_data_pos = readRDS("../data/fb_alldata_weekly_pos.RDS")
 indiana_data = readRDS("../data/weeklycoviddata.RDS")
 
