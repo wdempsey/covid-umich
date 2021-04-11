@@ -47,7 +47,9 @@ levels(indiana_data$gender) = c(2,1)
 construct_design <- function(gender, age) {
   basex =rep(0,8)
   basex[gender] = 1
-  basex[2+age] = 1
+  if (age != 1) {
+    basex[1+age] = 1
+  }
   basex
 }
 
@@ -105,11 +107,11 @@ for(all_row in 1:nrow(all_data)) {
   
   for (row in 1:nrow(temp)) {
     if (temp$ethnicity[row] == "Hispanic or Latino") {
-      temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]  
-      temp$weight_gottested[row] = temp$weight_gottested[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
+      temp$weight[row] = temp$weight[row] * 1/ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * 1/race_census[race_levels == temp$race[row]]  
+      # temp$weight_gottested[row] = temp$weight_gottested[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
     } else {
-      temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
-      temp$weight_gottested[row] = temp$weight_gottested[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
+      temp$weight[row] = temp$weight[row] * 1/ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * 1/hispanic_match$census[hispanic_match$race == temp$race[row]]  
+      # temp$weight_gottested[row] = temp$weight_gottested[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
     }
     
   }

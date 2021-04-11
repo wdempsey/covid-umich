@@ -9,7 +9,7 @@ propensities$date = MMWRweek::MMWRweek2Date(MMWRyear = propensities$year,
                                      MMWRday = 1)
 
 ## Example propensity: Fever + Not H + White + Male
-x = as.matrix(c(0,1,1,1,0,0,1,0,1,0,0,0,0), ncol = 1)
+x = as.matrix(c(0,1,1,1,0,0,1,0,0,0,1,0,0), ncol = 1)
 propensities$probs = as.vector(1/(1+exp(-as.matrix(propensities[,3:15])%*%x)))
 
 ggplot(data = propensities, aes(x = date, y = probs)) +
