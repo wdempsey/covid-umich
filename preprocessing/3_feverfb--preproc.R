@@ -69,9 +69,12 @@ for(all_row in 1:nrow(all_data_neg_contact)) {
       temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
       temp$weightcontact[row] = temp$weightcontact[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
     }
-    
   }
+
   complete_data_neg_contact = rbind(complete_data_neg_contact, temp)
+}
+
+for(all_row in 1:nrow(all_data_pos_contact)) {
   
   temp = data.frame(all_data_pos_contact[all_row,], nrow = nrow(allcombinations), ncol = length(all_data_pos_contact[all_row,]))
   temp[1:nrow(allcombinations),] = temp[1,]
@@ -114,7 +117,9 @@ for(all_row in 1:nrow(all_data_neg_symptom)) {
     
   }
   complete_data_neg_symptom = rbind(complete_data_neg_symptom, temp)
-  
+}
+
+for(all_row in 1:nrow(all_data_pos_symptom)) { 
   temp = data.frame(all_data_pos_symptom[all_row,], nrow = nrow(allcombinations), ncol = length(all_data_pos_symptom[all_row,]))
   temp[1:nrow(allcombinations),] = temp[1,]
   temp$ethnicity = allcombinations$ethnicity
@@ -130,9 +135,14 @@ for(all_row in 1:nrow(all_data_neg_symptom)) {
     }
     
   }
+  
+  if(any(is.na(temp$week))) {print(all_row)}
+  
   complete_data_pos_symptom = rbind(complete_data_pos_symptom, temp)
 }
 
+unique(complete_data_neg_symptom$week)
+unique(complete_data_pos_symptom$week)
 
 saveRDS(complete_data_neg_symptom,"../data/fb_weeklycomplete_neg_symptom.RDS")
 saveRDS(complete_data_pos_symptom,"../data/fb_weeklycomplete_pos_symptom.RDS")
