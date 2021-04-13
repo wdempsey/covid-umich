@@ -24,8 +24,8 @@ indiana_distance <- function(current_week, current_year) {
 
 fb_distance <-  function(current_week, current_year) {
   fb_dist <- function(row) {
-    rowyear = as.numeric(row[6])
-    rowweek = as.numeric(row[5])
+    rowyear = as.numeric(row[7])
+    rowweek = as.numeric(row[6])
     if (rowyear == current_year){
       dis = abs(rowweek - current_week)
     } else {
@@ -43,7 +43,7 @@ fb_distance <-  function(current_week, current_year) {
 kernelweight <- function(distance) {
   kw2 <- function(row) {
     dis = distance(row)
-    h = sqrt(-1/(2*log(0.6))) # Set a deterministic bandwidth for now
+    h = sqrt(-1/(2*log(0.7))) # Set a deterministic bandwidth for now
     kernel = exp(-dis^2/(2*h^2))
     return(kernel)
     }
@@ -94,8 +94,10 @@ irls <- function(current_week, current_year, fb_X, indiana_X,
 
 ## Brining in complete FB and Indiana data
 
-indiana_data = readRDS("../data/weeklycoviddata_withfever.RDS")
+indiana_data = readRDS("../data/weeklycoviddata_withsympcontact.RDS")
 fb_data = readRDS("../data/fb_weeklycomplete.RDS")
+names(fb_data)[3] = "fever"
+fb_data$contact = as.logical(fb_data$contact)
 
 ## How do we match ages?
 ## FB <--> INDIANA
@@ -111,7 +113,7 @@ fb_data = readRDS("../data/fb_weeklycomplete.RDS")
 ## Logistic regression with no interactions
 
 ## First term can be precomputed given design matrix
-model = ~ -1+as.factor(fever) + as.factor(gender) + ethnicity + race + as.factor(age)
+model = ~ -1+as.factor(fever) + as.factor(contact) + as.factor(gender) + ethnicity + race + as.factor(age)
 indiana_X = model.matrix(model, indiana_data)
 fb_X = model.matrix(model, fb_data)
 
@@ -129,9 +131,8 @@ for(i in 1:length(weeks)) {
 }
 
 results = data.frame(results)
-names(results) = c("week", "year", "feverFALSE", "feverTRUE", "genderF", 
-                   "NotHoL", "raceAA", "raceOther", "raceWhite", 
-                   "25to34", "35to44", "45to54",
-                   "55to64", "65to74", "75plus")
+names(results) = c("week", "year", "feverFALSE", "feverTRUE", "contactTRUE",
+                   "genderF", "NotHoL", "raceAA", "raceOther", "raceWhite", 
+                   "25to34", "35to44", "45to54", "55to64", "65to74", "75plus")
 
 saveRDS(results, "../data/smoothedpropensities.RDS")

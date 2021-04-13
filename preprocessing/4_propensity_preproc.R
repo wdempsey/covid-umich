@@ -5,13 +5,19 @@ library("lubridate")
 fb_data = read.csv("../data/fb_indiana_data.csv")
 indiana_data = readRDS("../data/weeklycoviddata.RDS")
 all_data = readRDS("../data/fb_weekly.RDS")
-propensities_neg_contact = readRDS("../data/smoothedfeverpropensities_neg_contact.RDS")
-propensities_pos_contact = readRDS("../data/smoothedfeverpropensities_pos.RDS")
+propensities_neg_contact = readRDS("../data/smoothedpropensities_neg_contact.RDS")
+propensities_pos_contact = readRDS("../data/smoothedpropensities_pos_contact.RDS")
+propensities_neg_symptom = readRDS("../data/smoothedpropensities_neg_symptom.RDS")
+propensities_pos_symptom = readRDS("../data/smoothedpropensities_pos_symptom.RDS")
 
-names(propensities_pos) = names(propensities_neg) = 
+
+names(propensities_pos_contact) = names(propensities_neg_contact) = 
   c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
     "55to64", "65to74", "75plus")
 
+names(propensities_pos_symptom) = names(propensities_neg_symptom) = 
+  c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
+    "55to64", "65to74", "75plus", "nocontact")
 
 ## How do we match ages?
 ## FB <--> INDIANA
@@ -42,11 +48,13 @@ indiana_data$age = as.numeric(indiana_data$age)
 levels(indiana_data$gender) = c(2,1)
 in_gender = as.numeric(indiana_data$gender)
 indiana_data$gender = 2*(in_gender == 1) + 1*(in_gender == 2)
-indiana_data_with_fever = rbind(indiana_data,indiana_data) 
-indiana_data_with_fever$fever = c(rep(TRUE, nrow(indiana_data)), rep(FALSE, nrow(indiana_data)))
+indiana_data_w_sympcontact = rbind(indiana_data,indiana_data, indiana_data, indiana_data) 
+indiana_data_w_sympcontact$fever = c(rep(TRUE, 2*nrow(indiana_data)), rep(FALSE, 2*nrow(indiana_data)))
+indiana_data_w_sympcontact$contact = c(rep(TRUE, nrow(indiana_data)), rep(FALSE, nrow(indiana_data)), 
+                                       rep(TRUE, nrow(indiana_data)), rep(FALSE, nrow(indiana_data)))
 
 
-construct_design <- function(gender, age) {
+construct_design_contact <- function(gender, age) {
   basex =rep(0,8)
   basex[gender] = 1
   if (age != 1) {
@@ -55,27 +63,56 @@ construct_design <- function(gender, age) {
   basex
 }
 
+construct_design_symptom <- function(gender, age, contact) {
+  basex =rep(0,9)
+  basex[gender] = 1
+  if (age != 1) {
+    basex[1+age] = 1
+  }
+  if (contact == FALSE) {
+    basex[9] = 1
+  }
+  basex
+}
+
 expit <- function(x, beta){
   1/(1+exp(-x%*%t(beta)))
 }
 
-for(row in 1:nrow(indiana_data_with_fever)){
-  temp = indiana_data_with_fever[row,]
-  tempx = construct_design(as.numeric(temp$gender), temp$age)
-  tempbeta_neg = propensities_neg[propensities_neg$week == week(temp$startdate) & propensities_neg$year == year(temp$startdate),3:10]
-  tempbeta_pos = propensities_pos[propensities_pos$week == week(temp$startdate) & propensities_pos$year == year(temp$startdate),3:10]
-  probfever_neg = expit(tempx, tempbeta_neg)
-  probfever_pos = expit(tempx, tempbeta_pos)
+for(row in 1:nrow(indiana_data_w_sympcontact)){
+  temp =  indiana_data_w_sympcontact[row,]
+  ## Contact probs
+  tempx = construct_design_contact(as.numeric(temp$gender), temp$age)
+  tempbeta_neg = propensities_neg_contact[propensities_neg_contact$week == week(temp$startdate) & 
+                                            propensities_neg_contact$year == year(temp$startdate),3:10]
+  tempbeta_pos = propensities_pos_contact[propensities_pos_contact$week == week(temp$startdate) & 
+                                            propensities_pos_contact$year == year(temp$startdate),3:10]
+  probcontact_neg = expit(tempx, tempbeta_neg)
+  probcontact_pos = expit(tempx, tempbeta_pos)
+  ## Contact probs
+  tempx = construct_design_symptom(as.numeric(temp$gender), temp$age, temp$contact)
+  tempbeta_neg = propensities_neg_symptom[propensities_neg_symptom$week == week(temp$startdate) & 
+                                            propensities_neg_symptom$year == year(temp$startdate),3:11]
+  tempbeta_pos = propensities_pos_symptom[propensities_pos_symptom$week == week(temp$startdate) & 
+                                            propensities_pos_symptom$year == year(temp$startdate),3:11]
+  probsymptom_neg = expit(tempx, tempbeta_neg)
+  probsymptom_pos = expit(tempx, tempbeta_pos)
+  
   neg_tests = temp$covid_tests - temp$covid_counts
-  neg_tests = neg_tests * ( (temp$fever == TRUE) * probfever_neg + (temp$fever == FALSE) * (1-probfever_neg))
-  pos_tests = temp$covid_counts * ( (temp$fever == TRUE) * probfever_pos + (temp$fever == FALSE) * (1-probfever_pos))
+  neg_prob_current_contact = ( (temp$contact == TRUE) * probcontact_neg + (temp$contact == FALSE) * (1-probcontact_neg))
+  neg_prob_current_fever = ( (temp$fever == TRUE) * probsymptom_neg + (temp$fever == FALSE) * (1-probsymptom_neg))
+  neg_tests = neg_tests * neg_prob_current_contact * neg_prob_current_fever
+  
+  pos_prob_current_contact = ( (temp$contact == TRUE) * probcontact_pos + (temp$contact == FALSE) * (1-probcontact_pos))
+  pos_prob_current_fever = ( (temp$fever == TRUE) * probsymptom_pos + (temp$fever == FALSE) * (1-probsymptom_pos))
+  pos_tests = temp$covid_counts * pos_prob_current_contact * pos_prob_current_fever
   temp$covid_tests = neg_tests + pos_tests
   temp$covid_counts = pos_tests
   temp$covid_posrate = temp$covid_counts/temp$covid_tests
-  indiana_data_with_fever[row,] = temp
+  indiana_data_w_sympcontact[row,] = temp
 }
 
-saveRDS(indiana_data_with_fever, "../data/weeklycoviddata_withfever.RDS")
+saveRDS(indiana_data_w_sympcontact, "../data/weeklycoviddata_withsympcontact.RDS")
 
 
 ## Facebook data

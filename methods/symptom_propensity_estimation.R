@@ -96,7 +96,7 @@ for(i in 1:length(weeks)) {
 
 results = data.frame(results)
 names(results) = c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
-                   "55to64", "65to74", "75plus")
+                   "55to64", "65to74", "75plus", "nocontact")
 
 saveRDS(results, "../data/smoothedpropensities_neg_symptom.RDS")
 
@@ -126,6 +126,6 @@ for(i in 1:length(weeks)) {
 
 results = data.frame(results)
 names(results) = c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
-                   "55to64", "65to74", "75plus")
+                   "55to64", "65to74", "75plus", "nocontact")
 
 saveRDS(results, "../data/smoothedpropensities_pos_symptom.RDS")
