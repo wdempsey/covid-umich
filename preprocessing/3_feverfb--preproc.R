@@ -2,8 +2,10 @@
 
 library("lubridate")
 
-all_data_neg = readRDS("../data/fb_alldata_weekly_neg.RDS")
-all_data_pos = readRDS("../data/fb_alldata_weekly_pos.RDS")
+all_data_neg_contact = readRDS("../data/fb_alldata_weekly_neg_contact.RDS")
+all_data_neg_symptom = readRDS("../data/fb_alldata_weekly_neg_symptom.RDS")
+all_data_pos_contact = readRDS("../data/fb_alldata_weekly_pos_contact.RDS")
+all_data_pos_symptom = readRDS("../data/fb_alldata_weekly_pos_symptom.RDS")
 indiana_data = readRDS("../data/weeklycoviddata.RDS")
 
 
@@ -50,45 +52,87 @@ hispanic_match$census = census/sum(census)
 allcombinations = expand.grid(ethnicity = ethnicity_levels, 
                               race = race_levels)
 
-complete_data_neg = data.frame()
-complete_data_pos = data.frame()
+complete_data_neg_contact = complete_data_neg_symptom = data.frame()
+complete_data_pos_contact = complete_data_pos_symptom =  data.frame()
 
-for(all_row in 1:nrow(all_data_neg)) {
-  temp = data.frame(all_data_neg[all_row,], nrow = nrow(allcombinations), ncol = length(all_data_neg[all_row,]))
+for(all_row in 1:nrow(all_data_neg_contact)) {
+  temp = data.frame(all_data_neg_contact[all_row,], nrow = nrow(allcombinations), ncol = length(all_data_neg_contact[all_row,]))
   temp[1:nrow(allcombinations),] = temp[1,]
   temp$ethnicity = allcombinations$ethnicity
   temp$race = allcombinations$race
   
   for (row in 1:nrow(temp)) {
-    if (temp$ethnicity[row] == "Hispanic or Latino") {
+    if (temp$ethnicity[row] != "Hispanic or Latino") {
       temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]  
-      temp$weightfever[row] = temp$weightfever[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
+      temp$weightcontact[row] = temp$weightcontact[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
     } else {
       temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
-      temp$weightfever[row] = temp$weightfever[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
+      temp$weightcontact[row] = temp$weightcontact[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
     }
     
   }
-  complete_data_neg = rbind(complete_data_neg, temp)
+  complete_data_neg_contact = rbind(complete_data_neg_contact, temp)
   
-  temp = data.frame(all_data_pos[all_row,], nrow = nrow(allcombinations), ncol = length(all_data_pos[all_row,]))
+  temp = data.frame(all_data_pos_contact[all_row,], nrow = nrow(allcombinations), ncol = length(all_data_pos_contact[all_row,]))
   temp[1:nrow(allcombinations),] = temp[1,]
   temp$ethnicity = allcombinations$ethnicity
   temp$race = allcombinations$race
   
   for (row in 1:nrow(temp)) {
-    if (temp$ethnicity[row] == "Hispanic or Latino") {
+    if (temp$ethnicity[row] != "Hispanic or Latino") {
       temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]  
-      temp$weightfever[row] = temp$weightfever[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
+      temp$weightcontact[row] = temp$weightcontact[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
     } else {
       temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
-      temp$weightfever[row] = temp$weightfever[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
+      temp$weightcontact[row] = temp$weightcontact[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
     }
     
   }
-  complete_data_pos = rbind(complete_data_pos, temp)
+  complete_data_pos_contact = rbind(complete_data_pos_contact, temp)
 }
 
 
-saveRDS(complete_data_neg,"../data/fb_weeklycomplete_neg.RDS")
-saveRDS(complete_data_pos,"../data/fb_weeklycomplete_pos.RDS")
+saveRDS(complete_data_neg_contact,"../data/fb_weeklycomplete_neg_contact.RDS")
+saveRDS(complete_data_pos_contact,"../data/fb_weeklycomplete_pos_contact.RDS")
+
+## Now build symptom given contact
+
+for(all_row in 1:nrow(all_data_neg_symptom)) {
+  temp = data.frame(all_data_neg_symptom[all_row,], nrow = nrow(allcombinations), ncol = length(all_data_neg_symptom[all_row,]))
+  temp[1:nrow(allcombinations),] = temp[1,]
+  temp$ethnicity = allcombinations$ethnicity
+  temp$race = allcombinations$race
+  
+  for (row in 1:nrow(temp)) {
+    if (temp$ethnicity[row] != "Hispanic or Latino") {
+      temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]  
+      temp$weightsymptoms[row] = temp$weightsymptoms[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
+    } else {
+      temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
+      temp$weightsymptoms[row] = temp$weightsymptoms[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
+    }
+    
+  }
+  complete_data_neg_symptom = rbind(complete_data_neg_symptom, temp)
+  
+  temp = data.frame(all_data_pos_symptom[all_row,], nrow = nrow(allcombinations), ncol = length(all_data_pos_symptom[all_row,]))
+  temp[1:nrow(allcombinations),] = temp[1,]
+  temp$ethnicity = allcombinations$ethnicity
+  temp$race = allcombinations$race
+  
+  for (row in 1:nrow(temp)) {
+    if (temp$ethnicity[row] != "Hispanic or Latino") {
+      temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]  
+      temp$weightsymptoms[row] = temp$weightsymptoms[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
+    } else {
+      temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
+      temp$weightsymptoms[row] = temp$weightsymptoms[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
+    }
+    
+  }
+  complete_data_pos_symptom = rbind(complete_data_pos_symptom, temp)
+}
+
+
+saveRDS(complete_data_neg_symptom,"../data/fb_weeklycomplete_neg_symptom.RDS")
+saveRDS(complete_data_pos_symptom,"../data/fb_weeklycomplete_pos_symptom.RDS")

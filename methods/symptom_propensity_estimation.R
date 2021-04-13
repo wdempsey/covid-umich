@@ -40,8 +40,8 @@ irls <- function(current_week, current_year, fb_X, fb_data,
   
   fb_dist = fb_distance(current_week, current_year)
   weights = apply(fb_data, 1, kernelweight(fb_dist))
-  weighted_fever = weights*fb_data$weightfever
-  first_term = t(fb_X)%*%weighted_fever
+  weighted_contact = weights*fb_data$weightcontact
+  first_term = t(fb_X)%*%weighted_contact
   
   fbweighted = weights*fb_data$weight
   
@@ -72,14 +72,14 @@ irls <- function(current_week, current_year, fb_X, fb_data,
 
 
 ## Brining in complete FB and Indiana data
-fb_data_neg = readRDS("../data/fb_weeklycomplete_neg.RDS")
+fb_data_neg_contact = readRDS("../data/fb_weeklycomplete_neg_symptom.RDS")
 
 ## Build \pi(x; \theta)
 ## Logistic regression with no interactions
 
 ## First term can be precomputed given design matrix
 model = ~ -1+as.factor(gender)+as.factor(age)
-fb_X = model.matrix(model, fb_data_neg)
+fb_X = model.matrix(model, fb_data_neg_contact)
 
 weeks = c(14:53,1:5)
 years = c(rep(2020, length = length(c(14:53))),rep(2021, length = length(1:5)))
@@ -89,7 +89,7 @@ for(i in 1:length(weeks)) {
   print(paste("On week", weeks[i], "in year", years[i]))
   current_week = weeks[i]
   current_year = years[i]
-  current_estimated_theta = irls(current_week, current_year, fb_X, fb_data_neg)  
+  current_estimated_theta = irls(current_week, current_year, fb_X, fb_data_neg_contact)  
   print(current_estimated_theta)
   results[i,] = c(current_week, current_year, as.vector(current_estimated_theta))
 }
@@ -98,18 +98,18 @@ results = data.frame(results)
 names(results) = c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
                    "55to64", "65to74", "75plus")
 
-saveRDS(results, "../data/smoothedfeverpropensities_neg.RDS")
+saveRDS(results, "../data/smoothedpropensities_neg_contact.RDS")
 
 
 ## Brining in complete FB and Indiana data
-fb_data_pos = readRDS("../data/fb_weeklycomplete_pos.RDS")
+fb_data_pos_contact = readRDS("../data/fb_weeklycomplete_pos_symptom.RDS")
 
 ## Build \pi(x; \theta)
 ## Logistic regression with no interactions
 
 ## First term can be precomputed given design matrix
 model = ~ -1+as.factor(gender)+as.factor(age)
-fb_X = model.matrix(model, fb_data_pos)
+fb_X = model.matrix(model, fb_data_pos_contact)
 
 weeks = c(14:53,1:5)
 years = c(rep(2020, length = length(c(14:53))),rep(2021, length = length(1:5)))
@@ -119,7 +119,7 @@ for(i in 1:length(weeks)) {
   print(paste("On week", weeks[i], "in year", years[i]))
   current_week = weeks[i]
   current_year = years[i]
-  current_estimated_theta = irls(current_week, current_year, fb_X, fb_data_pos)  
+  current_estimated_theta = irls(current_week, current_year, fb_X, fb_data_pos_contact)  
   print(current_estimated_theta)
   results[i,] = c(current_week, current_year, as.vector(current_estimated_theta))
 }
@@ -128,4 +128,4 @@ results = data.frame(results)
 names(results) = c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
                    "55to64", "65to74", "75plus")
 
-saveRDS(results, "../data/smoothedfeverpropensities_pos.RDS")
+saveRDS(results, "../data/smoothedpropensities_pos_symptom.RDS")

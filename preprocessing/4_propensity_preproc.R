@@ -5,8 +5,8 @@ library("lubridate")
 fb_data = read.csv("../data/fb_indiana_data.csv")
 indiana_data = readRDS("../data/weeklycoviddata.RDS")
 all_data = readRDS("../data/fb_weekly.RDS")
-propensities_neg = readRDS("../data/smoothedfeverpropensities_neg.RDS")
-propensities_pos = readRDS("../data/smoothedfeverpropensities_pos.RDS")
+propensities_neg_contact = readRDS("../data/smoothedfeverpropensities_neg_contact.RDS")
+propensities_pos_contact = readRDS("../data/smoothedfeverpropensities_pos.RDS")
 
 names(propensities_pos) = names(propensities_neg) = 
   c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
@@ -109,7 +109,7 @@ for(all_row in 1:nrow(all_data)) {
   temp$race = allcombinations$race
   
   for (row in 1:nrow(temp)) {
-    if (temp$ethnicity[row] == "Hispanic or Latino") {
+    if (temp$ethnicity[row] != "Hispanic or Latino") {
       temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
     } else {
       temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
