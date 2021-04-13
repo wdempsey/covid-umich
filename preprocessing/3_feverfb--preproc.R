@@ -2,7 +2,7 @@
 
 library("lubridate")
 
-all_data_neg = readRDS("../data/fb_alldata_weekly_got.RDS")
+all_data_neg = readRDS("../data/fb_alldata_weekly_neg.RDS")
 all_data_pos = readRDS("../data/fb_alldata_weekly_pos.RDS")
 indiana_data = readRDS("../data/weeklycoviddata.RDS")
 
@@ -50,11 +50,11 @@ hispanic_match$census = census/sum(census)
 allcombinations = expand.grid(ethnicity = ethnicity_levels, 
                               race = race_levels)
 
-complete_data_got = data.frame()
+complete_data_neg = data.frame()
 complete_data_pos = data.frame()
 
-for(all_row in 1:nrow(all_data_got)) {
-  temp = data.frame(all_data_got[all_row,], nrow = nrow(allcombinations), ncol = length(all_data_got[all_row,]))
+for(all_row in 1:nrow(all_data_neg)) {
+  temp = data.frame(all_data_neg[all_row,], nrow = nrow(allcombinations), ncol = length(all_data_neg[all_row,]))
   temp[1:nrow(allcombinations),] = temp[1,]
   temp$ethnicity = allcombinations$ethnicity
   temp$race = allcombinations$race
@@ -69,7 +69,7 @@ for(all_row in 1:nrow(all_data_got)) {
     }
     
   }
-  complete_data_got = rbind(complete_data_got, temp)
+  complete_data_neg = rbind(complete_data_neg, temp)
   
   temp = data.frame(all_data_pos[all_row,], nrow = nrow(allcombinations), ncol = length(all_data_pos[all_row,]))
   temp[1:nrow(allcombinations),] = temp[1,]
@@ -90,5 +90,5 @@ for(all_row in 1:nrow(all_data_got)) {
 }
 
 
-saveRDS(complete_data_got,"../data/fb_weeklycomplete_got.RDS")
+saveRDS(complete_data_neg,"../data/fb_weeklycomplete_neg.RDS")
 saveRDS(complete_data_pos,"../data/fb_weeklycomplete_pos.RDS")

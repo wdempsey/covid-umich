@@ -107,7 +107,6 @@ fb_data = readRDS("../data/fb_weeklycomplete.RDS")
 ## 65-74 years (6) <--> 70--79
 ## 75 years or older (7) <--> 80+
 
-levels(indiana_data$age) = c(1,1:7)
 ## Build \pi(x; \theta)
 ## Logistic regression with no interactions
 

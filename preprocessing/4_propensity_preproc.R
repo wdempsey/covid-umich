@@ -5,10 +5,10 @@ library("lubridate")
 fb_data = read.csv("../data/fb_indiana_data.csv")
 indiana_data = readRDS("../data/weeklycoviddata.RDS")
 all_data = readRDS("../data/fb_weekly.RDS")
-propensities_got = readRDS("../data/smoothedfeverpropensities_got.RDS")
+propensities_neg = readRDS("../data/smoothedfeverpropensities_neg.RDS")
 propensities_pos = readRDS("../data/smoothedfeverpropensities_pos.RDS")
 
-names(propensities_pos) = names(propensities_got) = 
+names(propensities_pos) = names(propensities_neg) = 
   c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
     "55to64", "65to74", "75plus")
 
@@ -37,12 +37,14 @@ names(propensities_pos) = names(propensities_got) =
 ## Indiana data
 ## Step 1: Add fever to each subgroup
 ## USE FB data to split by age and gender
+levels(indiana_data$age) = c(1,1,2,3,4,5,6,7)
+indiana_data$age = as.numeric(indiana_data$age)
+levels(indiana_data$gender) = c(2,1)
+in_gender = as.numeric(indiana_data$gender)
+indiana_data$gender = 2*(in_gender == 1) + 1*(in_gender == 2)
 indiana_data_with_fever = rbind(indiana_data,indiana_data) 
 indiana_data_with_fever$fever = c(rep(TRUE, nrow(indiana_data)), rep(FALSE, nrow(indiana_data)))
-indiana_to_fb_ages = c(1,1,2,3,4,5,6,7)
-levels(indiana_data$age) = 1:8
-indiana_to_fb_gender = c(1,2)
-levels(indiana_data$gender) = c(2,1)
+
 
 construct_design <- function(gender, age) {
   basex =rep(0,8)
@@ -59,15 +61,16 @@ expit <- function(x, beta){
 
 for(row in 1:nrow(indiana_data_with_fever)){
   temp = indiana_data_with_fever[row,]
-  tempfb_age = indiana_to_fb_ages[temp$age]
-  tempfb_gender = indiana_to_fb_gender[temp$gender]
-  tempx = construct_design(tempfb_age, tempfb_gender)
-  tempbeta_got = propensities_got[propensities_got$week == week(temp$startdate) & propensities_got$year == year(temp$startdate),3:10]
+  tempx = construct_design(as.numeric(temp$gender), temp$age)
+  tempbeta_neg = propensities_neg[propensities_neg$week == week(temp$startdate) & propensities_neg$year == year(temp$startdate),3:10]
   tempbeta_pos = propensities_pos[propensities_pos$week == week(temp$startdate) & propensities_pos$year == year(temp$startdate),3:10]
-  probfever_got = expit(tempx, tempbeta_got)
+  probfever_neg = expit(tempx, tempbeta_neg)
   probfever_pos = expit(tempx, tempbeta_pos)
-  temp$covid_tests = temp$covid_tests * ( (temp$fever == TRUE) * probfever_got + (temp$fever == FALSE) * (1-probfever_got))
-  temp$covid_counts = temp$covid_counts * ( (temp$fever == TRUE) * probfever_pos + (temp$fever == FALSE) * (1-probfever_pos))
+  neg_tests = temp$covid_tests - temp$covid_counts
+  neg_tests = neg_tests * ( (temp$fever == TRUE) * probfever_neg + (temp$fever == FALSE) * (1-probfever_neg))
+  pos_tests = temp$covid_counts * ( (temp$fever == TRUE) * probfever_pos + (temp$fever == FALSE) * (1-probfever_pos))
+  temp$covid_tests = neg_tests + pos_tests
+  temp$covid_counts = pos_tests
   temp$covid_posrate = temp$covid_counts/temp$covid_tests
   indiana_data_with_fever[row,] = temp
 }
@@ -107,11 +110,9 @@ for(all_row in 1:nrow(all_data)) {
   
   for (row in 1:nrow(temp)) {
     if (temp$ethnicity[row] == "Hispanic or Latino") {
-      temp$weight[row] = temp$weight[row] * 1/ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * 1/race_census[race_levels == temp$race[row]]  
-      # temp$weight_gottested[row] = temp$weight_gottested[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
+      temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
     } else {
-      temp$weight[row] = temp$weight[row] * 1/ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * 1/hispanic_match$census[hispanic_match$race == temp$race[row]]  
-      # temp$weight_gottested[row] = temp$weight_gottested[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
+      temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
     }
     
   }

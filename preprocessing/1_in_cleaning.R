@@ -30,6 +30,11 @@ gender_data$year = year(gender_data$date)
 ethnicity_data$year = year(ethnicity_data$date)
 race_data$year = year(race_data$date)
 
+age_data$day = day(age_data$date)
+age_data$week = week(age_data$date) 
+weekweight = aggregate(day ~ week, age_data, function(x){length(unique(x))})
+
+
 ## Pull each week and year
 ## Build every combination
 ## WE USE: https://www.census.gov/prod/cen2010/briefs/c2010br-04.pdf
@@ -45,6 +50,7 @@ week = 20
 year = 2020
 
 construct_combos <- function(week, year) {
+  addweight = 7/weekweight$day[weekweight$week == week]
 
   subset_age = age_data[age_data$week == week & age_data$year == year,]
   subset_gender = gender_data[gender_data$week == week & gender_data$year == year,]
@@ -56,7 +62,7 @@ construct_combos <- function(week, year) {
   gender_test = aggregate(COVID_TEST~GENDER, data = subset_gender, sum)
   ethnicity_test = aggregate(COVID_TEST~ETHNICITY, data = subset_ethnicity, sum)
   race_test = aggregate(COVID_TEST~RACE, data = subset_race, sum)
-  total_tests = sum(age_test$COVID_TEST)
+  total_tests = sum(age_test$COVID_TEST)*addweight
   
   ## COMPUTE TESTING FRACTIONS IGNORING UNKNOWN
   age_test$test_frac = age_test$COVID_TEST / sum(age_test$COVID_TEST[!age_test$age == 'Unknown'])
@@ -80,6 +86,12 @@ construct_combos <- function(week, year) {
   temp = (race_test$COVID_TEST[race_test$RACE == 'Unknown'] * race_test$test_frac[!race_test$RACE == 'Unknown'])
   race_test = race_test[!race_test$RACE == 'Unknown',]
   race_test$COVID_TEST = race_test$COVID_TEST + temp
+  
+  ## RECOMPUTE TESTING FRACTIONS
+  age_test$test_frac = age_test$COVID_TEST / sum(age_test$COVID_TEST)
+  gender_test$test_frac = gender_test$COVID_TEST / sum(gender_test$COVID_TEST)
+  ethnicity_test$test_frac = ethnicity_test$COVID_TEST / sum(ethnicity_test$COVID_TEST)
+  race_test$test_frac = race_test$COVID_TEST / sum(race_test$COVID_TEST)
   
   allcombinations = expand.grid(startdate = min(subset_age$date), age = age_test$age, 
                                 gender = gender_test$GENDER, ethnicity = ethnicity_test$ETHNICITY, 
@@ -106,7 +118,7 @@ construct_combos <- function(week, year) {
   gender_count = aggregate(COVID_COUNT~GENDER, data = subset_gender, sum)
   ethnicity_count = aggregate(COVID_COUNT~ETHNICITY, data = subset_ethnicity, sum)
   race_count = aggregate(COVID_COUNT~RACE, data = subset_race, sum)
-  total_counts = sum(age_count$COVID_COUNT)
+  total_counts = sum(age_count$COVID_COUNT)*addweight
   
   ## COMPUTE TESTING FRACTIONS IGNORING UNKNOWN
   age_count$count_frac = age_count$COVID_COUNT / sum(age_count$COVID_COUNT[!age_count$age == 'Unknown'])
@@ -131,6 +143,12 @@ construct_combos <- function(week, year) {
   race_count = race_count[!race_count$RACE == 'Unknown',]
   race_count$COVID_COUNT = race_count$COVID_COUNT + temp
   
+  ## RECOMPUTE TESTING FRACTIONS IGNORING UNKNOWN
+  age_count$count_frac = age_count$COVID_COUNT / sum(age_count$COVID_COUNT)
+  gender_count$count_frac = gender_count$COVID_COUNT / sum(gender_count$COVID_COUNT)
+  ethnicity_count$count_frac = ethnicity_count$COVID_COUNT / sum(ethnicity_count$COVID_COUNT[!ethnicity_count$ETHNICITY == 'Unknown'])
+  race_count$count_frac = race_count$COVID_COUNT / sum(race_count$COVID_COUNT[!race_count$RACE == 'Unknown'])
+  
   allcombinations$covid_counts = rep(NA, nrow(allcombinations))
   
   for(comb_iter in 1:nrow(allcombinations)) {
@@ -154,7 +172,7 @@ construct_combos <- function(week, year) {
   gender_death = aggregate(COVID_DEATHS~GENDER, data = subset_gender, sum)
   ethnicity_death = aggregate(COVID_DEATHS~ETHNICITY, data = subset_ethnicity, sum)
   race_death = aggregate(COVID_DEATHS~RACE, data = subset_race, sum)
-  total_deaths = sum(age_death$COVID_DEATHS)
+  total_deaths = sum(age_death$COVID_DEATHS)*addweight
   
   ## COMPUTE TESTING FRACTIONS IGNORING UNKNOWN
   age_death$death_frac = age_death$COVID_DEATHS / sum(age_death$COVID_DEATHS[!age_death$age == 'Unknown'])
@@ -178,6 +196,12 @@ construct_combos <- function(week, year) {
   temp = (race_death$COVID_DEATHS[race_death$RACE == 'Unknown'] * race_death$death_frac[!race_death$RACE == 'Unknown'])
   race_death = race_death[!race_death$RACE == 'Unknown',]
   race_death$COVID_DEATHS = race_death$COVID_DEATHS + temp
+  
+  ## COMPUTE TESTING FRACTIONS IGNORING UNKNOWN
+  age_death$death_frac = age_death$COVID_DEATHS / sum(age_death$COVID_DEATHS)
+  gender_death$death_frac = gender_death$COVID_DEATHS / sum(gender_death$COVID_DEATHS)
+  ethnicity_death$death_frac = ethnicity_death$COVID_DEATHS / sum(ethnicity_death$COVID_DEATHS)
+  race_death$death_frac = race_death$COVID_DEATHS / sum(race_death$COVID_DEATHS)
   
   allcombinations$covid_deaths = rep(NA, nrow(allcombinations))
   
@@ -204,7 +228,7 @@ weeksin2021 = unique(age_data$week[age_data$year == 2021])
 
 weeklycoviddata = construct_combos(14,2020)
 
-for(week in 15:max(weeksin2020)) {
+for(week in 14:max(weeksin2020)) {
   temp_weekdata = construct_combos(week,2020)
   weeklycoviddata = rbind(weeklycoviddata, temp_weekdata)
 }

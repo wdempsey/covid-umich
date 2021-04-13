@@ -12,6 +12,7 @@ indiana_data = readRDS("../data/weeklycoviddata.RDS")
 fb_data$day = day(fb_data$date)
 fb_data$week = week(fb_data$date) 
 weekweight = aggregate(day ~ week, fb_data, function(x){length(unique(x))})
+fb_data$contact = (fb_data$contact == 1)*TRUE + (fb_data$contact == 2)*FALSE
 
 ## Build weekly version of FB data first
 
@@ -25,7 +26,7 @@ for (week in weeksin2020) {
   temp = fb_data[week(fb_data$date) == week & year(fb_data$date) == 2020,]
   temp = subset(temp, is.element(gender, c(1,2)))
   total_weight = sum(temp$weight)
-  agg_temp = aggregate(weight ~ gender+ age + fever, temp, sum)
+  agg_temp = aggregate(weight ~ gender+ age + symptoms + contact, temp, sum)
   agg_temp$weight = agg_temp$weight/sum(agg_temp$weight) * total_weight * addweight
   agg_temp$week = rep(week, nrow(agg_temp))
   agg_temp$year = rep(2020, nrow(agg_temp))
@@ -39,7 +40,7 @@ for (week in weeksin2021) {
   temp = fb_data[week(fb_data$date) == week & year(fb_data$date) == 2021,]
   temp = subset(temp, is.element(gender, c(1,2)))
   total_weight = sum(temp$weight)
-  agg_temp = aggregate(weight ~ gender+ age + fever, temp, sum)
+  agg_temp = aggregate(weight ~ gender+ age + symptoms + contact, temp, sum)
   agg_temp$weight = agg_temp$weight/sum(agg_temp$weight) * total_weight * addweight
   agg_temp$week = rep(week, nrow(agg_temp))
   agg_temp$year = rep(2021, nrow(agg_temp))

@@ -72,14 +72,14 @@ irls <- function(current_week, current_year, fb_X, fb_data,
 
 
 ## Brining in complete FB and Indiana data
-fb_data_got = readRDS("../data/fb_weeklycomplete_got.RDS")
+fb_data_neg = readRDS("../data/fb_weeklycomplete_neg.RDS")
 
 ## Build \pi(x; \theta)
 ## Logistic regression with no interactions
 
 ## First term can be precomputed given design matrix
 model = ~ -1+as.factor(gender)+as.factor(age)
-fb_X = model.matrix(model, fb_data_got)
+fb_X = model.matrix(model, fb_data_neg)
 
 weeks = c(14:53,1:5)
 years = c(rep(2020, length = length(c(14:53))),rep(2021, length = length(1:5)))
@@ -89,7 +89,7 @@ for(i in 1:length(weeks)) {
   print(paste("On week", weeks[i], "in year", years[i]))
   current_week = weeks[i]
   current_year = years[i]
-  current_estimated_theta = irls(current_week, current_year, fb_X, fb_data_got)  
+  current_estimated_theta = irls(current_week, current_year, fb_X, fb_data_neg)  
   print(current_estimated_theta)
   results[i,] = c(current_week, current_year, as.vector(current_estimated_theta))
 }
@@ -98,7 +98,7 @@ results = data.frame(results)
 names(results) = c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
                    "55to64", "65to74", "75plus")
 
-saveRDS(results, "../data/smoothedfeverpropensities_got.RDS")
+saveRDS(results, "../data/smoothedfeverpropensities_neg.RDS")
 
 
 ## Brining in complete FB and Indiana data

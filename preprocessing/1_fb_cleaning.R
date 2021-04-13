@@ -24,6 +24,8 @@ for(i in 1:length(data_files)) {
   day_df$diffbreath = unlist(lapply(indiana_temp$B2,diffbreath))
   day_df$symptoms = (day_df$fever & day_df$cough) | day_df$shortness | day_df$diffbreath
   
+  day_df$contact = indiana_temp$C11
+  
   ### WAVE 3 Testing Info (only on symptomatic people)
   wave456_included = any(indiana_temp$wave >=4)
   if(!wave456_included) {

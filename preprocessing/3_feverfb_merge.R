@@ -69,7 +69,7 @@ for (week in weeksin2021) {
   agg_temp$weight = agg_temp$weight/sum(agg_temp$weight) * total_weight * addweight
   agg_temp$week = rep(week, nrow(agg_temp))
   agg_temp$year = rep(2020, nrow(agg_temp))
-  all_data_got = rbind(all_data_got, agg_temp)
+  all_data_neg = rbind(all_data_neg, agg_temp)
   
   total_weight = sum(temp$weight[temp$postest ==1], na.rm = TRUE)
   total_weightfever = sum(temp$weightfever[temp$postest ==1], na.rm = TRUE)
