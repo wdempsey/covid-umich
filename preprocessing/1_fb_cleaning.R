@@ -35,15 +35,19 @@ for(i in 1:length(data_files)) {
   } else { 
     day_df$gottested = as.numeric(is.element(indiana_temp$B5, c(1,2,3)) * (indiana_temp$wave < 4) + (indiana_temp$B10 == 1)*(indiana_temp$wave >= 4))
     day_df$postest =  as.numeric(is.element(indiana_temp$B5, c(1)) * (indiana_temp$wave < 4) + (indiana_temp$B10a == 1)*(indiana_temp$wave >= 4))
-    day_df$negtest =  as.numeric(is.element(indiana_temp$B5, c(2)) * (indiana_temp$wave < 4) + (indiana_temp$B10a == 1)*(indiana_temp$wave >= 4))
+    day_df$negtest =  as.numeric(is.element(indiana_temp$B5, c(2)) * (indiana_temp$wave < 4) + (indiana_temp$B10a == 2)*(indiana_temp$wave >= 4))
   }
   
   day_df$gender = indiana_temp$D1 # 1 = MALE, 2 = Female, 3 = Non-binary, 4 = Self-Describe, 5 = Prefer not to answer
   day_df$age = indiana_temp$D2 #  18-24 years (1), 25-34 years (2), 35-44 years (3), 45-54 years (4), 55-64 years (5), 65-74 years (6), 75 years or older (7)
   if(!wave456_included) {
-    day_df$hospital = indiana_temp$B6
+    day_df$hospital = indiana_temp$B6 == 1
   } else{
-    day_df$hospital = grepl("4", indiana_temp$B7) | grepl("5", indiana_temp$B7) | grepl("6", indiana_temp$B7)
+    tempwave123 = indiana_temp$B6 == 1
+    tempwave123[is.na(tempwave123)] = 0
+    tempwave456 = grepl("4", indiana_temp$B7) | grepl("5", indiana_temp$B7) | grepl("6", indiana_temp$B7)
+    tempwave456[is.na(tempwave456)] = 0
+    day_df$hospital = tempwave123 * (indiana_temp$wave < 4) + tempwave456 *(indiana_temp$wave >= 4)
   }
   
   if(file.exists(file_name)){
