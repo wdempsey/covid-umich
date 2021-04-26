@@ -10,8 +10,8 @@ names(propensities_neg) = c("week", "year", "gender1", "gender2", "25to34", "35t
                             "55to64", "65to74", "75plus", "date")
 
 ## Example propensity: Gender + 35-44
-xfemale = as.matrix(c(0,1,0,1,0,0,0,0), ncol = 1)
-xmale =   as.matrix(c(1,0,0,1,0,0,0,0), ncol = 1)
+xfemale = as.matrix(c(0,1,1,0,0,0,0,0), ncol = 1)
+xmale =   as.matrix(c(1,0,1,0,0,0,0,0), ncol = 1)
 propensities_neg$probs_female = as.vector(1/(1+exp(-as.matrix(propensities_neg[,3:10])%*%xfemale)))
 propensities_neg$probs_male = as.vector(1/(1+exp(-as.matrix(propensities_neg[,3:10])%*%xmale)))
 
@@ -25,7 +25,7 @@ ggplot(data = propensities_neg_long, aes(x = date, y = probs, col = gender)) +
   geom_point() +
   labs(x = "Date",
        y = "Likelihood of Contact",
-       title = "Individuals 35-44 tested negative in the past 24 hours")
+       title = "Individuals 25-34 tested negative in the past 24 hours")
 
 propensities_pos = readRDS("../data/smoothedpropensities_pos_contact.RDS")
 propensities_pos$date = MMWRweek::MMWRweek2Date(MMWRyear = propensities_pos$year,
@@ -51,5 +51,5 @@ ggplot(data = propensities_pos_long, aes(x = date, y = probs, col = gender)) +
   geom_point() +
   labs(x = "Date",
        y = "Likelihood of Contact",
-       title = "Individuals <= 25 tested positive in the past 24 hours")
+       title = "Individuals 25-34 tested positive in the past 24 hours")
 
