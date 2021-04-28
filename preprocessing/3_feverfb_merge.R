@@ -54,7 +54,7 @@ for (week in weeksin2020) {
   
   ## Positive 
   total_weight = sum(temp$weight[temp$postest ==1], na.rm = TRUE)
-  total_weightcontact = sum(temp$weightcontact[temp$postest ==1], na.rm = TRUE)
+  total_weightcontact = sum(temp$weightcontact[temp$postest == 1], na.rm = TRUE)
   agg_temp = aggregate(weightcontact ~ gender+ age, subset(temp, postest == 1), sum)
   agg_temp2 = aggregate(weight ~ gender+ age, subset(temp, postest == 1), sum)
   agg_temp$weight = agg_temp2$weight

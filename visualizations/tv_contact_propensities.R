@@ -9,7 +9,7 @@ propensities_neg$date = MMWRweek::MMWRweek2Date(MMWRyear = propensities_neg$year
 names(propensities_neg) = c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
                             "55to64", "65to74", "75plus", "date")
 
-## Example propensity: Gender + 35-44
+## Example propensity: Gender + 25-34
 xfemale = as.matrix(c(0,1,1,0,0,0,0,0), ncol = 1)
 xmale =   as.matrix(c(1,0,1,0,0,0,0,0), ncol = 1)
 propensities_neg$probs_female = as.vector(1/(1+exp(-as.matrix(propensities_neg[,3:10])%*%xfemale)))

@@ -18,7 +18,7 @@ for(i in 1:nrow(indiana_data)) {
   week_row = as.numeric(week(indiana_data$startdate[i]))
   year_row = as.numeric(year(indiana_data$startdate[i]))
   prop_row = which(propensities$week == week_row & propensities$year == year_row)
-  term = crossprod(t(propensities[prop_row,3:16]),modelmatrix_row)
+  term = as.matrix(propensities[prop_row,3:16])%*%modelmatrix_row
   prob = 1/(1+exp(-term))
   invweight[i] = 1/prob
 }
@@ -35,7 +35,7 @@ for(i in 1:length(weeks)) {
   current_year = years[i]
   current_counts = indiana_data$covid_counts[which(indiana_data$week == current_week & indiana_data$year == current_year)]
   current_tests = indiana_data$covid_tests[which(indiana_data$week == current_week & indiana_data$year == current_year)]
-  weights = invweight[which(indiana_data$week == current_week & indiana_data$year == current_year)]
+  weights = indiana_data$invweight[which(indiana_data$week == current_week & indiana_data$year == current_year)]
   results[i,1] = current_week
   results[i,2] = current_year
   results[i,3] = sum(current_counts)/sum(current_tests)

@@ -8,10 +8,12 @@ for(i in 1:length(data_files)) {
 
   temp = read.csv(paste("D:/fb-data/all-fb-data/monthly_data/",data_files[i], sep=""))
   
-  state_temp = subset(temp,is.element(A3b, c(15)))  #subset(temp,is.element(A3b, c(15,18,23,36))) # Bringing in Ohio/Michigan/Indiana/Kentucky for more data on this problem.
+  state_temp = temp # subset(temp,is.element(A3b, c(15,18,23,36))) # Bringing in Ohio/Michigan/Indiana/Kentucky for more data on this problem.
   
   time <- ymd_hms(state_temp$StartDatetime)
   day_df = data.frame("date" = date(time), "weight" = state_temp$weight)
+  
+  day_df$state = state_temp$A3b
   
   fever <- function(x) {any(as.numeric(unlist(strsplit(x, split = ",")))==1)}
   cough <- function(x) {any(as.numeric(unlist(strsplit(x, split = ",")))==2)}

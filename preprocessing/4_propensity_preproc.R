@@ -21,7 +21,8 @@ names(propensities_pos_symptom) = names(propensities_neg_symptom) =
 
 ## How do we match ages?
 ## FB <--> INDIANA
-## 18-24 (1) <--> 0-19 and 20-29.
+## Deleting 0-19 for now
+## 18-24 (1) <--> 20-29.
 ## 25--34 (2) <--> 30--39.
 ## 35--44 (3) <--> 40--49
 ## 45-54 years (4) <--> 50--59
@@ -43,6 +44,7 @@ names(propensities_pos_symptom) = names(propensities_neg_symptom) =
 ## Indiana data
 ## Step 1: Add fever to each subgroup
 ## USE FB data to split by age and gender
+indiana_data = indiana_data[indiana_data$age != "0-19",]
 levels(indiana_data$age) = c(1,1,2,3,4,5,6,7)
 indiana_data$age = as.numeric(indiana_data$age)
 levels(indiana_data$gender) = c(2,1)

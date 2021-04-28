@@ -228,7 +228,7 @@ weeksin2021 = unique(age_data$week[age_data$year == 2021])
 
 weeklycoviddata = construct_combos(14,2020)
 
-for(week in 14:max(weeksin2020)) {
+for(week in 15:max(weeksin2020)) {
   temp_weekdata = construct_combos(week,2020)
   weeklycoviddata = rbind(weeklycoviddata, temp_weekdata)
 }
