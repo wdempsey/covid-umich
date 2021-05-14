@@ -50,6 +50,7 @@ for (week in weeksin2021) {
 aggregate(weight~week, all_data, sum)
 
 
+
 saveRDS(all_data, file = "../data/fb_weekly.RDS")
 
 

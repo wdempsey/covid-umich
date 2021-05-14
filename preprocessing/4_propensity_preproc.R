@@ -123,9 +123,9 @@ saveRDS(indiana_data_w_sympcontact, "../data/weeklycoviddata_withsympcontact.RDS
 ## Census: 95.5% non-hispanic 4.5% histpanic
 ## Census: 88.7% white, 9.9% Black or African American, 1.2% Asian-American, Other Race = 0.2%
 ethnicity_levels = levels(indiana_data$ethnicity)
-ethnicity_census = c(0.045, 0.955)
+ethnicity_census = c(0.073, 0.927)
 race_levels = levels(indiana_data$race)
-race_census = c(0.012,0.099,0.002,0.887)
+race_census = c(0.026,0.099,0.027,0.848)
 
 ## Pull each week and year
 ## Build every combination
