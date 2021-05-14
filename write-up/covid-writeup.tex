@@ -1,4 +1,4 @@
-\documentclass[11pt]{amsart}
+\documentclass[12pt]{amsart}
 
 \RequirePackage[OT1]{fontenc}
 
@@ -41,8 +41,8 @@
 
 
 \usepackage{setspace}
-\onehalfspacing
-% \doublespacing
+% \onehalfspacing
+\doublespacing
 
 
 \def\pr{\text{pr}}
@@ -1333,5 +1333,19 @@ k_t^{R_3} &= - \gamma (i^{(NT)} + 0.5 k_t^{I_2^{(NT)}}) \\
 k_t^{R_4} &= - \gamma (i^{(NT)} + k_t^{I_3^{(NT)}}) \\
 \end{align*}
 
+\section{IRLS}
+
+First derivative with respect to $\theta$
+$$
+\nabla E(\theta) = \sum_{t^\prime=1}^T K_h(|t^\prime - t|) \left[ \sum_{j=1}^N I_{j,t^\prime} X_{j,t^\prime} + \sum_{j=1}^N \tilde W_{j,t^\prime} \tilde I_{j,t^\prime} \pi_t (X_{j,t^\prime}; \theta) X_{j,t^\prime} \right]
+$$
+Second derivative with respect to $\theta$
+$$
+H(\theta) = \sum_{t^\prime=1}^T K_h(|t^\prime - t|) \sum_{j=1}^N \tilde W_{j,t^\prime} \tilde I_{j,t^\prime} \pi_t (X_{j,t^\prime}; \theta) \left( 1- \pi_t (X_{j,t^\prime}; \theta) \right) X_{j,t^\prime} X_{j,t^\prime}^\top
+$$
+Then the Fisher scoring method sets
+$$
+\theta^{(t+1)} = \theta^{(t)} + H \left(\theta^{(t)} \right)^{-1} \nabla E \left(\theta^{(t)} \right)
+$$
 
 \end{document}

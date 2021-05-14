@@ -13,8 +13,8 @@ weekweight = aggregate(day ~ week, fb_data, function(x){length(unique(x))})
 
 ## Build weekly version of FB data first
 weeksin2020 = 14:53
-all_data_neg_hospital = all_data_neg_symptom = 
-  all_data_pos_hospital = all_data_pos_symptom = 
+all_data_neg_hospital = all_data_pos_hospital = 
+  all_data_covid = 
   data.frame(gender = rep(0,0), age = rep(0,0), 
              weight = rep(0,0), week = rep(0,0),
              year = rep(0,0))
@@ -43,19 +43,6 @@ for (week in weeksin2020) {
   agg_temp$year = rep(2020, nrow(agg_temp))
   all_data_neg_hospital = rbind(all_data_neg_hospital, agg_temp)
   
-  ## Adding symptoms given contact
-  temp$weightsymptoms =  temp$weight * temp$fever
-  total_weight = sum(temp$weight[temp$gottested ==1 & temp$postest == 0], na.rm = TRUE)
-  total_weightsymptoms = sum(temp$weightsymptoms[temp$gottested ==1 & temp$postest == 0], na.rm = TRUE)
-  agg_temp = aggregate(weightsymptoms ~ gender+ age, subset(temp, gottested == 1 & postest == 0), sum)
-  agg_temp2 = aggregate(weight ~ gender+ age, subset(temp, gottested == 1 & postest == 0), sum)
-  agg_temp$weight = agg_temp2$weight
-  agg_temp$weightsymptoms = agg_temp$weightsymptoms/sum(agg_temp$weightsymptoms) * total_weightsymptoms * addweight
-  agg_temp$weight = agg_temp$weight/sum(agg_temp$weight) * total_weight * addweight
-  agg_temp$week = rep(week, nrow(agg_temp))
-  agg_temp$year = rep(2020, nrow(agg_temp))
-  all_data_neg_symptom = rbind(all_data_neg_symptom, agg_temp)
-  
   ## Positive 
   total_weight = sum(temp$weight[temp$postest ==1], na.rm = TRUE)
   total_weighthospital = sum(temp$weighthospital[temp$postest == 1], na.rm = TRUE)
@@ -68,18 +55,19 @@ for (week in weeksin2020) {
   agg_temp$year = rep(2020, nrow(agg_temp))
   all_data_pos_hospital = rbind(all_data_pos_hospital, agg_temp)
   
-  ## Adding symptoms given contact
-  temp$weightsymptoms =  temp$weight * temp$fever
-  total_weight = sum(temp$weight[temp$postest == 1], na.rm = TRUE)
-  total_weightsymptoms = sum(temp$weightsymptoms[temp$postest == 1], na.rm = TRUE)
-  agg_temp = aggregate(weightsymptoms ~ gender+ age, subset(temp, postest == 1), sum)
-  agg_temp2 = aggregate(weight ~ gender+ age, subset(temp, postest == 1), sum)
+  ## Adding covid positive given symptoms
+  temp$weightcovid =  temp$weight * temp$postest
+  total_weight = sum(temp$weight[temp$symptoms == TRUE], na.rm = TRUE)
+  total_weightcovid = sum(temp$weightcovid[temp$symptoms == TRUE], na.rm = TRUE)
+  agg_temp = aggregate(weightcovid ~ gender+ age, subset(temp, symptoms == TRUE), sum)
+  agg_temp2 = aggregate(weight ~ gender+ age, subset(temp, gottested == 1 & postest == 0), sum)
   agg_temp$weight = agg_temp2$weight
-  agg_temp$weightsymptoms = agg_temp$weightsymptoms/sum(agg_temp$weightsymptoms) * total_weightsymptoms * addweight
+  agg_temp$weightcovid = agg_temp$weightcovid/sum(agg_temp$weightcovid) * total_weightcovid * addweight
   agg_temp$weight = agg_temp$weight/sum(agg_temp$weight) * total_weight * addweight
   agg_temp$week = rep(week, nrow(agg_temp))
   agg_temp$year = rep(2020, nrow(agg_temp))
-  all_data_pos_symptom = rbind(all_data_pos_symptom, agg_temp)
+  all_data_covid = rbind(all_data_covid, agg_temp)
+  
 }
 
 weeksin2021 = 1:5
@@ -102,19 +90,6 @@ for (week in weeksin2021) {
   agg_temp$year = rep(2021, nrow(agg_temp))
   all_data_neg_hospital = rbind(all_data_neg_hospital, agg_temp)
   
-  ## Adding symptoms given contact
-  temp$weightsymptoms =  temp$weight * temp$fever
-  total_weight = sum(temp$weight[temp$gottested ==1 & temp$postest == 0], na.rm = TRUE)
-  total_weightsymptoms = sum(temp$weightsymptoms[temp$gottested ==1 & temp$postest == 0], na.rm = TRUE)
-  agg_temp = aggregate(weightsymptoms ~ gender+ age, subset(temp, gottested == 1 & postest == 0), sum)
-  agg_temp2 = aggregate(weight ~ gender+ age, subset(temp, gottested == 1 & postest == 0), sum)
-  agg_temp$weight = agg_temp2$weight
-  agg_temp$weightsymptoms = agg_temp$weightsymptoms/sum(agg_temp$weightsymptoms) * total_weightsymptoms * addweight
-  agg_temp$weight = agg_temp$weight/sum(agg_temp$weight) * total_weight * addweight
-  agg_temp$week = rep(week, nrow(agg_temp))
-  agg_temp$year = rep(2021, nrow(agg_temp))
-  all_data_neg_symptom = rbind(all_data_neg_symptom, agg_temp)
-  
   ## Positive 
   total_weight = sum(temp$weight[temp$postest ==1], na.rm = TRUE)
   total_weighthospital = sum(temp$weighthospital[temp$postest == 1], na.rm = TRUE)
@@ -127,26 +102,24 @@ for (week in weeksin2021) {
   agg_temp$year = rep(2021, nrow(agg_temp))
   all_data_pos_hospital = rbind(all_data_pos_hospital, agg_temp)
   
-  ## Adding symptoms given contact
-  temp$weightsymptoms =  temp$weight * temp$symptoms
-  total_weight = sum(temp$weight[temp$postest == 1], na.rm = TRUE)
-  total_weightsymptoms = sum(temp$weightsymptoms[temp$postest == 1], na.rm = TRUE)
-  agg_temp = aggregate(weightsymptoms ~ gender+ age, subset(temp, postest == 1), sum)
-  agg_temp2 = aggregate(weight ~ gender+ age, subset(temp, postest == 1), sum)
+  ## Adding covid positive given symptoms
+  temp$weightcovid =  temp$weight * temp$postest
+  total_weight = sum(temp$weight[temp$symptoms == TRUE], na.rm = TRUE)
+  total_weightcovid = sum(temp$weightcovid[temp$symptoms == TRUE], na.rm = TRUE)
+  agg_temp = aggregate(weightcovid ~ gender+ age, subset(temp, symptoms == TRUE), sum)
+  agg_temp2 = aggregate(weight ~ gender+ age, subset(temp, gottested == 1 & postest == 0), sum)
   agg_temp$weight = agg_temp2$weight
-  agg_temp$weightsymptoms = agg_temp$weightsymptoms/sum(agg_temp$weightsymptoms) * total_weightsymptoms * addweight
+  agg_temp$weightcovid = agg_temp$weightcovid/sum(agg_temp$weightcovid) * total_weightcovid * addweight
   agg_temp$weight = agg_temp$weight/sum(agg_temp$weight) * total_weight * addweight
   agg_temp$week = rep(week, nrow(agg_temp))
   agg_temp$year = rep(2021, nrow(agg_temp))
-  all_data_pos_symptom = rbind(all_data_pos_symptom, agg_temp)
+  all_data_covid = rbind(all_data_covid, agg_temp)
 }
 
 
 #aggregate(weight~week, all_data_pos, sum)
 
-saveRDS(all_data_neg_hospital, file = "../data/fb_alldata_weekly_neg_hospital_alt.RDS")
-saveRDS(all_data_neg_symptom, file = "../data/fb_alldata_weekly_neg_symptom_alt.RDS")
 saveRDS(all_data_pos_hospital, file = "../data/fb_alldata_weekly_pos_hospital_alt.RDS")
-saveRDS(all_data_pos_symptom, file = "../data/fb_alldata_weekly_pos_symptom_alt.RDS")
+saveRDS(all_data_covid, file = "../data/fb_alldata_weekly_covid_alt.RDS")
 
 

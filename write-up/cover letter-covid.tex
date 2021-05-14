@@ -1,0 +1,78 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plain Cover Letter
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Original author:
+% Rensselaer Polytechnic Institute (http://www.rpi.edu/dept/arc/training/latex/resumes/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[10pt]{letter} % Default font size of the document, change to 10pt to fit more text
+
+\usepackage{newcent} % Default font is the New Century Schoolbook PostScript font
+%\usepackage{helvet} % Uncomment this (while commenting the above line) to use the Helvetica font
+
+% Margins
+\topmargin=-0.5in % Moves the top of the document 1 inch above the default
+\textheight=8.75in % Total height of the text on the page before text goes on to the next page, this can be increased in a longer letter
+\oddsidemargin=0in % Position of the left margin, can be negative or positive if you want more or less room
+\textwidth=6.5in % Total width of the text, increase this if the left margin was decreased and vice-versa
+
+\let\raggedleft\raggedright % Pushes the date (at the top) to the left, comment this line to have the date on the right
+
+%\address{Rutgers University and University of Michigan}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	ADDRESSEE SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{letter}{Professor Karen Kafadar \\
+    Editor-In-Chief, {\em Annals of Applied Statistics}
+         }
+%----------------------------------------------------------------------------------------
+%	YOUR NAME & ADDRESS SECTION
+%----------------------------------------------------------------------------------------
+
+%\begin{center}
+%\large
+%\end{center}
+%\vfill
+
+\signature{Walter Dempsey\\
+University of Michigan \\
+Department of Biostatistics\\
+M4057 SPH II \\
+1415 Washington Heights \\
+wdem@umich.edu} % Your name for the signature at the bottom
+
+%----------------------------------------------------------------------------------------
+%	LETTER CONTENT SECTION
+%----------------------------------------------------------------------------------------
+
+\date\today
+
+\opening{Dear Dr. Kafadar:}
+
+Kindly find enclosed the Report titled ``Statistical paradoxes in coronavirus case-counts: selection bias, measurement error, and the COVID-19 pandemic,'' by Walter Dempsey.
+
+The report contains novel empirical findings and an investigation of statistical paradoxes arising from the analysis of reported coronavirus case-counts that are being used by governments to guide policies and decision making. We have discovered an estimator and statistical decomposition of the associated error that shows the 21.5 million tests conducted in the US provides information on COVID-19 prevalence equivalent to a simple random sample of size 92. Analogous decompositions for the rate of change in prevalence and the effective reproduction number are used to demonstrate how the magnitude and sign of estimation bias varies over time, a bias which has strong policy implications. Overall, our findings demonstrate the statistical limitations of increased testing in the presence of selection bias and measurement error as well as how easy it is for researchers analysing reported coronavirus case-counts to not only fool themselves but be confident in their incorrect conclusions. We believe the work presents an important advance in the statistical understanding of the COVID-19 pandemic.
+
+Thank you for your consideration. We look forward to hearing back from you.
+
+\closing{Sincerely,}
+
+
+\end{letter}
+
+\end{document}
+
+
