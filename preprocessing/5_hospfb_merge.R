@@ -44,8 +44,8 @@ for (week in weeksin2020) {
   
   ## Adding covid positive given symptoms
   temp$weightcovid =  temp$weight * temp$postest
-  total_weight = sum(temp$weight[temp$symptoms == TRUE], na.rm = TRUE)
-  total_weightcovid = sum(temp$weightcovid[temp$symptoms == TRUE], na.rm = TRUE)
+  total_weight = sum(temp$weight[temp$symptoms == TRUE & temp$state == 15], na.rm = TRUE)
+  total_weightcovid = sum(temp$weightcovid[temp$symptoms == TRUE & temp$state == 15], na.rm = TRUE)
   agg_temp = aggregate(weightcovid ~ gender+ age, subset(temp, symptoms == TRUE), sum)
   agg_temp2 = aggregate(weight ~ gender+ age, subset(temp, gottested == 1 & postest == 0), sum)
   agg_temp$weight = agg_temp2$weight
@@ -66,17 +66,6 @@ for (week in weeksin2021) {
   temp = subset(temp, is.element(gender, c(1,2)))
   temp$weighthospital = temp$weight * temp$hospital
   temp = subset(temp, !is.na(weighthospital))
-  total_weight = sum(temp$weight[temp$gottested ==1 & temp$postest == 0], na.rm = TRUE)
-  total_weighthospital = sum(temp$weighthospital[temp$gottested ==1 & temp$postest == 0], na.rm = TRUE)
-  agg_temp = aggregate(weighthospital ~ gender+ age + fever, subset(temp, gottested == 1 & postest == 0), sum)
-  agg_temp2 = aggregate(weight ~ gender+ age + fever, subset(temp, gottested == 1 & postest == 0), sum)
-  agg_temp$weight = agg_temp2$weight
-  agg_temp$weighthospital = agg_temp$weighthospital/sum(agg_temp$weighthospital) * total_weighthospital * addweight
-  agg_temp$weight = agg_temp$weight/sum(agg_temp$weight) * total_weight * addweight
-  agg_temp$week = rep(week, nrow(agg_temp))
-  agg_temp$year = rep(2021, nrow(agg_temp))
-  all_data_neg_hospital = rbind(all_data_neg_hospital, agg_temp)
-  
   ## Positive 
   total_weight = sum(temp$weight[temp$postest ==1], na.rm = TRUE)
   total_weighthospital = sum(temp$weighthospital[temp$postest == 1], na.rm = TRUE)
@@ -91,8 +80,8 @@ for (week in weeksin2021) {
   
   ## Adding covid positive given symptoms
   temp$weightcovid =  temp$weight * temp$postest
-  total_weight = sum(temp$weight[temp$symptoms == TRUE], na.rm = TRUE)
-  total_weightcovid = sum(temp$weightcovid[temp$symptoms == TRUE], na.rm = TRUE)
+  total_weight = sum(temp$weight[temp$symptoms == TRUE & temp$state == 15], na.rm = TRUE)
+  total_weightcovid = sum(temp$weightcovid[temp$symptoms == TRUE & temp$state == 15], na.rm = TRUE)
   agg_temp = aggregate(weightcovid ~ gender+ age, subset(temp, symptoms == TRUE), sum)
   agg_temp2 = aggregate(weight ~ gender+ age, subset(temp, gottested == 1 & postest == 0), sum)
   agg_temp$weight = agg_temp2$weight
