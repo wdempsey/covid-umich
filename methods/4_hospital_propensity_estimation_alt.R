@@ -24,7 +24,7 @@ fb_distance <-  function(current_week, current_year) {
 kernelweight <- function(distance) {
   kw2 <- function(row) {
     dis = distance(row)
-    h = sqrt(-1/(2*log(0.9))) # Set a deterministic bandwidth for now
+    h = sqrt(-1/(2*log(0.75))) # Set a deterministic bandwidth for now
     kernel = exp(-dis^2/(2*h^2))
     return(kernel)
   }
@@ -72,6 +72,7 @@ irls <- function(current_week, current_year, fb_X, fb_data,
 
 ## Brining in complete FB and Indiana data
 fb_data_pos_hospital = readRDS("../data/fb_weeklycomplete_pos_hospital_alt.RDS")
+names(fb_data_pos_hospital)[3] = "symptoms"
 
 ## Build \pi(x; \theta)
 ## Logistic regression with no interactions

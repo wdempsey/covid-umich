@@ -40,8 +40,8 @@ irls <- function(current_week, current_year, fb_X, fb_data,
   
   fb_dist = fb_distance(current_week, current_year)
   weights = apply(fb_data, 1, kernelweight(fb_dist))
-  weighted_symptoms = weights*fb_data$weightsymptoms
-  first_term = t(fb_X)%*%weighted_symptoms
+  weighted_covid = weights*fb_data$weightcovid
+  first_term = t(fb_X)%*%weighted_covid
   
   fbweighted = weights*fb_data$weight
   
@@ -69,17 +69,15 @@ irls <- function(current_week, current_year, fb_X, fb_data,
   return(current_theta)
 }
 
-
-
 ## Brining in complete FB and Indiana data
-fb_data_neg_symptom = readRDS("../data/fb_weeklycomplete_neg_symptom_alt.RDS")
+fb_data_covid = readRDS("../data/fb_weeklycomplete_covid_alt.RDS")
 
 ## Build \pi(x; \theta)
 ## Logistic regression with no interactions
 
 ## First term can be precomputed given design matrix
 model = ~ -1+as.factor(gender)+as.factor(age)
-fb_X = model.matrix(model, fb_data_neg_symptom)
+fb_X = model.matrix(model, fb_data_covid)
 
 weeks = c(14:53,1:5)
 years = c(rep(2020, length = length(c(14:53))),rep(2021, length = length(1:5)))
@@ -89,7 +87,7 @@ for(i in 1:length(weeks)) {
   print(paste("On week", weeks[i], "in year", years[i]))
   current_week = weeks[i]
   current_year = years[i]
-  current_estimated_theta = irls(current_week, current_year, fb_X, fb_data_neg_symptom)  
+  current_estimated_theta = irls(current_week, current_year, fb_X, fb_data_covid)  
   print(current_estimated_theta)
   results[i,] = c(current_week, current_year, as.vector(current_estimated_theta))
 }
@@ -98,34 +96,4 @@ results = data.frame(results)
 names(results) = c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
                    "55to64", "65to74", "75plus")
 
-saveRDS(results, "../data/smoothedpropensities_neg_symptom_alt.RDS")
-
-
-## Brining in complete FB and Indiana data
-fb_data_pos_symptom = readRDS("../data/fb_weeklycomplete_pos_symptom_alt.RDS")
-
-## Build \pi(x; \theta)
-## Logistic regression with no interactions
-
-## First term can be precomputed given design matrix
-model = ~ -1+as.factor(gender)+as.factor(age)
-fb_X = model.matrix(model, fb_data_pos_symptom)
-
-weeks = c(14:53,1:5)
-years = c(rep(2020, length = length(c(14:53))),rep(2021, length = length(1:5)))
-results = matrix(nrow = length(weeks), ncol = 2+ncol(fb_X))
-
-for(i in 1:length(weeks)) {
-  print(paste("On week", weeks[i], "in year", years[i]))
-  current_week = weeks[i]
-  current_year = years[i]
-  current_estimated_theta = irls(current_week, current_year, fb_X, fb_data_pos_symptom)  
-  print(current_estimated_theta)
-  results[i,] = c(current_week, current_year, as.vector(current_estimated_theta))
-}
-
-results = data.frame(results)
-names(results) = c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
-                   "55to64", "65to74", "75plus")
-
-saveRDS(results, "../data/smoothedpropensities_pos_symptom_alt.RDS")
+saveRDS(results, "../data/smoothedpropensities_covid_alt.RDS")

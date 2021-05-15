@@ -2,9 +2,7 @@ weeklycoviddata_hospital = readRDS(file = "../data/weeklycoviddata_hospital.RDS"
 weeklycoviddata_testing = readRDS(file = "../data/weeklycoviddata.RDS")
 
 propensity_pos_hospital = readRDS("../data/smoothedpropensities_pos_hospital_alt.RDS")
-propensity_neg_hospital = readRDS("../data/smoothedpropensities_neg_hospital_alt.RDS")
-propensity_pos_symptom = readRDS("../data/smoothedpropensities_pos_symptom_alt.RDS")
-propensity_neg_symptom = readRDS("../data/smoothedpropensities_neg_symptom_alt.RDS")
+propensity_covid = readRDS("../data/smoothedpropensities_covid_alt.RDS")
 
 
 propensity_pos_hospital[1,]
@@ -48,24 +46,22 @@ for(current_row in 1:nrow(weeklycoviddata_hospital)) {
     weeklycoviddata_hospital$pos_nosymptom_count[current_row] = NA
   } else {
     prop_temp_pos_hospital = propensity_pos_hospital[propensity_pos_hospital$week == temp$week & propensity_pos_hospital$year == temp$year,]
-    prop_temp_pos_symptom = propensity_pos_symptom[propensity_pos_symptom$week == temp$week & propensity_pos_symptom$year == temp$year,]
-    prop_temp_neg_symptom = propensity_neg_symptom[propensity_neg_symptom$week == temp$week & propensity_neg_symptom$year == temp$year,]
     pos_hospital_term = sum(prop_temp_pos_hospital[3:11]*feature_vector)
     prob_hosp_temp = 1/(1+exp(-pos_hospital_term))
     
-    pos_symptom_term = sum(prop_temp_pos_symptom[3:10]*feature_vector[1:8])
-    prob_pos_symp_term = 1/(1+exp(-pos_symptom_term))
-    neg_symptom_term = sum(prop_temp_neg_symptom[3:10]*feature_vector[1:8])
-    prob_neg_symp_term = 1/(1+exp(-neg_symptom_term))
+    prop_temp_pos_covid = propensity_covid[propensity_covid$week == temp$week & propensity_covid$year == temp$year,]
+    pos_covid_term = sum(prop_temp_pos_covid[3:10]*feature_vector[1:8])
+    prob_pos_covid = 1/(1+exp(-pos_covid_term))
+    covid_odds_temp = prob_pos_covid/(1-prob_pos_covid)
     
     covidtesting_match = which(weeklycoviddata_testing$week == temp$week & weeklycoviddata_testing$year == temp$year &
-                                 weeklycoviddata_testing$age == temp$age & weeklycoviddata_testing$gender == temp$gender & 
+                                 weeklycoviddata_testing$age == temp$age & weeklycoviddata_testing$gender == temp$gender &
                                  weeklycoviddata_testing$ethnicity == temp$ethnicity & weeklycoviddata_testing$race == temp$race)
-    covid_posrate_temp = sum(weeklycoviddata_testing$covid_counts[covidtesting_match])/sum(weeklycoviddata_testing$covid_tests[covidtesting_match])
+    # covid_posrate_temp = sum(weeklycoviddata_testing$covid_counts[covidtesting_match])/sum(weeklycoviddata_testing$covid_tests[covidtesting_match])
+    # 
+    # covid_odds_temp = covid_posrate_temp/(1-covid_posrate_temp)
     
-    covid_odds_temp = covid_posrate_temp/(1-covid_posrate_temp)
-    
-    covid_neg_rate = prob_hosp_temp*prob_pos_symp_term/prob_neg_symp_term * covid_odds_temp
+    covid_neg_rate = prob_hosp_temp* covid_odds_temp
     if(length(covid_neg_rate) > 1) {print(current_row)}
     
     neg_counts = weeklycoviddata_testing$covid_tests[covidtesting_match]-weeklycoviddata_testing$covid_counts[covidtesting_match]
