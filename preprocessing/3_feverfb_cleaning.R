@@ -47,8 +47,8 @@ for(i in 1:length(data_files)) {
   } else{
     tempwave123 = state_temp$B6 == 1
     tempwave123[is.na(tempwave123)] = 0
-    tempwave456 = grepl("5", indiana_temp$B7) | grepl("6", indiana_temp$B7) # Admitted to hospital or went to ER
-    #tempwave456 = grepl("4", indiana_temp$B7) | grepl("5", indiana_temp$B7) | grepl("6", indiana_temp$B7)
+    tempwave456 = grepl("5", state_temp$B7) | grepl("6", state_temp$B7) # Admitted to hospital or went to ER
+    #tempwave456 = grepl("4", state_temp$B7) | grepl("5", state_temp$B7) | grepl("6", state_temp$B7)
     tempwave456[is.na(tempwave456)] = 0
     day_df$hospital = tempwave123 * (state_temp$wave < 4) + tempwave456 *(state_temp$wave >= 4)
   }
