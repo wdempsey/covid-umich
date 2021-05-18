@@ -56,7 +56,7 @@ construct_combos <- function(week, year) {
   addweight = 7/weekweight$day[weekweight$week == week]
 
   subset_hospital = indiana_hospital_data[indiana_hospital_data$week == week & indiana_hospital_data$year == year,]
-  weekly_hospitalization_count = sum(subset_hospital$Hospitalization.Count)
+  weekly_hospitalization_count = sum(subset_hospital$Hospitalization.Count, subset_hospital$ED.Visit.Count)
 
   allcombinations = expand.grid(startdate = min(subset_hospital$Date), age = unique(indiana_test_data$age), 
                                 gender = c("M", "F"), ethnicity = unique(indiana_test_data$ethnicity), 

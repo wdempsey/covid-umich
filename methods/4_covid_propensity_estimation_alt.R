@@ -24,7 +24,7 @@ fb_distance <-  function(current_week, current_year) {
 kernelweight <- function(distance) {
   kw2 <- function(row) {
     dis = distance(row)
-    h = sqrt(-1/(2*log(0.9))) # Set a deterministic bandwidth for now
+    h = sqrt(-1/(2*log(0.75))) # Set a deterministic bandwidth for now
     kernel = exp(-dis^2/(2*h^2))
     return(kernel)
   }

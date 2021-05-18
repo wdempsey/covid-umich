@@ -85,10 +85,10 @@ for(all_row in 1:nrow(all_data_pos_symptom)) {
   for (row in 1:nrow(temp)) {
     if (temp$ethnicity[row] != "Hispanic or Latino") {
       temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]  
-      temp$weighthospital[row] = temp$weighthospital[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
+      temp$weightsymptom[row] = temp$weightsymptom[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
     } else {
       temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
-      temp$weighthospital[row] = temp$weighthospital[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
+      temp$weightsymptom[row] = temp$weightsymptom[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
     }
     
   }

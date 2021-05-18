@@ -2,10 +2,8 @@ weeklycoviddata_hospital = readRDS(file = "../data/weeklycoviddata_hospital.RDS"
 weeklycoviddata_testing = readRDS(file = "../data/weeklycoviddata.RDS")
 
 propensity_pos_hospital = readRDS("../data/smoothedpropensities_pos_hospital_alt.RDS")
+propensity_pos_symptom = readRDS("../data/smoothedpropensities_pos_symptom_alt.RDS")
 propensity_covid = readRDS("../data/smoothedpropensities_covid_alt.RDS")
-
-
-propensity_pos_hospital[1,]
 
 library(lubridate)
 weeklycoviddata_hospital$week = week(mdy(weeklycoviddata_hospital$startdate))
@@ -45,30 +43,27 @@ for(current_row in 1:nrow(weeklycoviddata_hospital)) {
     weeklycoviddata_hospital$pos_symptom_count[current_row] = NA
     weeklycoviddata_hospital$pos_nosymptom_count[current_row] = NA
   } else {
-    prop_temp_pos_hospital = propensity_pos_hospital[propensity_pos_hospital$week == temp$week & propensity_pos_hospital$year == temp$year,]
-    pos_hospital_term = sum(prop_temp_pos_hospital[3:11]*feature_vector)
-    prob_hosp_temp = 1/(1+exp(-pos_hospital_term))
-    
-    prop_temp_pos_covid = propensity_covid[propensity_covid$week == temp$week & propensity_covid$year == temp$year,]
-    pos_covid_term = sum(prop_temp_pos_covid[3:10]*feature_vector[1:8])
-    prob_pos_covid = 1/(1+exp(-pos_covid_term))
-    covid_odds_temp = prob_pos_covid/(1-prob_pos_covid)
-    
     covidtesting_match = which(weeklycoviddata_testing$week == temp$week & weeklycoviddata_testing$year == temp$year &
                                  weeklycoviddata_testing$age == temp$age & weeklycoviddata_testing$gender == temp$gender &
                                  weeklycoviddata_testing$ethnicity == temp$ethnicity & weeklycoviddata_testing$race == temp$race)
-    # covid_posrate_temp = sum(weeklycoviddata_testing$covid_counts[covidtesting_match])/sum(weeklycoviddata_testing$covid_tests[covidtesting_match])
-    # 
-    # covid_odds_temp = covid_posrate_temp/(1-covid_posrate_temp)
+    covid_tests = sum(weeklycoviddata_testing$covid_tests[covidtesting_match])
+    covid_counts = sum(weeklycoviddata_testing$covid_counts[covidtesting_match])
+    frac_hospitalized = min(temp$hospitalization_count / covid_counts,1)
     
-    covid_neg_rate = prob_hosp_temp* covid_odds_temp
-    if(length(covid_neg_rate) > 1) {print(current_row)}
+    prop_temp_pos_symptom = propensity_pos_symptom[propensity_pos_symptom$week == temp$week & propensity_pos_symptom$year == temp$year,]
+    pos_symptom_term = sum(prop_temp_pos_symptom[3:11]*feature_vector)
+    prob_symptom_hosp = 1/(1+exp(-pos_symptom_term)) # Prob Symptom | Hospital & C+
     
-    neg_counts = weeklycoviddata_testing$covid_tests[covidtesting_match]-weeklycoviddata_testing$covid_counts[covidtesting_match]
-    pos_counts = weeklycoviddata_testing$covid_counts[covidtesting_match]
-    pos_symptom_count = min(temp$hospitalization_count/prob_hosp_temp,pos_counts)
-    pos_nosymptom_count = max(pos_counts - pos_symptom_count,0)
-    neg_symptom_count = min(temp$hospitalization_count/covid_neg_rate,neg_counts)
+    pos_symptom_term = sum(prop_temp_pos_symptom[3:11]*c(feature_vector[1:8],0))
+    prob_symptom_nohosp = 1/(1+exp(-pos_symptom_term)) # Prob Symptom | NH & C+
+    
+    symptom_given_covidpos = frac_hospitalized * prob_symptom_hosp + (1-frac_hospitalized) * prob_symptom_nohosp
+    symptom_given_covidneg = 0.1 # Holder
+    
+    pos_symptom_count = covid_counts * symptom_given_covidpos
+    pos_nosymptom_count = max(covid_counts - pos_symptom_count,0)
+    neg_counts = covid_tests - covid_counts
+    neg_symptom_count = neg_counts * symptom_given_covidneg
     neg_nosymptom_count = max(neg_counts - neg_symptom_count,0)
     
     weeklycoviddata_hospital$neg_symptom_count[current_row] = neg_symptom_count
