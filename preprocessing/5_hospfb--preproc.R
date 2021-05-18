@@ -2,9 +2,8 @@
 
 library("lubridate")
 
-all_data_pos_hospital = readRDS("../data/fb_alldata_weekly_pos_hospital_alt.RDS")
 all_data_pos_symptom = readRDS("../data/fb_alldata_weekly_pos_symptom_alt.RDS")
-all_data_covid = readRDS("../data/fb_alldata_weekly_covid_alt.RDS")
+all_data_neg_symptom = readRDS("../data/fb_alldata_weekly_neg_symptom_alt.RDS")
 indiana_data = readRDS("../data/weeklycoviddata.RDS")
 
 ## How do we match ages?
@@ -51,11 +50,9 @@ hispanic_match$census = census/sum(census)
 allcombinations = expand.grid(ethnicity = ethnicity_levels, 
                               race = race_levels)
 
-complete_data_pos_hospital = complete_data_pos_symptom = complete_data_covid =  data.frame()
-
-for(all_row in 1:nrow(all_data_pos_hospital)) {
+for(all_row in 1:nrow(all_data_pos_symptom)) {
   
-  temp = data.frame(all_data_pos_hospital[all_row,], nrow = nrow(allcombinations), ncol = length(all_data_pos_hospital[all_row,]))
+  temp = data.frame(all_data_pos_symptom[all_row,], nrow = nrow(allcombinations), ncol = length(all_data_pos_symptom[all_row,]))
   temp[1:nrow(allcombinations),] = temp[1,]
   temp$ethnicity = allcombinations$ethnicity
   temp$race = allcombinations$race
@@ -63,17 +60,20 @@ for(all_row in 1:nrow(all_data_pos_hospital)) {
   for (row in 1:nrow(temp)) {
     if (temp$ethnicity[row] != "Hispanic or Latino") {
       temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]  
-      temp$weighthospital[row] = temp$weighthospital[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
+      temp$weightsymptom[row] = temp$weightsymptom[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
     } else {
       temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
-      temp$weighthospital[row] = temp$weighthospital[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
+      temp$weightsymptom[row] = temp$weightsymptom[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
     }
     
   }
-  complete_data_pos_hospital = rbind(complete_data_pos_hospital, temp)
+  complete_data_pos_symptom = rbind(complete_data_pos_symptom, temp)
 }
 
-saveRDS(complete_data_pos_hospital,"../data/fb_weeklycomplete_pos_hospital_alt.RDS")
+
+saveRDS(complete_data_pos_symptom,"../data/fb_weeklycomplete_pos_symptom_alt.RDS")
+
+
 
 for(all_row in 1:nrow(all_data_pos_symptom)) {
   
@@ -99,28 +99,4 @@ for(all_row in 1:nrow(all_data_pos_symptom)) {
 saveRDS(complete_data_pos_symptom,"../data/fb_weeklycomplete_pos_symptom_alt.RDS")
 
 
-## Now build covid given no symptoms
 
-for(all_row in 1:nrow(all_data_covid)) {
-  temp = data.frame(all_data_covid[all_row,], nrow = nrow(allcombinations), ncol = length(all_data_covid[all_row,]))
-  temp[1:nrow(allcombinations),] = temp[1,]
-  temp$ethnicity = allcombinations$ethnicity
-  temp$race = allcombinations$race
-  
-  for (row in 1:nrow(temp)) {
-    if (temp$ethnicity[row] != "Hispanic or Latino") {
-      temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]  
-      temp$weightcovid[row] = temp$weightcovid[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * race_census[race_levels == temp$race[row]]
-    } else {
-      temp$weight[row] = temp$weight[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
-      temp$weightcovid[row] = temp$weightcovid[row] * ethnicity_census[ethnicity_levels == temp$ethnicity[row]] * hispanic_match$census[hispanic_match$race == temp$race[row]]  
-    }
-    
-  }
-  complete_data_covid = rbind(complete_data_covid, temp)
-}
-
-unique(complete_data_covid$week)
-
-
-saveRDS(complete_data_covid,"../data/fb_weeklycomplete_covid_alt.RDS")
