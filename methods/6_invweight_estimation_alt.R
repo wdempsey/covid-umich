@@ -1,11 +1,12 @@
-indiana_data = readRDS("../data/weeklycoviddata_withsympcontact.RDS")
-propensities = readRDS("../data/smoothedpropensities.RDS")
+indiana_data = readRDS("../data/weeklycoviddata_withsymptoms_alt.RDS")
+indiana_data$startdate = mdy(indiana_data$startdate)
+propensities = readRDS("../data/smoothedpropensities_alt.RDS")
 
 propensities$date = MMWRweek::MMWRweek2Date(MMWRyear = propensities$year,
                                             MMWRweek = propensities$week,
                                             MMWRday = 1)
 ## First term can be precomputed given design matrix
-model = ~ -1+as.factor(fever) + as.factor(contact) + as.factor(gender) + ethnicity + race + as.factor(age)
+model = ~ -1+as.factor(symptoms) + as.factor(gender) + ethnicity + race + as.factor(age)
 indiana_X = model.matrix(model, indiana_data)
 
 library(lubridate)
@@ -17,9 +18,13 @@ for(i in 1:nrow(indiana_data)) {
   modelmatrix_row = indiana_X[i,]
   week_row = as.numeric(week(indiana_data$startdate[i]))
   year_row = as.numeric(year(indiana_data$startdate[i]))
-  prop_row = which(propensities$week == week_row & propensities$year == year_row)
-  term = as.matrix(propensities[prop_row,3:16])%*%modelmatrix_row
-  invweight[i] = (1+exp(-term))
+  if(week_row > 5 & year_row == 2021) {
+    invweight[i] = NA
+  } else {
+    prop_row = which(propensities$week == week_row & propensities$year == year_row)
+    term = as.matrix(propensities[prop_row,3:15])%*%modelmatrix_row
+    invweight[i] = (1+exp(-term))
+  }
 }
 
 indiana_data$invweight = invweight
@@ -34,6 +39,7 @@ results = matrix(nrow = length(weeks), ncol = 4)
 for(i in 1:length(weeks)) {
   current_week = weeks[i]
   current_year = years[i]
+  print(paste("At week", current_week, "in year", current_year))
   current_counts = indiana_data$covid_counts[which(indiana_data$week == current_week & indiana_data$year == current_year)]
   current_tests = indiana_data$covid_tests[which(indiana_data$week == current_week & indiana_data$year == current_year)]
   weights = indiana_data$invweight[which(indiana_data$week == current_week & indiana_data$year == current_year)]
@@ -43,4 +49,5 @@ for(i in 1:length(weeks)) {
   results[i,4] = sum(current_counts*weights)/sum(current_tests*weights) 
 }
 
-saveRDS(results, "../data/invweights.RDS")
+saveRDS(results, "../data/invweights_alt.RDS")
+

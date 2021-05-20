@@ -1,9 +1,8 @@
 weeklycoviddata_hospital = readRDS(file = "../data/weeklycoviddata_hospital.RDS")
 weeklycoviddata_testing = readRDS(file = "../data/weeklycoviddata.RDS")
 
-propensity_pos_hospital = readRDS("../data/smoothedpropensities_pos_hospital_alt.RDS")
 propensity_pos_symptom = readRDS("../data/smoothedpropensities_pos_symptom_alt.RDS")
-propensity_covid = readRDS("../data/smoothedpropensities_covid_alt.RDS")
+propensity_neg_symptom = readRDS("../data/smoothedpropensities_neg_symptom_alt.RDS")
 
 library(lubridate)
 weeklycoviddata_hospital$week = week(mdy(weeklycoviddata_hospital$startdate))
@@ -57,8 +56,12 @@ for(current_row in 1:nrow(weeklycoviddata_hospital)) {
     pos_symptom_term = sum(prop_temp_pos_symptom[3:11]*c(feature_vector[1:8],0))
     prob_symptom_nohosp = 1/(1+exp(-pos_symptom_term)) # Prob Symptom | NH & C+
     
+    prop_temp_neg_symptom = propensity_neg_symptom[propensity_neg_symptom$week == temp$week & propensity_neg_symptom$year == temp$year,]
+    neg_symptom_term = sum(prop_temp_neg_symptom[3:10]*feature_vector[1:8])
+    prob_symptom_nocovid = 1/(1+exp(-neg_symptom_term)) # Prob Symptom | C-
+    
     symptom_given_covidpos = frac_hospitalized * prob_symptom_hosp + (1-frac_hospitalized) * prob_symptom_nohosp
-    symptom_given_covidneg = 0.1 # Holder
+    symptom_given_covidneg = prob_symptom_nocovid
     
     pos_symptom_count = covid_counts * symptom_given_covidpos
     pos_nosymptom_count = max(covid_counts - pos_symptom_count,0)
