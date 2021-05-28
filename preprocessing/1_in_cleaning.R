@@ -216,7 +216,7 @@ construct_combos <- function(week, year) {
       temp_race = race_death$death_frac[race_death$RACE == allcombinations[comb_iter,]$race]
       comb_frac = temp_age * temp_gender * temp_ethnicity * temp_race
     }
-    allcombinations$covid_deaths[comb_iter] = total_counts * comb_frac
+    allcombinations$covid_deaths[comb_iter] = total_deaths * comb_frac
   }
   
   return(allcombinations)
