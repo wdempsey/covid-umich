@@ -37,26 +37,12 @@ date_switch <- "2020-03-13" # date of introduction of control measures
 tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
 
 data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, cases = cases, tswitch = tswitch)
-
-date_survey_left <- "2020-05-04"
-date_survey_right <- "2020-05-07"
-t_survey_start <- df_swiss %>% filter(date < date_survey_left) %>% nrow() + 1 # convert time to number
-t_survey_end <- df_swiss %>% filter(date < date_survey_right) %>% nrow() + 1 # convert time to number
-n_infected_survey <-  83
-n_tested_survey <-  775
-# add these data to the data given to stan
-data_forcing_survey <- c(data_forcing, list(t_survey_start = t_survey_start, 
-                                            t_survey_end = t_survey_end,
-                                            n_infected_survey = n_infected_survey,
-                                            n_tested_survey = n_tested_survey))
-
-model_forcing_survey <- stan_model("./sir_model.stan")
-#fit_forcing_survey = readRDS("saved_fits/fit_swiss/fit_forcing_survey.rds")
-fit_forcing_survey_max <- sampling(model_forcing_survey, 
-                                   data_forcing_survey,  
-                                   control = list(max_treedepth = 13, adapt_delta=0.9), 
-                                   iter=1000,
-                                   seed = 0)
+model_forcing <- stan_model("../../disease_transmission_workflow/stan_models/models_swiss/seir_forcing.stan")
+# model_forcing <- stan_model("./sir_model.stan")
+fit_forcing <- sampling(model_forcing, 
+                        data_forcing, 
+                        iter=1000,
+                        seed=4)
 
 check_hmc_diagnostics(fit_forcing_survey_max)
 
