@@ -35,11 +35,13 @@ functions {
 }
 data {
   int<lower=1> n_days;
+  int<lower=1> max_death_day;
   real t0;
   real tswitch; // date of introduction of control measures
-  real ts[n_days];
+  real ts[n_days+max_death_day];
   int N; // population size
-  int cases[n_days];
+  int deaths[n_days];
+  real death_distribution[max_death_day+1];
 }
 transformed data {
   int x_i[1] = { N };
@@ -53,20 +55,27 @@ parameters {
   real<lower=0,upper=1> eta; // reduction in transmission due to control measures (in proportion of beta)
   real<lower=0> nu; // shift of quarantine implementation (strictly positive as it can only occur after tswitch)
   real<lower=0,upper=1> xi_raw; // slope of quarantine implementation (strictly positive as the logistic must be downward)
-  real<lower=0, upper=1> p_reported; // proportion of infected (symptomatic) people reported
+  real<lower=0, upper=1> p_death; // infection fatality rate
   real<lower=0> i0; // number of infected people inititally
   real<lower=0> e0;
 }
 transformed parameters{
-  real y[n_days, 4];
-  real incidence[n_days - 1];
+  real y[n_days+max_death_day, 4];
+  real incidence[n_days+max_death_day - 1];
+  real death_incidence[n_days - 1];
   real phi = 1. / phi_inv;
   real xi = xi_raw + 0.5;
   real theta[8];
   theta = {beta, gamma, a, eta, nu, xi, i0, e0};
   y = integrate_ode_rk45(sir, rep_array(0.0, 4), t0, ts, theta, x_r, x_i);
-  for (i in 1:n_days-1){
-    incidence[i] = -(y[i+1, 2] - y[i, 2] + y[i+1, 1] - y[i, 1]) * p_reported; //-(E(t+1) - E(t) + S(t+1) - S(t))
+  for (i in 1:(n_days+max_death_day)-1){
+    incidence[i] = -(y[i+1, 2] - y[i, 2] + y[i+1, 1] - y[i, 1]); //-(E(t+1) - E(t) + S(t+1) - S(t))
+  }
+  for (i in 1:n_days -1) {
+    death_incidence[i] = 0;
+    for (j in 0:max_death_day) {
+      death_incidence[i] = death_incidence[i] + incidence[(max_death_day - j)+i]*p_death * death_distribution[j]; 
+    }
   }
 }
 model {
@@ -77,14 +86,14 @@ model {
   phi_inv ~ exponential(5);
   i0 ~ normal(0, 10);
   e0 ~ normal(0, 10);
-  p_reported ~ beta(1, 2);
+  p_death ~ beta(100, 10000);
   eta ~ beta(2.5, 4);
   nu ~ exponential(1./5);
   xi_raw ~ beta(1, 1);
   
   //sampling distribution
   //col(matrix x, int n) - The n-th column of matrix x. Here the number of infected people 
-  cases[1:(n_days-1)] ~ neg_binomial_2(incidence, phi);
+  deaths[1:(n_days-1)] ~ neg_binomial_2(death_incidence, phi);
 }
 generated quantities {
   real R0 = beta / gamma;

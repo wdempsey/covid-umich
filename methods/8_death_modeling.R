@@ -5,6 +5,7 @@ library(gridExtra)
 library(ggplot2)
 library(rstan)
 df_swiss <- read.csv("../../disease_transmission_workflow/data/swiss_agg_data.csv")
+
 c_mid <- c("#fc9272")
 c_dark <- c("#de2d26")
 c_posterior = "orange"
@@ -12,8 +13,13 @@ c_prior = "aquamarine2"
 
 df_swiss %>% 
   ggplot() + 
-  geom_bar(mapping = aes(x = date, y = report_dt), fill = c_mid, color = c_dark, stat = "identity") +
-  labs(y="Number of reported cases")
+  geom_bar(mapping = aes(x = date, y = death_dt), fill = c_mid, color = c_dark, stat = "identity") +
+  labs(y="Number of COVID-19 Reported Deaths")
+
+## Death Distribution
+death_distribution = pnorm(seq(0.5,40.5, by =1), mean = 25, sd = 5)-pnorm(c(0,seq(0.5,39.5, by =1)), mean = 25, sd = 5)
+death_distribution = death_distribution/sum(death_distribution)
+plot(0:40, death_distribution)
 
 # Swiss population
 N <- 8.57E6;
@@ -26,31 +32,36 @@ y0 = c(S = s0, I = i0, R = r0)
 
 # Cases
 cases <- df_swiss$report_dt
+deaths <- df_swiss$death_dt
 
 # times
-n_days <- length(cases)
-t <- seq(1, n_days, by = 1)
+n_days <- length(deaths)
+max_death_day <- length(death_distribution)-1
+t <- seq(1, n_days+max_death_day, by = 1)
 t0 = 0
 t <- t
+
 
 date_switch <- "2020-03-13" # date of introduction of control measures
 tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
 
-data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, cases = cases, tswitch = tswitch)
-model_forcing <- stan_model("../../disease_transmission_workflow/stan_models/models_swiss/seir_forcing.stan")
+data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, cases = cases, 
+                     tswitch = tswitch, death_distribution = death_distribution,
+                     max_death_day = max_death_day)
+model_forcing <- stan_model("./8_sir_model.stan")
 # model_forcing <- stan_model("./sir_model.stan")
 fit_forcing <- sampling(model_forcing, 
                         data_forcing, 
                         iter=1000,
                         seed=4)
 
-check_hmc_diagnostics(fit_forcing_survey_max)
+check_hmc_diagnostics(fit_forcing)
 
 
-stan_hist(fit_forcing_survey_max, pars = "p_reported", fill = c_posterior, color=c_dark)
+stan_hist(fit_forcing, pars = "p_reported", fill = c_posterior, color=c_dark)
 
 
-smr_pred <- cbind(as.data.frame(summary(fit_forcing_survey_max, pars = "pred_cases", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary), t=1:(n_days-1), cases = cases[1:length(cases)-1])
+smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_cases", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary), t=1:(n_days-1), cases = cases[1:length(cases)-1])
 colnames(smr_pred) <- make.names(colnames(smr_pred)) # to remove % in the col names
 
 ggplot(smr_pred, mapping = aes(x = t)) +
@@ -61,7 +72,7 @@ ggplot(smr_pred, mapping = aes(x = t)) +
   geom_point(mapping = aes(y = cases)) +
   labs(x = "Day", y = "Incidence")
 
-fit_forcing_survey_max %>% 
+fit_forcing %>% 
   spread_draws(Reff[n_days]) %>% 
   group_by(n_days) %>% 
   summarise(R0_mean = mean(Reff), R09 = quantile(Reff, 0.95), R01 = quantile(Reff, 0.05)) %>% 
@@ -86,7 +97,7 @@ prior = tibble(
 
 pars = c("beta","gamma","phi_inv","a","p_reported","eta","nu","xi")
 samp =
-  extract(fit_forcing_survey_max,pars) %>%
+  extract(fit_forcing,pars) %>%
   as.data.frame() %>%
   pivot_longer(everything()) %>%
   mutate(type="Posterior") %>%
