@@ -14,7 +14,8 @@ c_prior = "aquamarine2"
 df_swiss %>% 
   ggplot() + 
   geom_bar(mapping = aes(x = date, y = death_dt), fill = c_mid, color = c_dark, stat = "identity") +
-  labs(y="Number of COVID-19 Reported Deaths")
+  labs(y="Number of COVID-19 Reported Deaths") + 
+  scale_x_date(date_breaks = "months" , date_labels = "%b-%y")
 
 ## Death Distribution
 death_distribution = pnorm(seq(0.5,40.5, by =1), mean = 25, sd = 5)-pnorm(c(0,seq(0.5,39.5, by =1)), mean = 25, sd = 5)
@@ -41,15 +42,14 @@ t <- seq(1, n_days+max_death_day, by = 1)
 t0 = 0
 t <- t
 
-
 date_switch <- "2020-03-13" # date of introduction of control measures
 tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
 
-data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, cases = cases, 
+data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths, 
                      tswitch = tswitch, death_distribution = death_distribution,
                      max_death_day = max_death_day)
 model_forcing <- stan_model("./8_sir_model.stan")
-# model_forcing <- stan_model("./sir_model.stan")
+
 fit_forcing <- sampling(model_forcing, 
                         data_forcing, 
                         iter=1000,

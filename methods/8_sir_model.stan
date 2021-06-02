@@ -74,7 +74,7 @@ transformed parameters{
   for (i in 1:n_days -1) {
     death_incidence[i] = 0;
     for (j in 0:max_death_day) {
-      death_incidence[i] = death_incidence[i] + incidence[(max_death_day - j)+i]*p_death * death_distribution[j]; 
+      death_incidence[i] = death_incidence[i] + incidence[(max_death_day - j)+i]*p_death * death_distribution[j+1]; 
     }
   }
 }
@@ -100,7 +100,7 @@ generated quantities {
   real Reff[n_days];
   real recovery_time = 1 / gamma;
   real incubation_time = 1 / a;
-  real pred_cases[n_days-1];
+  real pred_cases[n_days+max_death_day-1];
   pred_cases = neg_binomial_2_rng(incidence, phi);
   for (i in 1:n_days)
     Reff[i] = switch_eta(i, tswitch, eta, nu, xi) * beta / gamma;
