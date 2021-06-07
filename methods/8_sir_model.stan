@@ -11,7 +11,7 @@ functions {
       real beta = theta[1];
       real gamma = theta[2];
       real a = theta[3];
-      real gamma2 = theta[4]; 
+      real gamma_two = theta[4]; 
       real eta = theta[5]; // reduction in transmission rate after quarantine
       real nu = theta[6]; // shift of quarantine implementation
       real xi = theta[7]; // slope of quarantine implementation
@@ -31,8 +31,8 @@ functions {
       real dS_dt = -beta_eff * I * S / N;
       real dE_dt =  beta_eff * I * S / N - a * E;
       real dI_dt = a * E - gamma * I;
-      real dI2_dt = gamma * I - gamma2 * I2;
-      real dR_dt =  gamma2 * I2;
+      real dI2_dt = gamma * I - gamma_two * I2;
+      real dR_dt =  gamma_two * I2;
       
       return {dS_dt, dE_dt, dI_dt, dI2_dt, dR_dt};
   }
@@ -71,8 +71,8 @@ transformed parameters{
   real death_incidence[n_days - 1];
   real phi = 1. / phi_inv;
   real xi = xi_raw + 0.5;
-  real theta[8];
-  theta = {beta, gamma, a, eta, nu, xi, i0, e0};
+  real theta[10];
+  theta = {beta, gamma, a, gamma_two, eta, nu, xi, i0, e0, i02};
   y = integrate_ode_rk45(sir, rep_array(0.0, 5), t0, ts, theta, x_r, x_i);
   for (i in 1:(n_days+max_death_day)-1){
     incidence[i] = -(y[i+1, 2] - y[i, 2] + y[i+1, 1] - y[i, 1]); //-(E(t+1) - E(t) + S(t+1) - S(t))
@@ -93,9 +93,9 @@ model {
   gamma ~ normal(0.4, 0.5);
   a ~ normal(0.4, 0.5);
   phi_inv ~ exponential(5);
+  i02 ~ normal(0, 10);
   i0 ~ normal(0, 10);
   e0 ~ normal(0, 10);
-  p_death ~ beta(100, 10000);
   eta ~ beta(2.5, 4);
   nu ~ exponential(1./5);
   xi_raw ~ beta(1, 1);

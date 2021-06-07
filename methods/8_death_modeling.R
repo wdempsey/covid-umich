@@ -57,7 +57,7 @@ fit_forcing <- sampling(model_forcing,
                         data_forcing, 
                         iter=1000,
                         control = list(max_treedepth = 13, adapt_delta=0.9),
-                        seed=4,
+                        seed=0,
                         chains = 4)
 
 check_hmc_diagnostics(fit_forcing)
