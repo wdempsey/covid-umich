@@ -4,12 +4,15 @@ library(tidybayes)
 library(gridExtra)
 library(ggplot2)
 library(rstan)
+library(lubridate)
 df_swiss <- read.csv("../../disease_transmission_workflow/data/swiss_agg_data.csv")
 
 c_mid <- c("#fc9272")
 c_dark <- c("#de2d26")
 c_posterior = "orange"
 c_prior = "aquamarine2"
+
+df_swiss$date = ymd(df_swiss$date)
 
 df_swiss %>% 
   ggplot() + 
@@ -46,22 +49,23 @@ date_switch <- "2020-03-13" # date of introduction of control measures
 tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
 
 data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths, 
-                     tswitch = tswitch, death_distribution = death_distribution,
+                     tswitch = tswitch+max_death_day, death_distribution = death_distribution,
                      max_death_day = max_death_day, p_death = 0.01)
 model_forcing <- stan_model("./8_sir_model.stan")
 
 fit_forcing <- sampling(model_forcing, 
                         data_forcing, 
                         iter=1000,
-                        seed=4)
+                        control = list(max_treedepth = 13, adapt_delta=0.9),
+                        seed=4,
+                        chains = 4)
 
 check_hmc_diagnostics(fit_forcing)
 
+pairs(fit_forcing, pars = c("beta", "gamma", "a", "eta", "nu", "xi", "phi"))
 
-stan_hist(fit_forcing, pars = "p_reported", fill = c_posterior, color=c_dark)
-
-
-smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_cases", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary), t=1:(n_days-1), cases = cases[1:length(cases)-1])
+smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_cases", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary[(max_death_day+1):(max_death_day+length(cases)-1),]), 
+                                t=1:(n_days-1), cases = cases[1:length(cases)-1])
 colnames(smr_pred) <- make.names(colnames(smr_pred)) # to remove % in the col names
 
 ggplot(smr_pred, mapping = aes(x = t)) +
@@ -71,6 +75,19 @@ ggplot(smr_pred, mapping = aes(x = t)) +
   geom_line(mapping = aes(x = t, y = X50.), color = c_posterior) +
   geom_point(mapping = aes(y = cases)) +
   labs(x = "Day", y = "Incidence")
+
+smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_deaths", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary), 
+                  t=1:(n_days-1), deaths = deaths[1:length(deaths)-1])
+colnames(smr_pred) <- make.names(colnames(smr_pred)) # to remove % in the col names
+
+ggplot(smr_pred, mapping = aes(x = t)) +
+  #geom_ribbon(aes(ymin = X2.5., ymax = X97.5.), fill = c_dark, ) +
+  geom_ribbon(aes(ymin = X5., ymax = X95.), fill = c_posterior, alpha=0.35) +
+  #geom_ribbon(aes(ymin = X10., ymax = X90.), fill = c_light) +
+  geom_line(mapping = aes(x = t, y = X50.), color = c_posterior) +
+  geom_point(mapping = aes(y = cases)) +
+  labs(x = "Day", y = "Incidence")
+
 
 fit_forcing %>% 
   spread_draws(Reff[n_days]) %>% 
@@ -95,7 +112,7 @@ prior = tibble(
   pivot_longer(everything()) %>%
   mutate(type="Prior")
 
-pars = c("beta","gamma","phi_inv","a","p_reported","eta","nu","xi")
+pars = c("beta","gamma","phi_inv","a","eta","nu","xi")
 samp =
   extract(fit_forcing,pars) %>%
   as.data.frame() %>%
@@ -104,6 +121,8 @@ samp =
   bind_rows(prior) %>%
   mutate(name=factor(name,levels=pars),
          type=factor(type,levels=c("Prior","Posterior")))
+
+samp = samp[!is.na(samp$name),]
 
 ggplot(samp) +
   geom_density(aes(x=value,fill=type),alpha=.8) +
