@@ -42,6 +42,7 @@ data {
   int N; // population size
   int deaths[n_days];
   real death_distribution[max_death_day+1];
+  real p_death; // infection fatality rate
 }
 transformed data {
   int x_i[1] = { N };
@@ -55,7 +56,6 @@ parameters {
   real<lower=0,upper=1> eta; // reduction in transmission due to control measures (in proportion of beta)
   real<lower=0> nu; // shift of quarantine implementation (strictly positive as it can only occur after tswitch)
   real<lower=0,upper=1> xi_raw; // slope of quarantine implementation (strictly positive as the logistic must be downward)
-  real<lower=0, upper=1> p_death; // infection fatality rate
   real<lower=0> i0; // number of infected people inititally
   real<lower=0> e0;
 }
@@ -67,16 +67,20 @@ transformed parameters{
   real xi = xi_raw + 0.5;
   real theta[8];
   theta = {beta, gamma, a, eta, nu, xi, i0, e0};
-  y = integrate_ode_rk45(sir, rep_array(0.0, 4), t0, ts, theta, x_r, x_i);
+  print(theta);
+  y = integrate_ode_bdf(sir, rep_array(0.0, 4), t0, ts, theta, x_r, x_i);
   for (i in 1:(n_days+max_death_day)-1){
     incidence[i] = -(y[i+1, 2] - y[i, 2] + y[i+1, 1] - y[i, 1]); //-(E(t+1) - E(t) + S(t+1) - S(t))
   }
+  // print("Incidence =", incidence);
+  // print("P_death =", p_death);
   for (i in 1:n_days -1) {
     death_incidence[i] = 0;
     for (j in 0:max_death_day) {
       death_incidence[i] = death_incidence[i] + incidence[(max_death_day - j)+i]*p_death * death_distribution[j+1]; 
     }
   }
+  // print("Death Incidence =", death_incidence);
 }
 model {
   //priors

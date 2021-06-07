@@ -47,7 +47,7 @@ tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time
 
 data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths, 
                      tswitch = tswitch, death_distribution = death_distribution,
-                     max_death_day = max_death_day)
+                     max_death_day = max_death_day, p_death = 0.01)
 model_forcing <- stan_model("./8_sir_model.stan")
 
 fit_forcing <- sampling(model_forcing, 
