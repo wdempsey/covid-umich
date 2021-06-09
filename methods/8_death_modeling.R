@@ -5,14 +5,18 @@ library(gridExtra)
 library(ggplot2)
 library(rstan)
 library(lubridate)
-df_swiss <- read.csv("../../disease_transmission_workflow/data/swiss_agg_data.csv")
+# df_swiss <- read.csv("../../disease_transmission_workflow/data/swiss_agg_data.csv")
+df_swiss <- readRDS("../data/dailycoviddata_total.RDS")
 
 c_mid <- c("#fc9272")
 c_dark <- c("#de2d26")
 c_posterior = "orange"
 c_prior = "aquamarine2"
 
-df_swiss$date = ymd(df_swiss$date)
+df_swiss$date = ymd(df_swiss$startdate)
+df_swiss$death_dt = df_swiss$covid_deaths
+
+df_swiss = df_swiss[df_swiss$date < "2020-08-01",] # single bump to start
 
 df_swiss %>% 
   ggplot() + 
@@ -23,19 +27,18 @@ df_swiss %>%
 ## Death Distribution
 death_distribution = pnorm(seq(0.5,40.5, by =1), mean = 25, sd = 5)-pnorm(c(0,seq(0.5,39.5, by =1)), mean = 25, sd = 5)
 death_distribution = death_distribution/sum(death_distribution)
-plot(0:40, death_distribution)
 
 # Swiss population
-N <- 8.57E6;
+N <- 6.732E6;
 
 #initial conditions
 i0 <- 1
 s0 <- N - i0
+i02 <- 0
 r0 <- 0
-y0 = c(S = s0, I = i0, R = r0)
+y0 = c(S = s0, I = i0, I2 = i02, R = r0)
 
-# Cases
-cases <- df_swiss$report_dt
+# Deaths
 deaths <- df_swiss$death_dt
 
 # times
@@ -45,7 +48,7 @@ t <- seq(1, n_days+max_death_day, by = 1)
 t0 = 0
 t <- t
 
-date_switch <- "2020-03-13" # date of introduction of control measures
+date_switch <- "2020-03-29" # date of introduction of control measures
 tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
 
 data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths, 
@@ -58,7 +61,7 @@ fit_forcing <- sampling(model_forcing,
                         iter=1000,
                         control = list(max_treedepth = 13, adapt_delta=0.9),
                         seed=0,
-                        chains = 4)
+                        chains = 1)
 
 check_hmc_diagnostics(fit_forcing)
 
