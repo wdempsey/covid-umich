@@ -5,7 +5,6 @@ library(gridExtra)
 library(ggplot2)
 library(rstan)
 library(lubridate)
-# df_swiss <- read.csv("../../disease_transmission_workflow/data/swiss_agg_data.csv")
 df_swiss <- readRDS("../data/dailycoviddata_total.RDS")
 
 c_mid <- c("#fc9272")
@@ -16,7 +15,7 @@ c_prior = "aquamarine2"
 df_swiss$date = ymd(df_swiss$startdate)
 df_swiss$death_dt = df_swiss$covid_deaths
 
-df_swiss = df_swiss[df_swiss$date < "2020-08-01",] # single bump to start
+df_swiss = df_swiss[df_swiss$date < "2021-02-01",] # single bump to start
 
 df_swiss %>% 
   ggplot() + 
@@ -34,7 +33,6 @@ N <- 6.732E6;
 #initial conditions
 i0 <- 1
 s0 <- N - i0
-i02 <- 0
 r0 <- 0
 y0 = c(S = s0, I = i0, I2 = i02, R = r0)
 
@@ -50,6 +48,8 @@ t <- t
 
 date_switch <- "2020-03-29" # date of introduction of control measures
 tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
+date_switch_back <- "2020-09-25" # date of ending of control measures
+tswitch_back <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
 
 data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths, 
                      tswitch = tswitch+max_death_day, death_distribution = death_distribution,
@@ -58,25 +58,25 @@ model_forcing <- stan_model("./8_sir_model.stan")
 
 fit_forcing <- sampling(model_forcing, 
                         data_forcing, 
-                        iter=1000,
+                        iter=5000,
                         control = list(max_treedepth = 13, adapt_delta=0.9),
-                        seed=0,
+                        seed=3,
                         chains = 1)
 
 check_hmc_diagnostics(fit_forcing)
 
 pairs(fit_forcing, pars = c("beta", "gamma", "a", "eta", "nu", "xi", "phi"))
-
-smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_cases", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary[(max_death_day+1):(max_death_day+length(cases)-1),]), 
-                                t=1:(n_days-1), cases = cases[1:length(cases)-1])
+ 
+smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_cases", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary[(max_death_day+1):(max_death_day+length(deaths)-1),]),
+                                t=1:(n_days-1))
 colnames(smr_pred) <- make.names(colnames(smr_pred)) # to remove % in the col names
-
+ 
 ggplot(smr_pred, mapping = aes(x = t)) +
   #geom_ribbon(aes(ymin = X2.5., ymax = X97.5.), fill = c_dark, ) +
   geom_ribbon(aes(ymin = X5., ymax = X95.), fill = c_posterior, alpha=0.35) +
   #geom_ribbon(aes(ymin = X10., ymax = X90.), fill = c_light) +
   geom_line(mapping = aes(x = t, y = X50.), color = c_posterior) +
-  geom_point(mapping = aes(y = cases)) +
+  # geom_point(mapping = aes(y = cases)) +
   labs(x = "Day", y = "Incidence")
 
 smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_deaths", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary), 
@@ -88,7 +88,7 @@ ggplot(smr_pred, mapping = aes(x = t)) +
   geom_ribbon(aes(ymin = X5., ymax = X95.), fill = c_posterior, alpha=0.35) +
   #geom_ribbon(aes(ymin = X10., ymax = X90.), fill = c_light) +
   geom_line(mapping = aes(x = t, y = X50.), color = c_posterior) +
-  geom_point(mapping = aes(y = cases)) +
+  geom_point(mapping = aes(y = deaths)) +
   labs(x = "Day", y = "Incidence")
 
 
