@@ -15,7 +15,7 @@ c_prior = "aquamarine2"
 df_swiss$date = ymd(df_swiss$startdate)
 df_swiss$death_dt = df_swiss$covid_deaths
 
-df_swiss = df_swiss[df_swiss$date < "2021-02-01",] # single bump to start
+df_swiss = df_swiss[df_swiss$date > "2020-08-01",] # single bump to start
 
 df_swiss %>% 
   ggplot() + 
@@ -34,7 +34,7 @@ N <- 6.732E6;
 i0 <- 1
 s0 <- N - i0
 r0 <- 0
-y0 = c(S = s0, I = i0, I2 = i02, R = r0)
+y0 = c(S = s0, I = i0, R = r0)
 
 # Deaths
 deaths <- df_swiss$death_dt
@@ -48,8 +48,8 @@ t <- t
 
 date_switch <- "2020-03-29" # date of introduction of control measures
 tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
-date_switch_back <- "2020-09-25" # date of ending of control measures
-tswitch_back <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
+# date_switch_back <- "2020-09-25" # date of ending of control measures
+# tswitch_back <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
 
 data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths, 
                      tswitch = tswitch+max_death_day, death_distribution = death_distribution,
