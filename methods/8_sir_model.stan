@@ -1,6 +1,11 @@
 functions {
   real switch_eta(real t, real t1, real eta) {
-    return(eta  * (t - t1 > 0));
+    if( t > t1 ) {
+      real adj = 1;
+      return(adj);
+    } else {
+      return(eta  * (t - t1 > 0));
+    }
   }
   real[] sir(real t, real[] y, real[] theta, 
              real[] x_r, int[] x_i) {
@@ -12,8 +17,8 @@ functions {
       real gamma = theta[2];
       real a = theta[3];
       real eta = theta[4]; // reduction in transmission rate after quarantine
-      real i0 = theta[7];
-      real e0 = theta[8];
+      real i0 = theta[5];
+      real e0 = theta[6];
       real forcing_function = switch_eta(t,tswitch,eta); // switch function
       real beta_eff = beta * forcing_function; // beta increased/decreased to take control measures into account
       real init[4] = {N - i0 - e0, e0, i0, 0}; // initial values
@@ -84,7 +89,7 @@ model {
   phi_inv ~ exponential(5);
   i0 ~ normal(0, 10);
   e0 ~ normal(0, 10);
-  eta ~ beta(2.5, 4);
+  eta ~ lognormal(0, 10 );
   p_death ~ beta(100, 99000);
   
   //sampling distribution
