@@ -1,11 +1,11 @@
 functions {
-  real switch_eta(real t, real t1, real exp_eta) {
+  real switch_eta(real t, real t1, real eta) {
     real adj;
     if( t < t1 ) {
       adj = 1.0;
     }
     else {
-      adj = exp_eta;
+      adj = eta;
     }
     return(adj);
   }
@@ -18,10 +18,10 @@ functions {
       real beta = theta[1];
       real gamma = theta[2];
       real a = theta[3];
-      real exp_eta = theta[4]; // reduction in transmission rate after quarantine
+      real eta = theta[4]; // reduction in transmission rate after quarantine
       real i0 = theta[5];
       real e0 = theta[6];
-      real forcing_function = switch_eta(t,tswitch,exp_eta); // switch function
+      real forcing_function = switch_eta(t,tswitch,eta); // switch function
       real beta_eff = beta * forcing_function; // beta increased/decreased to take control measures into account
       real init[4] = {N - i0 - e0, e0, i0, 0}; // initial values
 
@@ -34,9 +34,6 @@ functions {
       real dE_dt =  beta_eff * I * S / N - a * E;
       real dI_dt = a * E - gamma * I;
       real dR_dt =  gamma * I;
-      
-      print(t);
-      print(forcing_function);
       
       return {dS_dt, dE_dt, dI_dt, dR_dt};
   }
@@ -70,9 +67,8 @@ transformed parameters{
   real incidence[n_days+max_death_day - 1];
   real death_incidence[n_days - 1];
   real phi = 1. / phi_inv;
-  real exp_eta = exp(eta);
   real theta[6];
-  theta = {beta, gamma, a, exp_eta, i0, e0};
+  theta = {beta, gamma, a, eta, i0, e0};
   y = integrate_ode_rk45(sir, rep_array(0.0, 4), t0, ts, theta, x_r, x_i);
   for (i in 1:(n_days+max_death_day)-1){
     incidence[i] = -(y[i+1, 2] - y[i, 2] + y[i+1, 1] - y[i, 1]); //-(E(t+1) - E(t) + S(t+1) - S(t))
@@ -95,7 +91,7 @@ model {
   phi_inv ~ exponential(5);
   i0 ~ normal(0, 10);
   e0 ~ normal(0, 10);
-  eta ~ normal(0, 0.5);
+  eta ~ lognormal(0, 0.5);
   p_death ~ beta(100, 99000);
   
   //sampling distribution
@@ -112,7 +108,7 @@ generated quantities {
   pred_cases = neg_binomial_2_rng(incidence, phi);
   pred_deaths = neg_binomial_2_rng(death_incidence, phi);
   for (i in 1:n_days)
-    Reff[i] = switch_eta(i, tswitch, exp_eta) * beta / gamma;
+    Reff[i] = switch_eta(i, tswitch, eta) * beta / gamma;
 }
 
 
