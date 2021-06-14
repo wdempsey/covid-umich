@@ -1,6 +1,6 @@
 functions {
-  real switch_eta(real t, real t1, real eta, real nu, real xi) {
-    return(eta + (1 - eta) / (1 + exp(xi * (t - t1 - nu))));
+  real switch_eta(real t, real t1, real eta) {
+    return(eta  * (t - t1 > 0));
   }
   real[] sir(real t, real[] y, real[] theta, 
              real[] x_r, int[] x_i) {
@@ -12,11 +12,9 @@ functions {
       real gamma = theta[2];
       real a = theta[3];
       real eta = theta[4]; // reduction in transmission rate after quarantine
-      real nu = theta[5]; // shift of quarantine implementation
-      real xi = theta[6]; // slope of quarantine implementation
       real i0 = theta[7];
       real e0 = theta[8];
-      real forcing_function = switch_eta(t,tswitch,eta,nu,xi); // switch function
+      real forcing_function = switch_eta(t,tswitch,eta); // switch function
       real beta_eff = beta * forcing_function; // beta increased/decreased to take control measures into account
       real init[4] = {N - i0 - e0, e0, i0, 0}; // initial values
 
@@ -54,8 +52,6 @@ parameters {
   real<lower=0> a;
   real<lower=0> phi_inv;
   real<lower=0,upper=1> eta; // reduction in transmission due to control measures (in proportion of beta)
-  real<lower=0> nu; // shift of quarantine implementation (strictly positive as it can only occur after tswitch)
-  real<lower=0,upper=1> xi_raw; // slope of quarantine implementation (strictly positive as the logistic must be downward)
   real<lower=0> i0; // number of infected
   real<lower=0> e0;
 }
@@ -64,9 +60,8 @@ transformed parameters{
   real incidence[n_days+max_death_day - 1];
   real death_incidence[n_days - 1];
   real phi = 1. / phi_inv;
-  real xi = xi_raw + 0.5;
-  real theta[8];
-  theta = {beta, gamma, a, eta, nu, xi, i0, e0};
+  real theta[6];
+  theta = {beta, gamma, a, eta, i0, e0};
   y = integrate_ode_rk45(sir, rep_array(0.0, 4), t0, ts, theta, x_r, x_i);
   for (i in 1:(n_days+max_death_day)-1){
     incidence[i] = -(y[i+1, 2] - y[i, 2] + y[i+1, 1] - y[i, 1]); //-(E(t+1) - E(t) + S(t+1) - S(t))
@@ -90,8 +85,6 @@ model {
   i0 ~ normal(0, 10);
   e0 ~ normal(0, 10);
   eta ~ beta(2.5, 4);
-  nu ~ exponential(1./5);
-  xi_raw ~ beta(1, 1);
   p_death ~ beta(100, 99000);
   
   //sampling distribution
@@ -108,6 +101,7 @@ generated quantities {
   pred_cases = neg_binomial_2_rng(incidence, phi);
   pred_deaths = neg_binomial_2_rng(death_incidence, phi);
   for (i in 1:n_days)
-    Reff[i] = switch_eta(i, tswitch, eta, nu, xi) * beta / gamma;
+    Reff[i] = switch_eta(i, tswitch, eta) * beta / gamma;
 }
+
 

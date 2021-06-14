@@ -35,10 +35,10 @@ gender_data$day = day(gender_data$date)
 ethnicity_data$day = day(ethnicity_data$date)
 race_data$day = day(race_data$date)
 
-age_levels = levels(age_data$AGE_GRP)[-9]
-gender_levels = levels(gender_data$GENDER)[-3]
-ethnicity_levels = levels(ethnicity_data$ETHNICITY)[-3]
-race_levels = levels(race_data$RACE)[-4]
+age_levels = unique(age_data$AGE_GRP)[-9]
+gender_levels = unique(gender_data$GENDER)[-3]
+ethnicity_levels = unique(ethnicity_data$ETHNICITY)[-3]
+race_levels = unique(race_data$RACE)[-4]
 
 ## Pull each week and year
 ## Build every combination

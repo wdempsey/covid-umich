@@ -15,7 +15,7 @@ c_prior = "aquamarine2"
 df_swiss$date = ymd(df_swiss$startdate)
 df_swiss$death_dt = df_swiss$covid_deaths
 
-df_swiss = df_swiss[df_swiss$date > "2020-08-01",] # single bump to start
+df_swiss = df_swiss[df_swiss$date < "2020-07-01",] # single bump to start
 
 df_swiss %>% 
   ggplot() + 
@@ -46,10 +46,10 @@ t <- seq(1, n_days+max_death_day, by = 1)
 t0 = 0
 t <- t
 
-date_switch <- "2020-03-29" # date of introduction of control measures
+date_switch <- "2020-05-08" # date of introduction of control measures (empirical)
 tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
-# date_switch_back <- "2020-09-25" # date of ending of control measures
-# tswitch_back <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
+# date_switch <- "2020-09-25" # date of ending of control measures
+# tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
 
 data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths, 
                      tswitch = tswitch+max_death_day, death_distribution = death_distribution,
@@ -58,7 +58,7 @@ model_forcing <- stan_model("./8_sir_model.stan")
 
 fit_forcing <- sampling(model_forcing, 
                         data_forcing, 
-                        iter=5000,
+                        iter=1000,
                         control = list(max_treedepth = 13, adapt_delta=0.9),
                         seed=3,
                         chains = 1)
