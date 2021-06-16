@@ -46,7 +46,7 @@ t <- seq(1, n_days+max_death_day, by = 1)
 t0 = 0
 t <- t
 
-date_switch <- "2020-05-01" # date of introduction of control measures (empirical)
+date_switch <- "2020-03-19" # date of introduction of control measures (empirical)
 tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
 # date_switch <- "2020-09-25" # date of ending of control measures
 # tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
@@ -60,12 +60,12 @@ fit_forcing <- sampling(model_forcing,
                         data_forcing, 
                         iter=1000,
                         control = list(max_treedepth = 13, adapt_delta=0.9),
-                        seed=3,
+                        seed=1,
                         chains = 1)
 
 check_hmc_diagnostics(fit_forcing)
 
-pairs(fit_forcing, pars = c("beta", "gamma", "a", "eta", "phi"))
+pairs(fit_forcing, pars = c("beta", "gamma", "a", "exp_eta", "nu", "xi", "phi"))
  
 smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_cases", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary[(max_death_day+1):(max_death_day+length(deaths)-1),]),
                                 t=1:(n_days-1))
@@ -108,12 +108,12 @@ prior = tibble(
   a = abs(rnorm(n,.4,.5)),
   phi_inv = rexp(n,5),
   p_reported = rbeta(n, 1, 2),
-  eta = rnorm(n, 0, 0.5),
+  eta = rnorm(n, 0, 0.10),
 ) %>%
   pivot_longer(everything()) %>%
   mutate(type="Prior")
 
-pars = c("beta","gamma","phi_inv","a","eta")
+pars = c("beta","gamma","phi_inv","a","exp_eta")
 samp =
   extract(fit_forcing,pars) %>%
   as.data.frame() %>%
