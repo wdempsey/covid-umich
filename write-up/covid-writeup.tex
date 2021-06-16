@@ -58,23 +58,25 @@
 % \email{wdem@umich.edu}
 
 \begin{abstract}
-  Coronavirus case-count data has influenced government policies and drives many epidemiological forecasts. Limited testing is cited as the key driver behind minimal information on the COVID-19 pandemic. While expanded testing is laudable, measurement error and selection bias are the two greatest problems limiting our understanding of the current COVID-19 pandemic; neither can be fully addressed by increased testing capacity. In this paper, we demonstrate their impact on estimation of point prevalence and the effective reproduction number. We show that estimates based on the millions of molecular tests in the US has the same mean square error as a small simple random sample.  To address this, a procedure is presented that combines case-count data and random samples over time to estimate selection propensities based on key covariate information. We then combine these selection propensities with epidemiological forecast models using death-only data to construct a \emph{doubly-robust} estimation method that accounts for both measurement-error and selection bias.  This method is then applied to estimate Indiana's prevalence using case-count, hospitalization, and death data with cumulative demographic information, the United States's only statewide random molecular sample collected from April 25--29th, and Facebook's COVID-19 symptom survey.  We end with a series of recommendations based on the proposed methodology.
+  Coronavirus case-count data has influenced government policies and drives most epidemiological forecasts. Limited testing is cited as the key driver behind minimal information on the COVID-19 pandemic. While expanded testing is laudable, measurement error and selection bias are the two greatest problems limiting our understanding of the COVID-19 pandemic; neither can be fully addressed by increased testing capacity. In this paper, we demonstrate their impact on estimation of point prevalence and the effective reproduction number. We show that estimates based on the millions of molecular tests in the US has the same mean square error as a small simple random sample.  To address this, a procedure is presented that combines case-count data and random samples over time to estimate selection propensities based on key covariate information. We then combine these selection propensities with epidemiological forecast models using death-only data to construct a \emph{doubly-robust} estimation method that accounts for both measurement-error and selection bias.  This method is then applied to estimate Indiana's prevalence using case-count, hospitalization, and death data with cumulative demographic information, the United States's only statewide random molecular sample collected from April 25--29th, and Facebook's COVID-19 symptom survey.  We end with a series of recommendations based on the proposed methodology.
 \end{abstract}
 
 \maketitle
 
 
 \section{Introduction}
-The World Health Organization has declared the coronavirus disease 2019 (COVID-19) a public health emergency.  \textcolor{red}{As of August 28th, 2020, over 24.5 million cases have been confirmed worldwide with 5.95 million cases and over 180 thousand confirmed deaths across the United States.} This pandemic
+The World Health Organization has declared the coronavirus disease 2019 (COVID-19) a public health emergency.  \textcolor{red}{As of June 15th, 2021, over 176 million cases have been confirmed worldwide with 33.4 million cases and over 590 thousand confirmed deaths across the United States.} This pandemic
 has become the focal point of everyday life; yet the data landscape for understanding COVID-19 remains limited.  Public databases~\citep{JHU_Lancet,NYT} provide incoming county-level information of confirmed cases and deaths.  Statisticians, epidemiologists, economists, and data scientists have used this granular data to forecast COVID-19 case-counts, deaths, and hospitalizations~\citep{Giordano2020,Song2020,Ray2020,2020.IHME,Wang2020.03,JTD36385}.
 
-This paper has two main objectives.  The first objective is to express reservations at the use of case-counts as a proxy for disease prevalence and in estimation of standard epidemiological models for inference and forecasting.  The reason is straightforward: observed case-count data is plagued by selection bias and measurement error. Through a series of calculations, we will demonstrate that the information gained from increasing testing capacity is limited in the presence of selection bias and when testing inaccuracies persist.  In particular, the millions of tests in the US have a small effective sample size when compared to random sampling. These calculations demonstrate the importance of probabilistic sampling designs  over time for estimation of point prevalence and effective reproduction number.
+This paper has two main objectives.  The first objective is to express reservations at the use of case-counts as a proxy for disease prevalence and in estimation of standard epidemiological models for inference and forecasting.  The reason is straightforward: observed case-count data is plagued by selection bias and measurement error. Through a series of calculations, we will demonstrate that the information gained from increasing testing capacity is limited in the presence of selection bias and when testing inaccuracies persist.  In particular, the millions of tests in the US have a small effective sample size when compared to random sampling. These calculations demonstrate the importance of probabilistic sampling designs over time for estimation of point prevalence and effective reproduction number.
 
-Due to monetary and time constraints, random testing may be performed infrequently.  \textcolor{red}{As of August 28, 2020}, Indiana is the only state to conduct a statewide random sample testing\footnote{This is the only random sample to collect both seroprevalence and diagnostic testing results. The CDC has conducted several seroprevalence studies. See Section~\ref{section:testinginfo} for further discussion.}, which was collected from April 25--29, 2020.  Infrequent random testing may be insufficient to understand the trajectory of infectious diseases which change rapidly over time.  Therefore, while random testing may be preferable in theory, in practice governments, researchers, and policy makers continue to use coronavirus case-counts to understand the impact of COVID-19 on the population and make data-informed decisions.
+Due to monetary and time constraints, however, random testing is either not performed or performed very infrequently.  As of June 2021, Indiana is the only state to conduct statewide random sample testing\footnote{This is the only random sample to collect both seroprevalence and diagnostic testing results. The CDC has conducted several seroprevalence studies. See Section~\ref{section:testinginfo} for further discussion.}, which was collected from April 25--29, 2020~\citep{Yiannoutsos2021}.  Such infrequent random testing is likely to provide insufficient information to help researchers and policy makers better understand the disease trajectory which can change rapidly over time.  Therefore, while random testing may be preferable in theory, in practice governments, researchers, and policy makers continue to use coronavirus case-counts to understand the impact of COVID-19 on the population and make data-informed decisions.
 
-The second objective is to demonstrate how random samples provide necessary auxiliary information to address selection bias in coronavirus case-count data.  Random samples provide the necessary covariate information from a representative sample from the population to estimate selection propensities. These propensities are then used in an inverse-probability weighting scheme to construct estimators of disease prevalence that attempt to control for selection bias.  A doubly robust extension allows researchers to combine these estimates with epidemiological forecasts based on compartmental models that are common in the study of infectious diseases~\cite{Hao2020,Song2020,Ray2020,Johndrow2020}.
+The second objective is to demonstrate how random samples provide necessary \emph{auxiliary information} to address selection bias in coronavirus case-count data.  Random samples provide the necessary covariate information from a representative sample from the population to estimate selection propensities. These propensities can then used in an inverse-probability weighting scheme to construct estimators of disease prevalence that attempt to control for selection bias.  A doubly robust extension allows researchers to combine these estimates with epidemiological forecasts based on compartmental models that are common in the study of infectious diseases~\cite{Hao2020,Song2020,Ray2020,Johndrow2020}.
+
+Note that the proposed approach requires covariate information to be collected on tested individuals.  Unfortunately, many states do not require or report auxiliary covariate information beyond demographics such as gender, age, race, and ethnicity.  To address this, we discuss how the proposal suggests minor changes to current practice that may improve performance over time. While we demonstrate empirical improvements over simple disease prevalence estimates, we also highlight how selection bias may persist and impact uncertainty quantification.
+
 % Hospitalization Gelman
-While we demonstrate improvements over simple estimates of disease prevalence, we highlight how selection bias may persist and impact uncertainty quantification.
 
 \subsection{Related work}
 
@@ -93,7 +95,7 @@ In Section~\ref{section:casecount}, we present simple mathematical arguments to 
 
 In Section~\ref{section:improvedcasecount}, we present a doubly robust estimation method for combining epidemiological forecasts with inverse-probability weighting methods to estimate prevalence.  Weight estimation requires auxiliary information provided by random samples.  A statistical error decomposition illustrates a trade-off in use of weights: a potential increase in data quality but a reduction in effective data quantity.
 
-In Section~\ref{section:applications}, the IPW and doubly-robust estimation methods are applied to the case study of Indiana statewide prevalence from March 1st until August 27th.  We estimate data quality for IPW estimates using the random sample on April 28th.  We then discuss a sensitivity analysis method for estimating data quality and its use in understanding the potential biases in COVID-19 case-count analyses by analysing New York statewide prevalence and comparing to the results from their statewide random testing on April 23rd.  Both demonstrate improvements over simple prevalence estimation but that data quality is not of the same order as random sampling.  In Section~\ref{section:crosspop}, the case study results are used to suggest cross-country comparisons are difficult at best with population size, sampling fraction, and data quality all interacting to impact hypothesis testing.
+In Section~\ref{section:applications}, the IPW and doubly-robust estimation methods are applied to the case study of Indiana statewide prevalence from March 2020 until June 2021.  We estimate data quality for IPW estimates using the random sample on April 28th.  This demonstrates the proposed approach is an improvement over simple prevalence estimation but that data quality is not of the same order as random sampling.
 
 In Section~\ref{section:discussion}, a series of recommendations are provided that aim to help improve statistical inference in settings with large nonprobability samples from a stochastic process where small random sampling over time is possible.
 
@@ -107,21 +109,22 @@ In this section we provide the necessary background to understand COVID-19 diagn
 
 % We start with a brief description of the difference between COVID-19 molecular and serological tests as well as the relationship between COVID-19 testing, the infection, and immune response time frame. These distinctions will be useful later in the paper when discussing different random sample tests.
 
-After an individual is infected with SARS-CoV-2, there is an incubation period which lasts between two to five days (cite: NPR) before the viral load is high enough to be detected.  A \emph{molecular test} refers to any diagnostic test that aims to detect increased viral load (e.g., RT-PCR or antigen tests).  If someone has an active infection then after the incubation period a molecular test with perfect sensitivity will yield a positive result for the next few weeks (cite: wlos).  After that, the viral load will decrease and a molecular test with perfect specificity will come back negative. While an infected individual may yield a positive molecular test for several weeks, they will likely stop transmitting the disease within a few days of infection, meaning a positive molecular test does not imply transmissibility.
+Upon infection with SARS-CoV-2, there is an incubation period which lasts approximately five days~\citep{Lauer2020} before the viral load is high enough to be detected.  A \emph{molecular test} refers to diagnostic tests that aim to detect increased viral load (e.g., RT-PCR or antigen tests).  If someone has an active infection then after the incubation period, a molecular test with perfect sensitivity will yield a positive result for the next few weeks.  After that, the viral load will decrease and a molecular test with perfect specificity will come back negative. While an infected individual may yield a positive molecular test for several weeks, they will likely stop transmitting the disease within a few days of infection, meaning a positive molecular test does not imply transmissibility.
 
-A molecular test conducted on an infected individual may return a negative result.  Such false negatives are very strongly associated with when the test is conducted.  In the incubation phase, most molecular tests will return a false negative result.  Molecular tests are most sensitive when the viral loads are highest which occurs during the first few days of transmissibility (cite: that guy ).   Moreover, most molecular tests are performed via nasopharyngeal swab.  Specimen collection by swab is known to impact false negative/positive rates regardless of test timing.   Systematic reviews suggest that 70\% sensitivity and 95\% specificity are reasonable estimates for current RT-PCR tests~\cite{Woloshin2020}.
+A molecular test conducted on an infected individual may return a negative result.  Such false negatives are very strongly associated with when the test is conducted.  In the incubation phase, most molecular tests will return a false negative result.  Molecular tests are most sensitive when the viral loads are highest which occurs during the first few days of transmissibility~\citep{Mina2020}.   Moreover, most molecular tests are performed via nasopharyngeal swab.  Specimen collection by swab is known to impact false negative/positive rates regardless of test timing.   Systematic reviews suggest that 70\% sensitivity and 95\% specificity are reasonable estimates for current RT-PCR tests~\cite{Woloshin2020}.
 
-The primary goal of molecular tests is diagnosis of active infections in the population.  Such diagnostic tests generate important information about the presence of SARS-Cov-2 in the population, and help scientists and policy-makers understand patterns of transmission and propagation. Rapid and frequent molecular testing is cited as a key component (citEe: OECD and others) in effective strategies to identify active infections and prevent systemic outbreaks.  There has been work on developing faster, cheaper testing options (cite: Mina) that can be used at-home as well as group testing (citE: Mina); however, these developments are beyond the scope of this paper.
+The primary goal of molecular tests is diagnosis of active infections in the population.  Such diagnostic tests generate important information about the presence of SARS-Cov-2 in the population, and help scientists and policy-makers understand patterns of transmission and propagation. Rapid and frequent molecular testing is cited as a key component~\cite{OECD2021} in effective strategies to identify active infections and prevent systemic outbreaks.
 % Here we consider the current system of testing which involves both self-selection into testing and historical limits on who was able to receive diagnostic tests due to limited testing capacity.
 
 \emph{Serological tests} look for an immunological response to the virus.  A week or so after an individual is infected with SARS-CoV-2, the individual will start producing antibodies.  At this point, a serological test with perfect sensitivity will come back positive.  This test provides evidence of past infection while the molecular test provides evidence of an \emph{active} infection.
 
-To better estimate SARS-CoV-2 immunity in a population, seroprevalence studies that generate a probabilistic population sample and perform serological tests on the sample can be collected.  These studies are useful for disease surveillance. When the number of active infections in a population are low, serological surveys are cheaper and more accurate than molecular tests and are more useful in detecting outbreaks (cite: Mina). To date, the CDC has conducted ten large-scale geographic serological surveys with three rounds.  While population-based sampling strategies provide a more representative nationwide sample, they are very time intensive and expensive.
+To better estimate SARS-CoV-2 immunity in a population, seroprevalence studies that generate a probabilistic population sample and perform serological tests on the sample can be collected.  These studies are useful for disease surveillance. To date, the CDC has conducted ten large-scale geographic serological surveys with three rounds.  While population-based sampling strategies provide a more representative nationwide sample, they are very time intensive and expensive.
 
 \subsection{Publicly available data on COVID-19}
-\label{section:testinginfo}
+\label{subsection:testinginfo}
 
-In this paper, our primary goal is accurate estimates of the population-level active infection rates over time using \emph{publicly available} testing data.  Secondary goals include estimation of rates of change in these quantities and the effective reproduction number (cite:) which characterize the infectious disease spread.  A final goal is using these estimates to characterize prevalence of immunity in the general population.  As previously stated, these quantities are fundamental to public health policy and general critical information on presence and transmission of SARS-CoV-2 as well as the impact of public health  interventions.
+Our primary goal is accurate estimates of the population-level active infection rates over time using \emph{publicly available} viral testing data.  Secondary goals include estimation of rates of change and the effective reproduction number which characterize disease trajectory.  A final goal is characterizing prevalence of population-level immunity. These quantities are fundamental to public health policy and provide critical information on the presence and transmission of SARS-CoV-2.
+ % as well as the impact of public health  interventions.
 
 % {\bf key point: WHAT IS THE GOAL OF CASE COUNT DATA? WHAT IS THE GOAL OF SEROPREVALENCE STUDIES?  are we using it for that reason. cse count data is colelcted as part of surveillance programs wehre teh goal is to identify and isolate active infections.  However, many people are trying to use these to udnerstand the disease.  This is our issue.}
 
@@ -161,7 +164,7 @@ Since April 2020, Facebook has started randomly showing an opt-in symptom survey
 
 \begin{figure}[!th]
 \centering
-\includegraphics[width = 0.9\textwidth]{../methods/figs/fbcovid19symptoms.png}
+\includegraphics[width = 0.9\textwidth]{../figs/fbcovid19symptoms.png}
 \caption{Reported rate of COVID-like symptoms in strata.  Daily rates were estimated using weighted method on each day separately and then smoothed over time using local-linear nonparametric regression.}
 \label{fig:fbsymptoms}
 \vspace{-0.3cm}
@@ -201,7 +204,7 @@ Figure~\ref{fig:heatmap} shows that $D_M$, as a function of the relative frequen
 
 \begin{figure}[!th]
 \centering
-\includegraphics[width = 0.4\textwidth]{../methods/figs/mem_heatmap_article.png}
+\includegraphics[width = 0.4\textwidth]{../figs/mem_heatmap_article.png}
 \caption{Imperfect testing adjustment: relative frequency $f_1/f_0$ (x-axis) against odds ratio (y-axis) for $FP=0.005$ and $FN=0.172$. Color scaled so blue = $-10$, white = $0$, and red = $10$.}
 \label{fig:heatmap}
 \vspace{-0.3cm}
@@ -264,18 +267,48 @@ This implies a similar trade-off as before but on the logarithmic scale.  The er
 \centering
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.9\linewidth]{../methods/figs/sir_ratio.png}
+  \includegraphics[width=.9\linewidth]{../figs/sir_ratio.png}
   \caption{Ratio estimator}
   \label{fig:ratio-bias}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.9\linewidth]{../methods/figs/sir_rt.png}
+  \includegraphics[width=.9\linewidth]{../figs/sir_rt.png}
   \caption{Effective reproductive rate estimator}
   \label{fig:r0-bias}
 \end{subfigure}
 \caption{Potential bias due to self-selection and measurement error from a deterministic SIR model with $\beta = 1.2$ (black) and $\gamma = 0.15$.  Here we assume $f = 0.02$, $FP = 0.005$, $FN = 0.172$, and use a range of relative sampling fraction $M = f_1/f_0$.}
 \label{fig:rates}
+\end{figure}
+
+\subsection{Rate comparisons}
+
+So far we have focused on understanding the limitations of using case-count data to understand population quantities of interest for a \emph{single} population.  Many are interested in cross-population comparisons to contrast the impact of countries' mitigation policies.  Here, for simplicity, we focus on comparing the estimated effective reproductive rate.  We assume the two time-series are aligned so that $t=0$ is the time of first case in each population respectively.
+% This negates alignment issues and is common in practice.
+
+% While the above issues on $Z$-scores and effective sample size are important, here we highlight a separate issue.
+Here we demonstrate the interaction of biases in estimation of the two trajectories when the peak infection times differ slightly.  First, we can write the difference in the rates as
+$$
+R_{t1} - R_{t2} = \frac{1}{\gamma} \log \left( \frac{1 + e_{1t}}{1+e_{2t}} \right)
+$$
+where $e_{jt}$ is the error associated given in Section \ref{section:r0-estimation}.  Recall that the error allowed for over-estimation prior to the peak and then under-estimation post-peak.  Here, these errors can mingle in interesting ways.  Consider two countries (A and B) in which the peak occurs 2 weeks prior for country A than country B.  Figure~\ref{fig:comparison} presents such a comparison where each country's disease trajectory follows an SIR model (A=black and B=red). Of interest is the difference between the effective reproduction rate for country A and B, $R_{tA} - R_{tB}$. Figure~\ref{fig:eff} shows how biases in estimation of each rate interact in complex ways.  At first, the difference is correctly estimated; then the gap is over-estimated as country A sees a rapid rise in cases; then the magnitude of over-estimation increases as country A sees declining case-count while country B sees rapidly increasing case-count; then country A's rate is correctly estimated while country B's rate is under-estimated as it sees declining case-count; finally, the gap disappears.  We do not claim this will always be the case; however, this demonstrates how observed information can tell a more complex story than the truth (i.e., country A's peak is 2 weeks prior to country B's peak).
+
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../figs/sir.png}
+  \caption{Fraction of new cases in population}
+  \label{fig:fracpop}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../figs/sir_rt_comparison.png}
+  \caption{Effective reproduction rate estimators}
+  \label{fig:eff}
+\end{subfigure}
+\caption{Left: fraction infected in two SIR models with $\beta = 1.2$ and $0.9$ respectively and $\gamma = 0.15$ with same initial conditions. Right: comparison of $\hat R_t$ across time with $FN = 0.172$, $FP = 0.005$, and $M = 4$.}
+\label{fig:comparison}
 \end{figure}
 
 \section{Potential improvements to prevalence estimation}
@@ -476,13 +509,13 @@ Here we consider estimation of the active infection rate in Indiana. We consider
 \centering
 \begin{subfigure}{.45\textwidth}
   \centering
-  \includegraphics[width=.9\linewidth]{../methods/figs/indianacasecounts.png}
+  \includegraphics[width=.9\linewidth]{../figs/indianacasecounts.png}
   \caption{Indiana case-counts per day}
   \label{fig:in-cases}
 \end{subfigure}
 \begin{subfigure}{.45\textwidth}
   \centering
-  \includegraphics[width=.9\linewidth]{../methods/figs/indianadeaths.png}
+  \includegraphics[width=.9\linewidth]{../figs/indianadeaths.png}
   \caption{Indiana death-counts per day}
   \label{fig:in-deaths}
 \end{subfigure}
@@ -592,61 +625,33 @@ We can perform a sensitivity analysis by considering the range of false negative
 % \end{figure}
 
 
-\section{Cross-population comparisons}
-\label{section:crosspop}
-So far we have focused on understanding the limitations of using case-count data to understand population quantities of interest for a \emph{single} population.  Many are interested in cross-population comparisons to contrast the impact of countries' mitigation policies.  Many pieces in the media as well as academic articles have plots of case-count over time aligned by time of first known case.  Others have claimed such comparisons unfair due to unequal population sizes and instead plotted case-count per million.  In this section, we focus on the statistical issues relevant to such comparisons.
+% \section{Cross-population comparisons}
+% \label{section:crosspop}
+% So far we have focused on understanding the limitations of using case-count data to understand population quantities of interest for a \emph{single} population.  Many are interested in cross-population comparisons to contrast the impact of countries' mitigation policies.  Many pieces in the media as well as academic articles have plots of case-count over time aligned by time of first known case.  Others have claimed such comparisons unfair due to unequal population sizes and instead plotted case-count per million.  In this section, we focus on the statistical issues relevant to such comparisons.
 
-\subsection{Prevalence comparisons}
+% \subsection{Prevalence comparisons}
 
-At a fixed time, suppose prevalence estimates $\bar y_1$ and $\bar y_2$ are observed for two populations. We can express $\bar y_1 - \bar y_2$ in statistical terms as
-$$
-(\bar Y_1 - \bar Y_2) + \left[ \rho_{I_1, Y_1} \times D_{M_1} \times \sqrt{\frac{1-f_1}{f_1}} \times \sigma_{Y_1}  - \rho_{I_2, Y_2} \times D_{M_2} \times \sqrt{\frac{1-f_2}{f_2}} \times \sigma_{Y_2} \right].
-$$
-The first term is the difference in population prevalence (i.e., the quantity of interest).  If random sampling were performed in each population, $E_{\I} [ \rho_{I_j, Y_j}] = 0$ and so the estimate would be unbiased.  However, the second term represents the complex error that results from selection bias.
-The particular test of interest is $H_0: \bar Y_1 = \bar Y_2$.  Under the null, $\sigma_{Y_1} = \sigma_{Y_2}$.  In classical statistics, we would compute a Z-score:
-$$
-\begin{aligned}
-\frac{\bar y_1 - \bar y_2}{ \sqrt{V_{SRS} (\bar y_1 - \bar y_2)} } &=
-\frac{\rho_{I_1, Y_1} \times D_{M_1} \times \sqrt{\frac{1-f_1}{f_1}}  - \rho_{I_2, Y_2} \times D_{M_2} \times \sqrt{\frac{1-f_2}{f_2}} }{ \sqrt{\frac{1}{N_1 -1} \times \frac{1-f_1}{f_1} + \frac{1}{N_2 - 1} \times \frac{1-f_2}{f_2}} }  \\
-&\overset{\star}{=}
-\sqrt{\frac{(N_1-1)(N_2 -1)}{N_1 + N_2}} \left[ \rho_{I_1, Y_1} - \rho_{I_2, Y_2} \right]
-\end{aligned}
-$$
-Where the last equality holds under $f_1 = f_2$, i.e., same sampling rate relative to population size. This tells us that the exact error in the comparison of sample means, as an estimate of the difference in population means, scales as a function of the difference in data quality $\rho_{I_1, Y_1} - \rho_{I_2, Y_2}$ times a square root of a population adjustment.  For highly unequal population sizes (e.g., $N_1 \gg N_2$), the adjustment is approximated well by the square root of the smaller population size minus one (e.g. $\sqrt{N_2 -1}$).
+% At a fixed time, suppose prevalence estimates $\bar y_1$ and $\bar y_2$ are observed for two populations. We can express $\bar y_1 - \bar y_2$ in statistical terms as
+% $$
+% (\bar Y_1 - \bar Y_2) + \left[ \rho_{I_1, Y_1} \times D_{M_1} \times \sqrt{\frac{1-f_1}{f_1}} \times \sigma_{Y_1}  - \rho_{I_2, Y_2} \times D_{M_2} \times \sqrt{\frac{1-f_2}{f_2}} \times \sigma_{Y_2} \right].
+% $$
+% The first term is the difference in population prevalence (i.e., the quantity of interest).  If random sampling were performed in each population, $E_{\I} [ \rho_{I_j, Y_j}] = 0$ and so the estimate would be unbiased.  However, the second term represents the complex error that results from selection bias.
+% The particular test of interest is $H_0: \bar Y_1 = \bar Y_2$.  Under the null, $\sigma_{Y_1} = \sigma_{Y_2}$.  In classical statistics, we would compute a Z-score:
+% $$
+% \begin{aligned}
+% \frac{\bar y_1 - \bar y_2}{ \sqrt{V_{SRS} (\bar y_1 - \bar y_2)} } &=
+% \frac{\rho_{I_1, Y_1} \times D_{M_1} \times \sqrt{\frac{1-f_1}{f_1}}  - \rho_{I_2, Y_2} \times D_{M_2} \times \sqrt{\frac{1-f_2}{f_2}} }{ \sqrt{\frac{1}{N_1 -1} \times \frac{1-f_1}{f_1} + \frac{1}{N_2 - 1} \times \frac{1-f_2}{f_2}} }  \\
+% &\overset{\star}{=}
+% \sqrt{\frac{(N_1-1)(N_2 -1)}{N_1 + N_2}} \left[ \rho_{I_1, Y_1} - \rho_{I_2, Y_2} \right]
+% \end{aligned}
+% $$
+% Where the last equality holds under $f_1 = f_2$, i.e., same sampling rate relative to population size. This tells us that the exact error in the comparison of sample means, as an estimate of the difference in population means, scales as a function of the difference in data quality $\rho_{I_1, Y_1} - \rho_{I_2, Y_2}$ times a square root of a population adjustment.  For highly unequal population sizes (e.g., $N_1 \gg N_2$), the adjustment is approximated well by the square root of the smaller population size minus one (e.g. $\sqrt{N_2 -1}$).
 
-Take, for example, a comparison of the US and Canada.  The two population sizes are approximately 328 million and 38 million people.  Then the population adjustment is $5.84$ million. As of May 5th, Canada has performed a total of 24.92 tests per 1,000 people while the US has performed a total of 22.01 tests per 1,000 people\footnote{According to \href{https://ourworldindata.org/grapher/full-list-cumulative-total-tests-per-thousand}{ourworldindata.org}} so the data quantities are approximately equal to $f = 23/1000 = 0.023$.  Then, under a prevalence of 10\%, one would need the differential $\Delta_1-\Delta_2$ to be much smaller than $11.68 \times 10^{-6}$ in order for the selection bias to not impact.  So only under the very strong assumptions of equal data quantity and quality will the comparisons be valid and the $Z$-score can be treated as in the classical setting.  A simple alternative is to use the effective sample sizes to build more appropriate $Z$-score.  That is, setting
-$$
-Z_n = \frac{\bar y_1 - \bar y_2}{ \frac{1-f}{f} \sigma_y \sqrt{ \frac{1}{n_{1,eff} - 1} + \frac{1}{n_{2,eff} - 1}}}
-$$
-allows us to build Z-scores that account for the true sample size.  While still not perfect, this allows us to build Z-scores that are not overly confident due to selection bias and measurement error.  See Section~\ref{section:est_dq} for discussion of how to estimate data quality.
-
-\subsection{Rate comparisons}
-
-An alternative is the comparison on the rates of case-count change over time.  Here, for simplicity, we focus on comparing the estimated effective reproductive rate.  We assume the two time-series are aligned so that $t=0$ is the time of first case.  This negates alignment issues and is common in practice.
-
-While the above issues on $Z$-scores and effective sample size are important, here we highlight a separate issue.  Namely, the interaction of biases in estimation of the two trajectories when the peak infection times differ slightly.  We can write the difference in the rates as
-$$
-R_{t1} - R_{t2} = \frac{1}{\gamma} \log \left( \frac{1 + e_{1t}}{1+e_{2t}} \right)
-$$
-where $e_{jt}$ is the error associated given in Section \ref{section:r0-estimation}.  Recall that the error allowed for over-estimation prior to the peak and then under-estimation post-peak.  Here, these errors can mingle in interesting ways.  Consider two countries (A and B) in which the peak occurs 2 weeks prior for country A than country B.  Figure~\ref{fig:comparison} presents such a comparison where each country's disease trajectory follows an SIR model (A=black and B=red). Of interest is the difference between the effective reproduction rate for country A and B, $R_{tA} - R_{tB}$. Figure~\ref{fig:eff} shows how biases in estimation of each rate interact in complex ways.  At first, the difference is correctly estimated; then the gap is over-estimated as country A sees a rapid rise in cases; then the magnitude of over-estimation increases as country A sees declining case-count while country B sees rapidly increasing case-count; then country A's rate is correctly estimated while country B's rate is under-estimated as it sees declining case-count; finally, the gap disappears.  We do not claim this will always be the case; however, this demonstrates how observed information can tell a more complex story than the truth (i.e., country A's peak is 2 weeks prior to country B's peak).
-
-\begin{figure}
-\centering
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{../methods/figs/sir.png}
-  \caption{Fraction of new cases in population}
-  \label{fig:fracpop}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{../methods/figs/sir_rt_comparison.png}
-  \caption{Effective reproduction rate estimators}
-  \label{fig:eff}
-\end{subfigure}
-\caption{Left: fraction infected in two SIR models with $\beta = 1.2$ and $0.9$ respectively and $\gamma = 0.15$ with same initial conditions. Right: comparison of $\hat R_t$ across time with $FN = 0.172$, $FP = 0.005$, and $M = 4$.}
-\label{fig:comparison}
-\end{figure}
+% Take, for example, a comparison of the US and Canada.  The two population sizes are approximately 328 million and 38 million people.  Then the population adjustment is $5.84$ million. As of May 5th, Canada has performed a total of 24.92 tests per 1,000 people while the US has performed a total of 22.01 tests per 1,000 people\footnote{According to \href{https://ourworldindata.org/grapher/full-list-cumulative-total-tests-per-thousand}{ourworldindata.org}} so the data quantities are approximately equal to $f = 23/1000 = 0.023$.  Then, under a prevalence of 10\%, one would need the differential $\Delta_1-\Delta_2$ to be much smaller than $11.68 \times 10^{-6}$ in order for the selection bias to not impact.  So only under the very strong assumptions of equal data quantity and quality will the comparisons be valid and the $Z$-score can be treated as in the classical setting.  A simple alternative is to use the effective sample sizes to build more appropriate $Z$-score.  That is, setting
+% $$
+% Z_n = \frac{\bar y_1 - \bar y_2}{ \frac{1-f}{f} \sigma_y \sqrt{ \frac{1}{n_{1,eff} - 1} + \frac{1}{n_{2,eff} - 1}}}
+% $$
+% allows us to build Z-scores that account for the true sample size.  While still not perfect, this allows us to build Z-scores that are not overly confident due to selection bias and measurement error.  See Section~\ref{section:est_dq} for discussion of how to estimate data quality.
 
 \section{Discussion}
 \label{section:discussion}
@@ -1283,7 +1288,7 @@ N^{-2} \bigg[ &(1-FP-FN)^{-2} \sum_{j=1}^N \zeta_{t,j}^2 \frac{(1-\pi_{j,t})}{\p
 
 
 \section{Model-based estimation: parameter choices and inference}
-\label{app:modelbased}
+\label{app:modelbased_approx}
 
 Following~\cite{Song2020}, the fourth-order Runge-Kutta (RK4) method gives an approximation to the proposed SEIR model in equation XX as follows:
 
