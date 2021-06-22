@@ -77,8 +77,8 @@ transformed parameters{
   // print("P_death =", p_death);
   for (i in 1:n_days -1) {
     death_incidence[i] = 0;
-    print("Time is ", i);
-    print("Beta is ", switch_eta(i,tswitch, eta, beta, nu, xi));
+    // print("Time is ", i);
+    // print("Beta is ", switch_eta(i,tswitch, eta, beta, nu, xi));
     for (j in 0:max_death_day) {
       death_incidence[i] = death_incidence[i] + incidence[(max_death_day - j)+i]*p_death * death_distribution[j+1]; 
     }
@@ -87,13 +87,13 @@ transformed parameters{
 }
 model {
   //priors
-  beta ~ normal(2, 0.5);
-  gamma ~ normal(0.3, 0.5);
-  a ~ normal(0.4, 0.5);
+  beta ~ normal(2, 0.5) T[0,];
+  gamma ~ normal(0.3, 0.5) T[0,];
+  a ~ normal(0.4, 0.5) T[0,];
   phi_inv ~ exponential(5);
   i0 ~ normal(0, 10);
   e0 ~ normal(0, 10);
-  eta ~ normal(2, 0.5);
+  eta ~ normal(1, 1) T[0,];
   nu ~ exponential(1./5);
   xi_raw ~ beta(1, 1);
   p_death ~ beta(100, 99000);
