@@ -87,7 +87,7 @@ transformed parameters{
 }
 model {
   //priors
-  beta ~ normal(2, 0.5) T[0,];
+  beta ~ normal(1, 1) T[0,];
   gamma ~ normal(0.3, 0.5) T[0,];
   a ~ normal(0.4, 0.5) T[0,];
   phi_inv ~ exponential(5);
