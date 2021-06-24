@@ -15,7 +15,7 @@ c_prior = "aquamarine2"
 df_swiss$date = ymd(df_swiss$startdate)
 df_swiss$death_dt = df_swiss$covid_deaths
 
-df_swiss = df_swiss[df_swiss$date < "2020-07-15",] # single bump to start
+# df_swiss = df_swiss[df_swiss$date < "2020-07-15",] # single bump to start
 
 df_swiss %>% 
   ggplot() + 
@@ -46,13 +46,14 @@ t <- seq(1, n_days+max_death_day, by = 1)
 t0 = 0
 t <- t
 
-date_switch <- "2020-04-01" # date of introduction of control measures (empirical)
+date_switch <- "2020-03-23" # date of introduction of control measures (empirical)
 tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
-# date_switch <- "2020-09-25" # date of ending of control measures
-# tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
+date_switch_two <- "2020-10-01" # date of ending of control measures
+tswitch_two <- df_swiss %>% filter(date < date_switch_two) %>% nrow() + 1 # convert time to number
 
 data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths, 
-                     tswitch = tswitch+max_death_day, death_distribution = death_distribution,
+                     tswitch = tswitch+max_death_day, tswitch_two = tswitch_two + max_death_day, 
+                     death_distribution = death_distribution,
                      max_death_day = max_death_day, p_death = 0.01)
 model_forcing <- stan_model("./8_sir_model.stan")
 
@@ -63,9 +64,12 @@ fit_forcing <- sampling(model_forcing,
                         seed=2,
                         chains = 1)
 
+
 check_hmc_diagnostics(fit_forcing)
 
-pairs(fit_forcing, pars = c("beta", "gamma", "a", "eta", "nu", "xi", "phi"))
+pairs(fit_forcing, pars = c("beta", "eta", "eta_two"))
+
+pairs(fit_forcing, pars = c("nu", "nu_two"))
  
 smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_cases", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary[(max_death_day+1):(max_death_day+length(deaths)-1),]),
                                 t=1:(n_days-1))
@@ -99,6 +103,7 @@ fit_forcing %>%
   ggplot() +
   geom_ribbon(aes(x = n_days, ymin = R01, ymax = R09), fill = c_posterior, alpha=0.35)+
   geom_line(mapping = aes(n_days, R0_mean), color = c_posterior) +
+  geom_vline(aes(xintercept = tswitch)) + 
   geom_vline(aes(xintercept = tswitch))
 
 n = 4000
