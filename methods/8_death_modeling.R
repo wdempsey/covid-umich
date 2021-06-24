@@ -52,9 +52,11 @@ date_switch_two <- "2020-10-01" # date of ending of control measures
 tswitch_two <- df_swiss %>% filter(date < date_switch_two) %>% nrow() + 1 # convert time to number
 
 data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths, 
-                     tswitch = tswitch+max_death_day, tswitch_two = tswitch_two + max_death_day, 
+                     tswitch = c(tswitch,tswitch_two) + max_death_day, 
+                     K = 2, 
                      death_distribution = death_distribution,
-                     max_death_day = max_death_day, p_death = 0.01)
+                     max_death_day = max_death_day, 
+                     p_death = 0.01)
 model_forcing <- stan_model("./8_sir_model.stan")
 
 fit_forcing <- sampling(model_forcing, 
@@ -64,6 +66,7 @@ fit_forcing <- sampling(model_forcing,
                         seed=2,
                         chains = 1)
 
+saveRDS(fit_forcing, "../data/fit_forcing.RDS")
 
 check_hmc_diagnostics(fit_forcing)
 
