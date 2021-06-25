@@ -3,33 +3,30 @@ functions {
     real weight = 1/(1+exp(-xi * (t - t1 - nu)));
     return( beta * (1-weight) + eta * weight );
   }
-  int which_switch(real t, real[] x_r) {
-    int K = size(x_r);
-    int which_k = 1;
-    for (k in 1:K) {
-      if(t > x_r[k]) {
-        which_k = k;
-      }
-    }
-    return(which_k);
-  }
   real[] sir(real t, real[] y, real[] theta, 
              real[] x_r, int[] x_i) {
 
       int N = x_i[1];
-      int K = size(x_r);
-      int which_k = which_switch(t, x_r);
-      real tswitch = x_r[which_k];
-      real beta = theta[which_k];
-      real eta = theta[which_k+1];
-      real nu = theta[K+1+which_k]; // shift of quarantine implementation
-      real gamma = theta[2*K+1+1];
-      real a = theta[2*K+1+2];
-      real xi = theta[2*K+1+3]; // slope of quarantine implementation
-      real i0 = theta[2*K+1+4];
-      real e0 = theta[2*K+1+5];
+      real tswitch = x_r[1];
+      real tswitch_two = x_r[2];
+      real tswitch_three = x_r[3];
       
-      real beta_eff = switch_eta(t,tswitch, beta, eta, nu, xi);  
+      real beta = theta[1];
+      real gamma = theta[2];
+      real a = theta[3];
+      real eta = theta[4]; // increase/reduction in transmission rate after quarantine
+      real eta_two = theta[5]; // increase/reduction in transmission rate after end of quarantine
+      real eta_three = theta[6]; // increase/reduction in transmission rate after end of quarantine
+      real nu = theta[7]; // shift of quarantine implementation
+      real nu_two = theta[8]; // shift of quarantine implementation
+      real nu_three = theta[9]; // shift of quarantine implementation
+      real xi = theta[10]; // slope of quarantine implementation
+      real i0 = theta[11];
+      real e0 = theta[12];
+      real beta_eff = switch_eta(t,tswitch, eta, beta, nu, xi);
+      real beta_eff_two = switch_eta(t,tswitch_two, eta_two, eta, nu_two, xi);
+      real beta_eff_three = switch_eta(t,tswitch_three, eta_three, eta_two, nu_three, xi);
+      real beta_final = beta_eff_three * (t > tswitch_three) + beta_eff_two * (t > tswitch_two) * (t <= tswitch_three) + beta_eff * (t <= tswitch_two);
       
       real init[4] = {N - i0 - e0, e0, i0, 0}; // initial values
 
@@ -38,8 +35,8 @@ functions {
       real I = y[3] + init[3];
       real R = y[4] + init[4];
       
-      real dS_dt = -beta_eff * I * S / N;
-      real dE_dt =  beta_eff * I * S / N - a * E;
+      real dS_dt = -beta_final * I * S / N;
+      real dE_dt =  beta_final * I * S / N - a * E;
       real dI_dt = a * E - gamma * I;
       real dR_dt =  gamma * I;
       
@@ -49,9 +46,10 @@ functions {
 data {
   int<lower=1> n_days;
   int<lower=1> max_death_day;
-  int<lower=0> K; // number of switches
   real t0;
-  real tswitch[K]; // date of introduction of control measures
+  real tswitch; // date of introduction of control measures
+  real tswitch_two; // date of reduction in control measures
+  real tswitch_three; // date of reduction in control measures
   real ts[n_days+max_death_day];
   int N; // population size
   int deaths[n_days];
@@ -60,26 +58,31 @@ data {
 }
 transformed data {
   int x_i[1] = { N };
-  real x_r[K] = tswitch;
+  real x_r[3] = {tswitch, tswitch_two, tswitch_three};
 }
 parameters {
-  real<lower=0> gamma[1];
-  real<lower=0> beta[K+1]; // sequence of 
-  real<lower=0> a[1];
+  real<lower=0> gamma;
+  real<lower=0> beta;
+  real<lower=0> a;
   real<lower=0> phi_inv;
-  real<lower=0> nu[K]; // shift of quarantine implementation (strictly positive as it can only occur after tswitch's)
-  real<lower=0,upper=1> xi_raw[1]; // slope of quarantine implementation (strictly positive as the logistic must be downward)
-  real<lower=0> i0[1]; // number of infected
-  real<lower=0> e0[1];
+  real<lower=0> eta; // reduction/increase in transmission due to control measures
+  real<lower=0> eta_two; // reduction/increase in transmission due to control measures 
+  real<lower=0> eta_three; // reduction/increase in transmission due to control measures 
+  real<lower=0> nu; // shift of quarantine implementation (strictly positive as it can only occur after tswitch)
+  real<lower=0> nu_two; // shift of quarantine implementation (strictly positive as it can only occur after tswitch)
+  real<lower=0> nu_three; // shift of quarantine implementation (strictly positive as it can only occur after tswitch)
+  real<lower=0,upper=1> xi_raw; // slope of quarantine implementation (strictly positive as the logistic must be downward)
+  real<lower=0> i0; // number of infected
+  real<lower=0> e0;
 }
 transformed parameters{
   real y[n_days+max_death_day, 4];
   real incidence[n_days+max_death_day - 1];
   real death_incidence[n_days - 1];
   real phi = 1. / phi_inv;
-  real theta[2*K+6];
-  theta = {beta, nu, gamma, a, xi_raw, i0, e0};
-  print(theta)
+  real xi = xi_raw + 0.5;
+  real theta[12];
+  theta = {beta, gamma, a, eta, eta_two, eta_three, nu, nu_two, nu_three, xi, i0, e0};
   y = integrate_ode_rk45(sir, rep_array(0.0, 4), t0, ts, theta, x_r, x_i);
   for (i in 1:(n_days+max_death_day)-1){
     incidence[i] = -(y[i+1, 2] - y[i, 2] + y[i+1, 1] - y[i, 1]); //-(E(t+1) - E(t) + S(t+1) - S(t))
@@ -102,17 +105,18 @@ transformed parameters{
 }
 model {
   //priors
-  for (k in 1:(K+1)) {
-    beta[k] ~ normal(1, 1) T[0,];
-  }
+  beta ~ normal(1.5, 1) T[0,];
   gamma ~ normal(0.3, 0.5) T[0,];
   a ~ normal(0.4, 0.5) T[0,];
   phi_inv ~ exponential(5);
   i0 ~ normal(0, 10);
   e0 ~ normal(0, 10);
-  for (k in 1:K) {
-    nu[k] ~ exponential(1./5);
-  }
+  eta ~ normal(1, 1) T[0,];
+  eta_two ~ normal(1, 1) T[0,];
+  eta_three ~ normal(1, 1) T[0,];
+  nu ~ exponential(1./5);
+  nu_two ~ exponential(1./5);
+  nu_three ~ exponential(1./5);
   xi_raw ~ beta(1, 1);
   p_death ~ beta(100, 99000);
   
@@ -129,14 +133,14 @@ generated quantities {
   real pred_deaths[n_days-1];
   pred_cases = neg_binomial_2_rng(incidence, phi);
   pred_deaths = neg_binomial_2_rng(death_incidence, phi);
-  for (i in 1:n_days) {
-    Reff[i] = switch_eta(i, tswitch[1], beta[2], beta[1], nu[1], xi) / gamma;  
-    for (k in 1:K) {
-      if (i > tswitch[k]) {
-        Reff[i] = switch_eta(i, tswitch[k], beta[k+1], beta[k], nu[k], xi) / gamma;
+  for (i in 1:n_days)
+    if (i > tswitch_two) {
+      if (i > tswitch_three) {
+        Reff[i] = switch_eta(i, tswitch_two, eta_three, eta_two, nu_three, xi) / gamma;
+      } else {
+        Reff[i] = switch_eta(i, tswitch_two, eta_two, eta, nu_two, xi) / gamma; 
       }
+    } else {
+      Reff[i] = switch_eta(i, tswitch, eta, beta, nu, xi) / gamma;
     }
-  }
 }
-
-

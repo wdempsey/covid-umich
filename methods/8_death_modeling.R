@@ -17,12 +17,6 @@ df_swiss$death_dt = df_swiss$covid_deaths
 
 # df_swiss = df_swiss[df_swiss$date < "2020-07-15",] # single bump to start
 
-df_swiss %>% 
-  ggplot() + 
-  geom_bar(mapping = aes(x = date, y = death_dt), fill = c_mid, color = c_dark, stat = "identity") +
-  labs(y="Number of COVID-19 Reported Deaths") + 
-  scale_x_date(date_breaks = "months" , date_labels = "%b-%y")
-
 ## Death Distribution
 death_distribution = pnorm(seq(0.5,40.5, by =1), mean = 25, sd = 5)-pnorm(c(0,seq(0.5,39.5, by =1)), mean = 25, sd = 5)
 death_distribution = death_distribution/sum(death_distribution)
@@ -48,15 +42,26 @@ t <- t
 
 date_switch <- "2020-03-23" # date of introduction of control measures (empirical)
 tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
-date_switch_two <- "2020-10-01" # date of ending of control measures
+date_switch_two <- "2020-06-15" # date of ending of control measures
 tswitch_two <- df_swiss %>% filter(date < date_switch_two) %>% nrow() + 1 # convert time to number
+date_switch_three <- "2020-10-01" # date of ending of control measures
+tswitch_three <- df_swiss %>% filter(date < date_switch_three) %>% nrow() + 1 # convert time to number
+
+
+df_swiss %>% 
+  ggplot() + 
+  geom_bar(mapping = aes(x = date, y = death_dt), fill = c_mid, color = c_dark, stat = "identity") +
+  labs(y="Number of COVID-19 Reported Deaths") + 
+  scale_x_date(date_breaks = "months" , date_labels = "%b-%y")+ 
+  geom_vline(aes(xintercept = date(date_switch)), linetype="dotted") + 
+  geom_vline(aes(xintercept = date(date_switch_two)), linetype="dotted") + 
+  geom_vline(aes(xintercept = date(date_switch_three)), linetype="dotted")
 
 data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths, 
-                     tswitch = c(tswitch,tswitch_two) + max_death_day, 
-                     K = 2, 
+                     tswitch = tswitch+max_death_day, tswitch_two = tswitch_two + max_death_day,
+                     tswitch_three = tswitch_three + max_death_day, 
                      death_distribution = death_distribution,
-                     max_death_day = max_death_day, 
-                     p_death = 0.01)
+                     max_death_day = max_death_day, p_death = 0.01)
 model_forcing <- stan_model("./8_sir_model.stan")
 
 fit_forcing <- sampling(model_forcing, 
@@ -66,18 +71,20 @@ fit_forcing <- sampling(model_forcing,
                         seed=2,
                         chains = 1)
 
-saveRDS(fit_forcing, "../data/fit_forcing.RDS")
+saveRDS(fit_forcing, "../data/fit_forcing_threejumps.RDS")
+
+# fit_forcing = readRDS("../data/fit_forcing.RDS")
 
 check_hmc_diagnostics(fit_forcing)
 
 pairs(fit_forcing, pars = c("beta", "eta", "eta_two"))
 
 pairs(fit_forcing, pars = c("nu", "nu_two"))
- 
+
 smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_cases", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary[(max_death_day+1):(max_death_day+length(deaths)-1),]),
-                                t=1:(n_days-1))
+                  t=1:(n_days-1))
 colnames(smr_pred) <- make.names(colnames(smr_pred)) # to remove % in the col names
- 
+
 ggplot(smr_pred, mapping = aes(x = t)) +
   #geom_ribbon(aes(ymin = X2.5., ymax = X97.5.), fill = c_dark, ) +
   geom_ribbon(aes(ymin = X5., ymax = X95.), fill = c_posterior, alpha=0.35) +
