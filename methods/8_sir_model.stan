@@ -52,9 +52,10 @@ data {
   real tswitch_three; // date of reduction in control measures
   real ts[n_days+max_death_day];
   int N; // population size
-  int deaths[n_days];
   real death_distribution[max_death_day+1];
-  real p_death; // infection fatality rate
+  int num_ages; // number of age groups
+  int deaths[num_ages, n_days]; // deaths by age group
+  real p_death[num_ages]; // infection fatality rate per age group
 }
 transformed data {
   int x_i[1] = { N };
@@ -74,11 +75,12 @@ parameters {
   real<lower=0,upper=1> xi_raw; // slope of quarantine implementation (strictly positive as the logistic must be downward)
   real<lower=0> i0; // number of infected
   real<lower=0> e0;
+  real<lower=0> incidence_by_age[num_ages, n_days-1]; 
 }
 transformed parameters{
   real y[n_days+max_death_day, 4];
   real incidence[n_days+max_death_day - 1];
-  real death_incidence[n_days - 1];
+  real death_incidence[num_ages, n_days - 1];
   real phi = 1. / phi_inv;
   real xi = xi_raw + 0.5;
   real theta[12];
@@ -87,18 +89,14 @@ transformed parameters{
   for (i in 1:(n_days+max_death_day)-1){
     incidence[i] = -(y[i+1, 2] - y[i, 2] + y[i+1, 1] - y[i, 1]); //-(E(t+1) - E(t) + S(t+1) - S(t))
   }
-  // print("Incidence =", incidence);
-  // print("P_death =", p_death);
-  for (i in 1:n_days -1) {
-    death_incidence[i] = 0;
-    // print("Time is ", i);
-    // if (i > tswitch_two) {
-    //   print("Beta is ", switch_eta(i,tswitch_two, eta_two, eta, nu, xi));
-    // } else {
-    //   print("Beta is ", switch_eta(i,tswitch, eta, beta, nu, xi));
-    // }
-    for (j in 0:max_death_day) {
-      death_incidence[i] = death_incidence[i] + incidence[(max_death_day - j)+i]*p_death * death_distribution[j+1]; 
+  ## ALL ABOVE KEEP
+  
+  for (k in 1:num_ages) {
+    for (i in 1:n_days -1) {
+      death_incidence[k,i] = 0;
+      for (j in 0:max_death_day) {
+        death_incidence[k,i] = death_incidence[k,i] + incidence_by_age[k,(max_death_day - j)+i]*p_death[k] * death_distribution[j+1]; 
+      }
     }
   }
   // print("Death Incidence =", death_incidence);
@@ -118,7 +116,11 @@ model {
   nu_two ~ exponential(1./5);
   nu_three ~ exponential(1./5);
   xi_raw ~ beta(1, 1);
-  p_death ~ beta(100, 99000);
+  ## ALL ABOVE IS FINE
+  
+  //sampling distribution
+  //col(matrix x, int n) - The n-th column of matrix x. Here the number of infected people 
+  incidence_by_age [num_ages, 1:(n_days-1)] ~ neg_binomial_2(death_incidence, phi);
   
   //sampling distribution
   //col(matrix x, int n) - The n-th column of matrix x. Here the number of infected people 
