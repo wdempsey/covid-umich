@@ -1,4 +1,5 @@
-## SWISS DATA
+## INDIANA DEATH DATA
+library(wesanderson)
 library(tidyverse)
 library(tidybayes)
 library(gridExtra)
@@ -32,10 +33,13 @@ r0 <- 0
 y0 = c(S = s0, I = i0, R = r0)
 
 # Deaths
-deaths <- df_coviddeath_age$death_dt
+deaths = rep(0,0)
+for(age_levels in levels(df_coviddeath_age$age)) {
+  deaths <- rbind(deaths, df_coviddeath_age$death_dt[df_coviddeath_age$age == age_levels])
+}
 
 # times
-n_days <- length(deaths)
+n_days <- ncol(deaths)
 max_death_day <- length(death_distribution)-1
 t <- seq(1, n_days+max_death_day, by = 1)
 t0 = 0
@@ -48,16 +52,22 @@ tswitch_two <- df_swiss %>% filter(date < date_switch_two) %>% nrow() + 1 # conv
 date_switch_three <- "2020-10-01" # date of ending of control measures
 tswitch_three <- df_swiss %>% filter(date < date_switch_three) %>% nrow() + 1 # convert time to number
 
-df_swiss = subset(df_coviddeath_age, age == "30-39")
 
-df_swiss %>% 
+## PLOTTING DEATH DATA BY AGE CATEGORY
+df_coviddeath_age_plot = df_coviddeath_age
+levels(df_coviddeath_age_plot$age) = c(1,1,1,2,2,2,3,3,3)
+levels(df_coviddeath_age_plot$age) = c("0-39", "40-69", "70+")
+
+df_coviddeath_age_plot %>% 
   ggplot() + 
-  geom_bar(mapping = aes(x = date, y = death_dt), fill = c_mid, color = c_dark, stat = "identity") +
+  geom_bar(mapping = aes(x = date, y = death_dt, fill = age), stat = "identity") +
   labs(y="Number of COVID-19 Reported Deaths") + 
   scale_x_date(date_breaks = "months" , date_labels = "%b-%y")+ 
   geom_vline(aes(xintercept = date(date_switch)), linetype="dotted") + 
   geom_vline(aes(xintercept = date(date_switch_two)), linetype="dotted") + 
-  geom_vline(aes(xintercept = date(date_switch_three)), linetype="dotted")
+  geom_vline(aes(xintercept = date(date_switch_three)), linetype="dotted") +
+  scale_fill_manual(values=wes_palette(n = 3, "IsleofDogs1"))
+
 
 death_rates = c(2.975607e-05, 1.440472e-04, 4.557553e-04, 1.441978e-03, 
                 4.562317e-03, 1.443485e-02, 4.567086e-02, 1.546816e-01)
@@ -66,7 +76,8 @@ data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths,
                      tswitch = tswitch+max_death_day, tswitch_two = tswitch_two + max_death_day,
                      tswitch_three = tswitch_three + max_death_day, 
                      death_distribution = death_distribution,
-                     max_death_day = max_death_day, p_death = death_rates)
+                     max_death_day = max_death_day, p_death = death_rates,
+                     num_ages = length(death_rates))
 model_forcing <- stan_model("./8_sir_model.stan")
 
 fit_forcing <- sampling(model_forcing, 
