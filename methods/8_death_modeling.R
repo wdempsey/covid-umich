@@ -77,7 +77,8 @@ data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths,
                      tswitch_three = tswitch_three + max_death_day, 
                      death_distribution = death_distribution,
                      max_death_day = max_death_day, p_death = death_rates,
-                     num_ages = length(death_rates))
+                     num_ages = length(death_rates),
+                     alpha = rep(1, length(death_rates)))
 model_forcing <- stan_model("./8_sir_model.stan")
 
 fit_forcing <- sampling(model_forcing, 

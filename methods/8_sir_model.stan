@@ -56,6 +56,7 @@ data {
   int num_ages; // number of age groups
   int deaths[num_ages, n_days]; // deaths by age group
   real p_death[num_ages]; // infection fatality rate per age group
+  vector<lower=0>[num_ages] alpha;
 }
 transformed data {
   int x_i[1] = { N };
@@ -75,11 +76,12 @@ parameters {
   real<lower=0,upper=1> xi_raw; // slope of quarantine implementation (strictly positive as the logistic must be downward)
   real<lower=0> i0; // number of infected
   real<lower=0> e0;
-  real<lower=0> incidence_by_age[num_ages, n_days-1]; 
+  simplex[num_ages] varphi[1];
 }
 transformed parameters{
   real y[n_days+max_death_day, 4];
   real incidence[n_days+max_death_day - 1];
+  real incidence_by_age[num_ages, n_days+max_death_day-1]; 
   real death_incidence[num_ages, n_days - 1];
   real phi = 1. / phi_inv;
   real xi = xi_raw + 0.5;
@@ -90,6 +92,11 @@ transformed parameters{
     incidence[i] = -(y[i+1, 2] - y[i, 2] + y[i+1, 1] - y[i, 1]); //-(E(t+1) - E(t) + S(t+1) - S(t))
   }
   ## ALL ABOVE KEEP
+  for (k in 1:num_ages) {
+    for (i in 1:(n_days+max_death_day)-1){
+      incidence_by_age[k,i] = incidence[i] * varphi[1][k];
+    }
+  }
   
   for (k in 1:num_ages) {
     for (i in 1:n_days -1) {
@@ -118,9 +125,10 @@ model {
   xi_raw ~ beta(1, 1);
   ## ALL ABOVE IS FINE
   
-  //sampling distribution
-  //col(matrix x, int n) - The n-th column of matrix x. Here the number of infected people 
-  incidence_by_age [num_ages, 1:(n_days-1)] ~ neg_binomial_2(death_incidence, phi);
+  //
+  for (i in 1:1){
+    varphi[1] ~ dirichlet(alpha);   
+  }
   
   //sampling distribution
   //col(matrix x, int n) - The n-th column of matrix x. Here the number of infected people 
@@ -132,8 +140,10 @@ generated quantities {
   real recovery_time = 1 / gamma;
   real incubation_time = 1 / a;
   real pred_cases[n_days+max_death_day-1];
+  real pred_cases_per_agegroup[num_ages, n_days+max_death_day-1];
   real pred_deaths[n_days-1];
   pred_cases = neg_binomial_2_rng(incidence, phi);
+  pred_cases_per_agegroup = neg_binomial_2_rng(incidence_by_age, phi);
   pred_deaths = neg_binomial_2_rng(death_incidence, phi);
   for (i in 1:n_days)
     if (i > tswitch_two) {
