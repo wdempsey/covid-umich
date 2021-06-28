@@ -11,8 +11,8 @@ fit <- lm(log(ifr) ~ age)
 
 
 ## Age Ranges
-lower_age = c(0,25,35,45,55,65,75)
-upper_age = c(24,34,44,54,64,74,90)
+lower_age = c(0,20,30,40,50,60,70, 80)
+upper_age = c(19,29,39,49,59,69,79,90)
 mean_ifr = vector(length = length(lower_age))
 
 for (i in 1:length(lower_age)) {
@@ -21,3 +21,4 @@ for (i in 1:length(lower_age)) {
   mean_ifr[i] = mean(pred_ifr)
 }
 
+print(mean_ifr)
