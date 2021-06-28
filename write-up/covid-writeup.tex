@@ -440,70 +440,68 @@ where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appen
 \subsection{Model-based estimation}
 \label{section:modelbased}
 
-Up to this point, the primary focus of this paper has been on selection bias in coronavirus case-count data from a survey sampling perspective.  Here, we consider compartmental model approaches from infectious disease epidemiology.  Our primary objective is a model-based forecast of strata-level prevalence $\bar y_k$. To do this, an extension of a standard epidemiological state-space model -- the susceptible, infected, and removed (recovered and death) model, or SIR model -- is presented. Here we consider the probabilistic SIR model was originally proposed by~\cite{Osthus2017} with only one-dimensional time series of infected proportions; this formulation was extended by~\cite{Song2020} to model coronavirus case-counts.
+Up to this point, the primary focus of this paper has been on selection bias in coronavirus case-count data from a survey sampling perspective.  Here, we consider compartmental model approaches from infectious disease epidemiology.  Our primary objective is a model-based forecast of strata-level prevalence $\bar y_k$. To do this, a probabilistic extension of a standard epidemiological state-space model -- the susceptible, exposed, infected, and removed (recovered and death) model, or SEIR model -- is presented. A probabilistic SIR model was originally proposed by~\cite{Osthus2017} with only one-dimensional time series of infected proportions; this formulation was extended by~\cite{Song2020} to model coronavirus case-counts.
 
-Let $s_t$, $e_t$, $i_t^{(T)}$, $i^{(NT)}$, and $r_t$ denote the proportion of survivors, exposed, currently transmitting and not trasmitting infected, and removed cases (i.e., including both recovered cases and deaths) at time $t$.  Suppose $K$ strata such that the proportions are defined per strata, i.e., $s_t = (s_{1,t},\ldots, s_{K,t})$ is the proportion of survivors in each strata. Let $\theta_t = (s_t, e_t, i_t^{(T)}, i_t^{(NT)}, r_t)$, then we assume the process is governed by the following Markov model:
-$$
-\theta_t \mid \theta_{t-1}; \tau \sim \text{Dirichlet} \left(\kappa f(\theta_{t-1}, \beta, \gamma) \right)
-$$
-where $\kappa$ scales the variance of the Dirichlet distribution and $f(\cdot)$ is a function that determines infection dynamics.  Here, we extend the SIR dynamics to account for strata-level dynamics
+Let $s_t$, $e_t$, $i_t^{(T)}$, and $r_t$ denote the proportion of survivors, exposed, infected, and removed cases (i.e., including both recovered cases and deaths) at time $t$.  The population-level SEIR dynamics are then given by the following set of differential equations:
 \begin{align*}
-\frac{\partial s_t}{\partial t} &= - s_t \circ (B \, i^{(T)}_t); \quad \frac{\partial e_t}{\partial t} = s_t \circ (B \, i^{(T)}_t) - \sigma e_t; \quad \\
-\frac{\partial i^{(T)}_t}{\partial t} &= \sigma e_t - \beta_2 i^{(T)}; \quad
-\frac{\partial i^{(NT)}_t}{\partial t} = \beta_2 i^{(NT)}  - \gamma i^{(NT)}; \quad \\
-\frac{\partial r_t}{\partial t} &= - \gamma i^{(NT)}_t
+\frac{\partial s_t}{\partial t} &= - \beta s_t i_t; \quad \frac{\partial e_t}{\partial t} = \beta s_t i_t - \sigma e_t; \quad \\
+\frac{\partial i^{(T)}_t}{\partial t} &= \sigma e_t - \gamma i_t; \quad
+\frac{\partial r_t}{\partial t} = - \gamma i_t.
 \end{align*}
-where $B \in \mathbb{R}^{K \times K}$ and $\circ$ denotes elementwise product of vectors.  The matrix $B$ allows for strata-specific infection dynamics with the SIR model being recovered if $B_{k,\cdot} = \beta$ for each $k \in [K]$.  Following~\cite{Song2020}, we employ Runge-Kutta (RK4) approximations for discretization; see Appendix XX for details.
+Following~\cite{Song2020}, we employ Runge-Kutta (RK4) approximations for discretization. Here, we consider covariate information to take the form of a stratificatoin variable $k$ with $K$ strata.  Let $\nu_{k,t}$ to denote the number of new infections on day $t$ in the $k$th strata.  AS there are a total of $N \cdot i_t := I_t$ new infections on day $t$, we assume the joint distribution of strata-specific new infection totals takes a multinomial distribution
+$$
+( \nu_{1,t}, \ldots, \nu_{K,t} ) \sim \text{Multinomial} \left( I_t, (p_{i1,t}, \ldots, p_{iK, t}) \right).
+$$
 
-Selection bias in case count data could be direcly addressed by extending the above compartmental model.  Here, we instead opt to bring in a different source of information by considering COVID-19 death data.  Let $D_{k,r}$ denote the number of individuals who pass away on day $r$ from strata $k$ and $\nu_{k,t}$ to denote the number of new infections on day $t$ in the $k$th strata.  Then
+Selection bias in case count data is addressed by bringing in a different source of information, COVID-19 death data.  Let $D_{k,r}$ denote the number of individuals who pass away on day $r$ from strata $k$.  Then
 $$
 D_{k,r} \mid p, \theta, \nu \sim \text{Poisson} \left( \sum_{t=1}^r p_{k} \nu_{k,t} \theta_{(r-t)} \right)
 $$
 where $p_{k}$ is the infection fatality rate for the $k$th strata.  This extends prior analysis of death data~\cite{Johndrow2020} by allowing the infection fatality rate to depend on age.  Indeed,~\cite{Levin2020} demonstrate that ``the estimated IFR is close to zero for children and younger adults but rises exponentially with age, reaching 0.4\% at age 55, 1.4\% at age 65, 4.6\% at age 75, and 15\% at age 85.'' For conciseness, parameter choices and inference are discussed in depth in Appendix~\ref{app:modelbased}.
 
-%\subsection{Doubly robust estimation.}
-%Rather than relying solely on IPW or epidemiological forecasts, here we combine forecasting and inverse-probability weighting by extending recent work by~\cite{Chen2019} to account time-varying propensities and measurement-error. In this context, the doubly-robust estimator is given by
-%$$
-%\bar y_{n}^{(DR)} = \frac{1}{N} \sum_{j=1}^N \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j w (x_j)} \sum_{j=1}^N I_j w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \mu(x_j) \right).
-%$$
-%where the estimates $\hat \mu(x_j)$ are not corrected for measurement-error as they are built to estimate true case count from death-only data. This estimator is called ``doubly-robust'' because it is consistent if either the model-based forecasts or the time-varying propensities are correctly specified. A statistical error decomposition can be derived
-%\begin{align}
-%\label{eq:statdecomp3}
-%\begin{split}
-%\rho_{\tilde I (X), Y-\mu(X)} &\times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y-\mu(X)}  \\
-%&\times \underbrace{\left[ 1 - \frac{\rho_{\tilde I(X),Y} \sigma_{Y}}{\rho_{\tilde I(X),Y-\mu(X)} \sigma_{Y-\mu(X)}} \times \tilde \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{\tilde f_0 (1-\bar Y) + \tilde f_1 \bar Y} \right]}_{\tilde D_M}.
-%\end{split}
-%\end{align}
-%See Appendix~\ref{app:DRderivation} for the derivation. Comparing~\eqref{eq:statdecomp3} to~\eqref{eq:statdecomp2} shows that the addition of the model-based focast impacts the estimation error in two ways.  First, if the model is adequate, then one may expect a reduction in the problem difficulty and (potentially) in the data quality components. Note that the model-based forecast does not impact the data quantity component.
-%
-%If the model-based forecast is correct then $E_{\bf R} [ \rho_{\tilde I (X), Y-\mu(X)} ] = 0$  and therefore $\rho_{\tilde I(X), Y} = O(N^{-1})$; however, if the forecasts are not correctly specified then the data quality index is unlikely to inversely scale with population size. Interestingly, the impact of measurement-error on data quality now depends on a relative comparison of the data quality and problem difficulty of the weighted estimator and the doubly-robust estimator.  For decent models, one would expect this ratio to be greater than one.  Therefore, $\tilde \Delta < 0$ implies an expected increase in impact of measurement-error and $\tilde \Delta > 0$ implies the magnitude could shrink toward zero or change sign and have an even large magnitude in the opposite direction.  Again, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from a DR estimator are likely to put too much confidence in the sheer size of the data.
-%
-%Unfortunately, the first term cannot be computed as covariate information is not collected on the entire population.  Here, we again use the probability samples and consider the doubly-robust estimator
-%$$
-%\frac{1}{\sum_{j=1}^N \tilde I_j \tilde W_j} \sum_{j=1}^N  \tilde I_j \tilde W_j \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j w (x_j)} \sum_{j=1}^N I_j w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \mu(x_j) \right).
-%$$
-%where $\tilde I_j$ indicates an individual is included in the random sample and $\tilde W_j$ is the associated weight for that unit. Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:dr} shows that the IPW estimator is  consistent and calculates the estimator's variance. See Appendix~\ref{app:asympderivations} for additional details.
-%
-%\begin{lemma}[Variance of doubly-robust estimator] \normalfont
-%\label{lemma:dr}
-%\textcolor{red}{Must fix.}
-%The estimates~$\mu_t := \bar y_{n,t}^\star$ and $\hat \pi_{j,t}$
-%are solutions to the following set of estimating equations
-%$$
-%\Phi_n (\eta_t) =
-%\left (
-%\begin{array}{c}
-%\frac{1}{N} \sum_{j=1}^N I_{j,t} \frac{Y_{j,t} - (1-FP-FN) \cdot (\mu_t+FP)}{\pi_{j,t}} \\
-%\frac{1}{N} \sum_{t^\prime = 1}^T K_{t,t^\prime} \sum_{j=1}^N I_{j,t^\prime} X_{j,t^\prime} - \frac{1}{N} \sum_{j = 1}^N \tilde I_{j,t^\prime} \tilde W_{j,t^\prime}  \pi_{j,t^\prime} X_{j,t^\prime}  \\
-%\frac{1}{n_{FP}} \sum_{j \in S_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
-%\frac{1}{n_{FN}} \sum_{j \in S_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
-%\end{array}
-%\right ) = {\bf 0}
-%$$
-%where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (n^{-1/2})$ (check)  and $\text{var} (\hat y_{n,t}) = V_{t}^{(IPW)} + o (n^{-1})$ where $V_t^{(IPW)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\Phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$.
-%\end{lemma}
-%
-%
+\subsection{Doubly robust estimation.}
+Rather than relying solely on IPW or epidemiological forecasts, here we combine forecasting and inverse-probability weighting by extending recent work by~\cite{Chen2019} to account time-varying propensities and measurement-error. In this context, the doubly-robust estimator is given by
+$$
+\bar y_{n}^{(DR)} = \frac{1}{N} \sum_{j=1}^N \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j w (x_j)} \sum_{j=1}^N I_j w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \mu(x_j) \right).
+$$
+where the estimates $\hat \mu(x_j)$ are not corrected for measurement-error as they are built to estimate true case count from death-only data. This estimator is called ``doubly-robust'' because it is consistent if either the model-based forecasts or the time-varying propensities are correctly specified. A statistical error decomposition can be derived
+\begin{align}
+\label{eq:statdecomp3}
+\begin{split}
+\rho_{\tilde I (X), Y-\mu(X)} &\times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y-\mu(X)}  \\
+&\times \underbrace{\left[ 1 - \frac{\rho_{\tilde I(X),Y} \sigma_{Y}}{\rho_{\tilde I(X),Y-\mu(X)} \sigma_{Y-\mu(X)}} \times \tilde \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{\tilde f_0 (1-\bar Y) + \tilde f_1 \bar Y} \right]}_{\tilde D_M}.
+\end{split}
+\end{align}
+See Appendix~\ref{app:DRderivation} for the derivation. Comparing~\eqref{eq:statdecomp3} to~\eqref{eq:statdecomp2} shows that the addition of the model-based focast impacts the estimation error in two ways.  First, if the model is adequate, then one may expect a reduction in the problem difficulty and (potentially) in the data quality components. Note that the model-based forecast does not impact the data quantity component.
+
+If the model-based forecast is correct then $E_{\bf R} [ \rho_{\tilde I (X), Y-\mu(X)} ] = 0$  and therefore $\rho_{\tilde I(X), Y} = O(N^{-1})$; however, if the forecasts are not correctly specified then the data quality index is unlikely to inversely scale with population size. Interestingly, the impact of measurement-error on data quality now depends on a relative comparison of the data quality and problem difficulty of the weighted estimator and the doubly-robust estimator.  For decent models, one would expect this ratio to be greater than one.  Therefore, $\tilde \Delta < 0$ implies an expected increase in impact of measurement-error and $\tilde \Delta > 0$ implies the magnitude could shrink toward zero or change sign and have an even large magnitude in the opposite direction.  Again, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from a DR estimator are likely to put too much confidence in the sheer size of the data.
+
+Unfortunately, the first term cannot be computed as covariate information is not collected on the entire population.  Here, we again use the probability samples and consider the doubly-robust estimator
+$$
+\frac{1}{\sum_{j=1}^N \tilde I_j \tilde W_j} \sum_{j=1}^N  \tilde I_j \tilde W_j \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j w (x_j)} \sum_{j=1}^N I_j w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \mu(x_j) \right).
+$$
+where $\tilde I_j$ indicates an individual is included in the random sample and $\tilde W_j$ is the associated weight for that unit. Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:dr} shows that the IPW estimator is  consistent and calculates the estimator's variance. See Appendix~\ref{app:asympderivations} for additional details.
+
+\begin{lemma}[Variance of doubly-robust estimator] \normalfont
+\label{lemma:dr}
+\textcolor{red}{Must fix.}
+The estimates~$\mu_t := \bar y_{n,t}^\star$ and $\hat \pi_{j,t}$
+are solutions to the following set of estimating equations
+$$
+\Phi_n (\eta_t) =
+\left (
+\begin{array}{c}
+\frac{1}{N} \sum_{j=1}^N I_{j,t} \frac{Y_{j,t} - (1-FP-FN) \cdot (\mu_t+FP)}{\pi_{j,t}} \\
+\frac{1}{N} \sum_{t^\prime = 1}^T K_{t,t^\prime} \sum_{j=1}^N I_{j,t^\prime} X_{j,t^\prime} - \frac{1}{N} \sum_{j = 1}^N \tilde I_{j,t^\prime} \tilde W_{j,t^\prime}  \pi_{j,t^\prime} X_{j,t^\prime}  \\
+\frac{1}{n_{FP}} \sum_{j \in S_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
+\frac{1}{n_{FN}} \sum_{j \in S_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
+\end{array}
+\right ) = {\bf 0}
+$$
+where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (n^{-1/2})$ (check)  and $\text{var} (\hat y_{n,t}) = V_{t}^{(IPW)} + o (n^{-1})$ where $V_t^{(IPW)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\Phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$.
+\end{lemma}
+
+
 %\section{COVID-19 active infection prevalence in Indiana}
 %\label{section:applications}
 %
@@ -1277,7 +1275,7 @@ $$
 A_{3,t} = \left( \begin{array}{c}
 0 \\
 0 \\
-\frac{1}{n_{FP}} \frac{1}{FP(1-FP)} \\
+\frac{1}{n_{FP}} \sum_{j \in S_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
 0
 \end{array}
 \right),
@@ -1288,7 +1286,7 @@ A_{4,t} = \left( \begin{array}{c}
 0 \\
 0 \\
 0 \\
-\frac{1}{n_{FN}} \frac{1}{FN(1-FN)}
+\frac{1}{n_{FN}} \sum_{j \in S_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
 \end{array}
 \right),
 $$
@@ -1308,59 +1306,80 @@ $$
 \right)
 $$
 }
-and $V_{j,t}$ are block-diagonal matrices with only one non-zero block that is equal to $D_{j,t}$ which is the design-based variance-covariance matrix under each probability sampling design.  The asymptotic variance for the IPW estimator is then the first diagonal element of the matrix $E \left[ \phi_n (\eta_0) \right]^{-1} \times \left[ V_{1,t} + V_{2,t} + V_{3,t} + V_{4,t} \right] E \left[ \phi_n (\eta_0) \right]^{-1}$.
-
-\section{Model-based estimation: parameter choices and inference}
-\label{app:modelbased_approx}
-
-Following~\cite{Song2020}, the fourth-order Runge-Kutta (RK4) method gives an approximation to the proposed SEIR model in equation XX as follows:
-
+and $V_{j,t}$ are block-diagonal matrices with only one non-zero block that is equal to $D_{j,t}$ which is the design-based variance-covariance matrix under each probability sampling design.
 $$
-f(\theta_{t-1}, \beta, \gamma) = \left(
-\begin{array}{c}
-\theta_{t-1}^{S} + \frac{1}{6} \left[ k_{t-1}^{S_1} + 2 k_{t-1}^{S_2} + 2 k_{t-1}^{S_3} + k_{t-1}^{S_4} \right] \\
-\theta_{t-1}^{E} + \frac{1}{6} \left[ k_{t-1}^{E_1} + 2 k_{t-1}^{E_2} + 2 k_{t-1}^{E_3} + k_{t-1}^{E_4} \right] \\
-\theta_{t-1}^{I^{(T)}} + \frac{1}{6} \left[ k_{t-1}^{I_1^{(T)}} + 2 k_{t-1}^{I_2^{(T)}} + 2 k_{t-1}^{I_3^{(T)}} + k_{t-1}^{I_4^{(T)}} \right] \\
-\theta_{t-1}^{I^{(NT)}} + \frac{1}{6} \left[ k_{t-1}^{I_1^{(NT)}} + 2 k_{t-1}^{I_2^{(NT)}} + 2 k_{t-1}^{I_3^{(NT)}} + k_{t-1}^{I_4^{(NT)}} \right] \\
-\theta_{t-1}^{R} + \frac{1}{6} \left[ k_{t-1}^{R_1} + 2 k_{t-1}^{R_2} + 2 k_{t-1}^{R_3} + k_{t-1}^{R_4} \right] \\
+V_{3,t} = \left( \begin{array}{c}
+0 \\
+0 \\
+\frac{1}{n_{FP}} \frac{1}{FP(1-FP)} \\
+0
 \end{array}
-\right)
+\right),
 $$
-where
-\begin{align*}
-k_t^{S_1} &= - s_t \circ (B i_t^{(T)}) \\
-k_t^{S_2} &= - (s_t + 0.5 k_t^{S_1}) \circ (B (i_t^{(T)} + 0.5 k_t^{I_1}) \\
-k_t^{S_3} &= - (s_t + 0.5 k_t^{S_2}) \circ (B i_t^{(T)} + 0.5 k_t^{I_2}) \\
-k_t^{S_4} &= - (s_t + k_t^{S_3}) \circ (B i_t^{(T)} + k_t^{I_3}),
-\end{align*}
 and
-\begin{align*}
-k_t^{E_1} &= s_t \circ (B i_t^{(T)}) - \sigma e_t \\
-k_t^{E_2} &= (s_t + 0.5 k_t^{S_1}) \circ (B (i_t^{(T)} + 0.5 k_t^{I_1}) - \sigma (e_t + 0.5 k_t^{e_1}) \\
-k_t^{E_3} &= (s_t + 0.5 k_t^{S_2}) \circ (B (i_t^{(T)} + 0.5 k_t^{I_2}) - \sigma (e_t + 0.5 k_t^{e_2}) \\
-k_t^{E_4} &= (s_t + k_t^{S_3}) \circ (B (i_t^{(T)} + k_t^{I_4}) - \sigma (e_t + k_t^{E_3}) \\
-\end{align*}
-and
-\begin{align*}
-k_t^{I_1^{(T)}} &= \sigma e_t - \beta_2 i^{(T)} \\
-k_t^{I_2^{(T)}} &= \sigma (e_t + 0.5 k_t^{E_1}) - \beta_2 (i^{(T)} + 0.5 k_t^{I_1^{(T)}}) \\
-k_t^{I_3^{(T)}} &= \sigma (e_t + 0.5 k_t^{E_2}) - \beta_2 (i^{(T)} + 0.5 k_t^{I_2^{(T)}}) \\
-k_t^{I_4^{(T)}} &= \sigma (e_t + k_t^{E_3}) - \beta_2 (i^{(T)} + k_t^{I_3^{(T)}}),
-\end{align*}
-and
-\begin{align*}
-k_t^{I_1^{(NT)}} &= \beta_2 i^{(T)} - \gamma i^{(NT)} \\
-k_t^{I_2^{(NT)}} &= \beta_2 (i^{(T)} + 0.5 k_t^{I_1^{(T)}}) - \gamma (i^{(NT)} + 0.5 k_t^{I_1^{(NT)}})\\
-k_t^{I_3^{(NT)}} &= \beta_2 (i^{(T)} + 0.5 k_t^{I_2^{(T)}}) - \gamma (i^{(NT)} + 0.5 k_t^{I_2^{(NT)}})\\
-k_t^{I_4^{(NT)}} &= \beta_2 (i^{(T)} + k_t^{I_3^{(T)}}) - \gamma (i^{(NT)} + k_t^{I_3^{(NT)}}) ,
-\end{align*}
-and
-\begin{align*}
-k_t^{R_1} &= - \gamma i_t^{(NT)} \\
-k_t^{R_2} &= - \gamma (i^{(NT)} + 0.5 k_t^{I_1^{(NT)}}) \\
-k_t^{R_3} &= - \gamma (i^{(NT)} + 0.5 k_t^{I_2^{(NT)}}) \\
-k_t^{R_4} &= - \gamma (i^{(NT)} + k_t^{I_3^{(NT)}}) \\
-\end{align*}
+$$
+V_{4,t} = \left( \begin{array}{c}
+0 \\
+0 \\
+0 \\
+\frac{1}{n_{FN}} \frac{1}{FN(1-FN)}
+\end{array}
+\right),
+$$
+
+The asymptotic variance for the IPW estimator is then the first diagonal element of the matrix $E \left[ \phi_n (\eta_0) \right]^{-1} \times \left[ V_{1,t} + V_{2,t} + V_{3,t} + V_{4,t} \right] E \left[ \phi_n (\eta_0) \right]^{-1}$.
+
+% \section{Model-based estimation: parameter choices and inference}
+% \label{app:modelbased_approx}
+
+% Following~\cite{Song2020}, the fourth-order Runge-Kutta (RK4) method gives an approximation to the proposed SEIR model in equation XX as follows:
+
+% $$
+% f(\theta_{t-1}, \beta, \gamma) = \left(
+% \begin{array}{c}
+% \theta_{t-1}^{S} + \frac{1}{6} \left[ k_{t-1}^{S_1} + 2 k_{t-1}^{S_2} + 2 k_{t-1}^{S_3} + k_{t-1}^{S_4} \right] \\
+% \theta_{t-1}^{E} + \frac{1}{6} \left[ k_{t-1}^{E_1} + 2 k_{t-1}^{E_2} + 2 k_{t-1}^{E_3} + k_{t-1}^{E_4} \right] \\
+% \theta_{t-1}^{I^{(T)}} + \frac{1}{6} \left[ k_{t-1}^{I_1^{(T)}} + 2 k_{t-1}^{I_2^{(T)}} + 2 k_{t-1}^{I_3^{(T)}} + k_{t-1}^{I_4^{(T)}} \right] \\
+% \theta_{t-1}^{I^{(NT)}} + \frac{1}{6} \left[ k_{t-1}^{I_1^{(NT)}} + 2 k_{t-1}^{I_2^{(NT)}} + 2 k_{t-1}^{I_3^{(NT)}} + k_{t-1}^{I_4^{(NT)}} \right] \\
+% \theta_{t-1}^{R} + \frac{1}{6} \left[ k_{t-1}^{R_1} + 2 k_{t-1}^{R_2} + 2 k_{t-1}^{R_3} + k_{t-1}^{R_4} \right] \\
+% \end{array}
+% \right)
+% $$
+% where
+% \begin{align*}
+% k_t^{S_1} &= - s_t \circ (B i_t^{(T)}) \\
+% k_t^{S_2} &= - (s_t + 0.5 k_t^{S_1}) \circ (B (i_t^{(T)} + 0.5 k_t^{I_1}) \\
+% k_t^{S_3} &= - (s_t + 0.5 k_t^{S_2}) \circ (B i_t^{(T)} + 0.5 k_t^{I_2}) \\
+% k_t^{S_4} &= - (s_t + k_t^{S_3}) \circ (B i_t^{(T)} + k_t^{I_3}),
+% \end{align*}
+% and
+% \begin{align*}
+% k_t^{E_1} &= s_t \circ (B i_t^{(T)}) - \sigma e_t \\
+% k_t^{E_2} &= (s_t + 0.5 k_t^{S_1}) \circ (B (i_t^{(T)} + 0.5 k_t^{I_1}) - \sigma (e_t + 0.5 k_t^{e_1}) \\
+% k_t^{E_3} &= (s_t + 0.5 k_t^{S_2}) \circ (B (i_t^{(T)} + 0.5 k_t^{I_2}) - \sigma (e_t + 0.5 k_t^{e_2}) \\
+% k_t^{E_4} &= (s_t + k_t^{S_3}) \circ (B (i_t^{(T)} + k_t^{I_4}) - \sigma (e_t + k_t^{E_3}) \\
+% \end{align*}
+% and
+% \begin{align*}
+% k_t^{I_1^{(T)}} &= \sigma e_t - \beta_2 i^{(T)} \\
+% k_t^{I_2^{(T)}} &= \sigma (e_t + 0.5 k_t^{E_1}) - \beta_2 (i^{(T)} + 0.5 k_t^{I_1^{(T)}}) \\
+% k_t^{I_3^{(T)}} &= \sigma (e_t + 0.5 k_t^{E_2}) - \beta_2 (i^{(T)} + 0.5 k_t^{I_2^{(T)}}) \\
+% k_t^{I_4^{(T)}} &= \sigma (e_t + k_t^{E_3}) - \beta_2 (i^{(T)} + k_t^{I_3^{(T)}}),
+% \end{align*}
+% and
+% \begin{align*}
+% k_t^{I_1^{(NT)}} &= \beta_2 i^{(T)} - \gamma i^{(NT)} \\
+% k_t^{I_2^{(NT)}} &= \beta_2 (i^{(T)} + 0.5 k_t^{I_1^{(T)}}) - \gamma (i^{(NT)} + 0.5 k_t^{I_1^{(NT)}})\\
+% k_t^{I_3^{(NT)}} &= \beta_2 (i^{(T)} + 0.5 k_t^{I_2^{(T)}}) - \gamma (i^{(NT)} + 0.5 k_t^{I_2^{(NT)}})\\
+% k_t^{I_4^{(NT)}} &= \beta_2 (i^{(T)} + k_t^{I_3^{(T)}}) - \gamma (i^{(NT)} + k_t^{I_3^{(NT)}}) ,
+% \end{align*}
+% and
+% \begin{align*}
+% k_t^{R_1} &= - \gamma i_t^{(NT)} \\
+% k_t^{R_2} &= - \gamma (i^{(NT)} + 0.5 k_t^{I_1^{(NT)}}) \\
+% k_t^{R_3} &= - \gamma (i^{(NT)} + 0.5 k_t^{I_2^{(NT)}}) \\
+% k_t^{R_4} &= - \gamma (i^{(NT)} + k_t^{I_3^{(NT)}}) \\
+% \end{align*}
 
 \section{IRLS}
 
