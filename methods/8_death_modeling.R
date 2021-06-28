@@ -66,7 +66,7 @@ model_forcing <- stan_model("./8_sir_model.stan")
 
 fit_forcing <- sampling(model_forcing, 
                         data_forcing, 
-                        iter=1000,
+                        iter=2000,
                         control = list(max_treedepth = 13, adapt_delta=0.9),
                         seed=2,
                         chains = 1)
@@ -77,9 +77,9 @@ saveRDS(fit_forcing, "../data/fit_forcing_threejumps.RDS")
 
 check_hmc_diagnostics(fit_forcing)
 
-pairs(fit_forcing, pars = c("beta", "eta", "eta_two"))
+pairs(fit_forcing, pars = c("beta", "eta", "eta_two", "eta_three"))
 
-pairs(fit_forcing, pars = c("nu", "nu_two"))
+pairs(fit_forcing, pars = c("nu", "nu_two", "nu_three"))
 
 smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_cases", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary[(max_death_day+1):(max_death_day+length(deaths)-1),]),
                   t=1:(n_days-1))
@@ -114,7 +114,8 @@ fit_forcing %>%
   geom_ribbon(aes(x = n_days, ymin = R01, ymax = R09), fill = c_posterior, alpha=0.35)+
   geom_line(mapping = aes(n_days, R0_mean), color = c_posterior) +
   geom_vline(aes(xintercept = tswitch)) + 
-  geom_vline(aes(xintercept = tswitch))
+  geom_vline(aes(xintercept = tswitch_two)) + 
+  geom_vline(aes(xintercept = tswitch_three))
 
 n = 4000
 prior = tibble(
