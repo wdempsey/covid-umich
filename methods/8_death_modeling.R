@@ -5,15 +5,16 @@ library(gridExtra)
 library(ggplot2)
 library(rstan)
 library(lubridate)
-df_swiss <- readRDS("../data/dailycoviddata_total.RDS")
+df_coviddeath <- readRDS("../data/dailycoviddata.RDS")
+df_coviddeath_age <- aggregate(covid_deaths ~ startdate + age, data = df_swiss, FUN = sum)
 
 c_mid <- c("#fc9272")
 c_dark <- c("#de2d26")
 c_posterior = "orange"
 c_prior = "aquamarine2"
 
-df_swiss$date = ymd(df_swiss$startdate)
-df_swiss$death_dt = df_swiss$covid_deaths
+df_coviddeath_age$date = ymd(df_coviddeath_age$startdate)
+df_coviddeath_age$death_dt = df_coviddeath_age$covid_deaths
 
 # df_swiss = df_swiss[df_swiss$date < "2020-07-15",] # single bump to start
 
@@ -31,7 +32,7 @@ r0 <- 0
 y0 = c(S = s0, I = i0, R = r0)
 
 # Deaths
-deaths <- df_swiss$death_dt
+deaths <- df_coviddeath_age$death_dt
 
 # times
 n_days <- length(deaths)
@@ -47,6 +48,7 @@ tswitch_two <- df_swiss %>% filter(date < date_switch_two) %>% nrow() + 1 # conv
 date_switch_three <- "2020-10-01" # date of ending of control measures
 tswitch_three <- df_swiss %>% filter(date < date_switch_three) %>% nrow() + 1 # convert time to number
 
+df_swiss = subset(df_coviddeath_age, age == "30-39")
 
 df_swiss %>% 
   ggplot() + 
@@ -57,11 +59,14 @@ df_swiss %>%
   geom_vline(aes(xintercept = date(date_switch_two)), linetype="dotted") + 
   geom_vline(aes(xintercept = date(date_switch_three)), linetype="dotted")
 
+death_rates = c(2.975607e-05, 1.440472e-04, 4.557553e-04, 1.441978e-03, 
+                4.562317e-03, 1.443485e-02, 4.567086e-02, 1.546816e-01)
+
 data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths, 
                      tswitch = tswitch+max_death_day, tswitch_two = tswitch_two + max_death_day,
                      tswitch_three = tswitch_three + max_death_day, 
                      death_distribution = death_distribution,
-                     max_death_day = max_death_day, p_death = 0.01)
+                     max_death_day = max_death_day, p_death = death_rates)
 model_forcing <- stan_model("./8_sir_model.stan")
 
 fit_forcing <- sampling(model_forcing, 
@@ -71,7 +76,7 @@ fit_forcing <- sampling(model_forcing,
                         seed=2,
                         chains = 1)
 
-saveRDS(fit_forcing, "../data/fit_forcing_threejumps.RDS")
+saveRDS(fit_forcing, "../data/fit_forcing_byage.RDS")
 
 # fit_forcing = readRDS("../data/fit_forcing.RDS")
 
@@ -93,6 +98,10 @@ ggplot(smr_pred, mapping = aes(x = t)) +
   # geom_point(mapping = aes(y = cases)) +
   labs(x = "Day", y = "Incidence")
 
+png(filename = "../figs/deaths_ppc.png",
+    width = 6.5, height = 4, units = "in", res = 1200, pointsize = 12)
+par(mar = c(2,2,1,1)+0.1)
+
 smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_deaths", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary), 
                   t=1:(n_days-1), deaths = deaths[1:length(deaths)-1])
 colnames(smr_pred) <- make.names(colnames(smr_pred)) # to remove % in the col names
@@ -104,6 +113,8 @@ ggplot(smr_pred, mapping = aes(x = t)) +
   geom_line(mapping = aes(x = t, y = X50.), color = c_posterior) +
   geom_point(mapping = aes(y = deaths)) +
   labs(x = "Day", y = "Incidence")
+
+dev.off()
 
 
 fit_forcing %>% 
