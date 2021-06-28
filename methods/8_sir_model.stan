@@ -91,13 +91,11 @@ transformed parameters{
   for (i in 1:(n_days+max_death_day)-1){
     incidence[i] = -(y[i+1, 2] - y[i, 2] + y[i+1, 1] - y[i, 1]); //-(E(t+1) - E(t) + S(t+1) - S(t))
   }
-  ## ALL ABOVE KEEP
   for (k in 1:num_ages) {
     for (i in 1:(n_days+max_death_day)-1){
       incidence_by_age[k,i] = incidence[i] * varphi[1][k];
     }
   }
-  
   for (k in 1:num_ages) {
     for (i in 1:n_days -1) {
       death_incidence[k,i] = 0;
@@ -106,7 +104,6 @@ transformed parameters{
       }
     }
   }
-  // print("Death Incidence =", death_incidence);
 }
 model {
   //priors
@@ -123,16 +120,17 @@ model {
   nu_two ~ exponential(1./5);
   nu_three ~ exponential(1./5);
   xi_raw ~ beta(1, 1);
-  ## ALL ABOVE IS FINE
-  
-  //
-  for (i in 1:1){
-    varphi[1] ~ dirichlet(alpha);   
-  }
-  
   //sampling distribution
   //col(matrix x, int n) - The n-th column of matrix x. Here the number of infected people 
-  deaths[1:(n_days-1)] ~ neg_binomial_2(death_incidence, phi);
+  for (k in 1:num_ages) {
+    for (i in 1:n_days-1) {
+      deaths[k,i] ~ neg_binomial_2(death_incidence[k,i], phi);
+    }
+  }
+  
+  // This is the Dirichlet prior on the fraction to each age group
+  varphi[1] ~ dirichlet(alpha);
+  
 }
 generated quantities {
   real R0 = beta / gamma;
@@ -141,10 +139,16 @@ generated quantities {
   real incubation_time = 1 / a;
   real pred_cases[n_days+max_death_day-1];
   real pred_cases_per_agegroup[num_ages, n_days+max_death_day-1];
-  real pred_deaths[n_days-1];
+  real pred_deaths[num_ages, n_days-1];
   pred_cases = neg_binomial_2_rng(incidence, phi);
-  pred_cases_per_agegroup = neg_binomial_2_rng(incidence_by_age, phi);
-  pred_deaths = neg_binomial_2_rng(death_incidence, phi);
+  for (k in 1:num_ages) {
+    for (i in 1:n_days-1) {
+      pred_deaths[k,i] = neg_binomial_2_rng(death_incidence[k,i], phi);
+    }
+    for (i in 1:(n_days+max_death_day-1)) {
+      pred_cases_per_agegroup[k,i] = neg_binomial_2_rng(incidence_by_age[k,i], phi);
+    }
+  }
   for (i in 1:n_days)
     if (i > tswitch_two) {
       if (i > tswitch_three) {

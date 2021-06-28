@@ -7,7 +7,7 @@ library(ggplot2)
 library(rstan)
 library(lubridate)
 df_coviddeath <- readRDS("../data/dailycoviddata.RDS")
-df_coviddeath_age <- aggregate(covid_deaths ~ startdate + age, data = df_swiss, FUN = sum)
+df_coviddeath_age <- aggregate(covid_deaths ~ startdate + age, data = df_coviddeath, FUN = sum)
 
 c_mid <- c("#fc9272")
 c_dark <- c("#de2d26")
@@ -46,11 +46,11 @@ t0 = 0
 t <- t
 
 date_switch <- "2020-03-23" # date of introduction of control measures (empirical)
-tswitch <- df_swiss %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
+tswitch <- subset(df_coviddeath_age, age == "80+") %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
 date_switch_two <- "2020-06-15" # date of ending of control measures
-tswitch_two <- df_swiss %>% filter(date < date_switch_two) %>% nrow() + 1 # convert time to number
+tswitch_two <- subset(df_coviddeath_age, age == "80+") %>% filter(date < date_switch_two) %>% nrow() + 1 # convert time to number
 date_switch_three <- "2020-10-01" # date of ending of control measures
-tswitch_three <- df_swiss %>% filter(date < date_switch_three) %>% nrow() + 1 # convert time to number
+tswitch_three <- subset(df_coviddeath_age, age == "80+") %>% filter(date < date_switch_three) %>% nrow() + 1 # convert time to number
 
 
 ## PLOTTING DEATH DATA BY AGE CATEGORY
