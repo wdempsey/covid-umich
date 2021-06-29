@@ -96,8 +96,8 @@ for(n in 1:2) {
 
 haty_nomem = sum(NR_array_test * weights)
 
-FP = 0.05
-FN = 0.30
+FP = 0.03 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7307014/
+FN = 0.13 # https://www.medrxiv.org/content/10.1101/2020.04.16.20066787v2.full.pdf
 
 haty = (haty_nomem - FP)/(1-FP-FN)
 
@@ -239,7 +239,7 @@ rbind(april, july, october)
 ## Death data
 
 deaths = read.csv("data/covid_report_death_date_agegrp.csv", header = T)
-deaths$date = mdy_hm(deaths$ï..date)
+deaths$date = mdy_hm(deaths$?..date)
 age = unique(deaths$agegrp)[1]
 subcase = deaths[deaths$agegrp == age,]
 temp = aggregate(covid_deaths ~ date, subcase, FUN = sum)

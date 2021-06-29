@@ -34,7 +34,7 @@ row.names(result) = round(seq_oddsratio,3)
 colnames(result) = round(seq_M,2)
 
 library("gplots")
-png(filename = "./figs/mem_heatmap.png",
+png(filename = "../figs/mem_heatmap.png",
     width = 960, height = 960, units = "px", pointsize = 16)
 heatmap.2(as.matrix(result), col = bluered(100), dendrogram='none',
           trace = "none", density.info = "none", Rowv=FALSE,

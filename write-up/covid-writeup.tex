@@ -584,7 +584,11 @@ Shortness & 0.058 & 0.060 & 0.062 & 0.062 \\ \hline
 
 \subsection{Inverse-probability weighting approach}
 
-We start with using Table~\ref{tab:indiana} to compute IPW weights.  The random sample is $n=3,658$.  Here, we demonstrate how to compute the weight for a particular strata.  For example, the strata defined as Male, 40--59, White, has a Fever, no household cases, and no prior tests has a weight proportional to
+% FP: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7307014/
+% FN: https://www.medrxiv.org/content/10.1101/2020.04.16.20066787v2.full.pdf
+
+
+We start by using Table~\ref{tab:indiana} to compute IPW weights for end of April, early May.  The random sample is $n=3,658$ and IPW weights are computed per strata which depend on Gender, Age, Race, Fever, Positive Case in Household, and Prior Positive Test.  The weight for the strata defined as Male, 40--59, White, has a Fever, no household cases, and no prior tests is proportional to:
 $$
 \frac{\left( 0.493 \times 0.252 \times 0.869 \times 0.018 \right)}{\left(0.418 \times 0.411 \times 0.231 \times 0.17 \right)} = 0.628
 $$
