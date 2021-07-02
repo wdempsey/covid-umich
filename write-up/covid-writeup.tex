@@ -546,17 +546,17 @@ Here we consider estimation of the active infection rate in Indiana. We consider
 & Male & 41.8 & 45.0 & 49.3 & 24.2 (12.4) & 2.1 \\ \hline
 \multirow{3}{*}{Age} & $<40$ & 39.4 & 28.0 & 52.7 & 29.7 (15.0) & 1.7 \\
 & $40-59$ & 41.1 & 36.0 & 25.2 & 24.9 (12.5) & 2.1 \\
-& $\geq 60$ & 19.5 & 36.0 & 22 & 6.7 (3.4) & 0.9 \\ \hline
+& $\geq 60$ & 19.5 & 36.0 & 22.1 & 6.7 (3.4) & 0.9 \\ \hline
 \multirow{2}{*}{Race} & White & 23.1 & 92.0 & 86.9 & 19.5 (9.6) & 1.5 \\
 & Nonwhite & 76.9 & 8.0 & 13.1 & 25.0 (12.3) & 3.4 \\ \hline
 % Hispanic & Hispanic & 44.1 & 2.0 & 7.1 & 37.6 & 6.9 \\
 % Origin & Non-Hispanic & 55.9 & 98.0 & 92.9 & 13.0 & 1.3 \\ \hline
 \multirow{2}{*}{Fever} & Yes & 17.0 & 1.8 & - & 66.4 (32.1) & 4.5 \\
 & No & 83.0 & 98.2 & - & 15.6 (7.5) & 1.3 \\ \hline
-Household & Yes & 10.8 & 1.4 & - & 46.1 & 29.4 \\
-$+$ Case & No & 89.2 & 98.6 & - & 21.6 & 1.3 \\ \hline
-Prior $+$ & Yes & 6.1 & 1.4 & - & 39.2 & 24.4 \\
-Test & No & 93.9 & 98.6 & - & 21.6 & 1.3 \\ \hline
+Household & Yes & 10.8 & 1.4 & - & 46.1 (22.4) & 29.4 \\
+$+$ Case & No & 89.2 & 98.6 & - & 21.6 (10.4) & 1.3 \\ \hline
+Prior $+$ & Yes & 6.1 & 1.4 & - & 39.2 (20.2) & 24.4 \\
+Test & No & 93.9 & 98.6 & - & 21.6 (11.1) & 1.3 \\ \hline
 \end{tabular}
 \caption{Estimated point prevalence of active infection with SARS-CoV-2 by demographics in Indiana.}
 \label{tab:indiana}
@@ -590,35 +590,14 @@ Shortness & 0.058 & 0.060 & 0.062 & 0.062 \\ \hline
 
 We start by using Table~\ref{tab:indiana} to compute IPW weights for end of April, early May.  The random sample is $n=3,658$ and IPW weights are computed per strata which depend on Gender, Age, Race, Fever, Positive Case in Household, and Prior Positive Test.  The weight for the strata defined as Male, 40--59, White, has a Fever, no household cases, and no prior tests is proportional to:
 $$
-\frac{\left( 0.493 \times 0.252 \times 0.869 \times 0.018 \right)}{\left(0.418 \times 0.411 \times 0.231 \times 0.17 \right)} = 0.628
+\frac{\left( 0.493 \times 0.252 \times 0.869 \times 0.018 \times 0.986 \times 0.986 \right)}{\left(0.418 \times 0.411 \times 0.231 \times 0.17 \times 0.892 \times 0.939 \right)} \approx 0.334
 $$
-Using the constructed weights and the adjusted strata-level prevalence estimates, the IPW estimate under no measurement-error is $7.7$, a decrease of four percentage points from the observed prevalence of $11.7$. Using Table~\ref{tab:indiana} to compute weights requires the assumption of independence among factors.  To alleviate this, we compute weights using Facebook's survey data collected in Indiana over that window of time; the resulting IPW estimate under no measurement-error is
+Using the constructed weights and the adjusted strata-level prevalence estimates, the IPW estimate under no measurement-error is $7.7$, a decrease of four percentage points from the observed prevalence of $11.7$. We also compute weights using Facebook's survey data collected in Indiana over that window of time but ignoring the household and prior testing information. The resulting IPW estimate under no measurement-error is $6.$
 
-The study did not report sensitivity and specificity; therefore, we take the suggested measures from~\cite{Woloshin2020} which report 70\% sensitivity is a reasonable estimates and~\cite{Cohen2020} which report 97.6\% specificity.  This corresponds to a false negative rate of $30\%$ and false positive rate of $2.4\%$.  Therefore, the IPW estimate accounting for measurement-error is $7.7\%$.  To account for uncertainty in
-
-Indiana's population as of 2019 was $6.732$ million.  Subtracting off the $617,555$ tests that had already performed yields a sampling fraction of $f = 0.001$.  The smoothed prevalence estimate is 28.4\%.  Adjusting for imperfect testing yields an estimate of $33.9\%$.
+The study did not report sensitivity and specificity; therefore, we take the suggested measures from~\cite{Woloshin2020} which report 70\% sensitivity is a reasonable estimates and~\cite{Cohen2020} which report 97.6\% specificity.  This corresponds to a false negative rate of $30\%$ and false positive rate of $2.4\%$.  Therefore, the IPW estimates accounting for measurement-error are $5.6\%$ and $4.2\%$ respectively.  To account for uncertainty in
 
 
 
-For this estimate, we consider estimation of data quality $E_{\I} \left[ \rho_{\tilde I(X),Y} \right]$. In \cite{Meng2018}, estimation relied on observing the true outcome (i.e., election vote totals), which is not possible in the current crisis.  Here, we use the random sample as a noisy but unbiased estimate of the true prevalence. Our goal is not inferential. Instead, we aim to build sensitivity analyses that can aid in understanding the amount of information in observational COVID case-count data.
-
-
-Under the assumption that the survey is a SRS from New York, the error is $17.6$\%.  Using~\eqref{eq:error}, we construct an estimate of the relative sampling rate as follows
-\[
-\rho D_M = \sqrt{\frac{f}{1-f}} \frac{\text{0.176}}{\sigma_Y} = 1.07 \times 10^{-2} \Rightarrow \Delta = 1.07 \times 10^{-3} \Rightarrow M = 2.3.
-\]
-We can perform a sensitivity analysis by considering the range of false negative and positive rates from~\cite{Bendavid2020}, which leads to a range for $M$ of $(2.21, 2.38)$.  Therefore, the impact on bias of $\hat R_t$ appears moderate.  If $FP = 0.05$ and $FN = 0.005$, then the relative sampling rate increases to $M=3.04$.  This simple tool helps us understand how sensitivity and specificity impact biases and  therefore how much we should trust conclusions based on these assumptions.
-
-
-%\subsubsection{Time-varying IPW estimator}
-%
-%\emph{Need to show Hospitalization C+ versus Covid count to show that most of the tests are in that subset for early parts.}
-%
-%
-%
-%
-%
-%
 %\subsection{Model-based estimation}
 %
 %\subsection{Doubly robust estimation}
@@ -641,35 +620,32 @@ We can perform a sensitivity analysis by considering the range of false negative
 %% \label{fig:ny-covid}
 %% \end{figure}
 %
+
+\subsection{Disease prevalence by April 2020}
+
+Indiana's population as of 2019 was $6.732$ million.  Subtracting off the $617,555$ tests that had already performed yields a sampling fraction of $f = 0.001$.  The smoothed prevalence estimate is 28.4\%.  Adjusting for imperfect testing yields an estimate of $33.9\%$.
+
+For this estimate, we consider estimation of data quality $E_{\I} \left[ \rho_{\tilde I(X),Y} \right]$. In \cite{Meng2018}, estimation relied on observing the true outcome (i.e., election vote totals), which is not possible in the current crisis.  Here, we use the random sample which estimates the true prevalence of active COVID-19 disease at 1.81\%~\cite{Yiannoutsos2021}.  Our goal is not inferential. Instead, we aim to build sensitivity analyses that can aid in understanding the amount of information in observational COVID case-count data.
+
+The non-weighted estimate error is $8.6$\%.  Using~\eqref{eq:statdecomp}, we construct an estimate of the relative sampling rate as follows
+\[
+\rho D_M = \sqrt{\frac{f}{1-f}} \frac{\text{0.085}}{\sigma_Y} = 3.84 \times 10^{-2} \Rightarrow \Delta = 1.39 \times 10^{-2} \Rightarrow M = 6.1.
+\]
+For the IPW estimates, $3.8$\% and $2.4$\% respectively
+\[
+\tilde \rho D_M = \sqrt{\frac{f}{1-f+CV_W^2}} \frac{\text{0.038}}{\sigma_Y} = 6.93 \times 10^{-3} \Rightarrow \tilde \Delta = 8.24 \times 10^{-3}  \Rightarrow \tilde M = 3.9.
+\]
+For the IPW estimate using Facebook data, we have $\tilde M = 3.3$.
+
+We can perform a sensitivity analysis by considering the range of false negative and false positive rates.  Here, we assume sensitivity between $81$\% and $91$\% and specificity between $95$\% and $98.8$\%~\cite{Katz2020}, which leads to a range for $M$ of $(5.60, 6.39)$ in the unweighted analysis.  Therefore, the impact on bias of $\hat R_t$ appears moderate.
+
+This simple tool helps us understand how sensitivity and specificity impact biases and  therefore how much we should trust conclusions based on these assumptions.
+
+%\subsubsection{Time-varying IPW estimator}
 %
-%% \section{Cross-population comparisons}
-%% \label{section:crosspop}
-%% So far we have focused on understanding the limitations of using case-count data to understand population quantities of interest for a \emph{single} population.  Many are interested in cross-population comparisons to contrast the impact of countries' mitigation policies.  Many pieces in the media as well as academic articles have plots of case-count over time aligned by time of first known case.  Others have claimed such comparisons unfair due to unequal population sizes and instead plotted case-count per million.  In this section, we focus on the statistical issues relevant to such comparisons.
-%
-%% \subsection{Prevalence comparisons}
-%
-%% At a fixed time, suppose prevalence estimates $\bar y_1$ and $\bar y_2$ are observed for two populations. We can express $\bar y_1 - \bar y_2$ in statistical terms as
-%% $$
-%% (\bar Y_1 - \bar Y_2) + \left[ \rho_{I_1, Y_1} \times D_{M_1} \times \sqrt{\frac{1-f_1}{f_1}} \times \sigma_{Y_1}  - \rho_{I_2, Y_2} \times D_{M_2} \times \sqrt{\frac{1-f_2}{f_2}} \times \sigma_{Y_2} \right].
-%% $$
-%% The first term is the difference in population prevalence (i.e., the quantity of interest).  If random sampling were performed in each population, $E_{\I} [ \rho_{I_j, Y_j}] = 0$ and so the estimate would be unbiased.  However, the second term represents the complex error that results from selection bias.
-%% The particular test of interest is $H_0: \bar Y_1 = \bar Y_2$.  Under the null, $\sigma_{Y_1} = \sigma_{Y_2}$.  In classical statistics, we would compute a Z-score:
-%% $$
-%% \begin{aligned}
-%% \frac{\bar y_1 - \bar y_2}{ \sqrt{V_{SRS} (\bar y_1 - \bar y_2)} } &=
-%% \frac{\rho_{I_1, Y_1} \times D_{M_1} \times \sqrt{\frac{1-f_1}{f_1}}  - \rho_{I_2, Y_2} \times D_{M_2} \times \sqrt{\frac{1-f_2}{f_2}} }{ \sqrt{\frac{1}{N_1 -1} \times \frac{1-f_1}{f_1} + \frac{1}{N_2 - 1} \times \frac{1-f_2}{f_2}} }  \\
-%% &\overset{\star}{=}
-%% \sqrt{\frac{(N_1-1)(N_2 -1)}{N_1 + N_2}} \left[ \rho_{I_1, Y_1} - \rho_{I_2, Y_2} \right]
-%% \end{aligned}
-%% $$
-%% Where the last equality holds under $f_1 = f_2$, i.e., same sampling rate relative to population size. This tells us that the exact error in the comparison of sample means, as an estimate of the difference in population means, scales as a function of the difference in data quality $\rho_{I_1, Y_1} - \rho_{I_2, Y_2}$ times a square root of a population adjustment.  For highly unequal population sizes (e.g., $N_1 \gg N_2$), the adjustment is approximated well by the square root of the smaller population size minus one (e.g. $\sqrt{N_2 -1}$).
-%
-%% Take, for example, a comparison of the US and Canada.  The two population sizes are approximately 328 million and 38 million people.  Then the population adjustment is $5.84$ million. As of May 5th, Canada has performed a total of 24.92 tests per 1,000 people while the US has performed a total of 22.01 tests per 1,000 people\footnote{According to \href{https://ourworldindata.org/grapher/full-list-cumulative-total-tests-per-thousand}{ourworldindata.org}} so the data quantities are approximately equal to $f = 23/1000 = 0.023$.  Then, under a prevalence of 10\%, one would need the differential $\Delta_1-\Delta_2$ to be much smaller than $11.68 \times 10^{-6}$ in order for the selection bias to not impact.  So only under the very strong assumptions of equal data quantity and quality will the comparisons be valid and the $Z$-score can be treated as in the classical setting.  A simple alternative is to use the effective sample sizes to build more appropriate $Z$-score.  That is, setting
-%% $$
-%% Z_n = \frac{\bar y_1 - \bar y_2}{ \frac{1-f}{f} \sigma_y \sqrt{ \frac{1}{n_{1,eff} - 1} + \frac{1}{n_{2,eff} - 1}}}
-%% $$
-%% allows us to build Z-scores that account for the true sample size.  While still not perfect, this allows us to build Z-scores that are not overly confident due to selection bias and measurement error.  See Section~\ref{section:est_dq} for discussion of how to estimate data quality.
-%
+%\emph{Need to show Hospitalization C+ versus Covid count to show that most of the tests are in that subset for early parts.}
+
+
 %\section{Discussion}
 %\label{section:discussion}
 %
@@ -1011,6 +987,11 @@ $\bar y$ & 1.2 & 1.4 & 1.6 & 1.8 & 2 \\
    \hline
 \end{tabular}
 \end{table}
+
+For binary outcomes, we have
+\begin{equation} \label{eq:binaryrho}
+\rho_{\tilde I (X),Y} = \tilde \Delta \sqrt{\frac{\bar Y (1 - \bar Y)}{f (1-f) \text{E}(W_J \mid I_J = 1)^2 + f \text{Var}(W_J \mid I_J = 1)} }
+\end{equation}
 
 \section{Effect modifiers in COVID-19 clinical trials}
 
