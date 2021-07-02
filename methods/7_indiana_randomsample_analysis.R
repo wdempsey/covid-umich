@@ -23,7 +23,7 @@ NR_test[['prior']] = c(0.392, 0.216)
 NR_test[['prior']] = NR_test[['prior']] * overall_test/sum(NR_rate[['prior']]*NR_test[['prior']])
 
 R_rate[['sex']] = c(0.507, 0.493) # CENSUS
-R_rate[['age']] = c(0.527, 0.252, 0.220) # CENSUS
+R_rate[['age']] = c(0.527, 0.252, 0.221) # CENSUS
 R_rate[['race']] = c(0.869, 0.131) # CENSUS
 R_rate[['fever']] = c(0.018, 0.982) # RANDOM SAMPLE
 R_rate[['household']] = c(0.014, 0.986) # RANDOM SAMPLE
@@ -103,7 +103,7 @@ haty = (haty_nomem - FP)/(1-FP-FN)
 
 ### Alternative using FB numbers
 
-fb_agg_weights = readRDS("data/fb_agg_weights.RDS")
+fb_agg_weights = readRDS("../data/fb_agg_weights.RDS")
 fb_agg_weights$altfever = (fb_agg_weights$fever == FALSE)*2 + (fb_agg_weights$fever == TRUE)*1
 
 fb_weights = fb_R_array_rate = fb_NR_array_rate = array(0,dim = c(2,3,2,2))
@@ -153,8 +153,8 @@ for(l in 1:2) {
 
 fb_haty_nomem = sum(fb_NR_array_test * fb_weights)
  
-FP = 0.05
-FN = 0.30
+FP = 0.03 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7307014/
+FN = 0.13 # https://www.medrxiv.org/content/10.1101/2020.04.16.20066787v2.full.pdf
 
 fb_haty = (fb_haty_nomem - FP)/(1-FP-FN)
 
@@ -166,117 +166,192 @@ print(paste("Hat y with MEM =", round(haty,3)))
 print(paste("FB-based hat y with no MEM =", round(fb_haty_nomem,3)))
 print(paste("FB-based hat y with MEM =", round(fb_haty,3)))
 
+## Statistical Error Decomposition
+N <- 6.732E6; # Indiana Population
+# https://www.cdc.gov/mmwr/volumes/69/wr/mm6929e1.htm
+n <- 898 # NR from Indiana paper
+priorn <- 95879
+n <- 19649 # Tests in total
 
-## CASE COUNT DATA PLOT
-library(lubridate)
-library(ggplot2)
+# April 25th - 29th
+f <- n/(N-priorn)
+true_y = 0.0181
+init_Delta = 0.001
 
-case_counts = read.csv("data/daily_covid_report.csv", header = T)
-case_counts$date = ymd_hms(case_counts$DATE)
-
-age = unique(case_counts$AGEGRP)[1]
-
-subcase = case_counts[case_counts$AGEGRP == age,]
-
-temp = aggregate(COVID_COUNT ~ date, subcase, FUN = sum)
-
-temp$cumsum = cumsum(temp$COVID_COUNT)
-
-temp$Age = age
-
-complete_date = temp
-
-for(age in unique(case_counts$AGEGRP)[2:8]) {
-
-  subcase = case_counts[case_counts$AGEGRP == age,]
-
-  temp = aggregate(COVID_COUNT ~ date, subcase, FUN = sum)
-
-  temp$cumsum = cumsum(temp$COVID_COUNT)
+stat_decomp <- function(haty, true_y, falsepos, falseneg, f) {
+  ## Defining error and variances
+  haty_mem = (haty - falsepos)/(1-falsepos-falseneg)
+  error <- haty - true_y
+  var_y = true_y * (1-true_y)
+  sigma_y = sqrt(var_y)
   
-  temp$Age = age
-  
-  complete_date = rbind(complete_date, temp)
-
+  interior_fn <- function(Delta) {
+    rho = Delta * sqrt( var_y / (f*(1-f)))
+    numerator = falsepos * (1-true_y) + falseneg * true_y
+    f_0 = f - true_y * Delta
+    f_1 = Delta + f_0
+    denominator = f_0* (1-true_y) + f_1 * true_y
+    odds = true_y/(1-true_y)
+    D_M = (1-Delta * odds * numerator/denominator) * 1/(1-falsepos-falseneg)
+    
+    output = rho * D_M - sqrt(f/(1-f)) * error / sigma_y
+    return(output^2)  
+  }
+  return(interior_fn)
 }
 
-names(complete_date)[2:4] = c("count","cumulative_count","Age")
 
-png(filename = "./figs/indianacasecounts.png",
-    width = 960, height = 480, units = "px", pointsize = 12)
+error = (overall_test-FP)/(1-FP-FN) - true_y 
+var_y = true_y * (1-true_y)
+sigma_y = sqrt(var_y)
+sqrt(f/(1-f)) * error / sigma_y
 
-ggplot(data = complete_date, aes(x = date, y = cumulative_count, col = Age)) +
-  geom_line(size=1.25) +
-  scale_colour_grey() + theme_bw() + 
-  theme(axis.line = element_line(colour = "black"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        panel.background = element_blank()) +
-  labs(x = "Date",
-       y = "Total Cases",
-       title = "Cumulative Case-count",
-       subtitle = "Indiana 2020")
+estimated_Delta = optim(par = init_Delta, fn = stat_decomp(overall_test, true_y, 0.03, 0.13, f))
+best_Delta <- estimated_Delta$par
+f_0 = f - true_y * best_Delta
+f_1 = best_Delta + f_0
+best_M = f_1/f_0
 
-dev.off()
+print(paste("Unweighted prevalence with MEM: Error = ", round(error,4), "Delta =", round(best_Delta,10), "M =", round(best_M,3)))
 
-## Example for paper (see distribution on April, July, and October 1st)
+# Smallest M for range of FP and FN
+estimated_Delta = optim(par = init_Delta, fn = stat_decomp(overall_test, true_y, 0.05, 0.19, f))
+best_Delta <- estimated_Delta$par
+f_0 = f - true_y * best_Delta
+f_1 = best_Delta + f_0
+best_M = f_1/f_0
+best_M
 
-print(complete_date$date[14])
-temp_cum = subset(complete_date, complete_date$date == complete_date$date[14])
-april = temp_cum$cumulative_count/sum(temp_cum$cumulative_count)
+# Largest M for range of FP and FN
+estimated_Delta = optim(par = init_Delta, fn = stat_decomp(overall_test, true_y, 0.03, 0.09, f))
+best_Delta <- estimated_Delta$par
+f_0 = f - true_y * best_Delta
+f_1 = best_Delta + f_0
+best_M = f_1/f_0
+best_M
 
-print(complete_date$date[802])
-temp_cum = subset(complete_date, complete_date$date == complete_date$date[802])
-july = temp_cum$cumulative_count/sum(temp_cum$cumulative_count)
 
-print(complete_date$date[197])
-temp_cum = subset(complete_date, complete_date$date == complete_date$date[197])
-october = temp_cum$cumulative_count/sum(temp_cum$cumulative_count)
+## Weighted error decomposition
+expected_weight = expected_weightsq = 0.0
 
-rbind(april, july, october)
-
-## Death data
-
-deaths = read.csv("data/covid_report_death_date_agegrp.csv", header = T)
-deaths$date = mdy_hm(deaths$?..date)
-age = unique(deaths$agegrp)[1]
-subcase = deaths[deaths$agegrp == age,]
-temp = aggregate(covid_deaths ~ date, subcase, FUN = sum)
-temp$cumsum = cumsum(temp$covid_deaths)
-temp$Age = age
-complete_date = temp
-
-for(age in unique(deaths$agegrp)[2:8]) {
-  
-  subcase = deaths[deaths$agegrp == age,]
-  
-  temp = aggregate(covid_deaths ~ date, subcase, FUN = sum)
-  
-  temp$cumsum = cumsum(temp$covid_deaths)
-  
-  temp$Age = age
-  
-  complete_date = rbind(complete_date, temp)
-  
+for (i in 1:2) {
+  for (j in 1:3) {
+    for (k in 1:2) {
+      for (l in 1:2) {
+        for (m in 1:2) {
+          for (n in 1:2) {
+            numer = R_rate[['sex']][i] * R_rate[['age']][j] * R_rate[['race']][k] * R_rate[['fever']][l] * R_rate[['household']][m] * R_rate[['prior']][n]  
+            denom = NR_rate[['sex']][i] * NR_rate[['age']][j] * NR_rate[['race']][k] * NR_rate[['fever']][l] * NR_rate[['household']][m] * NR_rate[['prior']][n] 
+            current_weight = numer/denom
+            rate = denom
+            expected_weight = expected_weight + current_weight*rate
+            expected_weightsq = expected_weightsq + current_weight^2*rate
+          }
+        }
+      }
+    }
+  }
 }
 
-names(complete_date)[2:4] = c("count","cumulative_count","Age")
+var_weight = expected_weightsq - expected_weight^2
+CV_Wsq = var_weight / expected_weight^2
 
-png(filename = "./figs/indianadeaths.png",
-    width = 960, height = 480, units = "px", pointsize = 12)
+fbexpected_weight = fbexpected_weightsq = 0.0
 
-ggplot(data = complete_date, aes(x = date, y = cumulative_count, col = Age)) +
-  geom_line(size=1.25) +
-  scale_colour_grey() + theme_bw() + 
-  theme(axis.line = element_line(colour = "black"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        panel.background = element_blank()) +
-  labs(x = "Date",
-       y = "Total Deaths",
-       title = "Cumulative Death-count",
-       subtitle = "Indiana 2020")
+for (i in 1:2) {
+  for (j in 1:3) {
+    for (k in 1:2) {
+      for (l in 1:2) {
+        numer = fb_agg_weights$frac[fb_agg_weights$gender == i & fb_agg_weights$altage == j & fb_agg_weights$altfever == l] * R_rate[['race']][k]
+        denom = NR_rate[['sex']][i] * NR_rate[['age']][j] * NR_rate[['race']][k] * NR_rate[['fever']][l]
+        current_weight =  numer/denom
+        rate = denom
+        fbexpected_weight = fbexpected_weight + current_weight * rate
+        fbexpected_weightsq = fbexpected_weightsq + current_weight^2 * rate
+      }
+    }
+  }
+}
 
-dev.off()
+fbvar_weight = fbexpected_weightsq - fbexpected_weight^2
+fbCV_Wsq = fbvar_weight / fbexpected_weight^2
+
+weighted_stat_decomp <- function(haty, true_y, falsepos, falseneg, f, expected_weight, var_weight) {
+  ## Defining error and variances
+  haty_mem = (haty - falsepos)/(1-falsepos-falseneg)
+  error <- haty - true_y
+  var_y = true_y * (1-true_y)
+  sigma_y = sqrt(var_y)
+  CV_Wsq = var_weight/expected_weight^2
+  tilde_f = expected_weight * f
+  
+  interior_fn <- function(Delta) {
+    rho = Delta * sqrt( var_y / (f*(1-f)*expected_weight^2+var_weight * f ))
+    numerator = falsepos * (1-true_y) + falseneg * true_y
+    f_0 = tilde_f - true_y * Delta
+    f_1 = Delta + f_0
+    denominator = f_0* (1-true_y) + f_1 * true_y
+    odds = true_y/(1-true_y)
+    D_M = (1-Delta * odds * numerator/denominator) * 1/(1-falsepos-falseneg)
+    
+    output = rho * D_M - sqrt(f/(1-f+CV_Wsq)) * error / sigma_y
+    return(output^2)  
+  }
+  return(interior_fn)
+}
+
+error = (haty_nomem-FP)/(1-FP-FN) - true_y 
+var_y = true_y * (1-true_y)
+sigma_y = sqrt(var_y)
+sqrt(f/(1-f+CV_Wsq)) * error / sigma_y
+
+estimated_Delta = optim(par = init_Delta, fn = weighted_stat_decomp(haty_nomem, true_y, 0.03, 0.13, f,expected_weight, var_weight))
+best_Delta <- estimated_Delta$par
+f_0 = expected_weight* f - true_y * best_Delta
+f_1 = best_Delta + f_0
+best_M = f_1/f_0
+
+print(paste("Weighted prevalence with MEM: Error = ", round(error,4), "Delta =", round(best_Delta,10), "M =", round(best_M,3)))
+
+fberror = (fb_haty_nomem-FP)/(1-FP-FN) - true_y 
+var_y = true_y * (1-true_y)
+sigma_y = sqrt(var_y)
+sqrt(f/(1-f+fbCV_Wsq)) * error / sigma_y
+
+fbestimated_Delta = optim(par = init_Delta, fn = weighted_stat_decomp(fb_haty_nomem, true_y, 0.03, 0.13, f, fbexpected_weight, fbvar_weight))
+fbbest_Delta <- fbestimated_Delta$par
+f_0 = fbexpected_weight * f - true_y * fbbest_Delta
+f_1 = fbbest_Delta + f_0
+fbbest_M = f_1/f_0
+
+print(paste("FB Weighted prevalence with MEM: Error = ", round(fberror,4), "Delta =", round(fbbest_Delta,10), "M =", round(fbbest_M,3)))
+
+# Smallest M for range of FP and FN
+estimated_Delta = optim(par = init_Delta, fn = weighted_stat_decomp(haty_nomem, true_y, 0.05, 0.19, f,expected_weight, var_weight))
+best_Delta <- estimated_Delta$par
+f_0 = expected_weight* f - true_y * best_Delta
+f_1 = best_Delta + f_0
+best_M = f_1/f_0
+best_M
+
+fbestimated_Delta = optim(par = init_Delta, fn = weighted_stat_decomp(fb_haty_nomem, true_y, 0.05, 0.19, f, fbexpected_weight, fbvar_weight))
+fbbest_Delta <- fbestimated_Delta$par
+f_0 = fbexpected_weight * f - true_y * fbbest_Delta
+f_1 = fbbest_Delta + f_0
+fbbest_M = f_1/f_0
+fbbest_M
+
+# Largest M for range of FP and FN
+estimated_Delta = optim(par = init_Delta, fn = weighted_stat_decomp(haty_nomem, true_y, 0.03, 0.09, f,expected_weight, var_weight))
+best_Delta <- estimated_Delta$par
+f_0 = expected_weight* f - true_y * best_Delta
+f_1 = best_Delta + f_0
+best_M = f_1/f_0
+best_M
+
+fbestimated_Delta = optim(par = init_Delta, fn = weighted_stat_decomp(fb_haty_nomem, true_y, 0.03, 0.09, f, fbexpected_weight, fbvar_weight))
+fbbest_Delta <- fbestimated_Delta$par
+f_0 = fbexpected_weight * f - true_y * fbbest_Delta
+f_1 = fbbest_Delta + f_0
+fbbest_M = f_1/f_0
+fbbest_M
