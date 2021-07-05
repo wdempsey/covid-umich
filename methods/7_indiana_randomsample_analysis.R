@@ -223,7 +223,7 @@ best_M = f_1/f_0
 best_M
 
 # Largest M for range of FP and FN
-estimated_Delta = optim(par = init_Delta, fn = stat_decomp(overall_test, true_y, 0.03, 0.09, f))
+estimated_Delta = optim(par = init_Delta, fn = stat_decomp(overall_test, true_y, 0.022, 0.09, f))
 best_Delta <- estimated_Delta$par
 f_0 = f - true_y * best_Delta
 f_1 = best_Delta + f_0
@@ -355,3 +355,4 @@ f_0 = fbexpected_weight * f - true_y * fbbest_Delta
 f_1 = fbbest_Delta + f_0
 fbbest_M = f_1/f_0
 fbbest_M
+
