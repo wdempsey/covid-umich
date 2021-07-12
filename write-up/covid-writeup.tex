@@ -261,8 +261,6 @@ Figure~\ref{fig:ratio-bias} displays the trajectory of the true ratio and the po
 \end{equation}
 where $s_t$ is the fraction of susceptible individuals, $i_t$ is the fraction of infected individuals, and $r_t$ is the fraction of removed (recovered or deceased) individuals in the population at time $t$.  In terms of bias, the rate is overestimated prior to the peak and underestimated afterwards; the bias increases dramatically when the relative fraction exceeds $2$.  Such biases may have a substantial impact on policy making.  First, overestimation may give policy makers more leverage in proposing aggressive actions to reduce prevalence.  Of course, the analysis provides evidence that estimates based on available data may be pessimistic. What is missing in the current discourse is that the direction of bias is non-constant over time.   Underestimation post-peak puts pressure on policy makers to prematurely relax social distancing measures.  Moreover, it appears that the peak time is the easiest to estimate in terms of having minimal error using available data.  Note, however, that the standard errors will be large due to small effective sample sizes.
 
-%%  MADE IT TO HERE
-
 \subsection{Estimation of effective reproduction number}
 \label{section:r0-estimation}
 Many epidemiologists argue that tracking the effective reproduction number $R_t$ is the only way to manage through the crisis~\citep{Gabriel2020}.  Under a Poisson likelihood, a simple relation between the trajectory of new cases and the effective reproduction number can be derived \citep{Bettencourt2008}.  In particular, under an SIR model the number of case counts on day $t$, denoted $K_t$, is Poisson distributed with rate $K_{t-1} \exp \left( \gamma (R_t - 1) \right)$ where $K_{t-1} = Y_{t-1}-Y_{t-2}$ is the number of new cases on day $t-1$ and $\gamma$ is the serial interval, which is approximately $7$ days for COVID-19~\citep{Sanche2020}.  Using this relation, a moment-based estimator is given by
@@ -276,7 +274,7 @@ $$
 &\times \left[ 1 - \rho_{I_{t-1},K_{t-1}} D_{M_{t-1}} \sqrt{\frac{1-f_{t-1}}{f_{t-1}}} CV (K_{t-1}) \right] \bigg) - \frac{1}{\gamma} \log \left( \frac{S_t}{S_{t-1}} \right).
 \end{aligned}
 $$
-This implies a similar trade-off as before but on the logarithmic scale.  The error is no longer scaled by $\bar Y_t/\bar Y_{t-1}$ but by the serial interval and does not depend on prevalence $\bar Y_t$ but on the fraction of new cases out of those susceptible $\bar K_t$. This leads to differences in when the bias is most pronounced. The final term is the error due to varying numbers of susceptible individuals.  Figure~\ref{fig:r0-bias} displays the bias as a function of the relative sampling fraction assuming the fraction of the population that is susceptible remains large.
+This implies a similar trade-off as before but on the logarithmic scale.  The error is no longer scaled by $\bar Y_t/\bar Y_{t-1}$ but by the serial interval and does not depend on prevalence but on the fraction of new cases out of those susceptible. This leads to differences in when the bias is most pronounced. Figure~\ref{fig:r0-bias} displays the bias as a function of the relative sampling fraction assuming the population fraction that is susceptible remains large.
 
 \begin{figure}
 \centering
@@ -292,7 +290,7 @@ This implies a similar trade-off as before but on the logarithmic scale.  The er
  \caption{Effective reproductive rate estimator}
  \label{fig:r0-bias}
 \end{subfigure}
-\caption{Potential bias due to self-selection and measurement error from a deterministic SIR model with $\beta = 1.2$ (black) and $\gamma = 0.15$.  Here we assume $f = 0.02$, $FP = 0.005$, $FN = 0.172$, and use a range of relative sampling fraction $M = f_1/f_0$.}
+\caption{Potential bias due to self-selection and measurement error from a deterministic SIR model with $\beta = 1.2$ (black) and $\gamma = 0.15$.  Here we assume $f = 0.02$, $FP = 0.024$, $FN = 0.30$, and use a range of relative sampling fraction $M = f_1/f_0$.}
 \label{fig:rates}
 \end{figure}
 
@@ -322,7 +320,7 @@ where $e_{jt}$ is the error associated given in Section \ref{section:r0-estimati
  \caption{Effective reproduction rate estimators}
  \label{fig:eff}
 \end{subfigure}
-\caption{Left: fraction infected in two SIR models with $\beta = 1.2$ and $0.9$ respectively and $\gamma = 0.15$ with same initial conditions. Right: comparison of $\hat R_t$ across time with $FN = 0.172$, $FP = 0.005$, and $M = 4$.}
+\caption{Left: fraction infected in two SIR models with $\beta = 1.2$ and $0.9$ respectively and $\gamma = 0.15$ with same initial conditions. Right: comparison of $\hat R_t$ across time with $FN = 0.30$, $FP = 0.024$, and $M = 4$.}
 \label{fig:comparison}
 \end{figure}
 
@@ -342,7 +340,7 @@ To see this mathematically, let $X_j$ denote a vector of covariates for the $j$t
 \sum_{j=1}^N I_j \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right) + \sum_{j=1}^N \log \left( 1 - \pi (X_j; \theta) \right).
 \end{equation}
 The first sum only involves individuals observed in the nonprobability sample.
-The second sum is over the entire population.  Maximum likelihood estimation therefore requires knowledge of covariate information for every individual in the population.  Typically, this is not possible.  Here we present a method that uses auxiliary information obtained from probability samples as well as probability subsamples from the self-selected population.
+The second sum is over the entire population.  Maximum likelihood estimation therefore requires knowledge of covariate information for every individual in the population.  Typically, this is not possible.  Here we present a method that uses auxiliary information obtained from probability samples.
 
 \subsubsection{Auxiliary information through probability samples}
 \label{subsec:auxprob}
