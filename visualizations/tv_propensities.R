@@ -13,13 +13,14 @@ x = as.matrix(c(0,1,1,0,1,0,0,1,0,1,0,0,0,0), ncol = 1)
 propensities$probs = as.vector(1/(1+exp(-as.matrix(propensities[,3:16])%*%x)))
 
 png(filename = "../figs/tvprop_fig1.png",
-    width = 960, height = 480, units = "px", pointsize = 12)
+    width = 960, height = 480, units = "px", pointsize = 25)
 
 ggplot(data = propensities, aes(x = date, y = probs)) +
-  geom_point() +
+  geom_point(size = 5) +
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
-       title = "35-44 year old non-Hispanic, White Male with Fever and COVID-19 Contact")
+       title = "35-44 year old non-Hispanic, White Male with Fever and COVID-19 Contact") + 
+  theme(text = element_text(size=25))
 
 dev.off()
 
@@ -29,12 +30,13 @@ propensities$probs = as.vector(1/(1+exp(-as.matrix(propensities[,3:16])%*%x)))
 
 
 png(filename = "../figs/tvprop_fig2.png",
-    width = 960, height = 480, units = "px", pointsize = 12)
+    width = 960, height = 480, units = "px", pointsize = 25)
 
 ggplot(data = propensities, aes(x = date, y = probs)) +
-  geom_point() +
+  geom_point(size = 5) +
   labs(x = "Date",
        y = "Testing Propensity",
-       title = "65-74 year old non-Hispanic, White Female without fever nor COVID-19 Contact")
+       title = "65-74 year old non-Hispanic, White Female without fever nor COVID-19 Contact") +
+  theme(text = element_text(size=25))
 
 dev.off()

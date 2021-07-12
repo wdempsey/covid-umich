@@ -17,15 +17,21 @@ propensities_neg$probs_male = as.vector(1/(1+exp(-as.matrix(propensities_neg[,3:
 
 propensities_neg_long = rbind(propensities_neg, propensities_neg)
 
-propensities_neg_long$gender = c(rep("F", nrow(propensities_neg)), rep("M", nrow(propensities_neg)))
+propensities_neg_long$Gender = c(rep("F", nrow(propensities_neg)), rep("M", nrow(propensities_neg)))
 
-propensities_neg_long$probs = propensities_neg_long$probs_female * (propensities_neg_long$gender == "F") +propensities_neg_long$probs_male * (propensities_neg_long$gender == "M")
+propensities_neg_long$probs = propensities_neg_long$probs_female * (propensities_neg_long$Gender == "F") +propensities_neg_long$probs_male * (propensities_neg_long$Gender == "M")
 
-ggplot(data = propensities_neg_long, aes(x = date, y = probs, col = gender)) +
-  geom_point() +
+png(filename = "../figs/tvprop_contact_fig1.png",
+    width = 960, height = 480, units = "px", pointsize = 25)
+
+ggplot(data = propensities_neg_long, aes(x = date, y = probs, col = Gender)) +
+  geom_point(size = 5) +
   labs(x = "Date",
        y = "Likelihood of Contact",
-       title = "Individuals 25-34 tested negative in the past 24 hours")
+       title = "Individuals 25-34 tested negative in the past 24 hours") +
+  theme(text = element_text(size=25))
+
+dev.off()
 
 propensities_pos = readRDS("../data/smoothedpropensities_pos_contact.RDS")
 propensities_pos$date = MMWRweek::MMWRweek2Date(MMWRyear = propensities_pos$year,
@@ -43,13 +49,18 @@ propensities_pos$probs_male = as.vector(1/(1+exp(-as.matrix(propensities_pos[,3:
 
 propensities_pos_long = rbind(propensities_pos, propensities_pos)
 
-propensities_pos_long$gender = c(rep("F", nrow(propensities_pos)), rep("M", nrow(propensities_pos)))
+propensities_pos_long$Gender = c(rep("F", nrow(propensities_pos)), rep("M", nrow(propensities_pos)))
 
-propensities_pos_long$probs = propensities_pos_long$probs_female * (propensities_pos_long$gender == "F") +propensities_pos_long$probs_male * (propensities_pos_long$gender == "M")
+propensities_pos_long$probs = propensities_pos_long$probs_female * (propensities_pos_long$Gender == "F") +propensities_pos_long$probs_male * (propensities_pos_long$Gender == "M")
 
-ggplot(data = propensities_pos_long, aes(x = date, y = probs, col = gender)) +
-  geom_point() +
+png(filename = "../figs/tvprop_contact_fig2.png",
+    width = 960, height = 480, units = "px", pointsize = 25)
+
+ggplot(data = propensities_pos_long, aes(x = date, y = probs, col = Gender)) +
+  geom_point(size = 5) +
   labs(x = "Date",
        y = "Likelihood of Contact",
-       title = "Individuals 25-34 tested positive in the past 24 hours")
+       title = "Individuals 25-34 tested positive in the past 24 hours") +
+  theme(text = element_text(size=25))
 
+dev.off()
