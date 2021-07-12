@@ -26,42 +26,49 @@ levels(df_case_counts$Age) = c(1,1,1,2,2,2,3,3)
 levels(df_case_counts$Age) = c("0-39", "40-69", "70+")
 
 png(filename = "../figs/indianacasecounts_byage.png",
-    width = 960, height = 480, units = "px", pointsize = 12)
+    width = 960, height = 480, units = "px", pointsize = 25)
 
 df_case_counts %>% 
   ggplot() + 
   geom_bar(mapping = aes(x = date, y = covid_count, fill = Age), stat = "identity") +
-  labs(y="Number of COVID-19 Reported Cases", x = "Date") + 
+  labs(y="COVID-19 Reported Cases", x = "Date") + 
   scale_x_date(date_breaks = "months" , date_labels = "%b-%y") +
   geom_vline(aes(xintercept = date(date_switch)), size = 1.5, linetype="dotted") + 
   geom_vline(aes(xintercept = date(date_switch_two)), size = 1.5, linetype="dotted") + 
   geom_vline(aes(xintercept = date(date_switch_three)), size = 1.5, linetype="dotted") +
-  scale_fill_manual(values=wes_palette(n = 3, "IsleofDogs1"))
+  scale_fill_manual(values=wes_palette(n = 3, "IsleofDogs1")) +
+  theme(text = element_text(size=25))
 
 dev.off()
 
-## Death data
-df_coviddeath <- readRDS("../data/dailycoviddata.RDS")
-df_coviddeath_age <- aggregate(covid_deaths ~ startdate + age, data = df_coviddeath, FUN = sum)
+png(filename = "../figs/indianacovidtests_byage.png",
+    width = 960, height = 480, units = "px", pointsize = 25)
 
-df_coviddeath_age$date = ymd(df_coviddeath_age$startdate)
-df_coviddeath_age$death_dt = df_coviddeath_age$covid_deaths
+df_case_counts %>% 
+  ggplot() + 
+  geom_bar(mapping = aes(x = date, y = covid_test, fill = Age), stat = "identity") +
+  labs(y="COVID-19 Reported Tests", x = "Date") + 
+  scale_x_date(date_breaks = "months" , date_labels = "%b-%y") +
+  geom_vline(aes(xintercept = date(date_switch)), size = 1.5, linetype="dotted") + 
+  geom_vline(aes(xintercept = date(date_switch_two)), size = 1.5, linetype="dotted") + 
+  geom_vline(aes(xintercept = date(date_switch_three)), size = 1.5, linetype="dotted") +
+  scale_fill_manual(values=wes_palette(n = 3, "IsleofDogs1")) +
+  theme(text = element_text(size=25))
 
-## PLOTTING DEATH DATA BY AGE CATEGORY
-levels(df_coviddeath_age$age) = c(1,1,1,2,2,2,3,3)
-levels(df_coviddeath_age$age) = c("0-39", "40-69", "70+")
+dev.off()
 
 png(filename = "../figs/indianadeaths_byage.png",
     width = 960, height = 480, units = "px", pointsize = 12)
 
-df_coviddeath_age %>% 
+df_case_counts %>% 
   ggplot() + 
-  geom_bar(mapping = aes(x = date, y = death_dt, fill = age), stat = "identity") +
-  labs(y="Number of COVID-19 Reported Deaths") + 
-  scale_x_date(date_breaks = "months" , date_labels = "%b-%y")+ 
-  geom_vline(aes(xintercept = date(date_switch)), linetype="dotted") + 
-  geom_vline(aes(xintercept = date(date_switch_two)), linetype="dotted") + 
-  geom_vline(aes(xintercept = date(date_switch_three)), linetype="dotted") +
-  scale_fill_manual(values=wes_palette(n = 3, "IsleofDogs1"))
+  geom_bar(mapping = aes(x = date, y = covid_deaths, fill = Age), stat = "identity") +
+  labs(y="COVID-19 Reported Tests", x = "Date") + 
+  scale_x_date(date_breaks = "months" , date_labels = "%b-%y") +
+  geom_vline(aes(xintercept = date(date_switch)), size = 1.5, linetype="dotted") + 
+  geom_vline(aes(xintercept = date(date_switch_two)), size = 1.5, linetype="dotted") + 
+  geom_vline(aes(xintercept = date(date_switch_three)), size = 1.5, linetype="dotted") +
+  scale_fill_manual(values=wes_palette(n = 3, "IsleofDogs1")) +
+  theme(text = element_text(size=25))
 
 dev.off()

@@ -52,7 +52,7 @@ dev.off()
 f = 0.02
 M = 4 
 days = 1:365
-FP = 0.005; FN = 0.172
+FP = 0.024; FN = 0.30
 bary1_new = -diff(out1$S)
 bary1_all = out1$I
 bary2_new = -diff(out2$S)
@@ -94,9 +94,9 @@ bias2_new = bias_fn(M, bary2_new, f)
 ## Ratio Comparison: Use New for Fraction of New Cases
 ymax = max(bias1_new$Rt+bias1_new$logbias, bias1_new$Rt, bias2_new$Rt+bias2_new$logbias, bias2_new$Rt, na.rm = TRUE)
 ymin = min(bias1_new$Rt+bias1_new$logbias, bias1_new$Rt, bias2_new$Rt+bias2_new$logbias, bias2_new$Rt, na.rm = TRUE)
-png(filename = "C:/Users/Balthazar/Documents/GitHub/covid-umich/methods/figs/sir_rt_comparison.png",
+png(filename = "../figs/sir_rt_comparison.png",
     width = 6.5, height = 4, units = "in", res = 1200, pointsize = 12)
-par(mar = c(2,3,0,1)+0.1)
+par(mar = c(2,3,1,1)+0.1)
 plot(bias1_new$Rt, type = "l", ylim = c(0.7, 1.3), axes = FALSE, bty = "n", xlab = "", ylab = "")
 lines(bias1_new$Rt + bias1_new$logbias, lty = 2)
 abline(h = 1.0, col = "grey", lty = 2)
@@ -117,7 +117,7 @@ bias3 = bias_fn(M3, bary2_all, f, FP, FN)
 ## Ratio for different M: Use All for Prevalence
 ymax = max(bias3$r+bias3$bias)
 ymin = min(bias3$r+bias3$bias)
-png(filename = "C:/Users/Balthazar/Documents/GitHub/covid-umich/methods/figs/sir_ratio.png",
+png(filename = "../figs/sir_ratio.png",
     width = 6.5, height = 4, units = "in", res = 1200, pointsize = 12)
 par(mar = c(2,3,1,1)+0.1)
 plot(bias1$r, type = "l", ylim = c(ymin, ymax), axes = FALSE, bty = "n", xlab = "", ylab = "")
@@ -139,7 +139,7 @@ bias3 = bias_fn(M3, bary2_new, f, FP, FN)
 
 ymax = max(bias3$Rt+bias3$logbias)
 ymin = min(bias3$Rt+bias3$logbias)
-png(filename = "C:/Users/Balthazar/Documents/GitHub/covid-umich/methods/figs/sir_rt.png",
+png(filename = "../figs/sir_rt.png",
     width = 6.5, height = 4, units = "in", res = 1200, pointsize = 12)
 par(mar = c(2,3,1,1)+0.1)
 plot(bias1$Rt, type = "l", ylim = c(ymin, ymax), axes = FALSE, bty = "n")
