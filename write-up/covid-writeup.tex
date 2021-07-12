@@ -8,6 +8,8 @@
 %\bibliographystyle{apalike}
 \usepackage{multirow}
 \usepackage{enumitem}
+\usepackage{caption,subcaption}
+
 
 \usepackage{tchdr}
 \boldshortcuts
@@ -74,11 +76,11 @@ has become the focal point of everyday life; yet the data landscape for understa
 
 This paper has two main objectives.  The first objective is to express reservations at the use of case-counts as a proxy for disease prevalence and in estimation of standard epidemiological models for inference and forecasting.  The reason is straightforward: observed case-count data is plagued by selection bias and measurement error. Through a series of calculations, we will demonstrate that the information gained from increasing testing capacity is limited in the presence of selection bias and when testing inaccuracies persist.  In particular, the millions of tests in the US have a small effective sample size when compared to random sampling. These calculations demonstrate the importance of probabilistic sampling designs over time for estimation of point prevalence and effective reproduction number.
 
-Due to monetary and time constraints, however, random testing is either not performed or performed very infrequently.  As of June 2021, Indiana is the only state to conduct statewide random sample testing\footnote{This is the only random sample to collect both seroprevalence and diagnostic testing results. The CDC has conducted several seroprevalence studies. See Section~\ref{section:testinginfo} for further discussion.}, which was collected from April 25--29, 2020~\citep{Yiannoutsos2021}.  Such infrequent random testing is likely to provide insufficient information to help researchers and policy makers better understand the disease trajectory which can change rapidly over time.  Therefore, while random testing may be preferable in theory, in practice governments, researchers, and policy makers continue to use coronavirus case-counts to understand the impact of COVID-19 on the population and make data-informed decisions.
+Due to monetary and time constraints, however, random testing is either not performed or performed infrequently.  As of June 2021, Indiana is the only state to conduct statewide random sample testing\footnote{This is the only random sample to collect both seroprevalence and diagnostic testing results. The CDC has conducted several seroprevalence studies. See Section~\ref{section:testinginfo} for further discussion.}, which was collected from April 25--29, 2020~\citep{Yiannoutsos2021}.  Such infrequent random testing is likely to provide insufficient information to help researchers and policy makers better understand the disease trajectory which can change rapidly over time.  Therefore, while random testing may be preferable in theory, in practice governments, researchers, and policy makers continue to use coronavirus case-counts to understand the impact of COVID-19 on the population and make data-informed decisions.
 
 The second objective is to demonstrate how random samples provide necessary \emph{auxiliary information} to address selection bias in coronavirus case-count data.  Random samples provide the necessary covariate information from a representative sample from the population to estimate selection propensities. These propensities can then used in an inverse-probability weighting scheme to construct estimators of disease prevalence that attempt to control for selection bias.  A doubly robust extension allows researchers to combine these estimates with epidemiological forecasts based on compartmental models that are common in the study of infectious diseases~\cite{Hao2020,Song2020,Ray2020,Johndrow2020}.
 
-Note that the proposed approach requires covariate information to be collected on tested individuals.  Unfortunately, many states do not require or report auxiliary covariate information beyond demographics such as gender, age, race, and ethnicity.  To address this, we discuss how the proposal suggests minor changes to current practice that may improve performance over time. While we demonstrate empirical improvements over simple disease prevalence estimates, we also highlight how selection bias may persist and impact uncertainty quantification.
+The proposed approach requires covariate information to be collected on individuals who receive a COVID-19 test.  Unfortunately, many states do not require or report auxiliary covariate information beyond basic demographic information (e.g., gender, age, race, and ethnicity).  We end with a brief list of suggestions of minor changes to current practice based on the proposed methodology. While we demonstrate empirical improvements over simple disease prevalence estimates, we also highlight how selection bias may persist and impact uncertainty quantification.
 
 % Hospitalization Gelman
 
@@ -91,22 +93,22 @@ After demonstrating the limitations of case-count analysis when compared to rand
 One core component of coronavirus research is epidemiological state-space modelling of case-count and death data. These models can be used to answer a variety of research questions including case-count forecasting, estimation of the effective reproduction number, and estimation of quarantine and other health policies on infectious disease dynamics.  The basic approach is a deterministic compartmental model called the susceptible-infectious-recovered (SIR) model.  A probabilistic extension was proposed by~\cite{Osthus2017} to model one-dimensional time series of infected proportions. \cite{Song2020} extended this approach to incorporate interventions and assess interventions on COVID-19 epidemic in China. \cite{Hao2020} builds an extended SEIR model (SAPHIRE) to account for various presymptomatic infectiousness, time-varying ascertainment rates, transmission rates and population movements. Given a probability sampling design, individual predictions can be leveraged to improve estimation via model-assisted approaches~\citep{Breidt2017}.  For nonprobability samples, \cite{Chen2019} derive a doubly robust approach that uses outcome predictions given covariates on the nonprobability and probability samples.  Here, we combine the state-space SIR approach of \cite{Song2020} but instead, as in \cite{Johndrow2020}, focus on COVID-19 confirmed death count data.  We generate epidemiological forecasts for point prevalence of each population strata.  We then demonstrate how to combine these forecasts with the IPW approach to construct doubly-robust estimates of point prevalence.  A derived statistical error decomposition guides this discussion.
 
 
-\subsection{Outline}
+% \subsection{Outline}
 
-In Section~\ref{section:data}, we summarize the publicly available data on COVID-19.  We highlight how testing information is collected as well as demographic and comorbidity information.  In Section~\ref{section:testinginfo}, we briefly summarize COVID-19 testing.  We clarify the difference between viral and antibody testing.  For viral testing, we briefly discuss the reasons behind measurement-error in RT-PCR tests including test timing and sample collection techniques.
+% In Section~\ref{section:data}, we summarize the publicly available data on COVID-19.  We highlight how testing information is collected as well as demographic and comorbidity information.  In Section~\ref{section:testinginfo}, we briefly summarize COVID-19 testing.  We clarify the difference between viral and antibody testing.  For viral testing, we briefly discuss the reasons behind measurement-error in RT-PCR tests including test timing and sample collection techniques.
 
-In Section~\ref{section:casecount}, we present simple mathematical arguments to show that unadjusted prevalence rates are (unsurprisingly) biased when tests are imperfect. What is surprising is that the direction and magnitude of the bias can vary substantially and interacts with the sampling fraction.  We show that the rate of change in COVID-19 observed case-counts overestimates the true rate of change prior to the peak time and underestimates it immediately after.  This implies a data scientist analyzing observed rates will be (on average) overly pessimistic in the early stages of the pandemic, and overly optimistic subsequent to the peak times.  We show that estimates of the effective reproduction number may be similarly impacted.
+% In Section~\ref{section:casecount}, we present simple mathematical arguments to show that unadjusted prevalence rates are (unsurprisingly) biased when tests are imperfect. What is surprising is that the direction and magnitude of the bias can vary substantially and interacts with the sampling fraction.  We show that the rate of change in COVID-19 observed case-counts overestimates the true rate of change prior to the peak time and underestimates it immediately after.  This implies a data scientist analyzing observed rates will be (on average) overly pessimistic in the early stages of the pandemic, and overly optimistic subsequent to the peak times.  We show that estimates of the effective reproduction number may be similarly impacted.
 
-In Section~\ref{section:improvedcasecount}, we present a doubly robust estimation method for combining epidemiological forecasts with inverse-probability weighting methods to estimate prevalence.  Weight estimation requires auxiliary information provided by random samples.  A statistical error decomposition illustrates a trade-off in use of weights: a potential increase in data quality but a reduction in effective data quantity.
+% In Section~\ref{section:improvedcasecount}, we present a doubly robust estimation method for combining epidemiological forecasts with inverse-probability weighting methods to estimate prevalence.  Weight estimation requires auxiliary information provided by random samples.  A statistical error decomposition illustrates a trade-off in use of weights: a potential increase in data quality but a reduction in effective data quantity.
 
-In Section~\ref{section:applications}, the IPW and doubly-robust estimation methods are applied to the case study of Indiana statewide prevalence from March 2020 until June 2021.  We estimate data quality for IPW estimates using the random sample on April 28th.  This demonstrates the proposed approach is an improvement over simple prevalence estimation but that data quality is not of the same order as random sampling.
+% In Section~\ref{section:applications}, the IPW and doubly-robust estimation methods are applied to the case study of Indiana statewide prevalence from March 2020 until June 2021.  We estimate data quality for IPW estimates using the random sample on April 28th.  This demonstrates the proposed approach is an improvement over simple prevalence estimation but that data quality is not of the same order as random sampling.
 
-In Section~\ref{section:discussion}, a series of recommendations are provided that aim to help improve statistical inference in settings with large nonprobability samples from a stochastic process where small random sampling over time is possible.
+% In Section~\ref{section:discussion}, a series of recommendations are provided that aim to help improve statistical inference in settings with large nonprobability samples from a stochastic process where small random sampling over time is possible.
 
 \section{COVID-19 testing and data}
 \label{section:data}
 
-In this section we provide the necessary background to understand COVID-19 diagnostic and serologic testing, their respective scientific uses in managing the pandemic, and the data streams we consider in this manuscript.
+In this section we provide the necessary background to understand COVID-19 diagnostic and serologic testing, discuss their respective scientific uses in managing the pandemic, and introduce the data streams considered in this manuscript.
 
 \subsection{Diagnostic testing}
 \label{section:testinginfo}
@@ -115,7 +117,7 @@ In this section we provide the necessary background to understand COVID-19 diagn
 
 Upon infection with SARS-CoV-2, there is an incubation period which lasts approximately five days~\citep{Lauer2020} before the viral load is high enough to be detected.  A \emph{molecular test} refers to diagnostic tests that aim to detect increased viral load (e.g., RT-PCR or antigen tests).  If someone has an active infection then after the incubation period, a molecular test with perfect sensitivity will yield a positive result for the next few weeks.  After that, the viral load will decrease and a molecular test with perfect specificity will come back negative. While an infected individual may yield a positive molecular test for several weeks, they will likely stop transmitting the disease within a few days of infection, meaning a positive molecular test does not imply transmissibility.
 
-A molecular test conducted on an infected individual may return a negative result.  Such false negatives are very strongly associated with when the test is conducted.  In the incubation phase, most molecular tests will return a false negative result.  Molecular tests are most sensitive when the viral loads are highest which occurs during the first few days of transmissibility~\citep{Mina2020}.   Moreover, most molecular tests are performed via nasopharyngeal swab.  Specimen collection by swab is known to impact false negative/positive rates regardless of test timing.   Systematic reviews suggest that 70\% sensitivity and 95\% specificity are reasonable estimates for current RT-PCR tests~\cite{Woloshin2020}.
+A molecular test conducted on an infected individual may return a negative result.  Such false negatives are very strongly associated with when the test is conducted.  In the incubation phase, most molecular tests will return a false negative result.  Molecular tests are most sensitive when the viral loads are highest which occurs during the first few days of transmissibility~\citep{Mina2020}.   Moreover, most molecular tests are performed via nasopharyngeal swab.  Specimen collection by swab is known to impact false negative/positive rates regardless of test timing.   Systematic reviews suggest that 70\% sensitivity and 97.6\% specificity are reasonable estimates for current RT-PCR tests~\cite{Woloshin2020,Cohen2020}.
 
 The primary goal of molecular tests is diagnosis of active infections in the population.  Such diagnostic tests generate important information about the presence of SARS-Cov-2 in the population, and help scientists and policy-makers understand patterns of transmission and propagation. Rapid and frequent molecular testing is cited as a key component~\cite{OECD2021} in effective strategies to identify active infections and prevent systemic outbreaks.
 % Here we consider the current system of testing which involves both self-selection into testing and historical limits on who was able to receive diagnostic tests due to limited testing capacity.
@@ -127,15 +129,15 @@ The primary goal of molecular tests is diagnosis of active infections in the pop
 \subsection{Publicly available data on COVID-19}
 \label{subsection:testinginfo}
 
-Our primary goal is accurate estimates of the population-level active infection rates over time using \emph{publicly available} viral testing data.  Secondary goals include estimation of rates of change and the effective reproduction number which characterize disease trajectory.  A final goal is characterizing prevalence of population-level immunity. These quantities are fundamental to public health policy and provide critical information on the presence and transmission of SARS-CoV-2.
+The primary goal of this manuscript is to produce accurate estimates of the population-level active infection rates over time using \emph{publicly available} viral testing data.  Secondary goals include estimation of rates of change and the effective reproduction number which characterize disease trajectory.  A final goal is characterizing prevalence of population-level immunity. These quantities are fundamental to public health policy and provide critical information on the presence and transmission of SARS-CoV-2.
  % as well as the impact of public health  interventions.
 
 % {\bf key point: WHAT IS THE GOAL OF CASE COUNT DATA? WHAT IS THE GOAL OF SEROPREVALENCE STUDIES?  are we using it for that reason. cse count data is colelcted as part of surveillance programs wehre teh goal is to identify and isolate active infections.  However, many people are trying to use these to udnerstand the disease.  This is our issue.}
 
 
-Coronavirus case-count data refers to the number of positive molecular tests performed on each day.  Figure~XX plots (dotted orange line) the number of reported confirmed COVID-19 cases per day in the state of Indiana.  Total number of COVID-19 diagnostic tests performed per day is also reported (Figure~XX, dotted blue line). On August 5th, 2020, for example, there were 1075 total daily positive cases and 11,663 total daily tests.  Public databases maintained by \href{https://bit.ly/2UqFSuA}{Johns Hopkins University} and the \href{https://bit.ly/2vUHfrK}{New York Times} provide accessible incoming county-level information of confirmed cases and deaths.
+Coronavirus case-count data refers to the number of positive molecular tests performed on each day.  Figure~\ref{fig:in-cases} plots the number of reported confirmed COVID-19 cases per day in the state of Indiana.  Figure~\ref{fig:in-tests} plots the total number of COVID-19 molecularw tests performed per day. Figure~\ref{fig:in-deaths} plots the total number of COVID-19 related reported deaths per day. Public databases maintained by \href{https://bit.ly/2UqFSuA}{Johns Hopkins University} and the \href{https://bit.ly/2vUHfrK}{New York Times} provide accessible incoming county-level information of confirmed cases and deaths.
 
-Public databases most often contain aggregate information.  The Johns Hopkins dashboard, for example, provides demographic breakdown of case counts as well as the total confirmed cases and deaths by county.  Aggregate time series of case count and deaths can also be extracted.  Unfortunately, most dashboards do not provide any demographic information on who requested a test nor on who tested positive for SARS-CoV-2 over time. Working closely with the State of Indiana, we were able to generate publicly available datasets for COVID-19 total tests, positive tests, and related deaths per day broken out marginally by age, gender, ethnicity, and race~\citep{IndianaData2021}.  This granular dataset motivates the proposed approach.
+Public databases most often contain aggregate information.  The Johns Hopkins dashboard, for example, provides demographic breakdown of case counts as well as the total confirmed cases and deaths by county.  Aggregate time series of case count and deaths can also be extracted.  Unfortunately, most dashboards do not provide any demographic information on who requested a test nor on who tested positive for SARS-CoV-2 over time. Working closely with the State of Indiana, we were able to produce publicly available datasets for COVID-19 total tests, positive tests, and related deaths per day broken out marginally by age, gender, ethnicity, and race~\citep{IndianaData2021}.  This granular dataset motivates the proposed approach.
 % https://www.regenstrief.org/covid-dashboard/
 %
 
@@ -161,7 +163,7 @@ On March 23, 2020, Indiana's governor issues a \emph{stay at home} order effecti
 
 \subsection{Probabilistic samples in Indiana}
 
-Due to testing restrictions and other potential selection biases, publicly reported covid testing data may not be sufficient to understand active infection rates or the disease trajectory.  Here, we discuss two random samples that can be leveraged to get either unbiased estimates of the statewide active infection rate or as auxiliary information to address selection bias in the testing data.
+Due to testing restrictions and other potential selection biases, publicly reported Covid testing data may not be sufficient to understand active infection rates or the disease trajectory.  Here, we discuss two random samples that can be leveraged to as auxiliary information to address selection bias.
 
 \subsubsection{Random statewide testing}
 
@@ -169,16 +171,17 @@ Between April 25--29, 2020, Indiana conducted statewide random molecular testing
 % In this paper, the nonrandom sample is used to assess whether the cumulative summary statistics are appropriate in constructing the inverse-probability weights as well as in constructing appropriate weights using symptom information.
 
 \subsubsection{Facebook/CMU symptom survey.}
-Since April 2020, Facebook has started randomly showing an opt-in symptom survey to its users~\citep{delphisurvey}.  Data collected includes basic demographic information and if the respondent has symptoms such as fever, coughing, shortness of breath, or loss of smell which are associated with COVID-19.  The survey defines an individual as displaying \emph{COVID-like symptoms} if they exhibit a fever along with a cough, or shortness of breath, or difficulty breathing.  Figure~\ref{fig:fbsymptoms} displays nonparametric regression estimates of the fraction of individuals within age and gender strata.  In this paper, we use this as the main source of auxiliary information on time-varying characteristics of the population of Indiana, e.g., fraction of popopulation displaying symptoms or in contact with COVID-19 positive individuals).
+Since April 2020, Facebook has started randomly showing an opt-in symptom survey to its users~\citep{delphisurvey}.  Data collected includes basic demographic information and if the respondent has symptoms such as fever, coughing, shortness of breath, or loss of smell which are associated with COVID-19.  The survey defines an individual as displaying \emph{COVID-like symptoms} if they exhibit a fever along with a cough, or shortness of breath, or difficulty breathing.  Figure~\ref{fig:fbsymptoms} displays smoothed estimates of the fraction of individuals within age and gender strata who report a fever within the past 24-hours.  This paper uses the Facebook symptom survey as the main source of auxiliary information on time-varying characteristics of the population of Indiana, e.g., fraction of population displaying symptoms or in contact with COVID-19 positive individuals).
 
 \begin{figure}[!th]
 \centering
 \includegraphics[width = 0.9\textwidth]{../figs/fbcovid19symptoms.png}
-\caption{Reported rate of COVID-like symptoms in strata.  Daily rates were estimated using weighted method on each day separately and then smoothed over time using local-linear nonparametric regression.}
+\caption{Rate of reported fever per strata.  Daily rates were estimated using weighted method on each day separately and then smoothed over time using local-linear nonparametric regression.}
 \label{fig:fbsymptoms}
 \vspace{-0.3cm}
 \end{figure}
 
+%% GOOD THROUGH HERE
 
 \section{Analysis of case-count data}
 \label{section:casecount}
@@ -188,7 +191,7 @@ We start with some simple notation.  Let $N$ denote the population size.  At a g
 To start, we assume the overall number of COVID-19 cases and/or disease prevalence are of primary interest. That is, we are interested in either the population total $Y = \sum_{j=1}^N Y_j$ or the population average $\bar Y = Y/N$. Suppose that $n$ tests are performed and we observe the values $y_1, \ldots, y_n \in \{0,1\}$.  Then a natural candidate for prevalence is the proportion of positive tests $\bar y = \frac{1}{n} \sum_{i=1}^n y_i$, and a natural candidate for overall cases is $N \times \bar y$.
 Under simple random sampling (SRS) or any other epsem\footnote{equal probability of selection method} design, the above are unbiased estimators of the population-level quantities of interest.  Under SRS, the variance of the estimator can be expressed as $\frac{1}{N-1} \times \frac{1-f}{f} \times \sigma_Y^2$ where $f = n/N$ is the sampling fraction and $\sigma_Y^2 = \frac{1}{N} \sum_{i=1}^N (Y_i - \bar Y)^2 = \bar Y (1- \bar Y)$.
 
-The above selection mechanisms are random and independent of the outcome of interest. When this is not the case, selection effects may cause bias in the above estimates. To better understand this issue, \cite{Meng2018} provided the following intuitive and powerful statistical decomposition of the error between $\bar y$ and the true proportion $\bar Y$
+These random selection mechanisms are independent of the outcome of interest. When this is not the case, selection effects may cause bias. To better understand this issue, \cite{Meng2018} recently provided the following intuitive and powerful statistical decomposition of the error between $\bar y$ and the true proportion $\bar Y$
 $$
 \bar y_n - \bar Y =  \rho_{I, Y} \times \sqrt{\frac{1-f}{f}} \times \sigma_Y.
 $$
@@ -199,7 +202,7 @@ The first term represents \emph{data quality}, the second \emph{data quantity}, 
 \subsection{Imperfect testing}
 \label{section:imperfecttesting}
 
-Tests are imperfect.  As discussed in Section~\ref{section:testinginfo}, COVID-19 testing is no exception. Here we investigate the interplay between imperfect testing and selection bias.  In discussions of inaccurate testing, the standard assumption is measurement error leads to parameter attenuation.  When paired with selection bias, however, the two sources of error become entangled, and resulting errors can become magnified, muted, or even switch signs.
+Tests are imperfect.  As discussed in Section~\ref{section:testinginfo}, COVID-19 testing is no exception. Here we investigate the interplay between imperfect testing and selection bias.  Researchers most often assume measurement error will lead to parameter attenuation.  When paired with selection bias, however, the two sources of error become entangled, and resulting errors can become magnified, muted, or even switch signs.
 
 First we require some additional notation.  Let $P_j$ be an indicator of measurement error, equal to $1$ when we incorrectly measure the outcome and $0$ when we observe the true outcome. We suppose this is a stochastic variable where $\pr(P_j = 1 \mid Y_j = 1) =: FN$ is the false-negative rate and $\pr(P_j = 1 \mid Y_j = 0) =: FP$ is the false-positive rate.  If individual $j$ is selected (i.e., $I_j = 1$) then the observed outcome can be written as $Y_j^{\star} = Y_j(1-P_j) + (1-Y_j) P_j$.  The attentive data analyst will recognize the estimator $\bar y_n$ is biased even for simple random samples.  In Appendix~\ref{app:memestimator}, assuming sensitivity and specificity were known a priori, we present a novel iterative procedure that uses the error decomposition to construct the estimator $\tilde y_n = (\bar y_n - FP)/(1-(FP+FN))$, which is unbiased under simple random sampling (SRS); see Appendix~\ref{app:modelbased} for a discussion of the connection to model-based estimators. To understand the impact of selection bias and imperfect testing, we derive the following statistical decomposition of the error between $\tilde y_n$ and $\bar Y$:
 \begin{equation}
@@ -207,14 +210,15 @@ First we require some additional notation.  Let $P_j$ be an indicator of measure
 \rho_{I,Y} \times \sqrt{\frac{1-f}{f}} \times \sigma_{Y}
 \times \underbrace{\left[ 1 - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right] \times \frac{1}{1-(FP+FN)}}_{D_M},
 \end{equation}
-where $f=n/N$ is the sampling fraction, $f_1$ and $f_0$ are sampling fractions for COVID-19 positive and negative individuals respectively, and $\Delta = f_1 - f_0$ is the sampling rate differential.  See Appendix~\ref{app:memestimator} for the derivation. This extends work by \cite{Meng2018} to account for imperfect testing. The first term represents \emph{data quality}, the second \emph{data quantity}, and the third \emph{problem difficulty}.  The final term represents the \emph{imperfect testing adjustment} which is again a complex function of the sampling rate differential, the odds ratio, and the ratio of measurement error interaction with prevalence and sampling rates interaction with prevalence but here is scaled by the factor $(1 - FP - FN)^{-1}$ compared to prior decomposition.
+where $f=n/N$ is the sampling fraction, $f_1$ and $f_0$ are sampling fractions for COVID-19 positive and negative individuals respectively, and $\Delta = f_1 - f_0$ is the sampling rate differential.  See Appendix~\ref{app:memestimator} for the derivation. This extends work by \cite{Meng2018} to account for imperfect testing. The first term represents \emph{data quality}, the second \emph{data quantity}, and the third \emph{problem difficulty}.  The final term represents the \emph{imperfect testing adjustment} which is a complex function of the sampling rate differential, the odds ratio, and the ratio of measurement error interaction with prevalence and sampling rates interaction with prevalence but here is scaled by the factor $(1 - FP - FN)^{-1}$.
 
-Figure~\ref{fig:heatmap} shows that $D_M$, as a function of the relative frequency ($f_1/f_0$) and odds ratio, can be both positive and negative as well as a range of magnitudes~\citep{Beesley2020,Beesley2019,Smeden2019}. Under perfect testing, $D_M = 1$ so the relation between estimation and selection bias is simple, e.g., COVID-19 positive individuals more likely to receive test implies upward bias in prevalence estimates. When tests are imperfect, this simple relationship no longer holds.
+Figure~\ref{fig:heatmap} shows that $D_M$, as a function of the relative frequency ($f_1/f_0$) and odds ratio, can be both positive and negative as well as a range of magnitudes~\citep{Beesley2020,Beesley2019,Smeden2019}. Under either perfect testing (i.e., $FP=FN=0$), $D_M = 1$ so the relation between estimation and selection bias is simple, e.g., COVID-19 positive individuals more likely to receive test implies upward bias in prevalence estimates. Under random testing (i.e., $f_0 = f_1$), $D_M = (1-FP-FN)^{-1}$ so measurement error simply scales the error. When tests are imperfect and selection bias exists, this simple relationship no longer holds.
 
 \begin{figure}[!th]
 \centering
 \includegraphics[width = 0.4\textwidth]{../figs/mem_heatmap_article.png}
-\caption{Imperfect testing adjustment: relative frequency $f_1/f_0$ (x-axis) against odds ratio (y-axis) for $FP=0.005$ and $FN=0.172$. Color scaled so blue = $-10$, white = $0$, and red = $10$. \textcolor{red}{NEED TO DO FOR FP = 0.05 and FN = 0.3}}
+\caption{Imperfect testing adjustment: relative frequency $f_1/f_0$ (x-axis) against odds ratio (y-axis) for $FP=0.024$ and $FN=0.30$. Color scaled so blue = $-10$, white = $0$, and red = $10$.}
+%\textcolor{red}{NEED TO DO FOR FP = 0.05 and FN = 0.3}}
 \label{fig:heatmap}
 \vspace{-0.3cm}
 \end{figure}
@@ -237,7 +241,7 @@ As of June 10th 2020, the US has performed $21,474,531$ tests.  The US populatio
 \subsection{Regrettable rates: complex biases resulting from self-selection}
 \label{section:rates}
 
-The prior analysis demonstrates the limited information regarding COVID-19 prevalence in observational case-count data.  Scientists, however, may claim that daily observed case-counts simply undercount daily total cases by a constant multiple over time.  If true then the ratio of case-counts at consecutive times may be a good estimate of the true change in prevalence, helping scientists understand the disease trajectory.  In this section, we demonstrate how selection bias and imperfect testing impact such estimates.
+The prior analysis demonstrates the limited information regarding COVID-19 prevalence in observational case-count data.  Scientists, however, may claim that daily observed case-counts simply undercount daily total cases by a constant multiple over time.  If true then the ratio of case-counts at consecutive times may be a good estimate of the true change in prevalence, helping scientists understand the disease trajectory.  We next demonstrate how selection bias and imperfect testing impact such estimates.
 
 Let $\bar Y_{t-1}$ and $\bar Y_{t}$ denote the prevalence on two consecutive days and consider the estimator $r = \tilde y_t / \tilde y_{t-1}$.  Using a second-order Taylor series approximation, the error between ${\tilde y_t}/{\tilde y_{t-1}}$ and ${\bar Y_{t}}/{\bar Y_{t-1}}$ can be expressed approximately as
 $$
@@ -246,7 +250,7 @@ $$
 &\times \left[ 1 - \rho_{I_{t-1},Y_{t-1}} D_{M_{t-1}} \sqrt{\frac{1-f_{t-1}}{f_{t-1}}} CV (Y_{t-1}) \right]
 \end{aligned}
 $$
-where $\rho_{I_j, Y_j}$ is the data quality, $f_j$ is the sampling fraction, $D_{M_j}$ is the measurement error adjustment, and $CV(Y_j) = \sigma_{Y_j}/Y_j$ is the coefficient of variation on day $j$.  See Appendix~\ref{app:ratio} for the derivation. The error magnitude depends on the true rate $\bar Y_{t} / \bar Y_{t-1}$ so a large decrease will have a relatively small error compared to a large increase. The second term represents potential \emph{cancellation} which may occur when data quality, sampling fraction, measurement error, and prevalence are all constant across time.
+where $\rho_{I_j, Y_j}$ is the data quality, $f_j$ is the sampling fraction, $D_{M_j}$ is the measurement error adjustment, and $CV(Y_j) = \sigma_{Y_j}/ \bar Y_j$ is the coefficient of variation on day $j$.  See Appendix~\ref{app:ratio} for the derivation. The error magnitude depends on the true rate $\bar Y_{t} / \bar Y_{t-1}$ so a large decrease will have a small error relative to a large increase. The second term represents potential \emph{cancellation} which can  occur when data quality, sampling fraction, measurement error, and prevalence are constant across time.
 
 Figure~\ref{fig:ratio-bias} displays the trajectory of the true ratio and the potential biased estimators under an SIR model~\citep{Pastor2001,Newman2002,Parshani2010} for the epidemic dynamics, with state evolution given by
 \begin{equation}
@@ -255,7 +259,9 @@ Figure~\ref{fig:ratio-bias} displays the trajectory of the true ratio and the po
 \frac{\partial i_t}{\partial t} = \beta s_t i_t - \gamma i_t; \quad
 \frac{\partial r_t}{\partial t} = - \gamma i_t
 \end{equation}
-where $s_t$ is the fraction of susceptible individuals, $i_t$ is the fraction of infected individuals, and $r_t$ is the fraction of removed (recovered or deceased) individuals in the population at time $t$.  In terms of bias, the rate is overestimated prior to the peak and underestimated afterwards; the bias increases dramatically when the relative fraction exceeds $2$.  From a decision making perspective, such biases have a substantial impact.  First, the overestimation may give lawmakers and governors more leverage in proposing aggressive actions that reduce prevalence.  Of course, the analysis supports the argument that the estimates based on available data may be pessimistic. What is missing in the current public health discourse is that the bias direction of the prevalence estimate is non-constant over time.   Underestimation post-peak puts pressure on lawmakers and governors to prematurely relax social distancing measures.  Moreover, it appears that the peak time is the easiest to estimate in terms of having minimal error using available data.  Note, however, that the standard errors will be large due to small effective sample sizes.
+where $s_t$ is the fraction of susceptible individuals, $i_t$ is the fraction of infected individuals, and $r_t$ is the fraction of removed (recovered or deceased) individuals in the population at time $t$.  In terms of bias, the rate is overestimated prior to the peak and underestimated afterwards; the bias increases dramatically when the relative fraction exceeds $2$.  Such biases may have a substantial impact on policy making.  First, overestimation may give policy makers more leverage in proposing aggressive actions to reduce prevalence.  Of course, the analysis provides evidence that estimates based on available data may be pessimistic. What is missing in the current discourse is that the direction of bias is non-constant over time.   Underestimation post-peak puts pressure on policy makers to prematurely relax social distancing measures.  Moreover, it appears that the peak time is the easiest to estimate in terms of having minimal error using available data.  Note, however, that the standard errors will be large due to small effective sample sizes.
+
+%%  MADE IT TO HERE
 
 \subsection{Estimation of effective reproduction number}
 \label{section:r0-estimation}
@@ -421,7 +427,7 @@ Assuming the selection propensity model is correctly specified, then under the d
 
 \begin{lemma}[Variance of IPW estimator] \normalfont
 \label{lemma:ipw}
-\textcolor{red}{Must check.}
+% \textcolor{red}{Must check.}
 The estimates~$\hat \mu_t := \bar y_{n,t}^\star$, $\hat \pi_{j,t}$, $\hat FP$, and $\hat FN$ are solutions to the following set of estimating equations
 $$
 \Phi_n (\eta_t) =
@@ -434,7 +440,7 @@ $$
 \end{array}
 \right ) = {\bf 0}
 $$
-where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (n^{-1/2})$ (check)  and $\text{var} (\hat y_{n,t}) = V_{t}^{(IPW)} + o (n^{-1})$ where $V_t^{(IPW)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\Phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$.
+where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (n^{-1/2})$  and $\text{var} (\hat y_{n,t}) = V_{t}^{(IPW)} + o (n^{-1})$ where $V_t^{(IPW)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\Phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$.
 \end{lemma}
 
 \subsection{Model-based estimation}
@@ -448,22 +454,21 @@ Let $s_t$, $e_t$, $i_t^{(T)}$, and $r_t$ denote the proportion of survivors, exp
 \frac{\partial i^{(T)}_t}{\partial t} &= \sigma e_t - \gamma i_t; \quad
 \frac{\partial r_t}{\partial t} = - \gamma i_t.
 \end{align*}
-Following~\cite{Song2020}, we employ Runge-Kutta (RK4) approximations for discretization. Here, we consider covariate information to take the form of a stratificatoin variable $k$ with $K$ strata.  Let $\nu_{k,t}$ to denote the number of new infections on day $t$ in the $k$th strata.  AS there are a total of $N \cdot i_t := I_t$ new infections on day $t$, we assume the joint distribution of strata-specific new infection totals takes a multinomial distribution
+Following~\cite{Song2020}, we employ Runge-Kutta (RK4) approximations for discretization. Here, we consider covariate information that takes the form of a stratification variable with $K$ strata.  Let $\nu_{k,t}$ to denote the number of new infections on day $t$ in the $k$th strata.  As there are a total of $N \cdot i_t := I_t$ new infections on day $t$, we assume the joint distribution of strata-specific new infection totals takes a multinomial distribution
 $$
-( \nu_{1,t}, \ldots, \nu_{K,t} ) \sim \text{Multinomial} \left( I_t, (p_{i1,t}, \ldots, p_{iK, t}) \right).
+( \nu_{1,t}, \ldots, \nu_{K,t} ) \sim \text{Multinomial} \left( I_t, (p_{1,t}, \ldots, p_{K, t}) \right).
 $$
 
-Selection bias in case count data is addressed by bringing in a different source of information, COVID-19 death data.  Let $D_{k,r}$ denote the number of individuals who pass away on day $r$ from strata $k$.  Then
+Selection bias in case count data is addressed by bringing in COVID-19 death data.  Let $D_{k,r}$ denote the number of individuals who pass away on day $r$ from strata $k$.  Then
 $$
 D_{k,r} \mid p, \theta, \nu \sim \text{Poisson} \left( \sum_{t=1}^r p_{k} \nu_{k,t} \theta_{(r-t)} \right)
 $$
-where $p_{k}$ is the infection fatality rate for the $k$th strata.  This extends prior analysis of death data~\cite{Johndrow2020} by allowing the infection fatality rate to depend on age.  Indeed,~\cite{Levin2020} demonstrate that ``the estimated IFR is close to zero for children and younger adults but rises exponentially with age, reaching 0.4\% at age 55, 1.4\% at age 65, 4.6\% at age 75, and 15\% at age 85.''  See Appendix~\ref{app:ifr} for details on choice of $p_k$.
+where $p_{k}$ is the infection fatality rate for the $k$th strata.  This extends prior analysis of death data~\cite{Johndrow2020} by allowing the infection fatality rate to depend on stratification variable.  Specifically, ``the estimated IFR is close to zero for children and younger adults but rises exponentially with age, reaching 0.4\% at age 55, 1.4\% at age 65, 4.6\% at age 75, and 15\% at age 85''~\cite{Levin2020}.
 
 % 0-17: 20/1000000 * 100 -> 0.002 (at age 9)
 % 18-49: 500/1000000 * 100 -> 0.05 (at age 33)
 % 50–64 years old: 6,000/1000000 * 100 -> 0.6
 % 65+ years old: 90,000/1000000 * 100 -> 9.0
-
 %
 
 % For conciseness, parameter choices and inference are discussed in depth in Appendix~\ref{app:modelbased}.
@@ -506,7 +511,7 @@ $$
 \end{array}
 \right ) = {\bf 0}
 $$
-where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (n^{-1/2})$ (check)  and $\text{var} (\hat y_{n,t}) = V_{t}^{(IPW)} + o (n^{-1})$ where $V_t^{(IPW)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\Phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$.
+where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (n^{-1/2})$ and $\text{var} (\hat y_{n,t}) = V_{t}^{(IPW)} + o (n^{-1})$ where $V_t^{(IPW)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\Phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$.
 \end{lemma}
 
 
@@ -515,27 +520,57 @@ where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appen
 
 % For COVID-19 case-count data, the only covariate information provided by state and local governments are summary statistics for those factors discussed in Section~\ref{section:testinginfo} -- age, sex,  and race.  These are discrete factors and therefore define a stratification of the population.  Currently, US testing does not collect additional covariate information such as symptom information; however, this need not be the case moving forward.  Recommendation XX below states that additional covariate information should be collected from nonprobabilistic samples.
 
-Here we consider estimation of the active infection rate in Indiana. We consider five sources of data:
+Here we consider estimation of the active infection rate in Indiana using unweighted, IPW, model-based, and doubly robust estimates. To do so, we consider five data sources:
 \begin{itemize}[leftmargin=*]
-\item {\bf Testing data}:  Each day, the number of tests performed and number of positive tests are reported, with counts broken out jointly by age, gender, and racial demographic information.  Figure~\ref{fig:in-cases} plots the number of COVID-19 positive cases based on testing date by age.
+\item {\bf Testing data}:  Each day, the number of tests performed and number of positive tests are reported, with counts broken out jointly by age, gender, and racial demographic information.  Figure~\ref{fig:in-cases} and~\ref{fig:in-tests} plots daily COVID-19 positive cases and tests by age strata.
 
 \begin{figure}
 \centering
 \begin{subfigure}{.45\textwidth}
  \centering
- \includegraphics[width=.9\linewidth]{../figs/indianacasecounts.png}
- \caption{Indiana case-counts per day}
+ \includegraphics[width=.9\linewidth]{../figs/indianacasecounts_byage.png}
+ \caption{Case-counts per day}
  \label{fig:in-cases}
 \end{subfigure}
 \begin{subfigure}{.45\textwidth}
  \centering
- \includegraphics[width=.9\linewidth]{../figs/indianadeaths.png}
- \caption{Indiana death-counts per day}
+ \includegraphics[width=.9\linewidth]{../figs/indianacovidtests_byage.png}
+\caption{Tests per day}
+\label{fig:in-tests}
+\end{subfigure} \\ [1ex]
+\begin{subfigure}{\linewidth}
+\centering
+\includegraphics[width=.45\linewidth]{../figs/indianadeaths_byage.png}
+ \caption{Deaths per per day}
  \label{fig:in-deaths}
 \end{subfigure}
+\caption{Indiana daily case count, testing, and death data by age strata}
 \end{figure}
 
-\item {\bf Random/Nonrandom statewide sample}: Table~\ref{tab:indiana} summarizes data from a random sample from April 25--29th as well as a nonrandom sample obtained between May 2--3 in racial/ethnic minority communities~\cite{Yiannoutsos2021}. The nonrandom sample is not a random subsample of the overall case-counts; however, this data provides important supplementary covariate information.  Namely, the samples collected included covariate information on (1) prior symptoms, (2) COVID-19 positive individual in household, and (3) prior COVID-19 positive test. To account for the nonrandom sample being from high risk areas, we adjust estimates to match the statewide positivity rate of 11.7\% between May 1--2. These adjusted rates are presented in parentheses in Table~\ref{tab:indiana}.
+\item {\bf Random/Nonrandom statewide sample}: Table~\ref{tab:indiana} summarizes data from a random sample from April 25--29th as well as a nonrandom sample obtained between May 2--3 in racial/ethnic minority communities~\cite{Yiannoutsos2021}. The nonrandom sample is not a random subsample of the overall case-counts; however, this data provides important supplementary covariate information.
+% Namely, the samples collected included covariate information on (1) prior symptoms, (2) COVID-19 positive individual in household, and (3) prior COVID-19 positive test.
+To account for the nonrandom sample being from high risk areas, we adjust estimates to match the statewide positivity rate of 11.7\% between May 1--2. These adjusted rates are presented in parentheses in Table~\ref{tab:indiana} along with the relevant covariate information.
+
+\item {\bf Facebook symptom survey}: We extract daily symptom surveys completed by individuals on Facebook who identify as living in Indiana.  We collect age, sex, and demographic information as well as COVID-19 related symptoms, which Facebook defines as having (1) a fever and cough, (2) shortness of breath, \emph{or} (3) difficulty breathing. To assess potential bias, we compare the random sample from Indiana to the Facebook symptom survey data collected from April 20th to April 25th.  Table~\ref{tab:comparison} demonstrates minimal bias in the Facebook symptom survey.
+
+\begin{table}[!th]
+\centering
+\begin{tabular}{c | c c c | c}
+& \multicolumn{3}{c}{Facebook} & Random \\ \cline{2-5}
+& Lower CI & Estimate & Upper CI & Estimate \\ \hline
+Fever &  0.017 & 0.020 & 0.024 & 0.018 \\
+Cough &  0.142 & 0.148 & 0.154 & 0.149 \\
+Shortness & 0.058 & 0.060 & 0.062 & 0.062 \\ \hline
+\end{tabular}
+\caption{Comparison of Facebook symptom survey and random sample demonstrates minimal bias.}
+\label{tab:comparison}
+\end{table}
+
+% \item {\bf Hospitalization data}: On each day, we observe the number of individuals who are COVID-19 positive that visited a hospital on that day.  Unfortunately, hospitalization data is not broken out by age, gender, and racial demographic information.  Instead, we rely on combining Facebook data to calculate the fraction of those who sought the hospital per week in each strata. We then use this to figure out how many individuals per strata were hospitalized and then back out how many
+
+\item {\bf Death data}: Daily COVID-19 related deaths are observed by age, gender, and racial demographics.  Figure~\ref{fig:in-deaths} plots the cumulative number of COVID-19 related deaths over time by age group. While most COVID-19 tests and positive cases are within the younger age strata, most deaths are within the 70+ age strata.
+\end{itemize}
+
 
 \begin{table}[th]
 \begin{tabular}{c | c | r r | r | r r }
@@ -562,25 +597,6 @@ Test & No & 93.9 & 98.6 & - & 21.6 (11.1) & 1.3 \\ \hline
 \label{tab:indiana}
 \end{table}
 
-\item {\bf Facebook symptom survey}: We extract daily symptom surveys completed by individuals on Facebook who identify as living in Indiana.  We collect age, sex, and demographic information as well as COVID-19 related symptoms, which Facebook defines as having (1) a fever and cough, (2) shortness of breath, \emph{or} (3) difficulty breathing. To assess potential bias, we compare the random sample from Indiana to the Facebook symptom survey data collected from April 20th to April 25th.  Table~\ref{tab:comparison} demonstrates minimal bias in the Facebook symptom survey.
-\begin{table}
-\centering
-\begin{tabular}{c | c c c | c}
-& \multicolumn{3}{c}{Facebook} & Random \\ \cline{2-5}
-& Lower CI & Estimate & Upper CI & Estimate \\ \hline
-Fever &  0.017 & 0.020 & 0.024 & 0.018 \\
-Cough &  0.142 & 0.148 & 0.154 & 0.149 \\
-Shortness & 0.058 & 0.060 & 0.062 & 0.062 \\ \hline
-\end{tabular}
-\caption{Comparison of Facebook symptom survey and random sample demonstrates minimal bias.}
-\label{tab:comparison}
-\end{table}
-
-% \item {\bf Hospitalization data}: On each day, we observe the number of individuals who are COVID-19 positive that visited a hospital on that day.  Unfortunately, hospitalization data is not broken out by age, gender, and racial demographic information.  Instead, we rely on combining Facebook data to calculate the fraction of those who sought the hospital per week in each strata. We then use this to figure out how many individuals per strata were hospitalized and then back out how many
-
-\item {\bf Death data}: On each day, we observe the number of deaths due to COVID-19 reported on that day, with deaths broken out jointly by age, gender, and racial demographic information.  Figure~\ref{fig:in-deaths} plots the cumulative number of COVID-19 related deaths over time by age group.
-\end{itemize}
-
 
 \subsection{Inverse-probability weighting approach}
 
@@ -588,19 +604,81 @@ Shortness & 0.058 & 0.060 & 0.062 & 0.062 \\ \hline
 % FN: https://www.medrxiv.org/content/10.1101/2020.04.16.20066787v2.full.pdf
 
 
-We start by using Table~\ref{tab:indiana} to compute IPW weights for end of April, early May.  The random sample is $n=3,658$ and IPW weights are computed per strata which depend on Gender, Age, Race, Fever, Positive Case in Household, and Prior Positive Test.  The weight for the strata defined as Male, 40--59, White, has a Fever, no household cases, and no prior tests is proportional to:
+We start by using Table~\ref{tab:indiana} to compute IPW weights for end of April, early May.  The random sample is $n=3,658$ and IPW weights are computed per strata which depend on Gender, Age, Race, Fever, Positive Case in Household, and Prior Positive Test.  The weight for the strata defined as Male, 40--59, White, has a Fever, no household cases, and no prior tests, for example, is proportional to:
 $$
 \frac{\left( 0.493 \times 0.252 \times 0.869 \times 0.018 \times 0.986 \times 0.986 \right)}{\left(0.418 \times 0.411 \times 0.231 \times 0.17 \times 0.892 \times 0.939 \right)} \approx 0.334
 $$
-Using the constructed weights and the adjusted strata-level prevalence estimates, the IPW estimate under no measurement-error is $7.7$, a decrease of four percentage points from the observed prevalence of $11.7$. We also compute weights using Facebook's survey data collected in Indiana over that window of time but ignoring the household and prior testing information. The resulting IPW estimate under no measurement-error is $6.$
+Using the constructed weights and the adjusted strata-level prevalence estimates, the IPW estimate under no measurement-error is $7.7$, a decrease of four percentage points from the observed prevalence of $11.7$. We also make use of Facebook's symptom survey over that window of time to construct a second IPW estimate conditoinal on demographics and fever but ignoring the household and prior testing information, which under no measurement-error is $6.5$\%.
 
-The study did not report sensitivity and specificity; therefore, we take the suggested measures from~\cite{Woloshin2020} which report 70\% sensitivity is a reasonable estimates and~\cite{Cohen2020} which report 97.6\% specificity.  This corresponds to a false negative rate of $30\%$ and false positive rate of $2.4\%$.  Therefore, the IPW estimates accounting for measurement-error are $5.6\%$ and $4.2\%$ respectively.  To account for uncertainty in
+The Indiana study did not report sensitivity and specificity; therefore, we take the suggested measures from~\cite{Woloshin2020} which report 70\% sensitivity is a reasonable estimates and~\cite{Cohen2020} which report 97.6\% specificity.  This corresponds to a false negative rate of $30\%$ and false positive rate of $2.4\%$.  Therefore, the IPW estimates accounting for measurement-error are $5.6\%$ and $4.2\%$ respectively.  To account for uncertainty in
+
+\subsubsection{Disease prevalence by April 2020}
+
+Indiana's population as of 2019 was $6.732$ million.  A total of $898$ were administered between April 25th to 29th. Subtracting off the $95,879$ tests that had already performed yields a sampling fraction of $f = 2.96 \times 10^{-3}$.  Next we consider estimation of data quality $E_{\I} \left[ \rho_{\tilde I(X),Y} \right]$. In \cite{Meng2018}, estimation relied on observing the true outcome (i.e., election vote totals), which is not possible in the current crisis.  Here, we use the random sample which estimates the true prevalence of active COVID-19 disease at 1.81\%~\cite{Yiannoutsos2021}.  Our goal is not inferential. Instead, we aim to build sensitivity analyses that can aid in understanding the amount of information in observational COVID case-count data.
+
+The unweighted estimate for the true prevalence of active COVID-19 disease between April 25th and April 29th is 11.7\%.  Assuming a false negative rate of $3$\% and false positive rate of $3$\%, the unweighted estimate is $10.4$\%, leading to an error of $8.5$\%.  Using~\eqref{eq:statdecomp}, we construct an estimate of the relative sampling rate as follows
+\begin{equation*}
+\rho D_M = \sqrt{\frac{f}{1-f}} \frac{\text{0.085}}{\sigma_Y} = 3.84 \times 10^{-2} \Rightarrow \Delta = 1.39 \times 10^{-2} \Rightarrow M = 6.1.
+\end{equation*}
+Using inverse-probability weights, the IPW estimates for the true prevalence of active COVID-19 disease between April 25th and April 29th are $7.7$\% and $6.5\%$ respectively.  Under the same sensitivity and specificity, the weighted estimates adjusted for measurement-error are $5.6$\% and $4.2$\%, leading to errors $3.8$\% and $2.4$\% respectively.  Using~\eqref{eq:statdecomp2}, we construct an estimate of the relative sampling rate as follows
+\begin{equation*}
+\tilde \rho D_M = \sqrt{\frac{f}{1-f+CV_W^2}} \frac{\text{0.038}}{\sigma_Y} = 6.93 \times 10^{-3} \Rightarrow \tilde \Delta = 8.24 \times 10^{-3}  \Rightarrow \tilde M = 3.9,
+\end{equation*}
+using the Indiana non-random sample.  For the IPW estimate using Facebook data, we have $\tilde M = 3.3$. Therefore, the impact of self selection on bias of $\hat R_t$ appears strong using unweighted data, remaining moderate even using the weighted estimates.
+
+A sensitivity analysis is performed by considering the range of false negative and false positive rates.  Here, sensitivity is assumed to fall between $81$\% and $91$\% and specificity between $95$\% and $98.8$\%~\cite{Katz2020}, which leads to a range for $M$ of $(5.60, 6.39)$ for the unweighted analysis, and $(3.63,4.07)$ and $(3.10, 3.45)$ for the weighted analyses respectively.
+
+\subsubsection{Time-varying IPW estimator}
+
+Here we extend the IPW analysis to the time-varying setting.  To do so, we make use of the Facebook symptom survey, hospitalization, and testing data.  Recall the COVID-19 testing and positive case counts are known by age, gender, and racial demographics. Symptom status (e.g., fever, coughing, shortness of breath) and related covariate information (COVID-19 positive contact), however, are currently unavailable\footnote{Whether this is due to data privacy considerations or lack of data collection efforts is unclear.}.  As COVID-19 symptom status is likely to alter the testing propensity and likelihood of active infection, Facebook symptom survey and hospitalization data are both used to estimate symptom status per strata.  We do this in two ways which are each detailed below.
+
+In the first approach, we estimate two logistic regressions using weighted pseudo-likelihoods with the Facebook survey symptom data.  The first estimates the probability of contact with a COVID-19 positive individual given demographic and COVID-19 test status (positive or negative COVID-19 test). The second estimates the probability of fever given demographic, COVID-19 test status, \emph{and} whether the individual has had contact with a COVID-19 positive individual.  Using these two models, mean imputation is used to calculate the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status.  With the resulting dataset, inverse probability weights are computed based.
+
+In the second model, for negative cases,  people fever
+
+For positive cases, we impute the number of positive cases
+
+Figure~\ref{fig:testinglik_mainpaper} presents the testing propensity for non-hispanic, white males across age strata and fever status using the second approach.  We note here that the ratio of testing propensity within strata across fever status is time-varying.  The ratio starting nine times more likely in early April and
+
+Fever
 
 
 
-%\subsection{Model-based estimation}
-%
-%\subsection{Doubly robust estimation}
+\begin{figure}[!th]
+\centering
+\begin{subfigure}{.5\textwidth}
+ \centering
+ \includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig1_mainpaper.png}
+ \caption{Testing Likelihood Given Fever}
+ \label{fig:testinglik1_mainpaper}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+ \centering
+\includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig2_mainpaper.png}
+ \caption{Testing Propensity Given No Fever}
+ \label{fig:testinglik2_mainpaper}
+\end{subfigure}
+\caption{Testing Propensity across age strata and fever status}
+\label{fig:testinglik_mainpaper}
+\end{figure}
+
+
+
+%\emph{Need to show Hospitalization C+ versus Covid count to show that most of the tests are in that subset for early parts.}
+
+\subsection{Model-based estimation}
+
+
+\begin{figure}[!th]
+\centering
+\includegraphics[width=.6\linewidth]{../figs/deaths_ppc.png}
+\caption{Posterior predictive check on aggregate daily death counts}
+\label{fig:deathsppc}
+\end{figure}
+
+
+
+\subsection{Doubly robust estimation}
 %
 %% \begin{figure}
 %% \centering
@@ -621,33 +699,19 @@ The study did not report sensitivity and specificity; therefore, we take the sug
 %% \end{figure}
 %
 
-\subsection{Disease prevalence by April 2020}
 
-Indiana's population as of 2019 was $6.732$ million.  Subtracting off the $617,555$ tests that had already performed yields a sampling fraction of $f = 0.001$.  The smoothed prevalence estimate is 28.4\%.  Adjusting for imperfect testing yields an estimate of $33.9\%$.
-
-For this estimate, we consider estimation of data quality $E_{\I} \left[ \rho_{\tilde I(X),Y} \right]$. In \cite{Meng2018}, estimation relied on observing the true outcome (i.e., election vote totals), which is not possible in the current crisis.  Here, we use the random sample which estimates the true prevalence of active COVID-19 disease at 1.81\%~\cite{Yiannoutsos2021}.  Our goal is not inferential. Instead, we aim to build sensitivity analyses that can aid in understanding the amount of information in observational COVID case-count data.
-
-The non-weighted estimate error is $8.6$\%.  Using~\eqref{eq:statdecomp}, we construct an estimate of the relative sampling rate as follows
-\[
-\rho D_M = \sqrt{\frac{f}{1-f}} \frac{\text{0.085}}{\sigma_Y} = 3.84 \times 10^{-2} \Rightarrow \Delta = 1.39 \times 10^{-2} \Rightarrow M = 6.1.
-\]
-For the IPW estimates, $3.8$\% and $2.4$\% respectively
-\[
-\tilde \rho D_M = \sqrt{\frac{f}{1-f+CV_W^2}} \frac{\text{0.038}}{\sigma_Y} = 6.93 \times 10^{-3} \Rightarrow \tilde \Delta = 8.24 \times 10^{-3}  \Rightarrow \tilde M = 3.9.
-\]
-For the IPW estimate using Facebook data, we have $\tilde M = 3.3$.
-
-We can perform a sensitivity analysis by considering the range of false negative and false positive rates.  Here, we assume sensitivity between $81$\% and $91$\% and specificity between $95$\% and $98.8$\%~\cite{Katz2020}, which leads to a range for $M$ of $(5.60, 6.39)$ in the unweighted analysis.  Therefore, the impact on bias of $\hat R_t$ appears moderate.
-
-This simple tool helps us understand how sensitivity and specificity impact biases and  therefore how much we should trust conclusions based on these assumptions.
-
-%\subsubsection{Time-varying IPW estimator}
-%
-%\emph{Need to show Hospitalization C+ versus Covid count to show that most of the tests are in that subset for early parts.}
+\begin{figure}[!th]
+\centering
+\includegraphics[width=.6\linewidth]{../figs/tv_air.png}
+\caption{Active Infection Rate Estimates}
+\label{fig:testinglik_mainpaper}
+\end{figure}
 
 
-%\section{Discussion}
-%\label{section:discussion}
+
+
+\section{Discussion}
+\label{section:discussion}
 %
 %{\bf Our goal with surveillance is to identify areas of weakness; but selection bias is an issue!}
 %
@@ -1390,5 +1454,116 @@ $$
 
 \section{Infection fatality rate (IFR) by age group}
 \label{app:ifr}
+
+\section{Image combos (temporary)}
+
+\subsection{Model 1}
+
+In this section, we describe.
+
+\begin{figure}[!th]
+\centering
+\begin{subfigure}{.5\textwidth}
+ \centering
+ \includegraphics[width=.9\linewidth]{../figs/tvprop_contact_fig1.png}
+ \caption{COVID-19 Contact Likelihood Given Negative Test}
+ \label{fig:contactlik1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+ \centering
+\includegraphics[width=.9\linewidth]{../figs/tvprop_contact_fig2.png}
+ \caption{COVID-19 Contact Likelihood Given Positive Test}
+ \label{fig:contactlik2}
+\end{subfigure}
+\caption{Likelihood of COVID-19 contact}
+\label{fig:contactlik}
+\end{figure}
+
+We then fit a model for likelihood of fever given
+
+\begin{figure}[!th]
+\centering
+\begin{subfigure}{.5\textwidth}
+ \centering
+ \includegraphics[width=.9\linewidth]{../figs/tvprop_symptom_fig1.png}
+ \caption{Symptom Likelihood Given Negative Test}
+ \label{fig:symptomlik1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+ \centering
+\includegraphics[width=.9\linewidth]{../figs/tvprop_symptom_fig2.png}
+ \caption{Symptom Likelihood Given Positive Test}
+ \label{fig:symptomlik2}
+\end{subfigure}
+\caption{Likelihood of COVID-19 contact}
+\label{fig:symptomlik}
+\end{figure}
+
+The testing propensity likelihood
+
+
+\begin{figure}[!th]
+\centering
+\begin{subfigure}{.5\textwidth}
+ \centering
+ \includegraphics[width=.9\linewidth]{../figs/tvprop_fig1.png}
+ \caption{COVID-10 Testing Likelihood Given Fever and COVID-19 Contact}
+ \label{fig:testinglik1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+ \centering
+\includegraphics[width=.9\linewidth]{../figs/tvprop_fig2.png}
+ \caption{Testing Propensity}
+ \label{fig:testinglik2}
+\end{subfigure}
+\caption{COVID-10 Testing Likelihood Given no Fever nor COVID-19 Contact}
+\label{fig:testinglik}
+\end{figure}
+
+\newpage
+
+\subsection{Model 2 (Hospitalization)}
+
+We then fit a model for likelihood of fever given
+
+\begin{figure}[!th]
+\centering
+\begin{subfigure}{.5\textwidth}
+ \centering
+ \includegraphics[width=.9\linewidth]{../figs/tvprop_symptom_alt_fig1.png}
+ \caption{Symptom Likelihood Given Negative Test}
+ \label{fig:symptomlik1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+ \centering
+\includegraphics[width=.9\linewidth]{../figs/tvprop_symptom_alt_fig2.png}
+ \caption{Symptom Likelihood Given Positive Test}
+ \label{fig:symptomlik2}
+\end{subfigure}
+\caption{Likelihood of COVID-19 contact}
+\label{fig:symptomlik}
+\end{figure}
+
+The testing propensity likelihood
+
+
+\begin{figure}[!th]
+\centering
+\begin{subfigure}{.5\textwidth}
+ \centering
+ \includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig1.png}
+ \caption{COVID-10 Testing Likelihood Given Fever and COVID-19 Contact}
+ \label{fig:testinglik1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+ \centering
+\includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig2.png}
+ \caption{Testing Propensity}
+ \label{fig:testinglik2}
+\end{subfigure}
+\caption{COVID-10 Testing Likelihood Given no Fever nor COVID-19 Contact}
+\label{fig:testinglik}
+\end{figure}
+
 
 \end{document}
