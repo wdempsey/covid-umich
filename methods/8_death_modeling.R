@@ -90,7 +90,7 @@ fit_forcing <- sampling(model_forcing,
 
 saveRDS(fit_forcing, "../data/fit_forcing_byage.RDS")
 
-# fit_forcing = readRDS("../data/fit_forcing.RDS")
+# fit_forcing = readRDS("../data/fit_forcing_threejumps.RDS")
 
 check_hmc_diagnostics(fit_forcing)
 
@@ -98,7 +98,7 @@ pairs(fit_forcing, pars = c("beta", "eta", "eta_two", "eta_three"))
 
 pairs(fit_forcing, pars = c("nu", "nu_two", "nu_three"))
 
-smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_cases", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary[(max_death_day+1):(max_death_day+length(deaths)-1),]),
+smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_cases", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary[(max_death_day+1):(max_death_day+ncol(deaths)-1),]),
                   t=1:(n_days-1))
 colnames(smr_pred) <- make.names(colnames(smr_pred)) # to remove % in the col names
 

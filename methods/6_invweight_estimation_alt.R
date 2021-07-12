@@ -46,8 +46,10 @@ for(i in 1:length(weeks)) {
   results[i,1] = current_week
   results[i,2] = current_year
   results[i,3] = sum(current_counts)/sum(current_tests)
-  results[i,4] = sum(current_counts*weights)/sum(current_tests*weights) 
+  results[i,4] = sum(current_counts*weights)/sum(current_tests*weights)
 }
 
 saveRDS(results, "../data/invweights_alt.RDS")
+
+results
 

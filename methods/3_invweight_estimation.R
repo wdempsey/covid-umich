@@ -29,7 +29,7 @@ current_year = 2020
 
 weeks = c(14:53,1:5)
 years = c(rep(2020, length = length(c(14:53))),rep(2021, length = length(1:5)))
-results = matrix(nrow = length(weeks), ncol = 4) 
+results = matrix(nrow = length(weeks), ncol = 6) 
 
 for(i in 1:length(weeks)) {
   current_week = weeks[i]
@@ -40,7 +40,7 @@ for(i in 1:length(weeks)) {
   results[i,1] = current_week
   results[i,2] = current_year
   results[i,3] = sum(current_counts)/sum(current_tests)
-  results[i,4] = sum(current_counts*weights)/sum(current_tests*weights) 
+  results[i,4] = sum(current_counts*weights)/sum(current_tests*weights)
 }
 
 saveRDS(results, "../data/invweights.RDS")
