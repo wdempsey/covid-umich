@@ -37,7 +37,7 @@ out2 <- as.data.frame(out2)
 out1$time <- NULL
 out2$time <- NULL
 ## Show data
-png(filename = "C:/Users/Balthazar/Documents/GitHub/covid-umich/methods/figs/sir.png",
+png(filename = "../figs/sir.png",
     width = 6.5, height = 4, units = "in", res = 1200, pointsize = 12)
 par(mar = c(2,2,1,1)+0.1)
 plot(times, out1$I, type = "l", axes = FALSE, bty = "n")
