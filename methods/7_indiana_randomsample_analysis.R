@@ -1,5 +1,9 @@
-## IPW estimator using random and nonrandom samples
+## 
 overall_test = 0.117
+FP = 0.024
+FN = 0.13
+
+## IPW estimator using random and nonrandom samples
 NR_rate = R_rate = list()
 NR_test = R_test = list()
 NR_rate[['sex']] = c(0.582, 0.418)
@@ -95,10 +99,7 @@ for(n in 1:2) {
 }
 
 haty_nomem = sum(NR_array_test * weights)
-
-FP = 0.024 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7307014/
-FN = 0.30 # https://www.medrxiv.org/content/10.1101/2020.04.16.20066787v2.full.pdf
-
+overall_test_mem = (overall_test-FP)/(1-FP-FN)
 haty = (haty_nomem - FP)/(1-FP-FN)
 
 ### Alternative using FB numbers
@@ -152,12 +153,15 @@ for(l in 1:2) {
 
 
 fb_haty_nomem = sum(fb_NR_array_test * fb_weights)
- 
-FP = 0.024 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7307014/
-FN = 0.30 # https://www.medrxiv.org/content/10.1101/2020.04.16.20066787v2.full.pdf
 
 fb_haty = (fb_haty_nomem - FP)/(1-FP-FN)
 
+
+## ESTIMATES 
+print(paste("FP =", FP, "and FN = ", FN))
+
+print(paste("Unweighted estimate with no MEM =", round(overall_test,3)))
+print(paste("Unweighted estimate with MEM =", round(overall_test_mem,3)))
 
 print(paste("Hat y with no MEM =", round(haty_nomem,3)))
 print(paste("Hat y with MEM =", round(haty,3)))
@@ -165,6 +169,8 @@ print(paste("Hat y with MEM =", round(haty,3)))
 
 print(paste("FB-based hat y with no MEM =", round(fb_haty_nomem,3)))
 print(paste("FB-based hat y with MEM =", round(fb_haty,3)))
+
+
 
 ## Statistical Error Decomposition
 N <- 6.732E6; # Indiana Population
@@ -201,10 +207,10 @@ stat_decomp <- function(haty, true_y, falsepos, falseneg, f) {
 }
 
 
-error = (overall_test-FP)/(1-FP-FN) - true_y 
+error = overall_test_mem - true_y 
 var_y = true_y * (1-true_y)
 sigma_y = sqrt(var_y)
-sqrt(f/(1-f)) * error / sigma_y
+RHS = sqrt(f/(1-f)) * error / sigma_y
 
 estimated_Delta = optim(par = init_Delta, fn = stat_decomp(overall_test, true_y, 0.03, 0.13, f))
 best_Delta <- estimated_Delta$par
@@ -212,7 +218,7 @@ f_0 = f - true_y * best_Delta
 f_1 = best_Delta + f_0
 best_M = f_1/f_0
 
-print(paste("Unweighted prevalence with MEM: Error = ", round(error,4), "Delta =", round(best_Delta,10), "M =", round(best_M,3)))
+print(paste("Unweighted prevalence with MEM: Error = ", round(error,4), "RHS = ", round(RHS, 4), "Delta =", round(best_Delta,10), "M =", round(best_M,3)))
 
 # Smallest M for range of FP and FN
 estimated_Delta = optim(par = init_Delta, fn = stat_decomp(overall_test, true_y, 0.05, 0.19, f))
@@ -303,7 +309,7 @@ weighted_stat_decomp <- function(haty, true_y, falsepos, falseneg, f, expected_w
 error = (haty_nomem-FP)/(1-FP-FN) - true_y 
 var_y = true_y * (1-true_y)
 sigma_y = sqrt(var_y)
-sqrt(f/(1-f+CV_Wsq)) * error / sigma_y
+RHS = sqrt(f/(1-f+CV_Wsq)) * error / sigma_y
 
 estimated_Delta = optim(par = init_Delta, fn = weighted_stat_decomp(haty_nomem, true_y, 0.03, 0.13, f,expected_weight, var_weight))
 best_Delta <- estimated_Delta$par
@@ -311,12 +317,12 @@ f_0 = expected_weight* f - true_y * best_Delta
 f_1 = best_Delta + f_0
 best_M = f_1/f_0
 
-print(paste("Weighted prevalence with MEM: Error = ", round(error,4), "Delta =", round(best_Delta,10), "M =", round(best_M,3)))
+print(paste("Weighted prevalence with MEM: Error = ", round(error,4), "RHS = ", round(RHS,6), "Delta =", round(best_Delta,10), "M =", round(best_M,3)))
 
 fberror = (fb_haty_nomem-FP)/(1-FP-FN) - true_y 
 var_y = true_y * (1-true_y)
 sigma_y = sqrt(var_y)
-sqrt(f/(1-f+fbCV_Wsq)) * error / sigma_y
+RHS = sqrt(f/(1-f+fbCV_Wsq)) * error / sigma_y
 
 fbestimated_Delta = optim(par = init_Delta, fn = weighted_stat_decomp(fb_haty_nomem, true_y, 0.03, 0.13, f, fbexpected_weight, fbvar_weight))
 fbbest_Delta <- fbestimated_Delta$par
@@ -324,7 +330,7 @@ f_0 = fbexpected_weight * f - true_y * fbbest_Delta
 f_1 = fbbest_Delta + f_0
 fbbest_M = f_1/f_0
 
-print(paste("FB Weighted prevalence with MEM: Error = ", round(fberror,4), "Delta =", round(fbbest_Delta,10), "M =", round(fbbest_M,3)))
+print(paste("FB Weighted prevalence with MEM: Error = ", round(fberror,4), "RHS =", round(RHS, 6), "Delta =", round(fbbest_Delta,10), "M =", round(fbbest_M,3)))
 
 # Smallest M for range of FP and FN
 estimated_Delta = optim(par = init_Delta, fn = weighted_stat_decomp(haty_nomem, true_y, 0.05, 0.19, f,expected_weight, var_weight))
