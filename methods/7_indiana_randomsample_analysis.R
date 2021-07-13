@@ -96,8 +96,8 @@ for(n in 1:2) {
 
 haty_nomem = sum(NR_array_test * weights)
 
-FP = 0.03 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7307014/
-FN = 0.13 # https://www.medrxiv.org/content/10.1101/2020.04.16.20066787v2.full.pdf
+FP = 0.024 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7307014/
+FN = 0.30 # https://www.medrxiv.org/content/10.1101/2020.04.16.20066787v2.full.pdf
 
 haty = (haty_nomem - FP)/(1-FP-FN)
 
@@ -153,8 +153,8 @@ for(l in 1:2) {
 
 fb_haty_nomem = sum(fb_NR_array_test * fb_weights)
  
-FP = 0.03 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7307014/
-FN = 0.13 # https://www.medrxiv.org/content/10.1101/2020.04.16.20066787v2.full.pdf
+FP = 0.024 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7307014/
+FN = 0.30 # https://www.medrxiv.org/content/10.1101/2020.04.16.20066787v2.full.pdf
 
 fb_haty = (fb_haty_nomem - FP)/(1-FP-FN)
 
