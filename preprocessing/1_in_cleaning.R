@@ -11,14 +11,16 @@ gender_data = read.csv("../data/covid_indiana_gender.csv")
 ethnicity_data = read.csv("../data/covid_indiana_ethnicity.csv")
 race_data = read.csv("../data/covid_indiana_race.csv")
 
-unique_dates = unique(age_data$ï..date)
+names(age_data)[2] = "age"
+
+unique_dates = unique(age_data$DATE)
 
 library(lubridate)
 ## MAKE DATES
-age_data$date = mdy(age_data$ï..date)
-gender_data$date = mdy(gender_data$ï..date)
-ethnicity_data$date = mdy(ethnicity_data$ï..date)
-race_data$date = mdy(race_data$ï..date)
+age_data$date = ymd(age_data$DATE)
+gender_data$date = ymd(gender_data$DATE)
+ethnicity_data$date = ymd(ethnicity_data$DATE)
+race_data$date = ymd(race_data$DATE)
 
 age_data$week = week(age_data$date)
 gender_data$week = week(gender_data$date)
