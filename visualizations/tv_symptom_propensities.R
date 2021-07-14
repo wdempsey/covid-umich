@@ -42,10 +42,10 @@ names(propensities_pos) = c("week", "year", "gender1", "gender2", "25to34", "35t
                             "55to64", "65to74", "75plus", "nocontact", "date")
 
 ## Example propensity: Fever + Not H + White + Male
-xmalenocontact = as.matrix(c(0,1,0,1,0,0,0,0,1), ncol = 1)
-xmalecontact     = as.matrix(c(0,1,0,1,0,0,0,0,0), ncol = 1)
-propensities_pos$probs_nocontact = as.vector(1/(1+exp(-as.matrix(propensities_pos[,3:11])%*%xmalenocontact)))
-propensities_pos$probs_contact = as.vector(1/(1+exp(-as.matrix(propensities_pos[,3:11])%*%xmalecontact)))
+xfemalenocontact = as.matrix(c(0,1,0,1,0,0,0,0,1), ncol = 1)
+xfemalecontact     = as.matrix(c(0,1,0,1,0,0,0,0,0), ncol = 1)
+propensities_pos$probs_nocontact = as.vector(1/(1+exp(-as.matrix(propensities_pos[,3:11])%*%xfemalenocontact)))
+propensities_pos$probs_contact = as.vector(1/(1+exp(-as.matrix(propensities_pos[,3:11])%*%xfemalecontact)))
 
 propensities_pos_long = rbind(propensities_pos, propensities_pos)
 
