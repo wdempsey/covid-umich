@@ -108,9 +108,9 @@ for(row in 1:nrow(indiana_data_w_sympcontact)){
   pos_prob_current_contact = ( (temp$contact == TRUE) * probcontact_pos + (temp$contact == FALSE) * (1-probcontact_pos))
   pos_prob_current_fever = ( (temp$fever == TRUE) * probsymptom_pos + (temp$fever == FALSE) * (1-probsymptom_pos))
   pos_tests = temp$covid_counts * pos_prob_current_contact * pos_prob_current_fever
-  temp$covid_tests = neg_tests + pos_tests
-  temp$covid_counts = pos_tests
-  temp$covid_posrate = temp$covid_counts/temp$covid_tests
+  temp$covid_tests[1] = neg_tests + pos_tests
+  temp$covid_counts[1] = pos_tests
+  temp$covid_posrate[1]= temp$covid_counts/temp$covid_tests
   indiana_data_w_sympcontact[row,] = temp
 }
 
