@@ -623,19 +623,14 @@ A sensitivity analysis is performed by considering the range of false negative a
 
 \subsubsection{Time-varying IPW estimator}
 
-The IPW analysis is next extended to the time-varying setting.  To do so, we make use of the Facebook symptom survey, hospitalization, and testing data.  Recall the COVID-19 testing and positive case counts are known by age, gender, and racial demographics. Symptom status (e.g., fever, coughing, shortness of breath) and related covariate information (COVID-19 positive contact), however, are currently unavailable\footnote{Whether this is due to data privacy considerations or lack of data collection efforts is unclear.}.  As COVID-19 symptom status is likely to alter the testing propensity and likelihood of active infection, Facebook symptom survey and hospitalization data are used to estimate symptom status per strata in two ways which are each detailed below.
+The IPW analysis is next extended to the time-varying setting.  To do so, we make use of the Facebook symptom survey, hospitalization, and testing data.  Recall the COVID-19 testing and positive case counts are known by age, gender, and racial demographics. Symptom status (e.g., fever, coughing, shortness of breath) and related covariate information (COVID-19 positive contact), however, are currently unavailable\footnote{Whether this is due to data privacy considerations or lack of data collection efforts is unclear.}.  As COVID-19 symptom status is likely to alter the testing propensity and likelihood of active infection, Facebook symptom survey and hospitalization data are used to estimate symptom status per strata in two ways which are each detailed below. Here, two simple imputation methods are considered for illustrative purposes; see Section~\ref{section:discussion} for additional discussion.
 
-In the first approach, we estimate two logistic regressions using weighted pseudo-likelihoods with the Facebook survey symptom data.  The first estimates the probability of contact with a COVID-19 positive individual given demographic and COVID-19 test status (positive or negative COVID-19 test). The second estimates the probability of fever given demographic, COVID-19 test status, \emph{and} whether the individual has had contact with a COVID-19 positive individual.  Using these two models, mean imputation is used to calculate the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status.  With the resulting dataset, inverse probability weights are computed based.
-
-In the second model, for negative cases,  people fever
-
-For positive cases, we impute the number of positive cases
-
-Figure~\ref{fig:testinglik_mainpaper} presents the testing propensity for non-hispanic, white males across age strata and fever status using the second approach.  We note here that the ratio of testing propensity within strata across fever status is time-varying.  The ratio starting nine times more likely in early April and
-
-Fever
+In the first approach, we estimate two logistic regressions using weighted pseudo-likelihoods with the Facebook survey symptom data.  The first estimates the probability of contact with a COVID-19 positive individual given demographic and COVID-19 test status (positive or negative COVID-19 test). Figure~\ref{fig:contactlik1} and~\ref{fig:contactlik2} in Appendix~\ref{app:in_add_details} presents the estimated likelihood of contact with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  The second estimates the probability of fever given demographic, COVID-19 test status, \emph{and} whether the individual has had contact with a COVID-19 positive individual.  Figure~\ref{fig:symptomlik1} and~\ref{fig:symptomlik2} in Appendix~\ref{app:in_add_details} presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that likelihood of fever varies greatly based on whether the individual also reported contact with a COVID-19 positive individual. Using these two models, mean imputation is used to calculate the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. With the resulting dataset, inverse probability weights are computed based (termed IPW1).
 
 
+In the second approach, we leverage hospitalization information. The first estimates the probability of fever given demographic and COVID-19 test status.  When the COVID-19 test status is positive, the probability of fever depends on whether the individual was hospitalized.  Figure~\ref{fig:symptomlik1_model2} and~\ref{fig:symptomlik2_model2} in Appendix~\ref{app:in_add_details} presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that hospitalization significantly increases the likelihood of fever as expected.  We use these models and the hospitalization rates by demographic to perform mean impuation of the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. With the resulting dataset, inverse probability weights are computed based (termed IPW2).
+
+To make the approach concrete, Figure~\ref{fig:testinglik_mainpaper} presents the testing propensity for non-hispanic, white males across age strata and fever status using the second approach.  We note here that the ratio of testing propensity within strata across fever status is time-varying.  The ratio starting nine times more likely in early April and dropping to twice as likely by end of 2020.
 
 \begin{figure}[!th]
 \centering
@@ -656,10 +651,13 @@ Fever
 \end{figure}
 
 
-
-%\emph{Need to show Hospitalization C+ versus Covid count to show that most of the tests are in that subset for early parts.}
-
 \subsection{Model-based estimation}
+
+Ages we use
+
+Stan.
+
+Figure~\ref{fig:deathsppc} performs a posterior predictive check on aggregate
 
 
 \begin{figure}[!th]
@@ -671,27 +669,13 @@ Fever
 
 
 
-\subsection{Doubly robust estimation}
-%
-%% \begin{figure}
-%% \centering
-%% \begin{subfigure}{.5\textwidth}
-%%   \centering
-%%   \includegraphics[width=.9\linewidth]{../methods/figs/NY_casecount.png}
-%%   \caption{NY new cases per day}
-%%   \label{fig:ny-covid-test}
-%% \end{subfigure}%
-%% \begin{subfigure}{.5\textwidth}
-%%   \centering
-%%   \includegraphics[width=.9\linewidth]{../methods/figs/NY_fracpos.png}
-%%   \caption{NY fraction of new tests positive per day}
-%%   \label{fig:ny-covid-frac}
-%% \end{subfigure}
-%% \caption{New York COVID-19 reported data}
-%% \label{fig:ny-covid}
-%% \end{figure}
-%
+\subsection{Time-varying prevalence estimates}
 
+Present IPW1, IPW2, Model-based, DR1, and DR2.
+
+We notice that IPW1/2 don't improve greatly but this may be due to the
+
+We notice model-based rates are much lower, but
 
 \begin{figure}[!th]
 \centering
@@ -705,65 +689,65 @@ Fever
 
 \section{Discussion}
 \label{section:discussion}
-%
-%{\bf Our goal with surveillance is to identify areas of weakness; but selection bias is an issue!}
-%
-%There is nothing routine about COVID-19, including the corresponding statistical questions.  The goal of this paper was to point out questionable statistical routines.  Precision in reported case-count data gives the illusion of information when what what is needed is quantification of uncertainty. Selection bias leads data analysts to feel certain about incorrect conclusions.  We end with a brief discussion of important related topics.
-%
-%\subsection*{Additional biases and measurement-error}
-%
-%Length bias and measurement-error?
-%
-%\subsection*{Decision-making: data versus information}
-%
-%Having read through the above technical discussions, one may come to the incorrect conclusion that because we are concerned about implicit biases in observational data, we must wait for better data sources in order to act~\citep{Ioannidis2020}.  This conclusion confuses data and information.  Lack of high quality data means we should be skeptical regarding conclusions drawn from these data sources alone.  Being skeptical of observed data does not imply governments and communities should wait for high quality data to act; this is especially true in the current high risk scenario.  Instead, we should aim to have high quality information.  Yet in the current crisis we have just that.  Indeed, epidemiologists and public health officials have a strong understanding of the basic facts of pandemics and disease spread.  Social distancing, contact tracing and mass testing are all important.  Individuals and communities with low quality data and only basic information will hopefully make decisions that respect inherent risks to their well being as well as the high degree of uncertainty in the observed data. Of course, there are trade-offs and long-term stay-at-home orders will have negative economic consequences.  A full discussion of these topics is beyond the scope of the current article.
-%
-%\subsection*{Data quantity versus quality}
-%
-%Governments implicitly argue that increased testing capacity will perform the above task.  Without complete compliance, however, our understanding of future outbreaks may be plagued by self-selection bias, compounded by changing sensitivity and specificity rates. Random testing removes these effect modifiers, giving governments more information to fight the disease.  This is not to say random testing should replace current testing practices; only that the random testing should supplement and will provide valuable additional information even with moderate sample sizes.
-%
-%\subsection*{High quality information on prevalence.}
-%
-%Governments are pushing for increased testing capacity and robust contact tracing.  Contact tracing is incredibly useful for identifying carriers early and preventing spread of the disease.  We would argue that, after the current wave, understanding prevalence is also key.  We know that the probability of an outbreak is a function of current prevalence and network connectivity.  Epidemic critical thresholds have been derived for many infectious disease models~\citep{Pastor2001,Newman2002,Parshani2010}.  Knowing prevalence will help governments determine long-term community-level risk and allow for more targeted interventions -- shutting down only certain locations when necessary.
-%
-%\subsection*{Stratified sampling: improving precision in low-prevalence environments.}
-%Random sampling is a powerful tool.  One difficulty with SRS is when prevalence is low.  Consider the Santa Clara study~\citep{Bendavid2020} which estimated prevalence less than 2\% in the county.  The key issue with low prevalence is that if the test's specificity is higher than the prevalence, then the observed data is consistent with zero recovered individuals. In these settings, SRS is likely to fail; however, there are potential solutions.  One can, for example, stratify the population into risk categories (e.g., based on population density, occupation, age) and perform Neyman allocation~\citep{Cochran77}.
-%
-%\subsection*{Model-based solutions.}
-%
-%One can extend the SIR model to account for selection bias and measurement error. Without strong assumptions on the selection mechanism, however, the estimates are often not identifiable.  When an issue ``cannot be resolved nonparametrically then it is usually dangerous to resolve it parametrically''\citep{CoxHink74}. Absent random sampling, the best route forward for all data analyses is careful associated sensitivity analyses and humility in data-driven conclusions.
-%
-%\subsection*{Random sampling for doubly robust estimation}
-%
-%Selection rates are likely time-varying; therefore, we need rapid survey samples to properly model the selection criteria for doubly robust inferential procedures.
-%
-%COLLECT COVARIATE INFORMATION (even aggregate) and provide it in accessible formats.
-%
-%- Easy access to history of testing requirements
-%- Smaller random samples over time (at least as testing and prevalence changes drastically) to assess selection changes
-%- Record symptom/asymptomatic status and COVID contact.  If not for all, then for at least some we need these covariates!!!!!
-%
-%\subsection*{Systematic data collection and reporting}
-%
-%I would say this is important but JHU is not enough; see above for benefits of random sampling to augment and improve decision making.
-%
-%\subsection*{Frequency and turnaround time}
-%
-%This supposes no selection bias.
-%
-%
-%
-%
-%What is your goal?  "get people who are currently sick off the street." Then test frequently and often.  But we dont live in a mandatory testing environment (nor is it currently capable).  Random testing is one way to improve upone current practice whiel we wait for that
-%
-%{\bf COORDINATION ON DATA SOURCES}
 
-% Equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected for all individuals in the nonprobability sample; however, this is often not feasible for state and local governments where rapid sample collection is prioritized over additional collection of covariate information.  We can extend~\eqref{eq:auxinfoprob} by randomly sampling a subset of the nonprobability sample on which to collect the covariate information, yielding the pseudo-likelihood
-% \begin{equation}
-% \label{eq:auxinfoprob2}
-% \sum_{j=1}^N I_j I_j^{(2)} W_j^{(2)} \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right)  + \sum_{i=1}^N \tilde I_j \tilde W_j \log ( 1 - \pi (X_j; \theta)).
-% \end{equation}
-% Here, $I_j^{(2)}$ is an indicator that the individual is in the probability subsample and $W_j^{(2)}$ is the probability of inclusion.  Estimation proceeds by maximizing the pseudo-likelihood which now depends on random sampling in both the first and second term.
+{\bf Our goal with surveillance is to identify areas of weakness; but selection bias is an issue!}
+
+There is nothing routine about COVID-19, including the corresponding statistical questions.  The goal of this paper was to point out questionable statistical routines.  Precision in reported case-count data gives the illusion of information when what what is needed is quantification of uncertainty. Selection bias leads data analysts to feel certain about incorrect conclusions.  We end with a brief discussion of important related topics.
+
+\subsection*{Additional biases and measurement-error}
+
+Length bias and measurement-error?
+
+\subsection*{Decision-making: data versus information}
+
+Having read through the above technical discussions, one may come to the incorrect conclusion that because we are concerned about implicit biases in observational data, we must wait for better data sources in order to act~\citep{Ioannidis2020}.  This conclusion confuses data and information.  Lack of high quality data means we should be skeptical regarding conclusions drawn from these data sources alone.  Being skeptical of observed data does not imply governments and communities should wait for high quality data to act; this is especially true in the current high risk scenario.  Instead, we should aim to have high quality information.  Yet in the current crisis we have just that.  Indeed, epidemiologists and public health officials have a strong understanding of the basic facts of pandemics and disease spread.  Social distancing, contact tracing and mass testing are all important.  Individuals and communities with low quality data and only basic information will hopefully make decisions that respect inherent risks to their well being as well as the high degree of uncertainty in the observed data. Of course, there are trade-offs and long-term stay-at-home orders will have negative economic consequences.  A full discussion of these topics is beyond the scope of the current article.
+
+\subsection*{Data quantity versus quality}
+
+Governments implicitly argue that increased testing capacity will perform the above task.  Without complete compliance, however, our understanding of future outbreaks may be plagued by self-selection bias, compounded by changing sensitivity and specificity rates. Random testing removes these effect modifiers, giving governments more information to fight the disease.  This is not to say random testing should replace current testing practices; only that the random testing should supplement and will provide valuable additional information even with moderate sample sizes.
+
+\subsection*{High quality information on prevalence.}
+
+Governments are pushing for increased testing capacity and robust contact tracing.  Contact tracing is incredibly useful for identifying carriers early and preventing spread of the disease.  We would argue that, after the current wave, understanding prevalence is also key.  We know that the probability of an outbreak is a function of current prevalence and network connectivity.  Epidemic critical thresholds have been derived for many infectious disease models~\citep{Pastor2001,Newman2002,Parshani2010}.  Knowing prevalence will help governments determine long-term community-level risk and allow for more targeted interventions -- shutting down only certain locations when necessary.
+
+\subsection*{Stratified sampling: improving precision in low-prevalence environments.}
+Random sampling is a powerful tool.  One difficulty with SRS is when prevalence is low.  Consider the Santa Clara study~\citep{Bendavid2020} which estimated prevalence less than 2\% in the county.  The key issue with low prevalence is that if the test's specificity is higher than the prevalence, then the observed data is consistent with zero recovered individuals. In these settings, SRS is likely to fail; however, there are potential solutions.  One can, for example, stratify the population into risk categories (e.g., based on population density, occupation, age) and perform Neyman allocation~\citep{Cochran77}.
+
+\subsection*{Model-based solutions.}
+
+One can extend the SIR model to account for selection bias and measurement error. Without strong assumptions on the selection mechanism, however, the estimates are often not identifiable.  When an issue ``cannot be resolved nonparametrically then it is usually dangerous to resolve it parametrically''\citep{CoxHink74}. Absent random sampling, the best route forward for all data analyses is careful associated sensitivity analyses and humility in data-driven conclusions.
+
+\subsection*{Random sampling for doubly robust estimation}
+
+Selection rates are likely time-varying; therefore, we need rapid survey samples to properly model the selection criteria for doubly robust inferential procedures.
+
+COLLECT COVARIATE INFORMATION (even aggregate) and provide it in accessible formats.
+
+- Easy access to history of testing requirements
+- Smaller random samples over time (at least as testing and prevalence changes drastically) to assess selection changes
+- Record symptom/asymptomatic status and COVID contact.  If not for all, then for at least some we need these covariates!!!!!
+
+\subsection*{Systematic data collection and reporting}
+
+I would say this is important but JHU is not enough; see above for benefits of random sampling to augment and improve decision making.
+
+\subsection*{Frequency and turnaround time}
+
+This supposes no selection bias.
+
+
+
+
+What is your goal?  "get people who are currently sick off the street." Then test frequently and often.  But we dont live in a mandatory testing environment (nor is it currently capable).  Random testing is one way to improve upone current practice whiel we wait for that
+
+{\bf COORDINATION ON DATA SOURCES}
+
+Equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected for all individuals in the nonprobability sample; however, this is often not feasible for state and local governments where rapid sample collection is prioritized over additional collection of covariate information.  We can extend~\eqref{eq:auxinfoprob} by randomly sampling a subset of the nonprobability sample on which to collect the covariate information, yielding the pseudo-likelihood
+\begin{equation}
+\label{eq:auxinfoprob2}
+\sum_{j=1}^N I_j I_j^{(2)} W_j^{(2)} \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right)  + \sum_{i=1}^N \tilde I_j \tilde W_j \log ( 1 - \pi (X_j; \theta)).
+\end{equation}
+Here, $I_j^{(2)}$ is an indicator that the individual is in the probability subsample and $W_j^{(2)}$ is the probability of inclusion.  Estimation proceeds by maximizing the pseudo-likelihood which now depends on random sampling in both the first and second term.
 
 \bibliographystyle{plain}
 \bibliography{covid-refs}
@@ -1455,8 +1439,8 @@ $$
 \section{Infection fatality rate (IFR) by age group}
 \label{app:ifr}
 
-\section{Image combos (temporary)}
-
+\section{Indiana COVID-19 Analysis: Additional details}
+\label{app:in_add_details}
 \subsection{Model 1}
 
 In this section, we describe.
@@ -1486,7 +1470,7 @@ We then fit a model for likelihood of fever given
 \begin{subfigure}{.5\textwidth}
  \centering
  \includegraphics[width=.9\linewidth]{../figs/tvprop_symptom_fig1.png}
- \caption{Symptom Likelihood Given Negative Test}
+ \caption{Symptom Likelihood Given Negative Test \textcolor{red}{FIX!!}}
  \label{fig:symptomlik1}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
@@ -1532,13 +1516,13 @@ We then fit a model for likelihood of fever given
  \centering
  \includegraphics[width=.9\linewidth]{../figs/tvprop_symptom_alt_fig1.png}
  \caption{Symptom Likelihood Given Negative Test}
- \label{fig:symptomlik1}
+ \label{fig:symptomlik1_model2}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
  \centering
 \includegraphics[width=.9\linewidth]{../figs/tvprop_symptom_alt_fig2.png}
  \caption{Symptom Likelihood Given Positive Test}
- \label{fig:symptomlik2}
+ \label{fig:symptomlik2_model2}
 \end{subfigure}
 \caption{Likelihood of COVID-19 contact}
 \label{fig:symptomlik}

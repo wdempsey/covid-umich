@@ -36,7 +36,7 @@ race_hosp_frac = dashboard_race/sum(dashboard_race)
 
 
 ## No hispanic information so use the census data here
-## Census: 95.5% non-hispanic 4.5% hispanic
+## Census: 92.7% non-hispanic 7.3% hispanic
 ethnicity_levels = levels(indiana_test_data$ethnicity)
 ethnicity_census = c(0.073, 0.927)
 

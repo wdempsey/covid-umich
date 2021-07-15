@@ -10,6 +10,7 @@ model = ~ -1+as.factor(symptoms) + as.factor(gender) + ethnicity + race + as.fac
 indiana_X = model.matrix(model, indiana_data)
 
 library(lubridate)
+indiana_data$startdate = ymd(indiana_data$startdate)
 indiana_data$week = week(indiana_data$startdate)
 indiana_data$year = year(indiana_data$startdate)
 
@@ -49,7 +50,5 @@ for(i in 1:length(weeks)) {
   results[i,4] = sum(current_counts*weights)/sum(current_tests*weights)
 }
 
-saveRDS(results, "../data/invweights_alt.RDS")
-
-results
+saveRDS(results, "../data/invweights_alt_071521.RDS")
 

@@ -92,7 +92,7 @@ irls <- function(current_week, current_year, fb_X, indiana_X,
 
 
 
-## Brining in complete FB and Indiana data
+## Bringing in complete FB and Indiana data
 
 indiana_data = readRDS("../data/weeklycoviddata_withsymptoms_alt.RDS")
 indiana_data$startdate = mdy(indiana_data$startdate)
@@ -137,4 +137,4 @@ names(results) = c("week", "year", "feverFALSE", "feverTRUE",
                    "genderF", "NotHoL", "raceAA", "raceOther", "raceWhite", 
                    "25to34", "35to44", "45to54", "55to64", "65to74", "75plus")
 
-saveRDS(results, "../data/smoothedpropensities_alt.RDS")
+saveRDS(results, "../data/smoothedpropensities_alt_071521.RDS")
