@@ -2,7 +2,7 @@ library(lubridate)
 library(MMWRweek)
 library(ggplot2)
 
-propensities = readRDS("../data/smoothedpropensities.RDS")
+propensities = readRDS("../data/smoothedpropensities_071521.RDS")
 
 propensities$date = MMWRweek::MMWRweek2Date(MMWRyear = propensities$year,
                                      MMWRweek = propensities$week,

@@ -1,5 +1,5 @@
 indiana_data = readRDS("../data/weeklycoviddata_withsympcontact.RDS")
-propensities = readRDS("../data/smoothedpropensities.RDS")
+propensities = readRDS("../data/smoothedpropensities_071521.RDS")
 
 propensities$date = MMWRweek::MMWRweek2Date(MMWRyear = propensities$year,
                                             MMWRweek = propensities$week,
@@ -29,7 +29,7 @@ current_year = 2020
 
 weeks = c(14:53,1:5)
 years = c(rep(2020, length = length(c(14:53))),rep(2021, length = length(1:5)))
-results = matrix(nrow = length(weeks), ncol = 6) 
+results = matrix(nrow = length(weeks), ncol = 4) 
 
 for(i in 1:length(weeks)) {
   current_week = weeks[i]
@@ -43,4 +43,4 @@ for(i in 1:length(weeks)) {
   results[i,4] = sum(current_counts*weights)/sum(current_tests*weights)
 }
 
-saveRDS(results, "../data/invweights.RDS")
+saveRDS(results, "../data/invweights_071521.RDS")

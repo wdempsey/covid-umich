@@ -7,7 +7,7 @@ library(tidybayes)
 library(gridExtra)
 library(rstan)
 
-prevalence = readRDS("../data/invweights.RDS")
+prevalence = readRDS("../data/invweights_071521.RDS")
 prevalence_alt = readRDS("../data/invweights_alt.RDS")
 
 prevalence = data.frame(prevalence)
