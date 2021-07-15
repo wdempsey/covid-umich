@@ -55,7 +55,7 @@ compute_probs <- function(X, theta) {
 }
 
 irls <- function(current_week, current_year, fb_X, indiana_X, 
-                 indiana_data, fb_data, max.iter = 50, min.tol = 1e-10) {
+                 indiana_data, fb_data, max.iter = 100, min.tol = 1e-20) {
 
   ind_dist = indiana_distance(current_week, current_year)
   weights = apply(indiana_data, 1, kernelweight(ind_dist))
@@ -135,4 +135,4 @@ names(results) = c("week", "year", "feverFALSE", "feverTRUE", "contactTRUE",
                    "genderF", "NotHoL", "raceAA", "raceOther", "raceWhite", 
                    "25to34", "35to44", "45to54", "55to64", "65to74", "75plus")
 
-saveRDS(results, "../data/smoothedpropensities.RDS")
+saveRDS(results, "../data/smoothedpropensities_071521.RDS")
