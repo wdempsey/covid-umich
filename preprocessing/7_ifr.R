@@ -1,10 +1,10 @@
 ## Age vs IFR
-## Using this to construct IFR per age blocl
+## Using this to construct IFR per age block
 
 age = c(9, 33, 55,65,75,85)
 ifr = c(0.002, 0.05, 0.4,1.4,4.6,15)
-plot(x,log(y))
-abline(lm(log(y) ~ x))
+plot(age,log(ifr))
+abline(lm(log(ifr) ~ age))
 
 ## Suggests a linear fit on log-scale 
 fit <- lm(log(ifr) ~ age)
