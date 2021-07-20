@@ -58,19 +58,31 @@ deaths = df_coviddeath$death_dt[-length(df_coviddeath$death_dt)]
 n_days <- length(deaths)
 max_death_day <- 41 # Hard coded
 
-fit_forcing = readRDS("../data/fit_forcing_threejumps.RDS")
+fit_forcing = readRDS("../data/fit_forcing_byage.RDS")
 
 smr_pred <- cbind(as.data.frame(summary(fit_forcing, pars = "pred_cases", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary[(max_death_day+1):(max_death_day+length(deaths)-1),]),
                   t=1:(n_days-1))
 colnames(smr_pred) <- make.names(colnames(smr_pred)) # to remove % in the col names
 
 smr_pred$current_date = df_coviddeath$date[-c(469:470)]
-smr_pred$air = smr_pred$mean/100000 ## TEMP
+smr_pred$air = smr_pred$mean/N ## TEMP
 
 prevalence_temp = data.frame(date = smr_pred$current_date, Method = rep("Model-based", nrow(smr_pred)), 
                              estimate = smr_pred$air)
 
 prevalence_temp = prevalence_temp[prevalence_temp$date <= max(prevalence_long$date),]
+
+prevalence_temp$week = week(prevalence_temp$date)
+prevalence_temp$year = year(prevalence_temp$date)
+
+prevalence_temp = aggregate(estimate ~ week + year, data = prevalence_temp, FUN = sum)
+
+prevalence_temp$date = MMWRweek::MMWRweek2Date(MMWRyear = prevalence_temp$year,
+                                            MMWRweek = prevalence_temp$week,
+                                            MMWRday = 1)
+
+prevalence_temp = data.frame(date = prevalence_temp$date, Method = rep("Model-based", nrow(prevalence_temp)), 
+                             estimate = prevalence_temp$estimate)
 
 prevalence_long = rbind(prevalence_long, prevalence_temp)
 
