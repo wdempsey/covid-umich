@@ -652,10 +652,21 @@ To make the approach concrete, Figure~\ref{fig:testinglik_mainpaper} presents th
 
 
 \subsection{Model-based estimation}
+\label{section:modelbased}
 
-Ages we use
+Here we consider the multinomial SEIR model using observed death data as presented in Figure~\ref{fig:in-deaths}. The model, presented in Section~\ref{section:modelbased}, requires infection fatality rates to be specified per-strata.  In this paper, similar to~\cite{Johndrow2020}, we specify fixed per-strata infection fatality rates. Based on published age-specific IFRs~\cite{Levin2020}, IFR by age seems to closely follow a log-linear relationship. Combining across published age-specific IFRs, Table~\ref{tab:ifrperage} presents estimates of the average IFR within each strata using the age-distribution.
+\begin{table}[!th]
+\begin{tabular}{c | c c c c c c c c}
+Age Strata & 0-19 & 20-29 & 30-39 & 40-49 & 50-59 & 60-69 & 70-79 & 80+ \\ \hline
+IFR & 0.003\% & 0.014\% & 0.046\% & 0.144\% & 0.456\% & 1.443\% & 4.567\% & 15.468\%
+\end{tabular}
+\caption{IFR by age-strata}
+\label{tab:ifrperage}
+\end{table}
 
-Stan.
+The discrete-time distribution~$\{ \theta_{j} \}$ is a discretized version of a truncated normal distribution with mean $25$, standard deviation~$5$, minimum value $0$, and maximum value $44$.  This was chosen to closely mimic the distribution from~\cite{Johndrow2020}.
+
+
 
 Figure~\ref{fig:deathsppc} performs a posterior predictive check on aggregate
 
