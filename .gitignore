@@ -129,3 +129,6 @@ dmypy.json
 *.aux
 *.synctex.gz
 *.out
+methods/zOLD/8_sir_model.stan
+methods/zOLD/8_death_modeling.R
+visualizations/fbcovid19symptoms.png
