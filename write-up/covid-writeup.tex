@@ -71,7 +71,7 @@
 
 
 \section{Introduction}
-The World Health Organization has declared the coronavirus disease 2019 (COVID-19) a public health emergency.  \textcolor{red}{As of June 15th, 2021, over 176 million cases have been confirmed worldwide with 33.4 million cases and over 590 thousand confirmed deaths across the United States.} This pandemic
+The World Health Organization has declared the coronavirus disease 2019 (COVID-19) a public health emergency.  As of July 29th, 2021, over 196 million cases have been confirmed worldwide with 34.8 million cases and over 612 thousand confirmed deaths across the United States. This pandemic
 has become the focal point of everyday life; yet the data landscape for understanding COVID-19 remains limited.  Public databases~\citep{JHU_Lancet,NYT} provide incoming county-level information of confirmed cases and deaths.  Statisticians, epidemiologists, economists, and data scientists have used this granular data to forecast COVID-19 case-counts, deaths, and hospitalizations~\citep{Giordano2020,Song2020,Ray2020,2020.IHME,Wang2020.03,JTD36385}.
 
 This paper has two main objectives.  The first objective is to express reservations at the use of case-counts as a proxy for disease prevalence and in estimation of standard epidemiological models for inference and forecasting.  The reason is straightforward: observed case-count data is plagued by selection bias and measurement error. Through a series of calculations, we will demonstrate that the information gained from increasing testing capacity is limited in the presence of selection bias and when testing inaccuracies persist.  In particular, the millions of tests in the US have a small effective sample size when compared to random sampling. These calculations demonstrate the importance of probabilistic sampling designs over time for estimation of point prevalence and effective reproduction number.
@@ -592,6 +592,7 @@ Test & No & 93.9 & 98.6 & - & 21.6 (11.1) & 1.3 \\ \hline
 
 
 \subsection{Inverse-probability weighting approach}
+\label{section:ipwapproach}
 
 % FP: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7307014/
 % FN: https://www.medrxiv.org/content/10.1101/2020.04.16.20066787v2.full.pdf
@@ -651,7 +652,7 @@ To make the approach concrete, Figure~\ref{fig:testinglik_mainpaper} presents th
 \end{figure}
 
 
-\subsection{Model-based estimation}
+\subsection{Application of SEIR model}
 \label{section:modelbased}
 
 Here we consider the multinomial SEIR model using observed death data as presented in Figure~\ref{fig:in-deaths}. The model, presented in Section~\ref{section:modelbased}, requires infection fatality rates to be specified per-strata.  In this paper, similar to~\cite{Johndrow2020}, we specify fixed per-strata infection fatality rates. Based on published age-specific IFRs~\cite{Levin2020}, IFR by age seems to closely follow a log-linear relationship. Combining across published age-specific IFRs, Table~\ref{tab:ifrperage} presents estimates of the average IFR within each strata using the age-distribution.
@@ -663,51 +664,33 @@ IFR & 0.003\% & 0.014\% & 0.046\% & 0.144\% & 0.456\% & 1.443\% & 4.567\% & 15.4
 \caption{IFR by age-strata}
 \label{tab:ifrperage}
 \end{table}
-
-The discrete-time distribution~$\{ \theta_{j} \}$ is a discretized version of a truncated normal distribution with mean $25$, standard deviation~$5$, minimum value $0$, and maximum value $44$.  This was chosen to closely mimic the distribution from~\cite{Johndrow2020}.
-
-
-
-Figure~\ref{fig:deathsppc} performs a posterior predictive check on aggregate
-
+The discrete-time distribution~$\{ \theta_{j} \}$ is a discretized version of a truncated normal distribution with mean $25$, standard deviation~$5$, minimum value $0$, and maximum value $44$.  This was chosen to closely mimic the distribution from~\cite{Johndrow2020}.  See~\ref{app:modelbased} for additional details on parametrization and choice of priors. To check how well our model fits the observed data, a posterior predictive check on aggregate death counts was performed. Figure~\ref{fig:deathsppc} shows the results which suggests chosen SEIR model fits the observed data well.  The model produces age-specific case counts which can then be used for model-based estimation of the active infection rate as well as in constructing the doubly robust estimator.
 
 \begin{figure}[!th]
 \centering
 \includegraphics[width=.6\linewidth]{../figs/deaths_ppc.png}
-\caption{Posterior predictive check on aggregate daily death counts}
+\caption{Posterior predictive check on aggregate daily death counts.}
 \label{fig:deathsppc}
 \end{figure}
 
-
-
 \subsection{Time-varying prevalence estimates}
 
-Present IPW1, IPW2, Model-based, DR1, and DR2.
+Here, we construct active infection rate estimates using the unweighted, inverse-probability weighted, model-based, and doubly robust estimators.  Figure~\ref{fig:air} presents the results. The inverse-probability weighting methods do not significantly reduce bias compared to the unweighted estimates.  We conjecture this is due to the limited availability of symptom and other important covariates that may impact the likelihood an individual will get  tested. Our imputation strategies use available data to try and alleviate this issue; however, this suggests better data collection in the future may strongly improve the IPW estimates as seen in Section~\ref{section:ipwapproach} when analyzing the statewide sample from April 25th--29th.
 
-We notice that IPW1/2 don't improve greatly but this may be due to the
-
-We notice model-based rates are much lower, but
+While the model-based estimates appear more reasonable, note that the estimate on the last week of April is $0.1$\% which is a severe underestimate. Caution is therefore warranted when interpreting these estimates.  We know that the age-specific infection fatality rate is likely time-varying and may vary by other factors beyond age.  Therefore, improvements to these model-based predictions could be made by improving the IFR estimates; however, there is currently minimal publicly available data to do so.  Moreover, the (thankfully) low number of deaths per strata make uncertainty in these estimates quite high.  The 95\% credible range for active infections on April 25th, for example, is $[XX,XX]$ with a posterior mean of $XX$.  Finally, the doubly robust estimates appear similar to the IPW estimate.
 
 \begin{figure}[!th]
 \centering
 \includegraphics[width=.6\linewidth]{../figs/tv_air.png}
 \caption{Active Infection Rate Estimates}
-\label{fig:testinglik_mainpaper}
+\label{fig:air}
 \end{figure}
-
-
 
 
 \section{Discussion}
 \label{section:discussion}
 
-{\bf Our goal with surveillance is to identify areas of weakness; but selection bias is an issue!}
-
-There is nothing routine about COVID-19, including the corresponding statistical questions.  The goal of this paper was to point out questionable statistical routines.  Precision in reported case-count data gives the illusion of information when what what is needed is quantification of uncertainty. Selection bias leads data analysts to feel certain about incorrect conclusions.  We end with a brief discussion of important related topics.
-
-\subsection*{Additional biases and measurement-error}
-
-Length bias and measurement-error?
+There is nothing routine about COVID-19, including the corresponding statistical questions.  The goal of this paper was to point out questionable statistical routines.  Precision in reported case-count data gives the illusion of information when what what is needed is quantification of uncertainty. This paper demonstrates how selection bias leads data analysts to feel certain about incorrect conclusions.  As case-count data is routinely used for public health policy making, we presented an inverse-probability weighting method and a doubly-robust estimation method that leverage auxiliary information collected through random samples to overcome these issues. We end with a brief discussion of important related topics.
 
 \subsection*{Decision-making: data versus information}
 
@@ -719,16 +702,16 @@ Governments implicitly argue that increased testing capacity will perform the ab
 
 \subsection*{High quality information on prevalence.}
 
-Governments are pushing for increased testing capacity and robust contact tracing.  Contact tracing is incredibly useful for identifying carriers early and preventing spread of the disease.  We would argue that, after the current wave, understanding prevalence is also key.  We know that the probability of an outbreak is a function of current prevalence and network connectivity.  Epidemic critical thresholds have been derived for many infectious disease models~\citep{Pastor2001,Newman2002,Parshani2010}.  Knowing prevalence will help governments determine long-term community-level risk and allow for more targeted interventions -- shutting down only certain locations when necessary.
+Governments are pushing for increased testing capacity and robust contact tracing.  Contact tracing is incredibly useful for identifying carriers early and preventing spread of the disease.  We would argue that, after the current wave, understanding active infections is also key.  We know that the probability of an outbreak is a function of current prevalence and network connectivity.  Epidemic critical thresholds have been derived for many infectious disease models~\citep{Pastor2001,Newman2002,Parshani2010}.  Knowing prevalence will help governments determine long-term community-level risk and allow for more targeted interventions -- shutting down only certain locations when necessary.
 
-\subsection*{Stratified sampling: improving precision in low-prevalence environments.}
-Random sampling is a powerful tool.  One difficulty with SRS is when prevalence is low.  Consider the Santa Clara study~\citep{Bendavid2020} which estimated prevalence less than 2\% in the county.  The key issue with low prevalence is that if the test's specificity is higher than the prevalence, then the observed data is consistent with zero recovered individuals. In these settings, SRS is likely to fail; however, there are potential solutions.  One can, for example, stratify the population into risk categories (e.g., based on population density, occupation, age) and perform Neyman allocation~\citep{Cochran77}.
+% \subsection*{Stratified sampling: improving precision in low-prevalence environments.}
+% Random sampling is a powerful tool.  One difficulty with SRS is when prevalence is low.  Consider the Santa Clara study~\citep{Bendavid2020} which estimated prevalence less than 2\% in the county.  The key issue with low prevalence is that if the test's specificity is higher than the prevalence, then the observed data is consistent with zero recovered individuals. In these settings, SRS is likely to fail; however, there are potential solutions.  One can, for example, stratify the population into risk categories (e.g., based on population density, occupation, age) and perform Neyman allocation~\citep{Cochran77}.
 
 \subsection*{Model-based solutions.}
 
 One can extend the SIR model to account for selection bias and measurement error. Without strong assumptions on the selection mechanism, however, the estimates are often not identifiable.  When an issue ``cannot be resolved nonparametrically then it is usually dangerous to resolve it parametrically''\citep{CoxHink74}. Absent random sampling, the best route forward for all data analyses is careful associated sensitivity analyses and humility in data-driven conclusions.
 
-\subsection*{Random sampling for doubly robust estimation}
+\subsection*{Real-world implementation of the proposed method}
 
 Selection rates are likely time-varying; therefore, we need rapid survey samples to properly model the selection criteria for doubly robust inferential procedures.
 
@@ -759,6 +742,15 @@ Equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected f
 \sum_{j=1}^N I_j I_j^{(2)} W_j^{(2)} \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right)  + \sum_{i=1}^N \tilde I_j \tilde W_j \log ( 1 - \pi (X_j; \theta)).
 \end{equation}
 Here, $I_j^{(2)}$ is an indicator that the individual is in the probability subsample and $W_j^{(2)}$ is the probability of inclusion.  Estimation proceeds by maximizing the pseudo-likelihood which now depends on random sampling in both the first and second term.
+
+\subsection*{Additional biases and measurement-error}
+
+Other biases exist and are incredible important when trying to estimate quantities such as the incubation period and mean serial interval.
+
+These estimates could be severely biased due to selection bias and measurement error, but also suffer from
+
+Nevertheless,
+Length bias and measurement-error?
 
 \bibliographystyle{plain}
 \bibliography{covid-refs}
@@ -1560,5 +1552,7 @@ The testing propensity likelihood
 \label{fig:testinglik}
 \end{figure}
 
+\section{Model-based: Additional details}
+\label{app:modelbased}
 
 \end{document}

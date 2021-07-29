@@ -1,10 +1,10 @@
 ### Input: 
 ### Daily total tests, positive tests, deaths
-### Aggregate by age, gender, ethnicitiy, and race separately
+### Aggregate by age, gender, ethnicity, and race separately
 
 ### Output: 
 ### Weekly total tests, positive tests, deaths
-### Aggregate by age, gender, ethnicitiy, and race separately
+### Aggregate by age, gender, ethnicity, and race separately
 
 age_data = read.csv("../data/covid_indiana_age.csv")
 gender_data = read.csv("../data/covid_indiana_gender.csv")

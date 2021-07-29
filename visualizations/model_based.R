@@ -18,7 +18,7 @@ df_coviddeath <- aggregate(covid_deaths ~ startdate, data = df_coviddeath, FUN =
 df_coviddeath$date = ymd(df_coviddeath$startdate)
 df_coviddeath$death_dt = df_coviddeath$covid_deaths
 
-# Swiss population
+# Indiana population
 N <- 6.732E6;
 
 # Deaths
@@ -28,11 +28,11 @@ dates = df_coviddeath$date[-length(df_coviddeath$death_dt)]
 # times
 n_days <- length(deaths)
 
-fit_forcing = readRDS("../data/fit_forcing_byage.RDS")
+fit_forcing = readRDS("../data/fit_forcing_byage_072621.RDS")
 
 test = summary(fit_forcing, pars = "pred_deaths", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary
-n_days = nrow(test)/8
-timepoints = rep(1:n_days, 8)
+n_days = nrow(test)/6
+timepoints = rep(1:n_days, 6)
 
 test = data.frame(test)
 test$timepoints = timepoints

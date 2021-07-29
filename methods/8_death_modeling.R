@@ -8,12 +8,10 @@ library(rstan)
 library(lubridate)
 
 df_coviddeath <- readRDS("../data/dailycoviddata.RDS")
+levels(df_coviddeath$age)[1:3] = "0-39" # Collapsing due to limited data
 df_coviddeath_age <- aggregate(covid_deaths ~ startdate + age, data = df_coviddeath, FUN = sum)
-
 df_coviddeath_age$date = ymd(df_coviddeath_age$startdate)
 df_coviddeath_age$death_dt = df_coviddeath_age$covid_deaths
-
-# df_swiss = df_swiss[df_swiss$date < "2020-07-15",] # single bump to start
 
 ## Death Distribution
 death_distribution = pnorm(seq(0.5,40.5, by =1), mean = 25, sd = 5)-pnorm(c(0,seq(0.5,39.5, by =1)), mean = 25, sd = 5)
@@ -50,7 +48,7 @@ tswitch_three <- subset(df_coviddeath_age, age == "80+") %>% filter(date < date_
 
 ## PLOTTING DEATH DATA BY AGE CATEGORY
 df_coviddeath_age_plot = df_coviddeath_age
-levels(df_coviddeath_age_plot$age) = c(1,1,1,2,2,2,3,3,3)
+levels(df_coviddeath_age_plot$age) = c(1,2,2,2,3,3)
 levels(df_coviddeath_age_plot$age) = c("0-39", "40-69", "70+")
 
 df_coviddeath_age_plot %>% 
@@ -64,8 +62,8 @@ df_coviddeath_age_plot %>%
   scale_fill_manual(values=wes_palette(n = 3, "IsleofDogs1"))
 
 
-death_rates = c(2.975607e-05, 1.440472e-04, 4.557553e-04, 1.441978e-03, 
-                4.562317e-03, 1.443485e-02, 4.567086e-02, 1.546816e-01)
+death_rates = c(0.01631191, 0.14419778, 0.45623168,
+                1.44348510, 4.56708582, 15.46815604)/100
 
 data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths, 
                      tswitch = tswitch+max_death_day, tswitch_two = tswitch_two + max_death_day,
@@ -83,5 +81,4 @@ fit_forcing <- sampling(model_forcing,
                         seed=2,
                         chains = 1)
 
-saveRDS(fit_forcing, "../data/fit_forcing_byage.RDS")
-
+saveRDS(fit_forcing, "../data/fit_forcing_byage_072621.RDS")
