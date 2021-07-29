@@ -92,6 +92,16 @@ After demonstrating the limitations of case-count analysis when compared to rand
 
 One core component of coronavirus research is epidemiological state-space modelling of case-count and death data. These models can be used to answer a variety of research questions including case-count forecasting, estimation of the effective reproduction number, and estimation of quarantine and other health policies on infectious disease dynamics.  The basic approach is a deterministic compartmental model called the susceptible-infectious-recovered (SIR) model.  A probabilistic extension was proposed by~\cite{Osthus2017} to model one-dimensional time series of infected proportions. \cite{Song2020} extended this approach to incorporate interventions and assess interventions on COVID-19 epidemic in China. \cite{Hao2020} builds an extended SEIR model (SAPHIRE) to account for various presymptomatic infectiousness, time-varying ascertainment rates, transmission rates and population movements. Given a probability sampling design, individual predictions can be leveraged to improve estimation via model-assisted approaches~\citep{Breidt2017}.  For nonprobability samples, \cite{Chen2019} derive a doubly robust approach that uses outcome predictions given covariates on the nonprobability and probability samples.  Here, we combine the state-space SIR approach of \cite{Song2020} but instead, as in \cite{Johndrow2020}, focus on COVID-19 confirmed death count data.  We generate epidemiological forecasts for point prevalence of each population strata.  We then demonstrate how to combine these forecasts with the IPW approach to construct doubly-robust estimates of point prevalence.  A derived statistical error decomposition guides this discussion.
 
+\textcolor{red}{Discuss the additional biases and Qing paper.}
+
+% Other biases exist and are incredible important when trying to estimate quantities such as the incubation period and mean serial interval.
+
+% These estimates could be severely biased due to selection bias and measurement error, but also suffer from
+
+% Nevertheless,
+% Length bias and measurement-error?
+
+
 
 % \subsection{Outline}
 
@@ -690,63 +700,32 @@ While the model-based estimates appear more reasonable, note that the estimate o
 \section{Discussion}
 \label{section:discussion}
 
-There is nothing routine about COVID-19, including the corresponding statistical questions.  The goal of this paper was to point out questionable statistical routines.  Precision in reported case-count data gives the illusion of information when what what is needed is quantification of uncertainty. This paper demonstrates how selection bias leads data analysts to feel certain about incorrect conclusions.  As case-count data is routinely used for public health policy making, we presented an inverse-probability weighting method and a doubly-robust estimation method that leverage auxiliary information collected through random samples to overcome these issues. We end with a brief discussion of important related topics.
+There is nothing routine about COVID-19, including the corresponding statistical questions.  The goal of this paper was to point out questionable statistical routines.  Precision in reported case-count data gives the illusion of information when what what is needed is quantification of uncertainty. Extensions of recent statistical error decompositions~\cite{Meng2018} demonstrate how selection bias leads data analysts to feel certain about incorrect conclusions.  As case-count data is routinely used for public health policy making, we presented an inverse-probability weighting method and a doubly-robust estimation method that leverage auxiliary information collected through random samples to overcome these issues. We end with a brief discussion of important related topics.
 
 \subsection*{Data quantity versus quality}
 
-Governments and policy makers often implicitly argue that increased testing capacity will alleviate selection bias.  Without complete compliance, however, our understanding of future outbreaks may be plagued by self-selection bias, compounded by changing sensitivity and specificity rates. Random testing removes these effect modifiers, giving governments more information to fight the disease.  This paper emphasizes that data quanitity is secondary to data quality and methodological considerations to account for selection bias.
+Governments and policy makers often implicitly argue that increased testing capacity will alleviate selection bias.  Without complete compliance, however, our understanding of future outbreaks may be plagued by self-selection bias, compounded by changing sensitivity and specificity rates of RT-PCR testing. Random testing removes these effect modifiers, giving governments more information to fight the disease.  This paper emphasizes that data quantity is secondary to both data quality and methodological considerations to account for selection bias.
 
-% \subsection*{High quality information on prevalence.}
+\subsection*{High quality information on prevalence.}
 
-% Governments are pushing for increased testing capacity and robust contact tracing.  Contact tracing is incredibly useful for identifying carriers early and preventing spread of the disease.  We would argue that, after the current wave, understanding active infections is also key.  We know that the probability of an outbreak is a function of current prevalence and network connectivity.  Epidemic critical thresholds have been derived for many infectious disease models~\citep{Pastor2001,Newman2002,Parshani2010}.  Knowing prevalence will help governments determine long-term community-level risk and allow for more targeted interventions -- shutting down only certain locations when necessary.
+Governments are pushing for increased testing capacity and robust contact tracing.  Contact tracing is incredibly useful for identifying carriers early and preventing spread of the disease.  We would argue that, after the current wave, understanding active infections is also key.  We know that the probability of an outbreak is a function of current prevalence and network connectivity.  Epidemic critical thresholds have been derived for many infectious disease models~\citep{Pastor2001,Newman2002,Parshani2010}.  Knowing prevalence will help governments determine long-term community-level risk and allow for more targeted interventions -- shutting down only certain locations when necessary.
 
-% \subsection*{Stratified sampling: improving precision in low-prevalence environments.}
-% Random sampling is a powerful tool.  One difficulty with SRS is when prevalence is low.  Consider the Santa Clara study~\citep{Bendavid2020} which estimated prevalence less than 2\% in the county.  The key issue with low prevalence is that if the test's specificity is higher than the prevalence, then the observed data is consistent with zero recovered individuals. In these settings, SRS is likely to fail; however, there are potential solutions.  One can, for example, stratify the population into risk categories (e.g., based on population density, occupation, age) and perform Neyman allocation~\citep{Cochran77}.
+\subsection*{Model-based solutions.}
 
-\subsection*{Purely model-based solutions.}
-
-A common argument is that the SIR model to account for selection bias and measurement error; therefore, there is no need for auxiliary random samples.  Without strong assumptions on the selection mechanism, however, the estimates are often not identifiable.  When an issue ``cannot be resolved nonparametrically then it is usually dangerous to resolve it parametrically''\citep{CoxHink74}. Absent some type of random sampling, the best route forward for all data analyses is careful associated sensitivity analyses and humility in data-driven conclusions.
+A common argument is that the SEIR model can be extended to account for selection bias and measurement error directly; therefore, there is no need for auxiliary random sampling.  Without strong assumptions on the selection mechanism, however, the estimates are often not identifiable.  When an issue ``cannot be resolved nonparametrically then it is usually dangerous to resolve it parametrically''\citep{CoxHink74}. Absent some type of random sampling, the best route forward for all data analyses is careful associated sensitivity analyses and humility in data-driven conclusions.
 
 \subsection*{Real-world implementation of the proposed method}
 
-Selection rates are likely time-varying; therefore, we need rapid survey samples to properly model the selection criteria for doubly robust inferential procedures.
+Application of the proposed methods relied on access to two critical datasets: (1) COVID-19 testing, case, hospitalization, and death data by demographic strata and (2) Facebook symptom survey.  Public access to (1) required the author to submit a data request directly to the state of Indiana.  Through conversations with XXXX, the author's request was one of only five to be approved by Indiana for public release.  Most states do not release such granular data, making selection bias adjustments difficult.  More systematic data collection and reporting is critical in future efforts. We acknowledge that this proposal will lead to important data privacy issues that will need to be addressed (cite).
 
-COLLECT COVARIATE INFORMATION (even aggregate) and provide it in accessible formats.
+While we are eternally grateful to Indiana for the release, symptom information was not made available.  This severely limits our ability to estimate correct selection propensity models.  What is required in the future is a more detailed effort to collect relevant measures of an individual's past history that may impact their likelihood of seeking testing and being a positive COVID-19 case.  Such data collection and dissemination is critical to address selection bias.
 
-- Easy access to history of testing requirements
-- Smaller random samples over time (at least as testing and prevalence changes drastically) to assess selection changes
-- Record symptom/asymptomatic status and COVID contact.  If not for all, then for at least some we need these covariates!!!!!
-
-\subsection*{Systematic data collection and reporting}
-
-I would say this is important but JHU is not enough; see above for benefits of random sampling to augment and improve decision making.
-
-\subsection*{Frequency and turnaround time}
-
-This supposes no selection bias.
-
-
-
-
-What is your goal?  "get people who are currently sick off the street." Then test frequently and often.  But we dont live in a mandatory testing environment (nor is it currently capable).  Random testing is one way to improve upone current practice whiel we wait for that
-
-{\bf COORDINATION ON DATA SOURCES}
-
-Equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected for all individuals in the nonprobability sample; however, this is often not feasible for state and local governments where rapid sample collection is prioritized over additional collection of covariate information.  We can extend~\eqref{eq:auxinfoprob} by randomly sampling a subset of the nonprobability sample on which to collect the covariate information, yielding the pseudo-likelihood
-\begin{equation}
-\label{eq:auxinfoprob2}
+A valid criticism of the proposed approach is that recording covariates on every tested individual is too time-consuming and costly, i.e., the data collection does not scale well.  We argue that the list of relevant factors is not too long.  For example, symptom status and COVID-19 contact are clearly relevant factors in testing selection.  Future work may consider how to include/exclude various factors over time that are not significant to limit citizen burden in reporting.  Moreover, equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected for all individuals in the nonprobability sample; however, this is often not feasible for state and local governments where rapid sample collection is prioritized over additional collection of covariate information.  We can extend~\eqref{eq:auxinfoprob} by randomly sampling a subset of the nonprobability sample on which to collect the covariate information, yielding the pseudo-likelihood
+\begin{equation*}
+% \label{eq:auxinfoprob2}
 \sum_{j=1}^N I_j I_j^{(2)} W_j^{(2)} \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right)  + \sum_{i=1}^N \tilde I_j \tilde W_j \log ( 1 - \pi (X_j; \theta)).
-\end{equation}
-Here, $I_j^{(2)}$ is an indicator that the individual is in the probability subsample and $W_j^{(2)}$ is the probability of inclusion.  Estimation proceeds by maximizing the pseudo-likelihood which now depends on random sampling in both the first and second term.
-
-\subsection*{Additional biases and measurement-error}
-
-Other biases exist and are incredible important when trying to estimate quantities such as the incubation period and mean serial interval.
-
-These estimates could be severely biased due to selection bias and measurement error, but also suffer from
-
-Nevertheless,
-Length bias and measurement-error?
+\end{equation*}
+Here, $I_j^{(2)}$ is an indicator that the individual is in the probability subsample and $W_j^{(2)}$ is the probability of inclusion.  Estimation proceeds by maximizing the pseudo-likelihood which now depends on random sampling in both the first and second term.  This would allow for rapid testing and minimizes cost of covariate collection.
 
 \bibliographystyle{plain}
 \bibliography{covid-refs}
