@@ -1,5 +1,5 @@
 ## Bring in data and libraries
-age_data = read.csv("../Documents/GitHub/covid-umich/data/covid_indiana_age.csv")
+age_data = read.csv("../data/covid_indiana_age.csv")
 
 library(lubridate)
 library(xtable)
@@ -8,7 +8,7 @@ library(xtable)
 
 age_data$DATE = date(age_data$DATE)
 temp = age_data[age_data$DATE >= "2020-04-25" & age_data$DATE <= "2020-04-29",]
-prevalence = 0.117
+prevalence = 0.0181
 N = 6.732e6
 
 f = sum(temp$COVID_TEST)/(N-sum(age_data$COVID_TEST[age_data$DATE < "2020-04-25"]))
@@ -60,8 +60,8 @@ print(paste("% Reduction in effective sample size:", round((effss2-effss_newFN)/
 
 
 ## APPENDIX B.8 
-seq_prevalence = seq(0.05,0.13,0.02)
-seq_M = seq(1.05,1.55,0.1)
+seq_prevalence = seq(0.01,0.11,0.02)
+seq_M = seq(1.05,1.65,0.1)
 results = matrix(nrow = length(seq_prevalence), ncol = length(seq_M))
 FN = 0
 FP = 0
@@ -69,10 +69,32 @@ f = 0.003
 
 for(i in 1:nrow(results)) {
   for (j in 1:ncol(results)) {
-    results[i,j] = effss_calc(seq_prevalence[j], f, seq_M[i], FN, FP) 
+    results[i,j] = effss_calc(seq_prevalence[i], f, seq_M[j], FN, FP) 
   }
 }
 
-results
+results = data.frame(round(results,0))
+rownames(results) = seq_prevalence
+colnames(results) = seq_M
+
+xtable(results)
+
+results_with_FPFN = matrix(nrow = length(seq_prevalence), ncol = length(seq_M))
+FN = 0.13
+FP = 0.024
+f = 0.003
+
+for(i in 1:nrow(results)) {
+  for (j in 1:ncol(results)) {
+    results_with_FPFN[i,j] = effss_calc(seq_prevalence[i], f, seq_M[j], FN, FP) 
+  }
+}
+
+results_with_FPFN = data.frame(round(results_with_FPFN,0))
+rownames(results_with_FPFN) = seq_prevalence
+colnames(results_with_FPFN) = seq_M
+
+xtable(results_with_FPFN)
+
 
 
