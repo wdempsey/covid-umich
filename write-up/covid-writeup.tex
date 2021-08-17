@@ -52,6 +52,7 @@
 \def\pr{\text{pr}}
 \def\sgn{\text{sgn}}
 \def\I{\bf I}
+\def\code#1{\texttt{#1}}
 
 \begin{document}
 
@@ -1521,5 +1522,53 @@ The testing propensity likelihood
 
 \section{Model-based: Additional details}
 \label{app:modelbased}
+
+We fit the
+
+\begin{align*}
+\frac{\partial s_t}{\partial t} &= - \beta s_t i_t; \quad \frac{\partial e_t}{\partial t} = \beta_t s_t i_t - \sigma e_t; \quad \\
+\frac{\partial i^{(T)}_t}{\partial t} &= \sigma e_t - \gamma i_t; \quad
+\frac{\partial r_t}{\partial t} = - \gamma i_t.
+\end{align*}
+
+We allow $\beta_t$ to be time-varying to account for the
+
+"2020-03-23", "2020-06-15", "2020-10-01".
+
+$w_t = 1/ \left( 1 + \exp \left( - \xi (t - t_1 - \nu)  \right) \right)$
+
+We defined a weight $w^{(1)}_t = 1$ prior to time $t_1$ and goes to $1$ as $t \to \infty$
+
+to accoun tfor
+
+$\beta (1-w_t) + \eta weight$
+
+For simplicity, we list the priors used in STAN below:
+\begin{itemize}
+  \item \code{beta $\sim$ Normal(1.5, 1) T[0,];}
+  \item \code{gamma $\sim$ normal(0.3, 0.5) T[0,];}
+  \item \code{sigma $\sim$ normal(0.4, 0.5) T[0,];}
+  \item \code{phi\_inv $\sim$ exponential(5);}
+  \item \code{i0 $\sim$ normal(0, 10);}
+  \item \code{e0 $\sim$ normal(0, 10);}
+  \item \code{eta $\sim$ normal(1, 1) T[0,];}
+  \item \code{eta\_two $\sim$ normal(1, 1) T[0,];}
+  \item \code{eta\_three $\sim$ normal(1, 1) T[0,];}
+  \item \code{nu $\sim$ exponential(1./5);}
+  \item \code{nu\_two $\sim$ exponential(1./5);}
+  \item \code{nu\_three $\sim$ exponential(1./5);}
+  \item \code{xi\_raw $\sim$ beta(1, 1);}
+  \item \code{phi = 1/phi\_inv;}
+  \item \code{xi = xi\_raw + 0.5;}
+\end{itemize}
+
+\begin{figure}[!th]
+\centering
+ \includegraphics[width=.9\linewidth]{../figs/logifr.png}
+ \caption{Logarithm of Infection Fatality Rate (IFR) by Age.  Linear model on the log-scale fits well and allows us to extrapolate publicly-reported IFR numbers to entire age range.}
+ \label{fig:logifr}
+\end{figure}
+
+
 
 \end{document}
