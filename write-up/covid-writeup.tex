@@ -1137,7 +1137,7 @@ From prior derivations, we then have the desired result.
 
 Here, we take the suggested measures from~\cite{Arevalo2020} which report 87\% sensitivity is a reasonable estimates and~\cite{Cohen2020} which report 97.6\% specificity.  This corresponds to a false negative rate of $13\%$ and false positive rate of $2.4\%$.  To allow for potential uncertainty, we assume two \emph{synthetic} simple random samples.  The first is a simple random sample of true negative cases denoted $S_{FP}$; the second is simple random sample of true positive cases denoted $S_{FN}$.  As $\mu_t$ and $\theta_{t}$ are estimated independently at each time $t$, we can focus on the estimating equations per time point~$t$ separately.
 
-Suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$.  Each finite population has an associated non-probability at time $t$ and probability samples of size $n$ at each time~$t=1,\ldots, T$.  Finally, let~$n_{FP}$ and $n_{FN}$ denote the sample sizes of $S_{FP}$ and $S_{FN}$ respectively.  For simplicity, dependency on $\nu$ is suppressed and the limiting process is represented by $N \to \infty$.
+uppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$.  Each finite population has an associated non-probability at time $t$ of  size~$\tilde n$ and $L_\nu$ probability samples of fixed size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^L$ over the study window~$[0,T]$. Let~$\Delta_\nu$ denote the gap times between consecutive sample times. Finally, let~$n_{FP}$ and $n_{FN}$ denote the sample sizes of $S_{FP}$ and $S_{FN}$ respectively.  For simplicity, dependency on $\nu$ is suppressed and the limiting process is represented by $N \to \infty$.
 
 For each~$\nu$ and $t$, the estimates of $\eta = (\mu_t, \theta_t, FP, FN)$ are given by:
 $$
@@ -1150,7 +1150,7 @@ $$
 \end{array}
 \right ) = {\bf 0}
 $$
-where $\pi_{j,t^\prime} = \pi (X_{j,t^\prime}; \theta_t)$, $Z_j$ is an indicator of a false positive in the sample $S_{FP}$  and $\tilde Z_j$ is an indicator of a false negative in the sample $S_{FN}$.  We assume the synthetic $|S_{FP}|^{-1} \sum_{j \in S_{FP}} Z_j = 0.024$ and $|S_{FP}|^{-1} \sum_{j \in S_{FP}} Z_j = 0.30$.  \textcolor{red}{Sample sizes, denoted $n_{FP}$ and $n_{FN}$ respectively, are chosen to achieve desired estimator variance, i.e., $\frac{0.024 \cdot (0.976)}{n_{FP}} = \sigma^2_{FP}$ and $\frac{0.30 \cdot 0.70}{n_{FN}} = \sigma^2_{FN}$.}
+where $\pi_{j,t^\prime} = \pi (X_{j,t^\prime}; \theta_t)$, $Z_j$ is an indicator of a false positive in the sample $S_{FP}$  and $\tilde Z_j$ is an indicator of a false negative in the sample $S_{FN}$.  We assume the $|S_{FP}|^{-1} \sum_{j \in S_{FP}} Z_j = 0.024$ and $|S_{FP}|^{-1} \sum_{j \in S_{FP}} Z_j = 0.30$.  Sample sizes, denoted $n_{FP}$ and $n_{FN}$ respectively, are chosen to achieve desired estimator variance, i.e., $\frac{0.024 \cdot (0.976)}{n_{FP}} = \sigma^2_{FP}$ and $\frac{0.13 \cdot 0.87}{n_{FN}} = \sigma^2_{FN}$. Here we set $\sigma^2_{FP} = 0.02^2$ and $\sigma_{FN}^2 = 0.05^2$ which yield $n_{FP} \approx 59$ and $n_{FN} \approx 45$ respectively.
 
 To prove consistency, first consider the setting where a random sample of size $n$ is observed at time $t$.  Let $\tilde \Phi (\eta)$ denote the corresponding estimating equations, which is the same as $\Phi(\eta)$ except for the second component which is given by
 $$
