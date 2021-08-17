@@ -143,6 +143,7 @@ Public databases most often, however, only contain aggregate information.  The J
 %https://www.npr.org/sections/goatsandsoda/2020/05/31/865932474/should-i-get-tested-for-coronavirus-just-for-the-heck-of-it
 
 \subsubsection{Testing restrictions and public health policy in Indiana}
+\label{section:publicpolicyindiana}
 
 Due to limited testing capacity, many US states instituted testing restrictions early on in the pandemic.
 % on who can request a molecular test at a given time.
@@ -441,11 +442,11 @@ where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appen
 Up to this point, the primary focus of this paper has been on selection bias in coronavirus case-count data from a survey sampling perspective.  Here, we consider compartmental model approaches from infectious disease epidemiology.  Our primary objective is a model-based forecast of strata-level prevalence $\bar y_k$. To do this, a probabilistic extension of a standard epidemiological state-space model -- the susceptible, exposed, infected, and removed (recovered and death) model, or SEIR model -- is presented. A probabilistic SIR model was originally proposed by~\cite{Osthus2017} with only one-dimensional time series of infected proportions; this formulation was extended by~\cite{Song2020} to model coronavirus case-counts.
 
 Let $s_t$, $e_t$, $i_t^{(T)}$, and $r_t$ denote the proportion of survivors, exposed, infected, and removed cases (i.e., including both recovered cases and deaths) at time $t$.  The population-level SEIR dynamics are then given by the following set of differential equations:
-\begin{align*}
-\frac{\partial s_t}{\partial t} &= - \beta s_t i_t; \quad \frac{\partial e_t}{\partial t} = \beta s_t i_t - \sigma e_t; \quad \\
+\begin{align}
+\frac{\partial s_t}{\partial t} &= - \beta s_t i_t; \quad \frac{\partial e_t}{\partial t} = \beta s_t i_t - \sigma e_t; \quad \label{eq:seir} \\
 \frac{\partial i^{(T)}_t}{\partial t} &= \sigma e_t - \gamma i_t; \quad
-\frac{\partial r_t}{\partial t} = - \gamma i_t.
-\end{align*}
+\frac{\partial r_t}{\partial t} = - \gamma i_t. \nonumber
+\end{align}
 Following~\cite{Song2020}, we employ Runge-Kutta (RK4) approximations for discretization. Here, we consider covariate information that takes the form of a stratification variable with $K$ strata.  Let $I_{k,t}$ to denote the number of new infections on day $t$ in the $k$th strata.  As there are a total of $N \cdot i_t := I_t$ new infections on day $t$, we assume the joint distribution of strata-specific new infection totals takes a multinomial distribution with
 $$
 ( I_{1,t}, \ldots, I_{K,t} ) \sim \text{Multinomial} \left( I_t, (p_{1,t}, \ldots, p_{K, t}) \right).
@@ -625,10 +626,10 @@ A sensitivity analysis is performed by considering the range of false negative a
 
 The IPW analysis is next extended to the time-varying setting.  To do so, we make use of the Facebook symptom survey, hospitalization, and testing data.  Recall the COVID-19 testing and positive case counts are known by age, gender, and racial demographics. Symptom status (e.g., fever, coughing, shortness of breath) and related covariate information (COVID-19 positive contact), however, are currently unavailable\footnote{Whether this is due to data privacy considerations or lack of data collection efforts is unclear.}.  As COVID-19 symptom status is likely to alter the testing propensity and likelihood of active infection, for illustrative purposes Facebook symptom survey and hospitalization data are used in two ways to imputate symptom status per strata. We outline the imputation methods below; see Section~\ref{section:discussion} for additional discussion.
 
-In the first approach, we estimate two logistic regressions using weighted pseudo-likelihoods with the Facebook survey symptom data.  The first estimates the probability of contact with a COVID-19 positive individual given demographic and COVID-19 test status (positive or negative COVID-19 test). Figure~\ref{fig:contactlik1} and~\ref{fig:contactlik2} in Appendix~\ref{app:in_add_details} presents the estimated likelihood of contact with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  The second estimates the probability of fever given demographic, COVID-19 test status, \emph{and} whether the individual has had contact with a COVID-19 positive individual.  Figure~\ref{fig:symptomlik1} and~\ref{fig:symptomlik2} in Appendix~\ref{app:in_add_details} presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that likelihood of fever varies greatly based on whether the individual also reported contact with a COVID-19 positive individual. Using these two models, mean imputation is used to calculate the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. With the resulting dataset, inverse probability weights are computed based (termed IPW1).
+In the first approach, we estimate two logistic regressions using weighted pseudo-likelihoods with the Facebook survey symptom data.  The first estimates the probability of contact with a COVID-19 positive individual given demographic and COVID-19 test status (positive or negative COVID-19 test). Figure~\ref{fig:contactlik1} and~\ref{fig:contactlik2} in Appendix~\ref{app:in_add_details} presents the estimated likelihood of contact with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  The second estimates the probability of fever given demographic, COVID-19 test status, \emph{and} whether the individual has had contact with a COVID-19 positive individual.  Figure~\ref{fig:symptomlik1} and~\ref{fig:symptomlik2} in Appendix~\ref{app:in_add_details} presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that likelihood of fever varies greatly based on whether the individual also reported contact with a COVID-19 positive individual. Using these two models, mean imputation is used to calculate the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. Inverse probability weights are then computed based on the resulting dataset (termed IPW1).
 
 
-In the second approach, we leverage hospitalization information. The first estimates the probability of fever given demographic and COVID-19 test status.  When the COVID-19 test status is positive, the probability of fever depends on whether the individual was hospitalized.  Figure~\ref{fig:symptomlik1_model2} and~\ref{fig:symptomlik2_model2} in Appendix~\ref{app:in_add_details} presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that hospitalization significantly increases the likelihood of fever as expected.  We use these models and the hospitalization rates by demographic to perform mean impuation of the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. With the resulting dataset, inverse probability weights are computed based (termed IPW2).
+In the second approach, we leverage hospitalization information. We first estimate the probability of fever given demographic and COVID-19 test status.  When the COVID-19 test status is positive, the probability of fever is allowed to depend on whether the individual was hospitalized.  Figure~\ref{fig:symptomlik1_model2} and~\ref{fig:symptomlik2_model2} in Appendix~\ref{app:in_add_details} presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that hospitalization significantly increases the likelihood of fever as expected.  We use these models and the hospitalization rates by demographic to perform mean impuation of the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. Inverse probability weights are then computed based on the resulting dataset (termed IPW2).
 
 To make the approach concrete, Figure~\ref{fig:testinglik_mainpaper} presents the testing propensity for non-hispanic, white males across age strata and fever status using the second approach.  We note here that the ratio of testing propensity within strata across fever status is time-varying.  The ratio starting nine times more likely in early April and dropping to twice as likely by end of 2020.
 
@@ -654,7 +655,7 @@ To make the approach concrete, Figure~\ref{fig:testinglik_mainpaper} presents th
 \subsection{Application of SEIR model}
 \label{section:modelbased}
 
-Here we consider the multinomial SEIR model using observed death data as presented in Figure~\ref{fig:in-deaths}. The model, presented in Section~\ref{section:modelbased}, requires infection fatality rates to be specified per-strata.  In this paper, similar to~\cite{Johndrow2020}, we specify fixed per-strata infection fatality rates. Based on published age-specific IFRs~\cite{Levin2020}, IFR by age seems to closely follow a log-linear relationship. Combining across published age-specific IFRs, Table~\ref{tab:ifrperage} presents estimates of the average IFR within each strata using the age-distribution.
+Here we consider the multinomial SEIR model using observed death data as presented in Figure~\ref{fig:in-deaths}. The model, presented in Section~\ref{section:modelbased}, requires infection fatality rates to be specified per-strata.  In this paper, similar to~\cite{Johndrow2020}, we specify fixed per-strata infection fatality rates. Based on published age-specific IFRs~\cite{Levin2020}, Figure~\ref{fig:logifr} shows that IFR seems to closely follow a log-linear relationship with age. Combining across published age-specific IFRs, Table~\ref{tab:ifrperage} presents estimates of the average IFR within each strata using the age-distribution.
 \begin{table}[!th]
 \begin{tabular}{c | c c c c c c c c}
 Age Strata & 0-19 & 20-29 & 30-39 & 40-49 & 50-59 & 60-69 & 70-79 & 80+ \\ \hline
@@ -663,7 +664,15 @@ IFR & 0.003\% & 0.014\% & 0.046\% & 0.144\% & 0.456\% & 1.443\% & 4.567\% & 15.4
 \caption{IFR by age-strata}
 \label{tab:ifrperage}
 \end{table}
-The discrete-time distribution~$\{ \theta_{j} \}$ is a discretized version of a truncated normal distribution with mean $25$, standard deviation~$5$, minimum value $0$, and maximum value $44$.  This was chosen to closely mimic the distribution from~\cite{Johndrow2020}.  See~\ref{app:modelbased} for additional details on parametrization and choice of priors. To check how well our model fits the observed data, a posterior predictive check on aggregate death counts was performed. Figure~\ref{fig:deathsppc} shows the results which suggests chosen SEIR model fits the observed data well.  The model produces age-specific case counts which can then be used for model-based estimation of the active infection rate as well as in constructing the doubly robust estimator.
+The discrete-time distribution~$\{ \theta_{j} \}$ is a discretized version of a truncated normal distribution with mean $25$, standard deviation~$5$, minimum value $0$, and maximum value $44$.  This was chosen to closely mimic the distribution from~\cite{Johndrow2020}.
+
+The SEIR model in equation~\eqref{eq:seir} is extended to allow for time-varying transmission rates~$\beta_t$ to account for public policy changes discussed in Section~\ref{section:publicpolicyindiana} over the time period considered.  Here, we insert three change points $(t_1,t_2,t_3)$ on March 23rd, June 15th, and October 1st of 2020 respectively.  Given sensitivity to these choices, instead of considering a multiplicative structure, we allow for delayed implementation and slow change in the transmission rate by using weights:
+$$
+\beta_t = \sum_{k=1}^{3} \left(\beta_{k-1} (1-w^{(k)}_t ) + \beta_{k} w_t\right),\quad w^{(k)}_t = (1 + \exp \left( -\xi (t - t_k - \nu) \right))^{-1}
+$$
+where $\nu \geq 0$ is the potential delay and $\xi$ is the rate of change.  Each weight~$w_t^{(k)} = 0$ for $t < t_k$ and $w_t^{(k)} \to 1$ as $t \to \infty$. See Section~\ref{app:modelbased} in the supplementary materials for details on prior specification.
+
+To check how well our model fits the observed data, a posterior predictive check on aggregate death counts was performed. Figure~\ref{fig:deathsppc} shows the results which suggests chosen SEIR model fits the observed data well.  The model produces age-specific case counts which can then be used for model-based estimation of the active infection rate as well as in constructing the doubly robust estimator.
 
 \begin{figure}[!th]
 \centering
@@ -676,7 +685,9 @@ The discrete-time distribution~$\{ \theta_{j} \}$ is a discretized version of a 
 
 Here, we construct active infection rate estimates using the unweighted, inverse-probability weighted, model-based, and doubly robust estimators.  Figure~\ref{fig:air} presents the results. The inverse-probability weighting methods do not significantly reduce bias compared to the unweighted estimates.  We conjecture this is due to the limited availability of symptom and other important covariates that may impact the likelihood an individual will get  tested. Our imputation strategies use available data to try and alleviate this issue; however, this suggests better data collection in the future may strongly improve the IPW estimates as seen in Section~\ref{section:ipwapproach} when analyzing the statewide sample from April 25th--29th.
 
-While the model-based estimates appear more reasonable, note that the estimate on the last week of April is $0.1$\% which is a severe underestimate. Caution is therefore warranted when interpreting these estimates.  We know that the age-specific infection fatality rate is likely time-varying and may vary by other factors beyond age.  Therefore, improvements to these model-based predictions could be made by improving the IFR estimates; however, there is currently minimal publicly available data to do so.  Moreover, the (thankfully) low number of deaths per strata make uncertainty in these estimates quite high.  The 95\% credible range for active infections on April 25th, for example, is $[XX,XX]$ with a posterior mean of $XX$.  Finally, the doubly robust estimates appear similar to the IPW estimate.
+\textcolor{red}{
+While the model-based estimates appear more reasonable, note that the estimate on the last week of April is XX\% which is a severe underestimate. Caution is therefore warranted when interpreting these estimates.  We know that the age-specific infection fatality rate is likely time-varying and may vary by other factors beyond age.  Therefore, improvements could be made by more finely grained, and accurate IFR estimates; however, there is currently minimal publicly available data to do so.  Moreover, the (thankfully) low number of deaths per strata make uncertainty in these estimates quite high.  The 95\% credible range for active infections on April 25th, for example, is $[XX,XX]$ with a posterior mean of $XX$.  Finally, the doubly robust estimates appear similar to the IPW estimate.
+}
 
 \begin{figure}[!th]
 \centering
@@ -685,6 +696,9 @@ While the model-based estimates appear more reasonable, note that the estimate o
 \label{fig:air}
 \end{figure}
 
+\textcolor{red}{
+We also construct ratio and effective reproduction number estimates as discussed in Section XX. Figure XX presents the results.  Unweighted, IPW, and doubly robust estimates appear similar.  Recall the severe bias during the growth phase due to selection bias dicussed in SEction XX may imply the observed rates are severely overestimated between October 2020 and January 2021.  The model-based methods may be conservative in this time window.  A similar argument holds for the effective reproduction rate in Figure XXb.
+}
 
 \section{Discussion}
 \label{section:discussion}
@@ -697,21 +711,21 @@ Governments and policy makers often implicitly argue that increased testing capa
 
 \subsection*{High quality information on prevalence.}
 
-Governments are pushing for increased testing capacity and robust contact tracing.  Contact tracing is incredibly useful for identifying carriers early and preventing spread of the disease.  We would argue that, after the current wave, understanding active infections is also key.  We know that the probability of an outbreak is a function of current prevalence and network connectivity.  Epidemic critical thresholds have been derived for many infectious disease models~\citep{Pastor2001,Newman2002,Parshani2010}.  Knowing prevalence will help governments determine long-term community-level risk and allow for more targeted interventions -- shutting down only certain locations when necessary.
+Governments are pushing for increased testing capacity and robust contact tracing.  Contact tracing is incredibly useful for identifying carriers early and preventing spread of the disease.  We argue that understanding active infections is also key.  We know that the probability of an outbreak is a function of current prevalence and network connectivity.  Epidemic critical thresholds have been derived for many infectious disease models~\citep{Pastor2001,Newman2002,Parshani2010}.  Knowing prevalence will help governments determine long-term community-level risk and allow for more targeted interventions -- shutting down only certain locations when necessary.
 
 \subsection*{Model-based solutions.}
 
 A common argument is that the SEIR model can be extended to account for selection bias and measurement error directly; therefore, there is no need for auxiliary random sampling.  Without strong assumptions on the selection mechanism, however, the estimates are often not identifiable.  When an issue ``cannot be resolved nonparametrically then it is usually dangerous to resolve it parametrically''\citep{CoxHink74}. Absent some type of random sampling, the best route forward for all data analyses is careful associated sensitivity analyses and humility in data-driven conclusions.
 
-\textcolor{red}{Underascertainmnet as pre-processed or modelled but often is an assumption that must be resolved parametrically. }
+%\textcolor{red}{Underascertainmnet as pre-processed or modelled but often is an assumption that must be resolved parametrically. }
 
 \subsection*{Real-world implementation of the proposed method}
 
-Application of the proposed methods relied on access to two critical datasets: (1) COVID-19 testing, case, hospitalization, and death data by demographic strata and (2) Facebook symptom survey.  Public access to (1) required the author to submit a data request directly to the state of Indiana.  Through conversations with XXXX, the author's request was one of only five to be approved by Indiana for public release.  Most states do not release such granular data, making selection bias adjustments difficult.  More systematic data collection and reporting is critical in future efforts. We acknowledge that this proposal will lead to important data privacy issues that will need to be addressed (cite).
+Application of the proposed methods relied on access to two critical datasets: (1) COVID-19 testing, case, hospitalization, and death data by demographic strata and (2) Facebook symptom survey.  Public access to (1) required the author to submit a data request directly to the state of Indiana.  Through conversations with the state of Indiana, the author's request was one of only five data requests to be approved by Indiana for public release.  Most states do not release such granular data, making selection bias adjustments difficult.  More systematic data collection and reporting is critical in future efforts. We acknowledge that this proposal will lead to data privacy issues that will need to be addressed.
 
 While we are eternally grateful to Indiana for the release, symptom information was not made available.  This severely limits our ability to estimate correct selection propensity models.  What is required in the future is a more detailed effort to collect relevant measures of an individual's past history that may impact their likelihood of seeking testing and being a positive COVID-19 case.  Such data collection and dissemination is critical to address selection bias.
 
-A valid criticism of the proposed approach is that recording covariates on every tested individual is too time-consuming and costly, i.e., the data collection does not scale well.  We argue that the list of relevant factors is not too long.  For example, symptom status and COVID-19 contact are clearly relevant factors in testing selection.  Future work may consider how to include/exclude various factors over time that are not significant to limit citizen burden in reporting.  Moreover, equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected for all individuals in the nonprobability sample; however, this is often not feasible for state and local governments where rapid sample collection is prioritized over additional collection of covariate information.  We can extend~\eqref{eq:auxinfoprob} by randomly sampling a subset of the nonprobability sample on which to collect the covariate information, yielding the pseudo-likelihood
+A valid criticism of the proposed approach is that recording covariates on every tested individual is too time-consuming and costly, i.e., the data collection does not scale well.  We argue that the list of relevant factors is not too long.  For example, symptom status and COVID-19 contact are clearly relevant factors in testing selection.  Future work may consider how to include/exclude various factors over time that are not significant to limit citizen burden in reporting.  Moreover, equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected for all individuals in the nonprobability sample; however, this is often not feasible for state and local governments where rapid sample collection is prioritized over additional collection of covariate information.  We can easily extend~\eqref{eq:auxinfoprob} by randomly sampling a subset of the nonprobability sample on which to collect the covariate information, yielding a new pseudo-likelihood
 \begin{equation*}
 % \label{eq:auxinfoprob2}
 \sum_{j=1}^N I_j I_j^{(2)} W_j^{(2)} \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right)  + \sum_{i=1}^N \tilde I_j \tilde W_j \log ( 1 - \pi (X_j; \theta)).
@@ -730,29 +744,7 @@ All relevant code can be found at \url{https://github.com/wdempsey/covid-umich}.
 
 \section{Technical details}
 
-Suppose disease prevalence was estimated as the fraction who tested positive for COVID-19, i.e., $\bar y_n^\star = \frac{\sum_{i=1}^N I_j Y_j^\star}{\sum_{i=1}^N I_j}$.  We can again investigate the error compared to the true prevalence $\bar Y$ in statistical terms:
-$$
-\bar y_n^\star - \bar Y = \sqrt{\frac{1-f}{f}} \left[ \rho_{I,Y} \times \sigma_Y + \rho_{I,PZ} \times \sigma_{PZ} + \sqrt{\frac{f}{1-f}}  \left( FP - (FP+FN) \bar Y \right) \right] .
-$$
-where $Z = 1-2Y$; see Appendix~\ref{app:imperfect} for the derivation. The first term in the large brackets represents the perfect testing regime; to this end, we refer to $\rho_{I,Y}$ as the \emph{true data quality}.  The second term represents the interaction between imperfect testing and selection bias. The variable $PZ = 1[Y=0,P=1] - 1[Y=1, P=1]$ is non-zero only when $P=1$ (i.e., the outcome is incorrectly reported) and the sign depends on the true outcome $Y$.  Given this, we refer to $\rho_{I,PZ}$ as the \emph{observed data quality} that accounts for both selection bias and measurement error.  In the appendix, we show the sign of $\rho_{I,PZ}$ is the opposite of the sign of $\rho_{I,Y}$, which implies that the observed data quality adds error in the opposite direction from the true data quality.  Finally, the third term represents the bias due to imperfect testing.
-
-\subsubsection{Connecting true and observed data quality}
-
-We start by considering the first two terms and assess whether the sign of the bias can reverse due to the interaction of measurement error and selection bias.  To do this, we define the sampling rates differential.  Let $f_1 := \pr (I_J = 1 \mid Y_J = 1)$ and $f_0 := \pr(I_J = 1 \mid Y_J = 0)$ be the sampling rates where $J$ is a random index defined on $\{1,\ldots, N\}$.  Then $\Delta = f_1 - f_0$ is the sampling rate differential.  Using these terms, we can re-express the first two terms as
-$$
-\rho_{I,Y} \times \sigma_Y + \rho_{I,PZ} \times \sigma_{PZ} =
-\rho_{I,Y} \times \sigma_Y \left[ 1 - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right].
-$$
-final term represents the \emph{imperfect testing adjustment} which is a complex function of the sampling rate differential, the odds ratio, and the ratio of measurement error interaction with prevalence and sampling rates interaction with prevalence. Note $\sgn(\Delta) = \sgn(\rho_{I,Y})$ by equation~\ref{eq:binaryrho} in the Appendix, which implies the measurement error adjustment either shrinks the data quality measure toward zero or reverses its sign.
-
-% While prior investigations have noted the interaction between measurement error and selection bias~\citep{Beesley2020,Beesley2019,Smeden2019}, the interaction with the sample size relative to the population, i.e., $f$, has largely been ignored.  The above statistical decomposition clarifies the importance of this quantity~$f$.  In particular, note that the statistical error also includes a bias term due to measurement error and this term increases as the sampled fraction $f$ increases. Therefore, how the first two terms interact with the final term depends on the fraction of the population sampled.  This interaction is complex, but implies that whether the estimate $\bar y^\star_n$ is an overestimate or underestimate is a complicated question due to the relation amongst these three pieces.
-
-% Consider again the current COVID-19 pandemic. For now, we continue to assume the ratio of conditional selection rates $f_1/f_0$ is equal to 1.5.  In Section~\ref{section:est_dq}, we discuss recent research suggesting a false negative rate around 17.2\% and a false positive rate around 0.05\%. Under these rates and the current US prevalence rates, the ratio of the MSE to MSE under no measurement error is 0.436; if we switch false negative rates down to 5\% and increase the false positive rate to 5\% then the relative MSE is 2.89.  This is merely to demonstrate that in some cases we see a huge increase in MSE and in other settings we have a huge decrease in MSE.  What drives this is the false positive and negative rate interaction with prevalence and sampling rates.  Therefore, whether we are better or worse off with respect to the MSE is a very difficult question to answer.
-
-\subsection{An improved estimator under imperfect testing}
-
-
-Let $P_j$ be an indicator of measurement error, equal to $1$ when we incorrectly measure the outcome and $0$ when we observe the true outcome. We suppose this is a stochastic variable where $\pr(P_j = 1 \mid Y_j = 1) =: FN$ is the false-negative rate and $\pr(P_j = 1 \mid Y_j = 0) =: FP$ is the false-positive rate.  If individual $j$ is selected (i.e., $I_j = 1$) then the observed outcome can be written as $Y_j^{\star} = Y_j(1-P_j) + (1-Y_j) P_j$.
+Recall that $P_j$ is  an indicator of measurement error, equal to $1$ when we incorrectly measure the outcome and $0$ when we observe the true outcome. We suppose this is a stochastic variable where $\pr(P_j = 1 \mid Y_j = 1) =: FN$ is the false-negative rate and $\pr(P_j = 1 \mid Y_j = 0) =: FP$ is the false-positive rate.  If individual $j$ is selected (i.e., $I_j = 1$) then the observed outcome can be written as $Y_j^{\star} = Y_j(1-P_j) + (1-Y_j) P_j$.
 
 \subsection{Derivations for imperfect testing framework.}
 \label{app:imperfect}
@@ -1145,7 +1137,7 @@ From prior derivations, we then have the desired result.
 
 Here, we take the suggested measures from~\cite{Arevalo2020} which report 87\% sensitivity is a reasonable estimates and~\cite{Cohen2020} which report 97.6\% specificity.  This corresponds to a false negative rate of $13\%$ and false positive rate of $2.4\%$.  To allow for potential uncertainty, we assume two \emph{synthetic} simple random samples.  The first is a simple random sample of true negative cases denoted $S_{FP}$; the second is simple random sample of true positive cases denoted $S_{FN}$.  As $\mu_t$ and $\theta_{t}$ are estimated independently at each time $t$, we can focus on the estimating equations per time point~$t$ separately.
 
-Suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$.  Each finite population has an associated non-probability at time $t$ of  size~$\tilde n$ and $L_\nu$ probability samples of fixed size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^L$ over the study window~$[0,T]$. Let~$\Delta_\nu$ denote the gap times between consecutive sample times.  Finally, let~$n_{FP}$ and $n_{FN}$ denote the sample sizes of $S_{FP}$ and $S_{FN}$ respectively.  For simplicity, dependency on $\nu$ is suppressed and the limiting process is represented by $N \to \infty$.
+Suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$.  Each finite population has an associated non-probability at time $t$ and probability samples of size $n$ at each time~$t=1,\ldots, T$.  Finally, let~$n_{FP}$ and $n_{FN}$ denote the sample sizes of $S_{FP}$ and $S_{FN}$ respectively.  For simplicity, dependency on $\nu$ is suppressed and the limiting process is represented by $N \to \infty$.
 
 For each~$\nu$ and $t$, the estimates of $\eta = (\mu_t, \theta_t, FP, FN)$ are given by:
 $$
@@ -1520,28 +1512,8 @@ The testing propensity likelihood
 \label{fig:testinglik}
 \end{figure}
 
-\section{Model-based: Additional details}
+\section{Model-based: Prior specification}
 \label{app:modelbased}
-
-We fit the
-
-\begin{align*}
-\frac{\partial s_t}{\partial t} &= - \beta s_t i_t; \quad \frac{\partial e_t}{\partial t} = \beta_t s_t i_t - \sigma e_t; \quad \\
-\frac{\partial i^{(T)}_t}{\partial t} &= \sigma e_t - \gamma i_t; \quad
-\frac{\partial r_t}{\partial t} = - \gamma i_t.
-\end{align*}
-
-We allow $\beta_t$ to be time-varying to account for the
-
-"2020-03-23", "2020-06-15", "2020-10-01".
-
-$w_t = 1/ \left( 1 + \exp \left( - \xi (t - t_1 - \nu)  \right) \right)$
-
-We defined a weight $w^{(1)}_t = 1$ prior to time $t_1$ and goes to $1$ as $t \to \infty$
-
-to accoun tfor
-
-$\beta (1-w_t) + \eta weight$
 
 For simplicity, we list the priors used in STAN below:
 \begin{itemize}
@@ -1561,14 +1533,6 @@ For simplicity, we list the priors used in STAN below:
   \item \code{phi = 1/phi\_inv;}
   \item \code{xi = xi\_raw + 0.5;}
 \end{itemize}
-
-\begin{figure}[!th]
-\centering
- \includegraphics[width=.9\linewidth]{../figs/logifr.png}
- \caption{Logarithm of Infection Fatality Rate (IFR) by Age.  Linear model on the log-scale fits well and allows us to extrapolate publicly-reported IFR numbers to entire age range.}
- \label{fig:logifr}
-\end{figure}
-
 
 
 \end{document}
