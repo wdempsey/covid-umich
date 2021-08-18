@@ -416,7 +416,7 @@ where $K_h$ is a kernel function with tunable parameter $h$. Given $\pi (x;\hat 
 %
 \subsubsection{Asymptotics}
 
-Suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu=1,2,\ldots$. Each finite population has an associated non-probability at time $t$ and probability samples of size~$n$ at each time~$t=1,\ldots,T$. Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:ipw} shows that the IPW estimator is  consistent and calculates the estimator's variance.  In Lemma~\ref{lemma:ipw}, sensitivity and specificity are not assumed known.  Instead, we suppose that these are estimated using a pseudo-likelihood on two random samples from the population whose size (denoted~$n_{FP}$ and $n_{FN}$ respectively) is chosen so the resulting estimated sensitivity and specificity have desired levels of uncertainty.  See Appendix~\ref{app:asympderivations} for additional details.
+Suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$.  Each finite population has an associated non-probability at time $t$ of  size~$\tilde n$ and $L_\nu$ probability samples of fixed size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^L$ over the study window~$[0,T]$. Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:ipw} shows that the IPW estimator is  consistent and calculates the estimator's variance.  In Lemma~\ref{lemma:ipw}, sensitivity and specificity are not assumed known.  Instead, we suppose that these are estimated using a pseudo-likelihood on two random samples from the population whose size (denoted~$n_{FP}$ and $n_{FN}$ respectively) is chosen so the resulting estimated sensitivity and specificity have desired levels of uncertainty.  See Appendix~\ref{app:asympderivations} for additional details.
 
 \begin{lemma}[Variance of IPW estimator] \normalfont
 \label{lemma:ipw}
@@ -433,7 +433,7 @@ $$
 \end{array}
 \right ) = {\bf 0}
 $$
-where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (n^{-1/2})$  and $\text{var} (\hat y_{n,t}) = V_{t}^{(IPW)} + o (n^{-1})$ where $V_t^{(IPW)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\Phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$.
+where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under certain regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (n^{-1/2})$  and $\text{var} (\hat y_{n,t}) = V_{t}^{(IPW)} + o (n^{-1})$ where $V_t^{(IPW)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\Phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$.
 \end{lemma}
 
 \subsection{Model-based estimation}
@@ -623,6 +623,7 @@ using the Indiana non-random sample.  For the IPW estimate using Facebook data, 
 A sensitivity analysis is performed by considering the range of false negative and false positive rates.  Here, sensitivity is assumed to fall between $81$\% and $91$\% and specificity between $95$\% and $98.8$\%~\cite{Katz2020}, which leads to a range for $M$ of $(5.60, 6.44)$ for the unweighted analysis, and $(3.63,4.07)$ and $(3.10, 3.45)$ for the weighted analyses respectively.
 
 \subsubsection{Time-varying IPW estimator}
+\label{section:tvipw}
 
 The IPW analysis is next extended to the time-varying setting.  To do so, we make use of the Facebook symptom survey, hospitalization, and testing data.  Recall the COVID-19 testing and positive case counts are known by age, gender, and racial demographics. Symptom status (e.g., fever, coughing, shortness of breath) and related covariate information (COVID-19 positive contact), however, are currently unavailable\footnote{Whether this is due to data privacy considerations or lack of data collection efforts is unclear.}.  As COVID-19 symptom status is likely to alter the testing propensity and likelihood of active infection, for illustrative purposes Facebook symptom survey and hospitalization data are used in two ways to imputate symptom status per strata. We outline the imputation methods below; see Section~\ref{section:discussion} for additional discussion.
 
@@ -1137,36 +1138,37 @@ From prior derivations, we then have the desired result.
 
 Here, we take the suggested measures from~\cite{Arevalo2020} which report 87\% sensitivity is a reasonable estimates and~\cite{Cohen2020} which report 97.6\% specificity.  This corresponds to a false negative rate of $13\%$ and false positive rate of $2.4\%$.  To allow for potential uncertainty, we assume two \emph{synthetic} simple random samples.  The first is a simple random sample of true negative cases denoted $S_{FP}$; the second is simple random sample of true positive cases denoted $S_{FN}$.  As $\mu_t$ and $\theta_{t}$ are estimated independently at each time $t$, we can focus on the estimating equations per time point~$t$ separately.
 
-uppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$.  Each finite population has an associated non-probability at time $t$ of  size~$\tilde n$ and $L_\nu$ probability samples of fixed size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^L$ over the study window~$[0,T]$. Let~$\Delta_\nu$ denote the gap times between consecutive sample times. Finally, let~$n_{FP}$ and $n_{FN}$ denote the sample sizes of $S_{FP}$ and $S_{FN}$ respectively.  For simplicity, dependency on $\nu$ is suppressed and the limiting process is represented by $N \to \infty$.
+Suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$.  Each finite population has an associated non-probability at time $t$ of  size~$\tilde n$ and $L_\nu$ probability samples of fixed size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^L$ over the study window~$[0,T]$. Let~$\Delta_\nu$ denote the gap times between consecutive sample times. Finally, let~$n_{FP}$ and $n_{FN}$ denote the sample sizes of $S_{FP}$ and $S_{FN}$ respectively.  For simplicity, dependency on $\nu$ is suppressed and the limiting process is represented by $N \to \infty$. The asymptotic argument below relies on regularity conditions C1-C6 from~\cite{Chen2019}, smoothness of the population-level distribution of the time-varying covariates~$\{ X_{j,t} \}$, and smoothness of the propensity function~$\pi(x; \theta)$ as a function of $x \in \mathbb{R}^p$.
 
 For each~$\nu$ and $t$, the estimates of $\eta = (\mu_t, \theta_t, FP, FN)$ are given by:
 $$
 \Phi (\eta) = \left (
 \begin{array}{c}
 \frac{1}{N} \sum_{j=1}^N I_{j,t} \frac{Y_{j,t} - FP - (1-FP-FN) \cdot \mu_t}{\pi_{j,t}} \\
-\frac{1}{N \sum_{l=1}^L K_{t,t_l^\prime}} \sum_{l=1}^L K_{t,t_l^\prime} \left[ \sum_{j=1}^N I_{j,t^\prime} X_{j,t^\prime_l} - \frac{1}{N} \sum_{j = 1}^N \tilde I_{j,t_l^\prime} \tilde W_{j,t_l^\prime}  \pi_{j,t_l^\prime} X_{j,t_l^\prime} \right] \\
+\frac{1}{N \sum_{l=1}^L K_{t,t_l^\prime}} \sum_{l=1}^L K_{t,t_l^\prime} \left[ \sum_{j=1}^N I_{j,t^\prime} X_{j,t^\prime_l} - \sum_{j = 1}^N \tilde I_{j,t_l^\prime} \tilde W_{j,t_l^\prime}  \pi_{j,t_l^\prime} X_{j,t_l^\prime} \right] \\
 \frac{1}{n_{FP}} \sum_{j \in S_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
 \frac{1}{n_{FN}} \sum_{j \in S_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
 \end{array}
 \right ) = {\bf 0}
 $$
-where $\pi_{j,t^\prime} = \pi (X_{j,t^\prime}; \theta_t)$, $Z_j$ is an indicator of a false positive in the sample $S_{FP}$  and $\tilde Z_j$ is an indicator of a false negative in the sample $S_{FN}$.  We assume the $|S_{FP}|^{-1} \sum_{j \in S_{FP}} Z_j = 0.024$ and $|S_{FP}|^{-1} \sum_{j \in S_{FP}} Z_j = 0.30$.  Sample sizes, denoted $n_{FP}$ and $n_{FN}$ respectively, are chosen to achieve desired estimator variance, i.e., $\frac{0.024 \cdot (0.976)}{n_{FP}} = \sigma^2_{FP}$ and $\frac{0.13 \cdot 0.87}{n_{FN}} = \sigma^2_{FN}$. Here we set $\sigma^2_{FP} = 0.02^2$ and $\sigma_{FN}^2 = 0.05^2$ which yield $n_{FP} \approx 59$ and $n_{FN} \approx 45$ respectively.
+where $\pi_{j,t^\prime} = \pi (X_{j,t^\prime}; \theta_t)$, $Z_j$ is an indicator of a false positive in the sample $S_{FP}$  and $\tilde Z_j$ is an indicator of a false negative in the sample $S_{FN}$.  We assume the $|S_{FP}|^{-1} \sum_{j \in S_{FP}} Z_j = 0.024$ and $|S_{FP}|^{-1} \sum_{j \in S_{FP}} Z_j = 0.30$.  Sample sizes, denoted $n_{FP}$ and $n_{FN}$ respectively, are chosen to achieve desired estimator variance, i.e., $\frac{0.024 \cdot (0.976)}{n_{FP}} = \sigma^2_{FP}$ and $\frac{0.13 \cdot 0.87}{n_{FN}} = \sigma^2_{FN}$. In this paper, we set $\sigma^2_{FP} = 0.02^2$ and $\sigma_{FN}^2 = 0.05^2$ which means $n_{FP} \approx 59$ and $n_{FN} \approx 45$ respectively.
 
-To prove consistency, first consider the setting where a random sample of size $n$ is observed at time $t$.  Let $\tilde \Phi (\eta)$ denote the corresponding estimating equations, which is the same as $\Phi(\eta)$ except for the second component which is given by
+To prove consistency, first consider the setting where a single random sample of size $n$ is observed at time $t$.  Let $\tilde \Phi (\eta)$ denote the corresponding estimating equations, which is the same as $\Phi(\eta)$ except for the second component which is now given by
 $$
 \frac{1}{N} \left[ \sum_{j=1}^N I_{j,t} X_{j,t} - \frac{1}{N} \sum_{j = 1}^N \tilde I_{j,t} \tilde W_{j,t}  \pi_{j,t} X_{j,t} \right].
 $$
 Then under joint randomization of propensity score model and sampling designs, we have $E [ \tilde \Phi (\eta_0) ] = {\bf 0}$.  Consistency then follows by arguments in Section 3.2 of Tsiatis (2006). Under conditions C1-C6 from~\cite{Chen2019} and as $n$ increases, we have $\tilde \Phi (\hat \eta) = 0$ and $\tilde \Phi(\eta_0) = O_p ( n^{-1/2} )$.
 
-To prove consistency under the sequence of sampling regimes, we need to show that $E[ \Phi (\eta_0) ] \to 0$ as $N \to \infty$.  First, we see that
+To prove consistency under the sequence of sampling regimes, we need to show that $E[ \Phi (\eta_0) ] \to 0$ as $N \to \infty$.  First, we study the difference in the 2nd term:
 \begin{align*}
-&\frac{1}{N}  E \left[ \sum_{j = 1}^N \tilde I_{j,t} \tilde W_{j,t}  \pi_{j,t} X_{j,t} - \sum_{l=1}^L  \sum_{j = 1}^N \tilde K_{t,t^\prime_l} \tilde I_{j,t} \tilde W_{j,t}  \pi_{j,t} X_{j,t^\prime_l} \right] \\
+&\frac{1}{N}  E \left[ \sum_{j = 1}^N \tilde I_{j,t} \tilde W_{j,t}  \pi_{j,t} X_{j,t} - \sum_{l=1}^L  \sum_{j = 1}^N \tilde K_{t,t^\prime_l} \tilde I_{j,t^\prime_l} \tilde W_{j,t^\prime_l}  \pi_{j,t^\prime_l} X_{j,t^\prime_l} \right] \\
 = &\frac{1}{N} \sum_{j = 1}^N \left[ \pi_{j,t} X_{j,t} - \sum_{l=1}^L \tilde K_{t,t^\prime_l} \pi_{j,t^\prime_l} X_{j,t^\prime_l} \right], \\
+= &\frac{1}{N} \sum_{j = 1}^N \left[ \sum_{l=1}^L \tilde K_{t,t^\prime_l} \pi_{j,t} X_{j,t} \pm \sum_{l=1}^L \tilde K_{t,t^\prime_l} \pi_{j,t_l^\prime} X_{j,t}  - \sum_{l=1}^L \tilde K_{t,t^\prime_l} \pi_{j,t^\prime_l} X_{j,t^\prime_l} \right], \\
 = &\frac{1}{N} \sum_{j = 1}^N \left[ \left( \sum_{l=1}^L \tilde K_{t,t^\prime_l}  \left( \pi (X_{j,t}; \theta) - \pi (X_{j,t^\prime_l}; \theta) \right) \right) X_{j,t} + \sum_{l=1}^L \tilde K_{t,t^\prime_l} \pi_{j,t^\prime_l} (X_{j,t} - X_{j,t^\prime_l} ) \right],
 \end{align*}
-where $\tilde K_{t, t^\prime_l}$ is the normalized kernel such that $\sum_{l=1}^L \tilde K_{t, t^\prime_l} = 1$.  Moreover, we have that
+where $\tilde K_{t, t^\prime_l}$ is the normalized kernel such that $\sum_{l=1}^L \tilde K_{t, t^\prime_l} = 1$. The difference in the 1st term is similarly defined.
 
-Let~$X_{j,t,l}$ denote the $l$th component of the vector $X_{j,t}$.  Then consider the population-level distribution $\{ X_{j,t,l} \}_{j=1}^N$.  We suppose
+Let~$X_{j,t,l}$ denote the $l$th component of the vector $X_{j,t}$.  Then consider the population-level distribution $\{ X_{j,t,l} \}_{j=1}^N$.  We make the additional assumption that
 $$
 \lim_{\epsilon \to 0} \lim_{N \to \infty} \frac{1}{N} \sum_{j=1}^N X_{j,t+\epsilon, l}  = \lim_{N \to \infty} \frac{1}{N} \sum_{j=1}^N X_{j,t, l}.
 $$
@@ -1174,6 +1176,7 @@ That is, the limiting distributions are continuous as a function of $t$. If $\pi
 $$
 \left | \sum_{l=1}^L \tilde K_{t, t_l^\prime} \pi (X_{j, t_l^\prime}; \theta) - \pi (X_{j, t}; \theta) \right|  \to 0
 $$
+Combining this, $E \left[ \Phi(\eta_0)  - \tilde \Phi (\eta_0) \right] \to 0$ which implies consistency as desired.
 
 Then by a first-order Taylor expansion we have $\hat \eta - \eta_0 = \left[ \phi (\eta) \right]^{-1} \Phi(\eta_0) + o_p (\tilde n^{-1/2})$ where $\phi(\eta) = \partial \Phi (\eta)/\partial \eta$ and $\tilde n = n \sum_{l=1}^L \tilde K_{t,t_l}$.  To calculate
 $$
@@ -1331,59 +1334,6 @@ V_{4,t} = \left( \begin{array}{c}
 $$
 
 The asymptotic variance for the IPW estimator is then the first diagonal element of the matrix $E \left[ \phi_n (\eta_0) \right]^{-1} \times \left[ V_{1,t} + V_{2,t} + V_{3,t} + V_{4,t} \right] E \left[ \phi_n (\eta_0) \right]^{-1}$.
-
-% \section{Model-based estimation: parameter choices and inference}
-% \label{app:modelbased_approx}
-
-% Following~\cite{Song2020}, the fourth-order Runge-Kutta (RK4) method gives an approximation to the proposed SEIR model in equation XX as follows:
-
-% $$
-% f(\theta_{t-1}, \beta, \gamma) = \left(
-% \begin{array}{c}
-% \theta_{t-1}^{S} + \frac{1}{6} \left[ k_{t-1}^{S_1} + 2 k_{t-1}^{S_2} + 2 k_{t-1}^{S_3} + k_{t-1}^{S_4} \right] \\
-% \theta_{t-1}^{E} + \frac{1}{6} \left[ k_{t-1}^{E_1} + 2 k_{t-1}^{E_2} + 2 k_{t-1}^{E_3} + k_{t-1}^{E_4} \right] \\
-% \theta_{t-1}^{I^{(T)}} + \frac{1}{6} \left[ k_{t-1}^{I_1^{(T)}} + 2 k_{t-1}^{I_2^{(T)}} + 2 k_{t-1}^{I_3^{(T)}} + k_{t-1}^{I_4^{(T)}} \right] \\
-% \theta_{t-1}^{I^{(NT)}} + \frac{1}{6} \left[ k_{t-1}^{I_1^{(NT)}} + 2 k_{t-1}^{I_2^{(NT)}} + 2 k_{t-1}^{I_3^{(NT)}} + k_{t-1}^{I_4^{(NT)}} \right] \\
-% \theta_{t-1}^{R} + \frac{1}{6} \left[ k_{t-1}^{R_1} + 2 k_{t-1}^{R_2} + 2 k_{t-1}^{R_3} + k_{t-1}^{R_4} \right] \\
-% \end{array}
-% \right)
-% $$
-% where
-% \begin{align*}
-% k_t^{S_1} &= - s_t \circ (B i_t^{(T)}) \\
-% k_t^{S_2} &= - (s_t + 0.5 k_t^{S_1}) \circ (B (i_t^{(T)} + 0.5 k_t^{I_1}) \\
-% k_t^{S_3} &= - (s_t + 0.5 k_t^{S_2}) \circ (B i_t^{(T)} + 0.5 k_t^{I_2}) \\
-% k_t^{S_4} &= - (s_t + k_t^{S_3}) \circ (B i_t^{(T)} + k_t^{I_3}),
-% \end{align*}
-% and
-% \begin{align*}
-% k_t^{E_1} &= s_t \circ (B i_t^{(T)}) - \sigma e_t \\
-% k_t^{E_2} &= (s_t + 0.5 k_t^{S_1}) \circ (B (i_t^{(T)} + 0.5 k_t^{I_1}) - \sigma (e_t + 0.5 k_t^{e_1}) \\
-% k_t^{E_3} &= (s_t + 0.5 k_t^{S_2}) \circ (B (i_t^{(T)} + 0.5 k_t^{I_2}) - \sigma (e_t + 0.5 k_t^{e_2}) \\
-% k_t^{E_4} &= (s_t + k_t^{S_3}) \circ (B (i_t^{(T)} + k_t^{I_4}) - \sigma (e_t + k_t^{E_3}) \\
-% \end{align*}
-% and
-% \begin{align*}
-% k_t^{I_1^{(T)}} &= \sigma e_t - \beta_2 i^{(T)} \\
-% k_t^{I_2^{(T)}} &= \sigma (e_t + 0.5 k_t^{E_1}) - \beta_2 (i^{(T)} + 0.5 k_t^{I_1^{(T)}}) \\
-% k_t^{I_3^{(T)}} &= \sigma (e_t + 0.5 k_t^{E_2}) - \beta_2 (i^{(T)} + 0.5 k_t^{I_2^{(T)}}) \\
-% k_t^{I_4^{(T)}} &= \sigma (e_t + k_t^{E_3}) - \beta_2 (i^{(T)} + k_t^{I_3^{(T)}}),
-% \end{align*}
-% and
-% \begin{align*}
-% k_t^{I_1^{(NT)}} &= \beta_2 i^{(T)} - \gamma i^{(NT)} \\
-% k_t^{I_2^{(NT)}} &= \beta_2 (i^{(T)} + 0.5 k_t^{I_1^{(T)}}) - \gamma (i^{(NT)} + 0.5 k_t^{I_1^{(NT)}})\\
-% k_t^{I_3^{(NT)}} &= \beta_2 (i^{(T)} + 0.5 k_t^{I_2^{(T)}}) - \gamma (i^{(NT)} + 0.5 k_t^{I_2^{(NT)}})\\
-% k_t^{I_4^{(NT)}} &= \beta_2 (i^{(T)} + k_t^{I_3^{(T)}}) - \gamma (i^{(NT)} + k_t^{I_3^{(NT)}}) ,
-% \end{align*}
-% and
-% \begin{align*}
-% k_t^{R_1} &= - \gamma i_t^{(NT)} \\
-% k_t^{R_2} &= - \gamma (i^{(NT)} + 0.5 k_t^{I_1^{(NT)}}) \\
-% k_t^{R_3} &= - \gamma (i^{(NT)} + 0.5 k_t^{I_2^{(NT)}}) \\
-% k_t^{R_4} &= - \gamma (i^{(NT)} + k_t^{I_3^{(NT)}}) \\
-% \end{align*}
-
 \section{IRLS}
 
 First derivative with respect to $\theta$
@@ -1399,54 +1349,54 @@ $$
 \theta^{(t+1)} = \theta^{(t)} + H \left(\theta^{(t)} \right)^{-1} \nabla E \left(\theta^{(t)} \right)
 $$
 
-\section{Infection fatality rate (IFR) by age group}
-\label{app:ifr}
-
 \section{Indiana COVID-19 Analysis: Additional details}
 \label{app:in_add_details}
+
+In this section, we describe the two mean-imputation methods.
 \subsection{Model 1}
 
-In this section, we describe.
+First, we use the pseudo-likelihood to compute the likelihood of contact given age, gender, and test result.  Figure~\ref{fig:contactlik1} and~\ref{fig:contactlik2} plots the likelihood for 25-34 year olds given a negative test and positive test respectfully.  We see that the likelihood of COVID-19 is much higher for those with a positive test and the likelihood is time-varying.
 
 \begin{figure}[!th]
 \centering
 \begin{subfigure}{.5\textwidth}
  \centering
  \includegraphics[width=.9\linewidth]{../figs/tvprop_contact_fig1.png}
- \caption{COVID-19 Contact Likelihood Given Negative Test}
+ \caption{Contact Likelihood Given Negative Test}
  \label{fig:contactlik1}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
  \centering
 \includegraphics[width=.9\linewidth]{../figs/tvprop_contact_fig2.png}
- \caption{COVID-19 Contact Likelihood Given Positive Test}
+ \caption{Contact Likelihood Given Positive Test}
  \label{fig:contactlik2}
 \end{subfigure}
 \caption{Likelihood of COVID-19 contact}
 \label{fig:contactlik}
 \end{figure}
 
-We then fit a model for likelihood of fever given
+We then use the pseudo-likelihood to compute the likelihood of fever given age, gender, COVID-19 contact status and test result.  Figure~\ref{fig:symptomlik1} and~\ref{fig:symptomlik2} plots the likelihood for 35-44 year olds given a negative test and positive test respectfully.  We see that the likelihood of fever depends heavily on whether they had a COVID-19 contact and their test results. Again, the likelihood is time-varying for most configurations.
+
 
 \begin{figure}[!th]
 \centering
 \begin{subfigure}{.5\textwidth}
  \centering
  \includegraphics[width=.9\linewidth]{../figs/tvprop_symptom_fig1.png}
- \caption{Symptom Likelihood Given Negative Test \textcolor{red}{FIX!!}}
+ \caption{Fever Likelihood Given Negative Test \textcolor{red}{FIX!!}}
  \label{fig:symptomlik1}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
  \centering
 \includegraphics[width=.9\linewidth]{../figs/tvprop_symptom_fig2.png}
- \caption{Symptom Likelihood Given Positive Test}
+ \caption{Fever Likelihood Given Positive Test}
  \label{fig:symptomlik2}
 \end{subfigure}
-\caption{Likelihood of COVID-19 contact}
+\caption{Likelihood of reported fever}
 \label{fig:symptomlik}
 \end{figure}
 
-The testing propensity likelihood
+Based on mean-imputation of COVID-19 contact and fever indicators, we can use the proposed pseudo-likelihood approach to compute the likelihood of getting tested for COVID-19 given age, ethnicity, race, gender, fever status, and COVID-19 contact indicator.  Figure~\ref{fig:testinglik1} and~\ref{fig:testinglik2} plots the likelihood of testing given fever and COVID-19 contact and no fever nor COVID-19 contact respectfully.  We see that the likelihood is time-varying and depends heavily on both fever and COVID-19 contact indicators.
 
 
 \begin{figure}[!th]
@@ -1454,7 +1404,7 @@ The testing propensity likelihood
 \begin{subfigure}{.5\textwidth}
  \centering
  \includegraphics[width=.9\linewidth]{../figs/tvprop_fig1.png}
- \caption{COVID-10 Testing Likelihood Given Fever and COVID-19 Contact}
+ \caption{Testing Likelihood Given Fever and COVID-19 Contact}
  \label{fig:testinglik1}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
@@ -1463,7 +1413,7 @@ The testing propensity likelihood
  \caption{Testing Propensity}
  \label{fig:testinglik2}
 \end{subfigure}
-\caption{COVID-10 Testing Likelihood Given no Fever nor COVID-19 Contact}
+\caption{Testing Likelihood Given no Fever nor COVID-19 Contact}
 \label{fig:testinglik}
 \end{figure}
 
@@ -1471,7 +1421,7 @@ The testing propensity likelihood
 
 \subsection{Model 2 (Hospitalization)}
 
-We then fit a model for likelihood of fever given
+This model uses hospitalization records to try and improve our mean-imputation strategy.  First, we use the pseudo-likelihood to compute the likelihood of fever given age, gender, and test result.  The model only depends on hospitalization status for positive tests.  Figure~\ref{fig:symptomlik1_model2} and~\ref{fig:symptomlik2_model2} plots the likelihood for 35-44 year olds given a negative test and positive test respectfully.  We see that the likelihood of fever is time-varying.  For a negative test, the likelihood of ever fever is very high in early April, which accounts for testing restrictions. We see that hospitalization significantly increases the risk of fever given a positive test.
 
 \begin{figure}[!th]
 \centering
@@ -1491,26 +1441,27 @@ We then fit a model for likelihood of fever given
 \label{fig:symptomlik}
 \end{figure}
 
-The testing propensity likelihood
+First, we computed the probability of fever given COVID-19 positive test and hospitalization as well as COVID-19 positive test and no hospitalization.  We then computed the lieklihood of symptom given a COVID-19 positive test by weighting these two likelihoods by the fraction of COVID-19 positive hospitalizations to COVID-19 total positive cases per week.  Mean imputation of fever status for COVID-19 negative tests was performed based on the above model without use of hospitalization data.
 
+Based on mean-imputation of COVID-19 fever using hospitalization records indicators, we can use the proposed pseudo-likelihood approach to compute the likelihood of getting tested for COVID-19 given age, ethnicity, race, gender, and fever status.  Figure~\ref{fig:testinglik1_mainpaper} and~\ref{fig:testinglik1_mainpaper} in Section~\ref{section:tvipw} of the manuscript plots the likelihood of testing given fever and no fever respectfully for all age ranges.  We see that the likelihood is time-varying and depends heavily on both fever status.
 
-\begin{figure}[!th]
-\centering
-\begin{subfigure}{.5\textwidth}
- \centering
- \includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig1.png}
- \caption{COVID-10 Testing Likelihood Given Fever and COVID-19 Contact}
- \label{fig:testinglik1}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
- \centering
-\includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig2.png}
- \caption{Testing Propensity}
- \label{fig:testinglik2}
-\end{subfigure}
-\caption{COVID-10 Testing Likelihood Given no Fever nor COVID-19 Contact}
-\label{fig:testinglik}
-\end{figure}
+% \begin{figure}[!th]
+% \centering
+% \begin{subfigure}{.5\textwidth}
+%  \centering
+%  \includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig1.png}
+%  \caption{Testing Likelihood Given Fever}
+%  \label{fig:tvprop_alt_fig1.png}
+% \end{subfigure}%
+% \begin{subfigure}{.5\textwidth}
+%  \centering
+% \includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig2.png}
+%  \caption{Testing Propensity Given No Fever}
+%  \label{fig:tvprop_alt_fig2.png}
+% \end{subfigure}
+% \caption{COVID-10 Testing Likelihood Given no Fever nor COVID-19 Contact}
+% \label{fig:testinglik}
+% \end{figure}
 
 \section{Model-based: Prior specification}
 \label{app:modelbased}
@@ -1533,6 +1484,7 @@ For simplicity, we list the priors used in STAN below:
   \item \code{phi = 1/phi\_inv;}
   \item \code{xi = xi\_raw + 0.5;}
 \end{itemize}
+where \code{beta, eta, eta\_two, eta\_three} refer to the four values that form the time-varying parameter $\beta_t$ when combined with \code{xi, eta, eta\_two, eta\_three} in the SEIR model as described in Section~\ref{section:modelbased}.
 
 
 \end{document}
