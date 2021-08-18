@@ -37,6 +37,19 @@ prevalence_long$estimate = prevalence_long$prev * (prevalence_long$Method == "Un
 
 prevalence_long = data.frame(date = prevalence_long$date, Method = prevalence_long$Method, estimate = prevalence_long$estimate)
 
+for(method in c("Unweighted", "IPW1", "IPW2")) {
+  prevalence_temp = subset(prevalence_long, Method == method)
+  ratio = prevalence_temp$estimate[2:length(prevalence_temp$estimate)]/prevalence_temp$estimate[1:(length(prevalence_temp$estimate)-1)]
+  date = prevalence_temp$date[2:length(prevalence_temp$estimate)]
+  x = as.numeric(prevalence_temp$date - min(prevalence_temp$date))
+  smoothed_estimate = (predict(loess(prevalence_temp$estimate ~ x)))
+  ratio = smoothed_estimate[2:length(smoothed_estimate)]/smoothed_estimate[1:(length(smoothed_estimate)-1)]
+  ratio_temp = data.frame(date = date, Method = rep(method, length(date)), 
+                               estimate = ratio)
+}
+
+plot(prevalence_temp$date, prevalence_temp$estimate)
+lines(prevalence_temp$date, smoothed_estimate)
 
 prevalence_temp = readRDS("../data/aggregate_air.RDS")
 prevalence_temp = data.frame(date = prevalence_temp$date, Method = rep("Model-based", nrow(prevalence_temp)), 
@@ -64,3 +77,7 @@ ggplot(data = prevalence_long, aes(x = date, y = estimate, col = Method)) +
   scale_color_manual(values=wes_palette(n = 5, "IsleofDogs1"))
 
 dev.off()
+
+
+
+
