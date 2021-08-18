@@ -37,6 +37,8 @@ prevalence_long$estimate = prevalence_long$prev * (prevalence_long$Method == "Un
 
 prevalence_long = data.frame(date = prevalence_long$date, Method = prevalence_long$Method, estimate = prevalence_long$estimate)
 
+ratio_long = data.frame(date = rep(0,0), Method = rep(0,0), estimate = rep(0,0))
+
 for(method in c("Unweighted", "IPW1", "IPW2")) {
   prevalence_temp = subset(prevalence_long, Method == method)
   ratio = prevalence_temp$estimate[2:length(prevalence_temp$estimate)]/prevalence_temp$estimate[1:(length(prevalence_temp$estimate)-1)]
@@ -46,26 +48,40 @@ for(method in c("Unweighted", "IPW1", "IPW2")) {
   ratio = smoothed_estimate[2:length(smoothed_estimate)]/smoothed_estimate[1:(length(smoothed_estimate)-1)]
   ratio_temp = data.frame(date = date, Method = rep(method, length(date)), 
                                estimate = ratio)
+  ratio_long = rbind(ratio_long, ratio_temp)
 }
 
-plot(prevalence_temp$date, prevalence_temp$estimate)
-lines(prevalence_temp$date, smoothed_estimate)
 
+## ADD IN MODEL-BASED
 prevalence_temp = readRDS("../data/aggregate_air.RDS")
 prevalence_temp = data.frame(date = prevalence_temp$date, Method = rep("Model-based", nrow(prevalence_temp)), 
                              estimate = prevalence_temp$estimate)
-
+ratio = prevalence_temp$estimate[2:length(prevalence_temp$estimate)]/prevalence_temp$estimate[1:(length(prevalence_temp$estimate)-1)]
+date = prevalence_temp$date[2:length(prevalence_temp$estimate)]
+x = as.numeric(prevalence_temp$date - min(prevalence_temp$date))
+smoothed_estimate = (predict(loess(prevalence_temp$estimate ~ x)))
+ratio = smoothed_estimate[2:length(smoothed_estimate)]/smoothed_estimate[1:(length(smoothed_estimate)-1)]
+ratio_temp = data.frame(date = date, Method = rep("Model-based", length(date)), 
+                        estimate = ratio)
+ratio_long = rbind(ratio_long, ratio_temp)
 prevalence_long = rbind(prevalence_long, prevalence_temp)
 
+## ADD IN DOUBLY ROBUST
 prevalence_temp = readRDS("../data/drestimates_alt_071521.RDS")
 prevalence_temp = data.frame(date = dates, Method = rep("Doubly Robust", nrow(prevalence_temp)), 
                              estimate = prevalence_temp[,5])
-
+ratio = prevalence_temp$estimate[2:length(prevalence_temp$estimate)]/prevalence_temp$estimate[1:(length(prevalence_temp$estimate)-1)]
+date = prevalence_temp$date[2:length(prevalence_temp$estimate)]
+x = as.numeric(prevalence_temp$date - min(prevalence_temp$date))
+smoothed_estimate = (predict(loess(prevalence_temp$estimate ~ x)))
+ratio = smoothed_estimate[2:length(smoothed_estimate)]/smoothed_estimate[1:(length(smoothed_estimate)-1)]
+ratio_temp = data.frame(date = date, Method = rep("Doubly Robust", length(date)), 
+                        estimate = ratio)
+ratio_long = rbind(ratio_long, ratio_temp)
 prevalence_long = rbind(prevalence_long, prevalence_temp)
 
 
-## STILL NEED TO ADD DOUBLY ROBUST
-
+## FINAL FIGURES
 png(filename = "../figs/tv_air.png",
     width = 960, height = 480, units = "px", pointsize = 25)
 
@@ -77,6 +93,21 @@ ggplot(data = prevalence_long, aes(x = date, y = estimate, col = Method)) +
   scale_color_manual(values=wes_palette(n = 5, "IsleofDogs1"))
 
 dev.off()
+
+
+png(filename = "../figs/tv_air_ratio.png",
+    width = 960, height = 480, units = "px", pointsize = 25)
+
+ggplot(data = ratio_long, aes(x = date, y = estimate, col = Method)) +
+  geom_line(size = 2) +
+  labs(x = "Date",
+       y = "Active Infection Rate Estimate") + 
+  theme(text = element_text(size=25)) +
+  scale_color_manual(values=wes_palette(n = 5, "IsleofDogs1"))
+
+dev.off()
+
+
 
 
 

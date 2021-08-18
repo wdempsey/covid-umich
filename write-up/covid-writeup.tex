@@ -686,20 +686,27 @@ To check how well our model fits the observed data, a posterior predictive check
 
 Here, we construct active infection rate estimates using the unweighted, inverse-probability weighted, model-based, and doubly robust estimators.  Figure~\ref{fig:air} presents the results. The inverse-probability weighting methods do not significantly reduce bias compared to the unweighted estimates.  We conjecture this is due to the limited availability of symptom and other important covariates that may impact the likelihood an individual will get  tested. Our imputation strategies use available data to try and alleviate this issue; however, this suggests better data collection in the future may strongly improve the IPW estimates as seen in Section~\ref{section:ipwapproach} when analyzing the statewide sample from April 25th--29th.
 
-\textcolor{red}{
-While the model-based estimates appear more reasonable, note that the estimate on the last week of April is 0.25\% which is a severe underestimate. Caution is therefore warranted when interpreting these estimates.  We know that the age-specific infection fatality rate is likely time-varying and may vary by other factors beyond age.  Therefore, improvements could be made by more finely grained, and accurate IFR estimates; however, there is currently minimal publicly available data to do so.  Moreover, the (thankfully) low number of deaths per strata make uncertainty in these estimates quite high.  Finally, the doubly robust estimates appear similar to the IPW estimate.
-}
+While the model-based estimates appear more reasonable, note that the estimate on the last week of April is 0.25\% which is a severe underestimate compared to the estimated prevalence using the stratified random sample. Caution is therefore warranted when interpreting these estimates.  We know that the age-specific infection fatality rate is likely time-varying and may vary by other factors beyond age.  Therefore, improvements could be made by more finely grained, and accurate IFR estimates; however, there is currently minimal publicly available data to do so.  Moreover, the (thankfully) low number of deaths per strata make uncertainty in these estimates quite high.  Finally, the doubly robust estimates appear similar to the IPW estimate.
 
-\begin{figure}[!th]
+\begin{figure}
 \centering
-\includegraphics[width=.6\linewidth]{../figs/tv_air.png}
-\caption{Active Infection Rate Estimates}
-\label{fig:air}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../figs/tv_air.png}
+  \caption{Active Infection Rate Estimates}
+  \label{fig:air}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+ \centering
+ \includegraphics[width=.9\linewidth]{../figs/tv_air_ratio.png}
+ \caption{Ratio estimates}
+ \label{fig:air_ratio}
+\end{subfigure}
+\caption{Time-varying estimates based on unweighted, model-based, IPW and doubly robust methods.}
+\label{fig:tvestimates}
 \end{figure}
 
-\textcolor{red}{
-We also construct ratio and effective reproduction number estimates as discussed in Section XX. Figure XX presents the results.  Unweighted, IPW, and doubly robust estimates appear similar.  Recall the severe bias during the growth phase due to selection bias dicussed in SEction XX may imply the observed rates are severely overestimated between October 2020 and January 2021.  The model-based methods may be conservative in this time window.  A similar argument holds for the effective reproduction rate in Figure XXb.
-}
+We also construct ratio estimates as discussed in Section~\ref{section:rates}. Figure~\ref{fig:air_ratio} presents the results.  Unweighted, IPW, and doubly robust estimates appear similar.  Recall the severe bias during the growth phase due to selection bias dicussed in Section~\ref{section:rates} may imply the observed rates are  overestimated between October 2020 and January 2021.  The model-based methods may be as well.
 
 \section{Discussion}
 \label{section:discussion}
