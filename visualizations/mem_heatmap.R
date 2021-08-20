@@ -30,13 +30,17 @@ for(i in 1:length(seq_oddsratio)) {
 }
 
 result = data.frame(result)
-row.names(result) = round(seq_oddsratio,3)
-colnames(result) = round(seq_M,2)
+row.names(result) = round(seq_oddsratio,4)
+colnames(result) = round(seq_M,4)
 
-library("gplots")
 png(filename = "../figs/mem_heatmap.png",
-    width = 960, height = 960, units = "px", pointsize = 16)
-heatmap.2(as.matrix(result), col = bluered(100), dendrogram='none',
-          trace = "none", density.info = "none", Rowv=FALSE,
-          Colv=FALSE, key.xlab = "Relative Sampling Frequency", key.ylab = "Odds Ratio")
+    width = 960, height = 640, units = "px", pointsize = 16)
+par(mar = c(4,4,1,1)+0.1)
+contour( z = as.matrix(result),
+         y = log(seq_oddsratio),
+         x = seq_M, nlevels = 30,
+         xlab = "Relative Sampling Frequency (M)",
+         ylab = "Log Odds Ratio", bty = "n",
+         labcex = 0.9)
+axis(side =1, cex = 1.5); axis(side = 2, cex = 1.5)
 dev.off()
