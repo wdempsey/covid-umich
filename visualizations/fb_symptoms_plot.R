@@ -34,12 +34,12 @@ lines(date(numer$date[numer$gender == 2]), fitted(model.np)-1.96*se(model.np), l
 
 model.np <- npreg(y~x, regtype = 'll', bwmethod = 'cv.aic', gradients = TRUE, data = subset(tempdf, gender == 1))
 
-lines(date(numer$date[numer$gender == 1]), fitted(model.np), col = "red", lwd = 3)
+lines(date(numer$date[numer$gender == 1]), fitted(model.np), col = "grey50", lwd = 3)
 
-lines(date(numer$date[numer$gender == 1]), fitted(model.np)+1.96*se(model.np), lty = 2, col = "red")
-lines(date(numer$date[numer$gender == 1]), fitted(model.np)-1.96*se(model.np), lty = 2, col = "red")
+lines(date(numer$date[numer$gender == 1]), fitted(model.np)+1.96*se(model.np), lty = 2, col = "grey50")
+lines(date(numer$date[numer$gender == 1]), fitted(model.np)-1.96*se(model.np), lty = 2, col = "grey50")
 
-legend(date("2020-04-20"), 0.025, c("Male", "Female"), lty = c(1,1), col = c("black", "red"), cex = 0.75, bty = 'n')
+legend(date("2020-04-20"), 0.025, c("Male", "Female"), lwd = c(2,2), lty = c(1,1), col = c("black", "grey50"), cex = 1, bty = 'n')
 
 ## Age plot
 
@@ -64,14 +64,14 @@ lines(date(numerage$date[numerage$blockage == 1]), fitted(model.np)+se(model.np)
 lines(date(numerage$date[numerage$blockage == 1]), fitted(model.np)-se(model.np)*1.96, lty = 2)
 
 model.np <- npreg(y~x, regtype = 'll', bwmethod = 'cv.aic', gradients = TRUE, data = subset(tempdf, age == 2))
-lines(date(numerage$date[numerage$blockage == 2]), fitted(model.np), col = "red", lwd = 3)
-lines(date(numerage$date[numerage$blockage == 2]), fitted(model.np)+1.96*se(model.np), col = "red", lty = 2)
-lines(date(numerage$date[numerage$blockage == 2]), fitted(model.np)-1.96*se(model.np), col = "red", lty = 2)
+lines(date(numerage$date[numerage$blockage == 2]), fitted(model.np), col = "grey50", lwd = 3)
+lines(date(numerage$date[numerage$blockage == 2]), fitted(model.np)+1.96*se(model.np), col = "grey50", lty = 2)
+lines(date(numerage$date[numerage$blockage == 2]), fitted(model.np)-1.96*se(model.np), col = "grey50", lty = 2)
 
 model.np <- npreg(y~x, regtype = 'll', bwmethod = 'cv.aic', gradients = TRUE, data = subset(tempdf, age == 3))
-lines(date(numerage$date[numerage$blockage == 3]), fitted(model.np), col = "blue", lwd = 3)
-lines(date(numerage$date[numerage$blockage == 3]), fitted(model.np)+se(model.np)*1.96, col = "blue", lty = 2)
-lines(date(numerage$date[numerage$blockage == 3]), fitted(model.np)-se(model.np)*1.96, col = "blue", lty = 2)
+lines(date(numerage$date[numerage$blockage == 3]), fitted(model.np), col = "grey75", lwd = 3)
+lines(date(numerage$date[numerage$blockage == 3]), fitted(model.np)+se(model.np)*1.96, col = "grey75", lty = 2)
+lines(date(numerage$date[numerage$blockage == 3]), fitted(model.np)-se(model.np)*1.96, col = "grey75", lty = 2)
 
-legend(date("2020-04-20"), 0.025, c("18-44", "45-64", "65+"), lty = c(1,1), col = c("black", "red", "blue"), cex = 0.75, bty = 'n')
+legend(date("2020-04-20"), 0.025, c("18-44", "45-64", "65+"), lty = c(1,1), col = c("black", "grey50", "grey75"), cex = 1, bty = 'n', lwd = c(2,2,2))
 dev.off()
