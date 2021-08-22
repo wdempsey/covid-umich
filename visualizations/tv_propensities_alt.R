@@ -1,13 +1,15 @@
 library(lubridate)
 library(MMWRweek)
 library(ggplot2)
-library(wesanderson)
+library("RColorBrewer")
 
 propensities = readRDS("../data/smoothedpropensities_alt.RDS")
 
 propensities$date = MMWRweek::MMWRweek2Date(MMWRyear = propensities$year,
                                             MMWRweek = propensities$week,
                                             MMWRday = 1)
+
+my_palette <- brewer.pal(name="Greys",n=9)[3:(3+5)]
 
 ## Example propensity: Fever + Not H + White + Male + 35to44
 x = as.matrix(c(0,1,0,1,0,0,1,0,1,0,0,0,0), ncol = 1)
@@ -68,7 +70,7 @@ ggplot(data = propensities_long, aes(x = date, y = propensity, col = age)) +
        y = "COVID-19 Testing Propensity",
        title = "Non-Hispanic, White Male with Fever") +
   theme(text = element_text(size=25)) +
-  scale_color_manual(values=wes_palette(n = 6, "IsleofDogs1"))
+  scale_color_manual(values=my_palette)
 
 dev.off()
 
@@ -133,7 +135,7 @@ ggplot(data = propensities_long, aes(x = date, y = propensity, col = age)) +
        y = "COVID-19 Testing Propensity",
        title = "Non-Hispanic, White Male without Fever") +
   theme(text = element_text(size=25)) +
-  scale_color_manual(values=wes_palette(n = 6, "IsleofDogs1"))
+  scale_color_manual(values=my_palette)
 
 dev.off()
 

@@ -86,6 +86,7 @@ The proposed approach requires covariate information to be collected on individu
 \subsection{Related work}
 
 This article discusses the relationship between three statistical concepts: selection bias, measurement error, and population size.  We build on the work of \cite{Meng2018} who studied an error decomposition to understand the relationship between selection bias and population size.  In particular, we quantify the interaction between measurement-error and selection bias.  The sign and magnitude of the statistical decomposition can change drastically; the impact on the effective sample size can therefore be quite large.
+\textcolor{red}{Acknowledge selection bias and measurement error.}
 
 After demonstrating the limitations of case-count analysis when compared to random sampling, we then assess whether their is potential for combining the \emph{nonprobability samples} with \emph{probability samples} to improve point prevalence estimation. For any probability sampling design, the Horvitz-Thompson estimator~\citep{HT1952} incorporates design information via inverse-probability weights (IPW).  For nonprobability samples, the IPW estimator requires modelling the propensity scores.  Its use in the survey context is also referred to as the quasi-randomization approach~\citep{Elliott2017}. \cite{Valliant2011} consider a weighted logistic regression procedure using the pooled probability and nonprobability samples.  \cite{Chen2019} consider a pseudo-log-likelihood approach that uses the random samples as a proxy for a term in the log-likelihood.  Here, we extend this approach to account for measurement-error as well as random sampling at multiple times. We then provide an extension of the statistical error decomposition and discuss the trade-offs inherent in such a weighting approach.
 
@@ -138,7 +139,9 @@ Public databases most often, however, only contain aggregate information.  The J
 % https://www.regenstrief.org/covid-dashboard/
 %
 
+\begin{rmk}[Reporting Delays]
 
+\end{rmk}
 
 %https://www.npr.org/sections/goatsandsoda/2020/05/31/865932474/should-i-get-tested-for-coronavirus-just-for-the-heck-of-it
 
@@ -656,7 +659,7 @@ To make the approach concrete, Figure~\ref{fig:testinglik_mainpaper} presents th
 \subsection{Application of SEIR model}
 \label{section:application_of_modelbased}
 
-Here we consider the multinomial SEIR model using observed death data as presented in Figure~\ref{fig:in-deaths}. The model, presented in Section~\ref{section:modelbased}, requires infection fatality rates to be specified per-strata.  In this paper, similar to~\cite{Johndrow2020}, we specify fixed per-strata infection fatality rates. Based on published age-specific IFRs~\cite{Levin2020}, Figure~\ref{fig:logifr} shows that IFR seems to closely follow a log-linear relationship with age. Combining across published age-specific IFRs, Table~\ref{tab:ifrperage} presents estimates of the average IFR within each strata using the age-distribution.
+Here we consider the multinomial SEIR model using observed death data as presented in Figure~\ref{fig:in-deaths}. The model, presented in Section~\ref{section:modelbased}, requires infection fatality rates to be specified per-strata.  In this paper, similar to~\cite{Johndrow2020}, we specify fixed per-strata infection fatality rates. Based on published age-specific IFRs~\cite{Levin2020}, IFR closely follows a log-linear relationship with age. Combining across published age-specific IFRs, Table~\ref{tab:ifrperage} presents estimates of the average IFR within each strata using the age-distribution.
 \begin{table}[!th]
 \begin{tabular}{c | c c c c c c c c}
 Age Strata & 0-19 & 20-29 & 30-39 & 40-49 & 50-59 & 60-69 & 70-79 & 80+ \\ \hline
@@ -671,7 +674,7 @@ The SEIR model in equation~\eqref{eq:seir} is extended to allow for time-varying
 $$
 \beta_t = \sum_{k=1}^{3} \left(\beta_{k-1} (1-w^{(k)}_t ) + \beta_{k} w_t\right),\quad w^{(k)}_t = (1 + \exp \left( -\xi (t - t_k - \nu) \right))^{-1}
 $$
-where $\nu \geq 0$ is the potential delay and $\xi$ is the rate of change.  Each weight~$w_t^{(k)} = 0$ for $t < t_k$ and $w_t^{(k)} \to 1$ as $t \to \infty$. See Section~\ref{app:modelbased} in the supplementary materials for details on prior specification.
+where $\nu \geq 0$ is the potential delay and $\xi$ is the rate of change.  Each weight~$w_t^{(k)} = 0$ for $t < t_k$ and $w_t^{(k)} \to 1$ as $t \to \infty$. See Section~\ref{app:prior_modelbased} in the supplementary materials for details on prior specification.
 
 To check how well our model fits the observed data, a posterior predictive check on aggregate death counts was performed. Figure~\ref{fig:deathsppc} shows the results which suggests chosen SEIR model fits the observed data well.  The model produces age-specific case counts which can then be used for model-based estimation of the active infection rate as well as in constructing the doubly robust estimator.
 
@@ -740,6 +743,8 @@ A valid criticism of the proposed approach is that recording covariates on every
 \end{equation*}
 Here, $I_j^{(2)}$ is an indicator that the individual is in the probability subsample and $W_j^{(2)}$ is the probability of inclusion.  Estimation proceeds by maximizing the pseudo-likelihood which now depends on random sampling in both the first and second term.  This would allow for rapid testing and minimizes cost of covariate collection.
 
+\newpage
+\textcolor{red}{Fix references!}
 \bibliographystyle{plain}
 \bibliography{covid-refs}
 
@@ -1008,7 +1013,7 @@ We also present the same plot under $FP = 0.024$ and $FN = 0.13$ to show the imp
 \end{table}
 
 For binary outcomes, we have
-\begin{equation} \label{eq:binaryrho}
+\begin{equation} \label{eq:weightedbinaryrho}
 \rho_{\tilde I (X),Y} = \tilde \Delta \sqrt{\frac{\bar Y (1 - \bar Y)}{f (1-f) \text{E}(W_J \mid I_J = 1)^2 + f \text{Var}(W_J \mid I_J = 1)} }
 \end{equation}
 
@@ -1445,7 +1450,7 @@ This model uses hospitalization records to try and improve our mean-imputation s
  \label{fig:symptomlik2_model2}
 \end{subfigure}
 \caption{Likelihood of COVID-19 contact}
-\label{fig:symptomlik}
+\label{fig:symptomlik_model2}
 \end{figure}
 
 First, we computed the probability of fever given COVID-19 positive test and hospitalization as well as COVID-19 positive test and no hospitalization.  We then computed the lieklihood of symptom given a COVID-19 positive test by weighting these two likelihoods by the fraction of COVID-19 positive hospitalizations to COVID-19 total positive cases per week.  Mean imputation of fever status for COVID-19 negative tests was performed based on the above model without use of hospitalization data.
@@ -1471,7 +1476,7 @@ Based on mean-imputation of COVID-19 fever using hospitalization records indicat
 % \end{figure}
 
 \section{Model-based: Prior specification}
-\label{app:modelbased}
+\label{app:prior_modelbased}
 
 For simplicity, we list the priors used in STAN below:
 \begin{itemize}

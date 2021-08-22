@@ -1,5 +1,5 @@
 ## Libraries and Colors
-library(wesanderson)
+library("RColorBrewer")
 library(tidyverse)
 library(tidybayes)
 library(gridExtra)
@@ -11,6 +11,7 @@ c_mid <- c("#fc9272")
 c_dark <- c("#de2d26")
 c_posterior = "orange"
 c_prior = "aquamarine2"
+my_palette <- brewer.pal(name="Greys",n=9)[7]
 
 ## Death model
 df_coviddeath <- readRDS("../data/dailycoviddata.RDS")
@@ -51,7 +52,7 @@ smr_pred <- cbind(agg_deaths,
 colnames(smr_pred) <- make.names(colnames(smr_pred)) # to remove % in the col names
 smr_pred$date = date(dates)
 smr_pred = smr_pred[smr_pred$date < "2021-02-01",]
-c_posterior = "orange"
+c_posterior = my_palette # "orange"
 
 
 ggplot(smr_pred, mapping = aes(x = date)) +

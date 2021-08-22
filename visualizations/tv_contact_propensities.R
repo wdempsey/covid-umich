@@ -1,3 +1,4 @@
+library("RColorBrewer")
 library(lubridate)
 library(MMWRweek)
 library(ggplot2)
@@ -8,6 +9,8 @@ propensities_neg$date = MMWRweek::MMWRweek2Date(MMWRyear = propensities_neg$year
                                                 MMWRday = 1)
 names(propensities_neg) = c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
                             "55to64", "65to74", "75plus", "date")
+
+my_palette <- brewer.pal(name="Greys",n=9)[c(5,9)]
 
 ## Example propensity: Gender + 25-34
 xfemale = as.matrix(c(0,1,1,0,0,0,0,0), ncol = 1)
@@ -29,6 +32,7 @@ ggplot(data = propensities_neg_long, aes(x = date, y = probs, col = Gender)) +
   labs(x = "Date",
        y = "Likelihood of Contact",
        title = "Individuals 25-34 tested negative in the past 24 hours") +
+  scale_color_manual(values = my_palette) +
   theme(text = element_text(size=25))
 
 dev.off()
@@ -61,6 +65,7 @@ ggplot(data = propensities_pos_long, aes(x = date, y = probs, col = Gender)) +
   labs(x = "Date",
        y = "Likelihood of Contact",
        title = "Individuals 25-34 tested positive in the past 24 hours") +
-  theme(text = element_text(size=25))
+  theme(text = element_text(size=25)) + 
+  scale_color_manual(values = my_palette)
 
 dev.off()

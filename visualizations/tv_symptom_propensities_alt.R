@@ -1,3 +1,4 @@
+library("RColorBrewer")
 library(lubridate)
 library(MMWRweek)
 library(ggplot2)
@@ -29,6 +30,7 @@ ggplot(data = propensities_neg_long, aes(x = date, y = probs, col = Gender)) +
   labs(x = "Date",
        y = "Likelihood of Fever",
        title = "Individuals 35-44 tested negative in the past 24 hours")+ 
+  scale_color_manual(values = my_palette) +
   theme(text = element_text(size=25))
 
 dev.off()
@@ -61,6 +63,7 @@ ggplot(data = propensities_pos_long, aes(x = date, y = probs, col = Hospitalized
   labs(x = "Date",
        y = "Likelihood of Fever",
        title = "Individuals 35-44 tested positive in the past 24 hours") + 
+  scale_color_manual(values = my_palette) +
   theme(text = element_text(size=25))
 
 dev.off()

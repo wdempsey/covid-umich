@@ -33,7 +33,7 @@ df_case_counts %>%
   ggplot() + 
   geom_bar(mapping = aes(x = date, y = covid_count, fill = Age), stat = "identity") +
   labs(y="COVID-19 Reported Cases", x = "Date") + 
-  scale_x_date(date_breaks = "months" , date_labels = "%b-%y") +
+  scale_x_date(date_breaks = "3 month" , date_labels = "%b-%y") +
   # geom_vline(aes(xintercept = date(date_switch)), size = 1.5, linetype="dotted") + 
   # geom_vline(aes(xintercept = date(date_switch_two)), size = 1.5, linetype="dotted") + 
   # geom_vline(aes(xintercept = date(date_switch_three)), size = 1.5, linetype="dotted") +
@@ -49,7 +49,7 @@ df_case_counts %>%
   ggplot() + 
   geom_bar(mapping = aes(x = date, y = covid_test, fill = Age), stat = "identity") +
   labs(y="COVID-19 Reported Tests", x = "Date") + 
-  scale_x_date(date_breaks = "months" , date_labels = "%b-%y") +
+  scale_x_date(date_breaks = "3 months" , date_labels = "%b-%y") +
   # geom_vline(aes(xintercept = date(date_switch)), size = 1.5, linetype="dotted") + 
   # geom_vline(aes(xintercept = date(date_switch_two)), size = 1.5, linetype="dotted") + 
   # geom_vline(aes(xintercept = date(date_switch_three)), size = 1.5, linetype="dotted") +
@@ -65,7 +65,7 @@ df_case_counts %>%
   ggplot() + 
   geom_bar(mapping = aes(x = date, y = covid_deaths, fill = Age), stat = "identity") +
   labs(y="COVID-19 Reported Tests", x = "Date") + 
-  scale_x_date(date_breaks = "months" , date_labels = "%b-%y") +
+  scale_x_date(date_breaks = "3 months" , date_labels = "%b-%y") +
   # geom_vline(aes(xintercept = date(date_switch)), size = 1.5, linetype="dotted") + 
   # geom_vline(aes(xintercept = date(date_switch_two)), size = 1.5, linetype="dotted") + 
   # geom_vline(aes(xintercept = date(date_switch_three)), size = 1.5, linetype="dotted") +
