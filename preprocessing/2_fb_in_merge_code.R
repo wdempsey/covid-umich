@@ -2,7 +2,7 @@
 ## (1) Cleaned Facebook Data
 ## (2) Cleaned Weekly Indiana Data
 ## Outputs:
-## (1) Collaping down to FEVER only
+## (1) Collapsing down to CONTACT + FEVER only
 
 library("lubridate")
 
@@ -26,7 +26,7 @@ for (week in weeksin2020) {
   temp = fb_data[week(fb_data$date) == week & year(fb_data$date) == 2020,]
   temp = subset(temp, is.element(gender, c(1,2)))
   total_weight = sum(temp$weight)
-  agg_temp = aggregate(weight ~ gender+ age + symptoms + contact, temp, sum)
+  agg_temp = aggregate(weight ~ gender+ age + fever + contact, temp, sum)
   agg_temp$weight = agg_temp$weight/sum(agg_temp$weight) * total_weight * addweight
   agg_temp$week = rep(week, nrow(agg_temp))
   agg_temp$year = rep(2020, nrow(agg_temp))
@@ -40,14 +40,14 @@ for (week in weeksin2021) {
   temp = fb_data[week(fb_data$date) == week & year(fb_data$date) == 2021,]
   temp = subset(temp, is.element(gender, c(1,2)))
   total_weight = sum(temp$weight)
-  agg_temp = aggregate(weight ~ gender+ age + symptoms + contact, temp, sum)
+  agg_temp = aggregate(weight ~ gender+ age + fever + contact, temp, sum)
   agg_temp$weight = agg_temp$weight/sum(agg_temp$weight) * total_weight * addweight
   agg_temp$week = rep(week, nrow(agg_temp))
   agg_temp$year = rep(2021, nrow(agg_temp))
   all_data = rbind(all_data, agg_temp)
 }
 
-aggregate(weight~week, all_data, sum)
+aggregate(weight~week, all_data, sum) #sanity check on non-timevarying populations
 
 
 
