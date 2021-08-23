@@ -2,7 +2,7 @@
 ## (1) Cleaned Facebook Data
 ## (2) Cleaned Weekly Indiana Data
 ## Outputs:
-## (1) Collaping down to FEVER only
+## (1) Collapsing down to Symptom and Contact only
 
 library("lubridate")
 
@@ -39,8 +39,8 @@ for (week in weeksin2020) {
   agg_temp$year = rep(2020, nrow(agg_temp))
   all_data_neg_contact = rbind(all_data_neg_contact, agg_temp)
   
-  ## Adding fever given contact
-  temp$weightsymptoms =  temp$weight * temp$fever
+  ## Adding symptoms given contact
+  temp$weightsymptoms =  temp$weight * temp$symptoms
   total_weight = sum(temp$weight[temp$gottested ==1 & temp$postest == 0], na.rm = TRUE)
   total_weightsymptoms = sum(temp$weightsymptoms[temp$gottested ==1 & temp$postest == 0], na.rm = TRUE)
   agg_temp = aggregate(weightsymptoms ~ gender+ age + contact, subset(temp, gottested == 1 & postest == 0), sum)
@@ -64,8 +64,8 @@ for (week in weeksin2020) {
   agg_temp$year = rep(2020, nrow(agg_temp))
   all_data_pos_contact = rbind(all_data_pos_contact, agg_temp)
   
-  ## Adding fever given contact
-  temp$weightsymptoms =  temp$weight * temp$fever
+  ## Adding symptoms given contact
+  temp$weightsymptoms =  temp$weight * temp$symptoms
   total_weight = sum(temp$weight[temp$postest == 1], na.rm = TRUE)
   total_weightsymptoms = sum(temp$weightsymptoms[temp$postest == 1], na.rm = TRUE)
   agg_temp = aggregate(weightsymptoms ~ gender+ age + contact, subset(temp, postest == 1), sum)
@@ -98,8 +98,8 @@ for (week in weeksin2021) {
   agg_temp$year = rep(2021, nrow(agg_temp))
   all_data_neg_contact = rbind(all_data_neg_contact, agg_temp)
   
-  ## Adding fever given contact
-  temp$weightsymptoms =  temp$weight * temp$fever
+  ## Adding symptoms given contact
+  temp$weightsymptoms =  temp$weight * temp$symptoms
   total_weight = sum(temp$weight[temp$gottested ==1 & temp$postest == 0], na.rm = TRUE)
   total_weightsymptoms = sum(temp$weightsymptoms[temp$gottested ==1 & temp$postest == 0], na.rm = TRUE)
   agg_temp = aggregate(weightsymptoms ~ gender+ age + contact, subset(temp, gottested == 1 & postest == 0), sum)
@@ -123,8 +123,8 @@ for (week in weeksin2021) {
   agg_temp$year = rep(2021, nrow(agg_temp))
   all_data_pos_contact = rbind(all_data_pos_contact, agg_temp)
   
-  ## Adding fever given contact
-  temp$weightsymptoms =  temp$weight * temp$fever
+  ## Adding symptoms given contact
+  temp$weightsymptoms =  temp$weight * temp$symptoms
   total_weight = sum(temp$weight[temp$postest == 1], na.rm = TRUE)
   total_weightsymptoms = sum(temp$weightsymptoms[temp$postest == 1], na.rm = TRUE)
   agg_temp = aggregate(weightsymptoms ~ gender+ age + contact, subset(temp, postest == 1), sum)

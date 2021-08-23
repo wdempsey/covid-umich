@@ -9,22 +9,22 @@ indiana_data = read.csv("../data/fb_indiana_data.csv")
 
 indiana_data$symptoms = (indiana_data$fever & (indiana_data$cough | indiana_data$shortness | indiana_data$diffbreath))
 
-indiana_data$weightedfever = (indiana_data$fever) * indiana_data$weight
+indiana_data$weightedsymptoms = (indiana_data$symptoms) * indiana_data$weight
 png(filename = "../figs/fbcovid19symptoms.png",
     width = 960, height = 480, units = "px", pointsize = 12)
 par(mfrow = c(1,2), mar = c(4,4,0.5,1)+0.1)
 
 denom = aggregate(weight ~ date + gender, data = indiana_data, sum)
 
-numer = aggregate(weightedfever ~ date + gender, data = indiana_data, sum)
+numer = aggregate(weightedsymptoms ~ date + gender, data = indiana_data, sum)
 
-tempdf = data.frame('x' = difftime(date(numer$date), "2020-01-01"), 'y' = numer$weightedfever/denom$weight, 'gender' = denom$gender)
+tempdf = data.frame('x' = difftime(date(numer$date), "2020-01-01"), 'y' = numer$weightedsymptoms/denom$weight, 'gender' = denom$gender)
 tempdf$x = as.vector(tempdf$x)
 
 model.np <- npreg(y~x, regtype = 'll', bwmethod = 'cv.aic', gradients = TRUE, data = subset(tempdf, gender == 2))
 
 plot(date(numer$date[numer$gender == 2]), fitted(model.np), type = "l", 
-     bty= 'n', axes = FALSE, ylab = "Reported Fever", xlab = "Date",
+     bty= 'n', axes = FALSE, ylab = "Reported COVID-19 Symptoms", xlab = "Date",
      ylim = c(0.0,0.030), lwd = 3)
 axis.Date(1, at=seq(min(date(numer$date[numer$gender == 2])), max(date(numer$date[numer$gender == 2])), by="months"), format="%b")
 axis(side = 2)
@@ -47,9 +47,9 @@ indiana_data$blockage = is.element(indiana_data$age, c(1,2,3)) + 2* is.element(i
 
 denomage = aggregate(weight ~ date + blockage, data = subset(indiana_data, blockage != 0), sum)
 
-numerage = aggregate(weightedfever ~ date + blockage, data = subset(indiana_data, blockage != 0), sum)
+numerage = aggregate(weightedsymptoms ~ date + blockage, data = subset(indiana_data, blockage != 0), sum)
 
-tempdf = data.frame('x' = difftime(date(numerage$date), "2020-01-01"), 'y' = numerage$weightedfever/denomage$weight, 'age' = denomage$blo)
+tempdf = data.frame('x' = difftime(date(numerage$date), "2020-01-01"), 'y' = numerage$weightedsymptoms/denomage$weight, 'age' = denomage$blo)
 tempdf$x = as.vector(tempdf$x)
 
 model.np <- npreg(y~x, regtype = 'll', bwmethod = 'cv.aic', gradients = TRUE, data = subset(tempdf, age == 1))
