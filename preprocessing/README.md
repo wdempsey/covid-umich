@@ -5,9 +5,9 @@ This folder contains all pre-processing code.  Each step may have inputs from pr
 ## Prepare Facebook symptom survey and Indiana case count data
 | <img height=0 width=800> File Name <img height=0 width=800> | <img height=0 width=1000> Brief Description <img height=0 width=1000> |
 |:-----------------------------:|:-----------------------------------------------------------------------|
-| [`1_fb_cleaning.R`](./preprocessing/1_fb_clearning) | Builds Indiana only Facebook dataset |
-| [`1_indiana_cleaning.R`](./preprocessing/1_fb_clearning) | Cleans the Indiana data to calculate weekly tests and counts per age, gender, ethnicity, and race. |
-| [`./preprocessing/1_indiana_cleaning.R`](./preprocessing/1_fb_clearning) | Cleans the Indiana data to calculate weekly tests and counts per age, gender, ethnicity, and race. |
+| [`1_fb_cleaning.R`](./1_fb_clearning) | Builds Indiana only Facebook dataset |
+| [`1_indiana_cleaning.R`](./1_fb_clearning) | Cleans the Indiana data to calculate weekly tests and counts per age, gender, ethnicity, and race. |
+| [`./preprocessing/1_indiana_cleaning.R`](./1_fb_clearning) | Cleans the Indiana data to calculate weekly tests and counts per age, gender, ethnicity, and race. |
 
 To run this set of code, simply run `bash clean.sh` in the pre-processing folder.  This will generate all the cleaned files and prepare 
 
