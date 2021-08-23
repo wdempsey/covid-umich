@@ -128,7 +128,7 @@ axis(side =1, labels = FALSE)
 axis(side =2, cex.axis = 1)
 mtext(expression(Y[t]/Y[t-1]), side =2, line = 2, cex = 1.5)
 mtext("Time", side = 1, line = 1, cex = 1.5)
-legend(35, 3.0, legend = c("M=1", "M=2", "M=3", "M=4"), lty = c(1,2,2,3), col = c("black", "black", "grey50", "grey50"), cex = 1.5, bty = "n", lwd = c(1,1,2,2))
+legend(35, 4.0, legend = c("M=1", "M=2", "M=3", "M=4"), lty = c(1,2,2,3), col = c("black", "black", "grey50", "grey50"), cex = 1.5, bty = "n", lwd = c(1,1,2,2))
 dev.off()
 
 ## Recompute bias for new only
