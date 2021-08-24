@@ -1,8 +1,17 @@
-## Simulation and data analysis scripts
+# Step-by-step instructions
 
-| <img height=0 width=1000> File Name <img height=0 width=1000> | <img height=0 width=1000> Brief Description <img height=0 width=1000> |
+This folder contains all methods code.  Each step has inputs from prior `pre-processing` and therefore a step-by-step set of instructions is listed below concerning sequence of fitting the models and cleaning the data.
+
+## Model 1: preprocessing
+
+We first build the imputation models for contact and then fever status given demographics and testing.
+
+| <img height=0 width=800> File Name <img height=0 width=800> | <img height=0 width=1000> Brief Description <img height=0 width=1000> |
 |:-----------------------------:|:-----------------------------------------------------------------------|
-| [`us_testing.ipynb`](https://github.com/wdempsey/covid-umich/new/master/methods/us_testing.ipynb) | Plots of State and Country Level testing and data quality calculation|
-| [`mem_heatmap.R`](https://github.com/wdempsey/sense2stop-lvm/blob/master/methods/mem_heatmap.R) | Builds a heatmap of the imperfect testing adjustment as a function of relative frequency and odds ratio |
-| [`sir_example.R`](https://github.com/wdempsey/sense2stop-lvm/blob/master/methods/sir_example.R) | Estimates potential bias in the ratio and effective reproductive rate estimators for output from an SIR model  |
+| [`3_feverfb_cleaning.R`](./3_feverfb_cleaning.R) | Extracts individuals who state they live in Indiana from FB dataset |
+| [`3_feverfb_merge.R`](./3_feverfb_merge.R) | Generates weekly FB weights x contact by demographic and test outcome as well as FB weights x symptoms by same + contact. |
+| [`3_feverfb--preproc.R`](./1_fb_clearning) | Incorporates ethnicity into the weights x outcome files |
+
+After running pre-processing, fit the imputation models using [`1_contact_propensity_estimation.R`](../methods/1_contact_propensity_estimation.R) and [`1_symptom_propensity_estimation.R`](../methods/1_symptom_propensity_estimation.R) respectively.
+
 
