@@ -22,12 +22,3 @@ Cleaning here is used in the first imputation method which calculates probabilit
 After running pre-processing, fit the imputation models using [`1_contact_propensity_estimation.R`](../methods/1_contact_propensity_estimation.R) and [`1_symptom_propensity_estimation.R`](../methods/1_symptom_propensity_estimation.R) respectively.
 
 
-## Model 2: preprocessing
-| <img height=0 width=800> File Name <img height=0 width=800> | <img height=0 width=1000> Brief Description <img height=0 width=1000> |
-|:-----------------------------:|:-----------------------------------------------------------------------|
-| [`1_fb_cleaning.R`](./preprocessing/1_fb_clearning) | Builds single  the FB data . |
-| [`./preprocessing/1_indiana_cleaning.R`](./preprocessing/1_fb_clearning) | Cleans the FB data . |
-
-To run this set of code, simply run `bash clean.sh` in the pre-processing folder.  This will generate all the cleaned files and prepare 
-
-
