@@ -30,8 +30,8 @@ png(filename = "../figs/tvprop_symptom_fig1.png",
 ggplot(data = propensities_neg_long, aes(x = date, y = probs, col = Contact)) +
   geom_point(size=5) +
   labs(x = "Date",
-       y = "Likelihood of Fever",
-       title = "Male Individuals 35-44 tested negative in the past 24 hours") + 
+       y = "Likelihood of Symptoms",
+       title = "Male, 35-44, Negative Test") + 
   scale_color_manual(values = my_palette) +
   theme(text = element_text(size=25))
 
@@ -63,8 +63,8 @@ png(filename = "../figs/tvprop_symptom_fig2.png",
 ggplot(data = propensities_pos_long, aes(x = date, y = probs, col = Contact)) +
   geom_point(size=5) +
   labs(x = "Date",
-       y = "Likelihood of Fever",
-       title = "Female individuals 35-44 tested positive in the past 24 hours") +
+       y = "Likelihood of Symptoms",
+       title = "Female, 35-44, Positive Test") +
   scale_color_manual(values = my_palette) +
   theme(text = element_text(size=25))
 

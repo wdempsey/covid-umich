@@ -31,7 +31,7 @@ ggplot(data = propensities_neg_long, aes(x = date, y = probs, col = Gender)) +
   geom_point(size = 5) +
   labs(x = "Date",
        y = "Likelihood of Contact",
-       title = "Individuals 25-34 tested negative in the past 24 hours") +
+       title = "Individuals 25-34, Negative Test") +
   scale_color_manual(values = my_palette) +
   theme(text = element_text(size=25))
 
@@ -64,7 +64,7 @@ ggplot(data = propensities_pos_long, aes(x = date, y = probs, col = Gender)) +
   geom_point(size = 5) +
   labs(x = "Date",
        y = "Likelihood of Contact",
-       title = "Individuals 25-34 tested positive in the past 24 hours") +
+       title = "Individuals 25-34, Positive Test") +
   theme(text = element_text(size=25)) + 
   scale_color_manual(values = my_palette)
 
