@@ -16,13 +16,10 @@ year = {2020}}
 
 If there are steps to run the code list them as follows: 
 
-0. Dependencies: all code is developed in Python using [Anaconda](https://anaconda.org/about).
-* The Anaconda environment can be installed using [covid.yml](./bayesian.yml). See [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file) for instructions on creating the environment.  Simply open Anaconda shell, open to github repo and run:
-```
-conda env create -f covid.yml
-```
+0. Dependencies: all code is developed in R.
 1. Datasets and exploratory data analysis
-* World testing data is accessed [here](https://ourworldindata.org/covid-testing) and country population totals is accessed [here](https://www.worldometers.info/world-population/population-by-country/)
-* US testing data is accessed [here](https://covidtracking.com/) and US population totals is accessed [here](https://www.census.gov/data/datasets/time-series/demo/popest/2010s-state-total.html).  For AS, GU, MP, and VI are extracted from [here](https://www.google.com/publicdata/explore?ds=d5bncppjof8f9_&met_y=sp_pop_totl&idim=country:ASM:VIR:MNP&hl=en&dl=en)
+* [Indiana case count data](https://hub.mph.in.gov/dataset?q=COVID)
+* [Facebook Symptom Survey](https://dataforgood.fb.com/docs/covid-19-symptom-survey-request-for-data-access/) 
+* [Random Sample from Indiana](https://www.cdc.gov/mmwr/volumes/69/wr/mm6929e1.htm)
 2. The [methods directory](/methods) contains all relevant code to this project.
 4. Final reports can be found in [the write-up directory](/write-up)
