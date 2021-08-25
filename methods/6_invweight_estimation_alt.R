@@ -32,6 +32,8 @@ indiana_data$invweight = invweight
 
 current_week = 48
 current_year = 2020
+FP = 0.024
+FN = 0.13
 
 weeks = c(14:53,1:5)
 years = c(rep(2020, length = length(c(14:53))),rep(2021, length = length(1:5)))
@@ -46,9 +48,9 @@ for(i in 1:length(weeks)) {
   weights = indiana_data$invweight[which(indiana_data$week == current_week & indiana_data$year == current_year)]
   results[i,1] = current_week
   results[i,2] = current_year
-  results[i,3] = sum(current_counts)/sum(current_tests)
-  results[i,4] = sum(current_counts*weights)/sum(current_tests*weights)
+  results[i,3] = (sum(current_counts)/sum(current_tests)-FP)/(1-FP-FN)
+  results[i,4] = (sum(current_counts*weights)/sum(current_tests*weights)-FP)/(1-FP-FN)
 }
 
-saveRDS(results, "../data/invweights_alt_071521.RDS")
+saveRDS(results, "../data/invweights_alt_08252021.RDS")
 
