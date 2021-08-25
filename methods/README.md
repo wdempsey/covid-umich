@@ -61,5 +61,5 @@ We first build the imputation models for contact and then fever status given dem
 | <img height=0 width=800> File Name <img height=0 width=800> | <img height=0 width=1000> Brief Description <img height=0 width=1000> |
 |:-----------------------------:|:-----------------------------------------------------------------------|
 | [`7_indiana_randomsample_analysis.R`](./7_indiana_randomsample_analysis.R) | Detailed analysis of the Indiana random sample from Yiannoutsos et al. (2021)  |
-| [`11_effss_calcs.R`](./11_effss_calcs.R) | Estimates effective sample size for choices of prevalence and relative sampling rates given in Appendix B.7  |
+| [`10_effss_calcs.R`](./11_effss_calcs.R) | Estimates effective sample size for choices of prevalence and relative sampling rates given in Appendix B.7  |
 
