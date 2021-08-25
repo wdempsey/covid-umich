@@ -10,6 +10,8 @@ propensities_neg$date = MMWRweek::MMWRweek2Date(MMWRyear = propensities_neg$year
 names(propensities_neg) = c("week", "year", "gender1", "gender2", "25to34", "35to44", "45to54",
                             "55to64", "65to74", "75plus", "date")
 
+my_palette <- brewer.pal(name="Greys",n=9)[c(4,6)]
+
 ## Example propensity: Fever + Not H + White + Male
 xmale =   as.matrix(c(1,0,0,1,0,0,0,0), ncol = 1)
 xfemale =   as.matrix(c(0,1,0,1,0,0,0,0), ncol = 1)
@@ -28,8 +30,8 @@ png(filename = "../figs/tvprop_symptom_alt_fig1.png",
 ggplot(data = propensities_neg_long, aes(x = date, y = probs, col = Gender)) +
   geom_point(size = 5) +
   labs(x = "Date",
-       y = "Likelihood of Fever",
-       title = "Individuals 35-44 tested negative in the past 24 hours")+ 
+       y = "Likelihood of Symptoms",
+       title = "Individuals 35-44, Negative Test")+ 
   scale_color_manual(values = my_palette) +
   theme(text = element_text(size=25))
 
@@ -61,8 +63,8 @@ png(filename = "../figs/tvprop_symptom_alt_fig2.png",
 ggplot(data = propensities_pos_long, aes(x = date, y = probs, col = Hospitalized)) +
   geom_point(size = 5) +
   labs(x = "Date",
-       y = "Likelihood of Fever",
-       title = "Individuals 35-44 tested positive in the past 24 hours") + 
+       y = "Likelihood of Symptoms",
+       title = "Individuals 35-44, Positive test") + 
   scale_color_manual(values = my_palette) +
   theme(text = element_text(size=25))
 

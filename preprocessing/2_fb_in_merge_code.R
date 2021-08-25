@@ -47,7 +47,8 @@ for (week in weeksin2021) {
   all_data = rbind(all_data, agg_temp)
 }
 
-aggregate(weight~week, all_data, sum) #sanity check on non-timevarying populations
+temp_weeklyweight = aggregate(weight~week, all_data, sum) #sanity check on non-timevarying populations
+
 
 
 

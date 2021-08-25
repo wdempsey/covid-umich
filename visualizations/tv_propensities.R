@@ -19,8 +19,8 @@ ggplot(data = propensities, aes(x = date, y = probs)) +
   geom_point(size = 5) +
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
-       title = "35-44 year old non-Hispanic, White Male with Fever and COVID-19 Contact") + 
-  theme(text = element_text(size=25))
+       title = "35-44, non-Hispanic, White Male with Symptom and COVID-19 Contact") + 
+  theme(text = element_text(size=15))
 
 dev.off()
 
@@ -36,7 +36,7 @@ ggplot(data = propensities, aes(x = date, y = probs)) +
   geom_point(size = 5) +
   labs(x = "Date",
        y = "Testing Propensity",
-       title = "65-74 year old non-Hispanic, White Female without fever nor COVID-19 Contact") +
-  theme(text = element_text(size=25))
+       title = "65-74, non-Hispanic, White Female without symptoms nor COVID-19 Contact") +
+  theme(text = element_text(size=15))
 
 dev.off()
