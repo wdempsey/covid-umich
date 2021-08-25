@@ -10,7 +10,6 @@ model = ~ -1+as.factor(symptoms) + as.factor(gender) + ethnicity + race + as.fac
 indiana_X = model.matrix(model, indiana_data)
 
 library(lubridate)
-indiana_data$startdate = ymd(indiana_data$startdate)
 indiana_data$week = week(indiana_data$startdate)
 indiana_data$year = year(indiana_data$startdate)
 
@@ -46,6 +45,9 @@ for(i in 1:length(weeks)) {
   current_counts = indiana_data$covid_counts[which(indiana_data$week == current_week & indiana_data$year == current_year)]
   current_tests = indiana_data$covid_tests[which(indiana_data$week == current_week & indiana_data$year == current_year)]
   weights = indiana_data$invweight[which(indiana_data$week == current_week & indiana_data$year == current_year)]
+  clip_value = quantile(weights,0.80)
+  clipped_weights = weights
+  clipped_weights[weights>=clip_value] = clip_value
   results[i,1] = current_week
   results[i,2] = current_year
   results[i,3] = (sum(current_counts)/sum(current_tests)-FP)/(1-FP-FN)
