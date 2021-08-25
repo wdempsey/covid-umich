@@ -38,3 +38,10 @@ After running pre-processing, fit the imputation models using [`4_symptom_neg_pr
 
 
 
+## Model 3: Death modeling pre-processing
+
+| <img height=0 width=800> File Name <img height=0 width=800> | <img height=0 width=1000> Brief Description <img height=0 width=1000> |
+|:-----------------------------:|:-----------------------------------------------------------------------|
+| [`6_in_death_cleaning.R`](./6_in_death_cleaning.R) | Generates weekly FB weights x symptoms by demographic and test outcome |
+| [`7_ifr.R`](./7_ifr.R) | Generates age strata-specific IFRs based on published rates in the literature.  |
+| [`8_modelbased_preproc.R`](./8_modelbased_preproc.R) | Constructs active infection rate based on the SEIR model posterior predictive checks. |
