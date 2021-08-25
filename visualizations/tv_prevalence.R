@@ -1,11 +1,13 @@
 library(lubridate)
 library(MMWRweek)
 library(ggplot2)
-library(wesanderson)
+library("RColorBrewer")
 library(tidyverse)
 library(tidybayes)
 library(gridExtra)
 library(rstan)
+
+my_palette <- brewer.pal(name="Greys",n=9)[seq(1,9,2)]
 
 prevalence = readRDS("../data/invweights_071521.RDS")
 prevalence_alt = readRDS("../data/invweights_alt.RDS")
@@ -90,7 +92,7 @@ ggplot(data = prevalence_long, aes(x = date, y = estimate, col = Method)) +
   labs(x = "Date",
        y = "Active Infection Rate Estimate") + 
   theme(text = element_text(size=25)) +
-  scale_color_manual(values=wes_palette(n = 5, "IsleofDogs1"))
+  scale_color_manual(values=my_palette)
 
 dev.off()
 
