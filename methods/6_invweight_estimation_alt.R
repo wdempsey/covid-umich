@@ -1,6 +1,6 @@
 indiana_data = readRDS("../data/weeklycoviddata_withsymptoms_alt.RDS")
 indiana_data$startdate = mdy(indiana_data$startdate)
-propensities = readRDS("../data/smoothedpropensities_alt.RDS")
+propensities = readRDS("../data/smoothedpropensities_alt_08252021.RDS")
 
 propensities$date = MMWRweek::MMWRweek2Date(MMWRyear = propensities$year,
                                             MMWRweek = propensities$week,

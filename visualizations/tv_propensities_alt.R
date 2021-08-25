@@ -3,7 +3,7 @@ library(MMWRweek)
 library(ggplot2)
 library("RColorBrewer")
 
-propensities = readRDS("../data/smoothedpropensities_alt.RDS")
+propensities = readRDS("../data/smoothedpropensities_alt_08252021.RDS")
 
 propensities$date = MMWRweek::MMWRweek2Date(MMWRyear = propensities$year,
                                             MMWRweek = propensities$week,
@@ -22,8 +22,8 @@ ggplot(data = propensities, aes(x = date, y = probs)) +
   geom_point(size = 5) +
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
-       title = "35-44 year old non-Hispanic, White Male with Fever") +
-  theme(text = element_text(size=25))
+       title = "35-44, non-Hispanic, White Male with Symptoms") +
+  theme(text = element_text(size=20))
 
 dev.off()
 
@@ -61,6 +61,8 @@ propensities_long$propensity = propensities_long$probs1 * (propensities_long$age
 
 propensities_long_fever = propensities_long
 
+my_palette <- brewer.pal(name="Greys",n=9)[3:(3+5)]
+
 png(filename = "../figs/tvprop_alt_fig1_mainpaper.png",
     width = 960, height = 480, units = "px", pointsize = 25)
 
@@ -68,7 +70,7 @@ ggplot(data = propensities_long, aes(x = date, y = propensity, col = age)) +
   geom_point(size = 5) +
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
-       title = "Non-Hispanic, White Male with Fever") +
+       title = "Non-Hispanic, White Male with Symptoms") +
   theme(text = element_text(size=25)) +
   scale_color_manual(values=my_palette)
 
@@ -87,8 +89,8 @@ ggplot(data = propensities, aes(x = date, y = probs)) +
   geom_point(size = 5) +
   labs(x = "Date",
        y = "Testing Propensity",
-       title = "65-74 year old non-Hispanic, White Female without fever") +
-  theme(text = element_text(size=25))
+       title = "65-74, non-Hispanic, White Female without Symptoms") +
+  theme(text = element_text(size=20))
 
 dev.off()
 
@@ -133,7 +135,7 @@ ggplot(data = propensities_long, aes(x = date, y = propensity, col = age)) +
   geom_point(size = 5) +
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
-       title = "Non-Hispanic, White Male without Fever") +
+       title = "Non-Hispanic, White Male without Symptoms") +
   theme(text = element_text(size=25)) +
   scale_color_manual(values=my_palette)
 

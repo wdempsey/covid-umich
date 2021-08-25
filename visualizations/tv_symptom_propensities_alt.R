@@ -33,7 +33,7 @@ ggplot(data = propensities_neg_long, aes(x = date, y = probs, col = Gender)) +
        y = "Likelihood of Symptoms",
        title = "Individuals 35-44, Negative Test")+ 
   scale_color_manual(values = my_palette) +
-  theme(text = element_text(size=25))
+  theme(text = element_text(size=15))
 
 dev.off()
 
@@ -66,6 +66,6 @@ ggplot(data = propensities_pos_long, aes(x = date, y = probs, col = Hospitalized
        y = "Likelihood of Symptoms",
        title = "Individuals 35-44, Positive test") + 
   scale_color_manual(values = my_palette) +
-  theme(text = element_text(size=25))
+  theme(text = element_text(size=15))
 
 dev.off()
