@@ -510,6 +510,7 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  \frac{1}{\sum_{j=1}^N \tilde I_j \tilde W_j} \sum_{j=1}^N  \tilde I_j \tilde W_j \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j w (x_j)} \sum_{j=1}^N I_j w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \mu(x_j) \right).
  $$
  where $\tilde I_j$ indicates an individual is included in the random sample and $\tilde W_j$ is the associated weight for that unit. Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:dr} shows that the IPW estimator is  consistent and calculates the estimator's variance. See Appendix~\ref{app:asympderivations} for additional details.
+ \textcolor{red}{clarify what you are predicting as we go from no time to longitudinal setting. WE can't assume the survey at the time so we need the kernel again here.}
 
  \begin{lemma}[Variance of doubly-robust estimator] \normalfont
  \label{lemma:dr}
@@ -519,14 +520,14 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  \Phi_n (\eta_t) =
  \left (
  \begin{array}{c}
- \frac{1}{N} \left[ \sum_{j=1}^N \frac{I_{j,t}}{\pi_{j,t}} \left( \left( \frac{Y_{j,t} - FP}{1-FP-FN} - \mu(x_j)  \right)  - \mu_t \right) + \frac{1}{\sum_{j=1}^N \tilde I_j \tilde W_j} \sum_{j=1}^N  \tilde I_j \tilde W_j \hat \mu (x_j) \right] \\
+ \frac{1}{N} \left[ \sum_{j=1}^N \frac{I_{j,t}}{\pi_{j,t}} \left( \left( \frac{Y_{j,t} - FP}{1-FP-FN} - \hat \mu_{j,t}  \right)  - \mu_t \right) + \frac{1}{\sum_{j=1}^N \tilde I_j \tilde W_j} \sum_{j=1}^N  \tilde I_j \tilde W_j \hat \mu_t (X_{j,t}) \right] \\
  \frac{1}{N} \sum_{t^\prime = 1}^T K_{t,t^\prime} \sum_{j=1}^N I_{j,t^\prime} X_{j,t^\prime} - \frac{1}{N} \sum_{j = 1}^N \tilde I_{j,t^\prime} \tilde W_{j,t^\prime}  \pi_{j,t^\prime} X_{j,t^\prime}  \\
  \frac{1}{n_{FP}} \sum_{j \in S_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
  \frac{1}{n_{FN}} \sum_{j \in S_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
  \end{array}
  \right ) = {\bf 0}
  $$
- where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (n^{-1/2})$ and $\text{var} (\hat y_{n,t}) = V_{t}^{(DR)} + o (n^{-1})$ where $V_t^{(DR)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\Phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$.
+ where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (n^{-1/2})$ and $\text{var} (\hat y_{n,t}) = V_{t}^{(DR)} + o (n^{-1})$ where $V_t^{(DR)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\Phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$ with $E[\cdot]$ and $\text{Var} (\cdot)$ are under the joint randomization of propensity score and sampling designs.
  \end{lemma}
 
 
@@ -572,7 +573,7 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  \begin{table}[!th]
  \centering
  \begin{tabular}{c | c c c | c}
- & \multicolumn{3}{c}{Facebook} & Random \\ \cline{2-5}
+ & \multicolumn{3}{c}{Facebook} & Random \\ \cline{2-4}
  & Lower CI & Estimate & Upper CI & Estimate \\ \hline
  Fever &  0.017 & 0.020 & 0.024 & 0.018 \\
  Cough &  0.142 & 0.148 & 0.154 & 0.149 \\
