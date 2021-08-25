@@ -494,7 +494,7 @@ From prior derivations, we then have the desired result.
 
 Here, we take the suggested measures from~\cite{Arevalo2020} which report 87\% sensitivity is a reasonable estimates and~\cite{Cohen2020} which report 97.6\% specificity.  This corresponds to a false negative rate of $13\%$ and false positive rate of $2.4\%$.  To allow for potential uncertainty, we assume two \emph{synthetic} simple random samples.  The first is a simple random sample of true negative cases denoted $S_{FP}$; the second is simple random sample of true positive cases denoted $S_{FN}$.  As $\mu_t$ and $\theta_{t}$ are estimated independently at each time $t$, we can focus on the estimating equations per time point~$t$ separately.
 
-Suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$.  Each finite population has an associated non-probability at time $t$ of  size~$\tilde n$ and $L_\nu$ probability samples of fixed size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^L$ over the study window~$[0,T]$. Let~$\Delta_\nu$ denote the gap times between consecutive sample times. Finally, let~$n_{FP}$ and $n_{FN}$ denote the sample sizes of $S_{FP}$ and $S_{FN}$ respectively.  For simplicity, dependency on $\nu$ is suppressed and the limiting process is represented by $N \to \infty$. The asymptotic argument below relies on regularity conditions C1-C6 from~\cite{Chen2019}, smoothness of the population-level distribution of the time-varying covariates~$\{ X_{j,t} \}$, and smoothness of the propensity function~$\pi(x; \theta)$ as a function of $x \in \mathbb{R}^p$.
+Suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$.  Each finite population has an associated non-probability sample at time $t$ of  size~$\tilde n$ and $L_\nu$ probability samples of fixed size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^L$ over the study window~$[0,T]$. Let~$\Delta_\nu$ denote the gap times between consecutive sample times such that as $\nu \to \infty$ we have that $\Delta_\nu \to 0$. Finally, let~$n_{FP}$ and $n_{FN}$ denote the sample sizes of $S_{FP}$ and $S_{FN}$ respectively.  For simplicity, dependency on $\nu$ is suppressed and the limiting process is represented by $N \to \infty$. The asymptotic argument below relies on regularity conditions C1-C6 from~\cite{Chen2019}, smoothness of the population-level distribution of the time-varying covariates~$\{ X_{j,t} \}$ as a function of $t > 0$, and smoothness of the propensity function~$\pi(x; \theta)$ as a function of $x \in \mathbb{R}^p$.
 
 For each~$\nu$ and $t$, the estimates of $\eta = (\mu_t, \theta_t, FP, FN)$ are given by:
 $$
@@ -513,7 +513,7 @@ To prove consistency, first consider the setting where a single random sample of
 $$
 \frac{1}{N} \left[ \sum_{j=1}^N I_{j,t} X_{j,t} - \frac{1}{N} \sum_{j = 1}^N \tilde I_{j,t} \tilde W_{j,t}  \pi_{j,t} X_{j,t} \right].
 $$
-Then under joint randomization of propensity score model and sampling designs, we have $E [ \tilde \Phi (\eta_0) ] = {\bf 0}$.  Consistency then follows by arguments in Section 3.2 of Tsiatis (2006). Under conditions C1-C6 from~\cite{Chen2019} and as $n$ increases, we have $\tilde \Phi (\hat \eta) = 0$ and $\tilde \Phi(\eta_0) = O_p ( n^{-1/2} )$.
+Then under joint randomization of propensity score model and sampling designs, we have $E [ \tilde \Phi (\eta_0) ] = {\bf 0}$.  Consistency then follows by arguments in Section 3.2 of Tsiatis (2006). Under conditions C1-C6 from~\cite{Chen2019} and as $n$ increases, we have $\tilde \Phi (\hat \eta^\prime) = 0$ and $\tilde \Phi(\eta_0) = O_p ( n^{-1/2} )$ where $\hat \eta^\prime$ here refers to the solution to $\tilde \Phi (\eta)$.
 
 To prove consistency under the sequence of sampling regimes, we need to show that $E[ \Phi (\eta_0) ] \to 0$ as $N \to \infty$.  First, we study the difference in the 2nd term:
 \begin{align*}
@@ -616,7 +616,7 @@ Next, note that $\text{Var}(\Phi(\eta))$ can be decomposed into $A_{1,t} + A_{2,
 $$
 A_{1,t} = \frac{1}{N} \left( \begin{array}{c}
 \sum_{j=1}^N \frac{I_{j,t} (Y_{j,t} - FP - (1-FP-FN) \mu_t)}{\pi_{j,t}} \\
-\sum_{t^\prime = 1}^T K_{t,t^\prime} \sum_{j=1}^N I_{j,t^\prime} X_{j,t^\prime} - \pi_{j,t^\prime} X_{j,t^\prime} \\
+\sum_{t^\prime = 1}^T K_{t,t^\prime} \left[ \sum_{j=1}^N I_{j,t^\prime} X_{j,t^\prime} - \pi_{j,t^\prime} X_{j,t^\prime} \right] \\
 0 \\
 0
 \end{array}
@@ -626,7 +626,7 @@ and
 $$
 A_{2,t} = \frac{1}{N} \left( \begin{array}{c}
 0 \\
-\sum_{t^\prime = 1}^T K_{t,t^\prime} \sum_{j=1}^N \pi_{j,t^\prime} X_{j,t^\prime} - \sum_{j=1}^N \tilde I_{j,t^\prime} \pi_{j,t^\prime} X_{j,t} \\
+\sum_{t^\prime = 1}^T K_{t,t^\prime} \left[ \sum_{j=1}^N \pi_{j,t^\prime} X_{j,t^\prime} - \sum_{j=1}^N \tilde I_{j,t^\prime} \pi_{j,t^\prime} X_{j,t} \right] \\
 0 \\
 0
 \end{array}
@@ -652,7 +652,7 @@ A_{4,t} = \left( \begin{array}{c}
 \end{array}
 \right),
 $$
-By independence of these components, the variance can be calculated by summation over variance of each term individually yielding. First, $V_1$
+By independence of these components, the variance can be calculated by summation over variance of each term individually yielding. First, $V_{1,t}$
 {
 \tiny
 $$
@@ -668,7 +668,7 @@ $$
 \right)
 $$
 }
-and $V_{j,t}$ are block-diagonal matrices with only one non-zero block that is equal to $D_{j,t}$ which is the design-based variance-covariance matrix under each probability sampling design.
+and $V_{2,t}$ is a block-diagonal matrix with only one non-zero block that is equal to $D_{j,t} = N^{-2} \sum_{t^\prime} K_{t,t^\prime}^2 V_p\left( \sum_{i=1}^n \tilde W_{i,t^\prime} \tilde I_{i,t^\prime}  \pi_{j,t^\prime} X_{j,t^\prime} \right)$ which is the design-based variance-covariance matrix under the probability sampling design; and
 $$
 V_{3,t} = \left( \begin{array}{c}
 0 \\
