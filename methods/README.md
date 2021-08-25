@@ -41,18 +41,16 @@ We first build the imputation models for contact and then fever status given dem
 
 After running these two imputation models, return the preprocessing stage using [`5_in_hops_cleaning.R`](./5_in_hops_cleaning.R) and [`5_in_hops_cleaning--preproc.R`](./5_in_hops_cleaning--preproc.R) to clean data for the propensity estimation phase.
 
-## Model 3: imputation + estimation
+## Model 3: model-based and doubly robust estimation
 
 We first build the imputation models for contact and then fever status given demographics and testing.
 
 | <img height=0 width=800> File Name <img height=0 width=800> | <img height=0 width=1000> Brief Description <img height=0 width=1000> |
 |:-----------------------------:|:-----------------------------------------------------------------------|
-| [`4_symptom_neg_propensity_estimation_alt.R`](./4_symptom_neg_propensity_estimation_alt.R) | Estimates the likelihood of contact given demographics and COVID-19 testing outcome (negative) and hospitalization indicator for individuals who reported getting tested |
-| [`4_symptom_pos_propensity_estimation_alt.R`](./4_symptom_pos_propensity_estimation_alt.R) | Estimates the likelihood of symptoms given demographics and COVID-19 testing outcome (positive or negative) for individuals who reported getting tested |
-| [`5_propensity_estimation_alt.R`](./5_propensity_estimation_alt.R) | Estimates the likelihood of testing given demographics, contact, and symptoms |
-| [`6_invweight_estimation_alt.R`](./6_invweight_estimation_alt.R) | Builds IPW estimates of the AIR per week |
+| [`8_death_modeling.R`](./8_death_modeling.R) | Runs the SEIR model on death data and saves this as an RDS file |
+| [`8_sir_model.stan`](./8_sir_model.stan) | STAN file that specifies the SEIR model |
+| [`9_dr_estimation.R`](./9_dr_estimation.R) | Doubly robust estimation of the active infection rates |
 
-After running these two imputation models, return the preprocessing stage using [`5_in_hops_cleaning.R`](./5_in_hops_cleaning.R) and [`5_in_hops_cleaning--preproc.R`](./5_in_hops_cleaning--preproc.R) to clean data for the propensity estimation phase.
 
 ## Other analysis files
 
