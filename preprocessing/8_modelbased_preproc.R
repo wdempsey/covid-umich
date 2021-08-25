@@ -68,6 +68,7 @@ summary_fit$year = year(summary_fit$timepoints)
 
 summary_aggregate = aggregate(mean ~ age_group + week + year, data = summary_fit, FUN = sum)
 
+
 ## WE NOW NEED DEATH FRACTIONS PER SUBGROUP
 ## We DO THIS AS A KERNEL ESTIMATOR 
 levels(df_coviddeath$age) = c(1,1,1:6)
@@ -227,7 +228,7 @@ df_coviddeath <- aggregate(covid_deaths ~ startdate, data = df_coviddeath, FUN =
 df_coviddeath$date = ymd(df_coviddeath$startdate)
 df_coviddeath$death_dt = df_coviddeath$covid_deaths
 
-# Swiss population
+# Indiana population
 N <- 6.732E6;
 
 # Deaths

@@ -437,6 +437,7 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  %
  %
  \subsubsection{Asymptotics}
+ \label{section:asymptotics}
 
  Suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$.  Each finite population has an associated non-probability sample at time $t$ of size~$\tilde n$ and $L_\nu$ probability samples of size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^L$ over the study window~$[0,T]$. Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:ipw} shows that the IPW estimator is  consistent as the number of probability samples grows and calculates the estimator's variance.  In Lemma~\ref{lemma:ipw}, sensitivity and specificity are not assumed known.  Instead, we suppose that these are estimated using a pseudo-likelihood on two random samples from the population whose size (denoted~$n_{FP}$ and $n_{FN}$ respectively) is chosen so the resulting estimated sensitivity and specificity have desired levels of uncertainty.  See Appendix~\ref{app:asympderivations} for additional details.
 
@@ -505,12 +506,12 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
 
  If the model-based forecast is correct then $E_{\bf R} [ \rho_{\tilde I (X), Y-\mu(X)} ] = 0$  and therefore $\rho_{\tilde I(X), Y-\mu(X)} = O(N^{-1})$; however, if the forecasts are not correctly specified then the data quality index is unlikely to inversely scale with population size. Interestingly, the impact of measurement-error on data quality now depends on a relative comparison of the data quality and problem difficulty of the weighted estimator and the doubly-robust estimator.  For decent models, one would expect this ratio to be greater than one.  Therefore, $\tilde \Delta < 0$ implies an expected increase in impact of measurement-error and $\tilde \Delta > 0$ implies the magnitude could shrink toward zero or change sign and have an even large magnitude in the opposite direction.  Again, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from a DR estimator are likely to put too much confidence in the sheer size of the data.
 
- Unfortunately, the first term of the doubly robust estimator cannot be computed as covariate information is not collected on the entire population.  Here, we again use the probability samples and consider the doubly-robust estimator
- $$
- \frac{1}{\sum_{j=1}^N \tilde I_j \tilde W_j} \sum_{j=1}^N  \tilde I_j \tilde W_j \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j w (x_j)} \sum_{j=1}^N I_j w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \mu(x_j) \right).
- $$
- where $\tilde I_j$ indicates an individual is included in the random sample and $\tilde W_j$ is the associated weight for that unit. Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:dr} shows that the IPW estimator is  consistent and calculates the estimator's variance. See Appendix~\ref{app:asympderivations} for additional details.
- \textcolor{red}{clarify what you are predicting as we go from no time to longitudinal setting. WE can't assume the survey at the time so we need the kernel again here.}
+ Unfortunately, the first term of the doubly robust estimator cannot be computed as covariate information is not collected on the entire population.  Here, we suppose the same asymptotic regime as in Section~\ref{section:asymptotics} and therefore use the probability samples and consider the doubly-robust estimator at time~$t$
+ \begin{align*}
+ &\frac{1}{\sum_{l=1}^L K_{t,t_l^\prime} \sum_{j=1}^N \tilde I_{j,t_l^\prime} \tilde W_{j,t_l^\prime}} \sum_{l=1}^L K_{t,t_l^\prime} \sum_{j=1}^N  \tilde I_{j,t_l^\prime} \tilde W_{j,t_l^\prime} \hat \mu (X_{j,t^\prime}) \\
+ + &\quad \frac{1}{\sum_{j=1}^N I_j w (X_{j,t})} \sum_{j=1}^N I_j w(X_{j,t}) \left( \frac{Y_{j,t} - FP}{1 - FP - FN} - \mu_t(X_{j,t}) \right).
+ \end{align*}
+ where $\tilde I_{j,t_l^\prime}$ indicates an individual is included in the random sample at time~$t_l^\prime$ and $\tilde W_{j,t_l^\prime}$ is the associated weight for that unit. Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:dr} shows that the doubly robust estimator is consistent and calculates the estimator's variance. See Appendix~\ref{app:asympderivations} for additional details.
 
  \begin{lemma}[Variance of doubly-robust estimator] \normalfont
  \label{lemma:dr}
@@ -691,6 +692,13 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  \end{table}
  The discrete-time distribution~$\{ \theta_{j} \}$ is a discretized version of a truncated normal distribution with mean $25$, standard deviation~$5$, minimum value $0$, and maximum value $44$.  This was chosen to closely mimic the distribution from~\cite{Johndrow2020}.
 
+ \begin{figure}[!th]
+ \centering
+ \includegraphics[width=.6\linewidth]{../figs/deaths_ppc.png}
+ \caption{Posterior predictive check on aggregate daily death counts.}
+ \label{fig:deathsppc}
+ \end{figure}
+
  The SEIR model in equation~\eqref{eq:seir} is extended to allow for time-varying transmission rates~$\beta_t$ to account for public policy changes discussed in Section~\ref{section:publicpolicyindiana} over the time period considered.  Here, we insert three change points $(t_1,t_2,t_3)$ on March 23rd, June 15th, and October 1st of 2020 respectively.  Given sensitivity to these choices, instead of considering a multiplicative structure, we allow for delayed implementation and slow change in the transmission rate by using weights:
  $$
  \beta_t = \sum_{k=1}^{3} \left(\beta_{k-1} (1-w^{(k)}_t ) + \beta_{k} w_t\right),\quad w^{(k)}_t = (1 + \exp \left( -\xi (t - t_k - \nu) \right))^{-1}
@@ -699,38 +707,32 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
 
  To check how well our model fits the observed data, a posterior predictive check on aggregate death counts was performed. Figure~\ref{fig:deathsppc} shows the results which suggests chosen SEIR model fits the observed data well.  The model produces age-specific case counts which can then be used for model-based estimation of the active infection rate as well as in constructing the doubly robust estimator.
 
- \begin{figure}[!th]
- \centering
- \includegraphics[width=.6\linewidth]{../figs/deaths_ppc.png}
- \caption{Posterior predictive check on aggregate daily death counts.}
- \label{fig:deathsppc}
- \end{figure}
 
  \subsection{Time-varying prevalence estimates}
 
- Here, we construct active infection rate estimates using the unweighted, inverse-probability weighted, model-based, and doubly robust estimators.  Figure~\ref{fig:air} presents the results. The inverse-probability weighting methods do not significantly reduce bias compared to the unweighted estimates.  We conjecture this is due to the limited availability of symptom and other important covariates that may impact the likelihood an individual will get  tested. Our imputation strategies use available data to try and alleviate this issue; however, this suggests better data collection in the future may strongly improve the IPW estimates as seen in Section~\ref{section:ipwapproach} when analyzing the statewide sample from April 25th--29th.
+ Here, we construct active infection rate estimates using the unweighted, inverse-probability weighted, model-based, and doubly robust estimators.  Figure~\ref{fig:tvestimates} presents the results. The inverse-probability weighting methods do not significantly reduce bias compared to the unweighted estimates. We conjecture the poor performance is due to the limited availability of symptom and other important covariate information to estimate strata-specific infection rates. This suggests better data collection in the future may strongly improve the IPW estimates as seen in Section~\ref{section:ipwapproach} when analyzing the statewide sample from April 25th--29th.
 
  While the model-based estimates appear more reasonable, note that the estimate on the last week of April is 0.25\% which is a severe underestimate compared to the estimated prevalence using the stratified random sample. Caution is therefore warranted when interpreting these estimates.  We know that the age-specific infection fatality rate is likely time-varying and may vary by other factors beyond age.  Therefore, improvements could be made by more finely grained, and accurate IFR estimates; however, there is currently minimal publicly available data to do so.  Moreover, the (thankfully) low number of deaths per strata make uncertainty in these estimates quite high.  Finally, the doubly robust estimates appear similar to the IPW estimate.
 
- \begin{figure}
- \centering
- \begin{subfigure}{.5\textwidth}
+  % We also construct ratio estimates as discussed in Section~\ref{section:rates}. Figure~\ref{fig:air_ratio} presents the results.  Unweighted, IPW, and doubly robust estimates appear similar.  Recall the severe bias during the growth phase due to selection bias dicussed in Section~\ref{section:rates} may imply the observed rates are  overestimated between October 2020 and January 2021.  The model-based methods may be as well.
+
+  \begin{figure}[!th]
+ % \centering
+ % \begin{subfigure}{.5\textwidth}
    \centering
-   \includegraphics[width=.9\linewidth]{../figs/tv_air.png}
-   \caption{Active Infection Rate Estimates}
-   \label{fig:air}
- \end{subfigure}%
- \begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{../figs/tv_air_ratio.png}
-  \caption{Ratio estimates}
-  \label{fig:air_ratio}
- \end{subfigure}
- \caption{Time-varying estimates based on unweighted, model-based, IPW and doubly robust methods.}
+   \includegraphics[width=.6\linewidth]{../figs/tv_air.png}
+   % \caption{Active Infection Rate Estimates}
+   % \label{fig:air}
+ % \end{subfigure}%
+ % \begin{subfigure}{.5\textwidth}
+ %  \centering
+ %  \includegraphics[width=.9\linewidth]{../figs/tv_air_ratio.png}
+ %  \caption{Ratio estimates}
+ %  \label{fig:air_ratio}
+ % \end{subfigure}
+ \caption{Time-varying active infectino rate estimates based on unweighted, model-based, IPW and doubly robust methods.}
  \label{fig:tvestimates}
  \end{figure}
-
- We also construct ratio estimates as discussed in Section~\ref{section:rates}. Figure~\ref{fig:air_ratio} presents the results.  Unweighted, IPW, and doubly robust estimates appear similar.  Recall the severe bias during the growth phase due to selection bias dicussed in Section~\ref{section:rates} may imply the observed rates are  overestimated between October 2020 and January 2021.  The model-based methods may be as well.
 
  \section{Discussion}
  \label{section:discussion}
@@ -741,9 +743,9 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
 
  Governments and policy makers often implicitly argue that increased testing capacity will alleviate selection bias.  Without complete compliance, however, our understanding of future outbreaks may be plagued by self-selection bias, compounded by changing sensitivity and specificity rates of RT-PCR testing. Random testing removes these effect modifiers, giving governments more information to fight the disease.  This paper emphasizes that data quantity is secondary to both data quality and methodological considerations to account for selection bias.
 
- \subsection*{High quality information on prevalence.}
+ % \subsection*{High quality information on prevalence.}
 
- Governments are pushing for increased testing capacity and robust contact tracing.  Contact tracing is incredibly useful for identifying carriers early and preventing spread of the disease.  We argue that understanding active infections is also key.  We know that the probability of an outbreak is a function of current prevalence and network connectivity.  Epidemic critical thresholds have been derived for many infectious disease models~\citep{Pastor2001,Newman2002,Parshani2010}.  Knowing prevalence will help governments determine long-term community-level risk and allow for more targeted interventions -- shutting down only certain locations when necessary.
+ % Governments are pushing for increased testing capacity and robust contact tracing.  Contact tracing is incredibly useful for identifying carriers early and preventing spread of the disease.  We argue that understanding active infections is also key.  We know that the probability of an outbreak is a function of current prevalence and network connectivity.  Epidemic critical thresholds have been derived for many infectious disease models~\citep{Pastor2001,Newman2002,Parshani2010}.  Knowing prevalence will help governments determine long-term community-level risk and allow for more targeted interventions -- shutting down only certain locations when necessary.
 
  \subsection*{Model-based solutions.}
 
@@ -755,14 +757,16 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
 
  Application of the proposed methods relied on access to two critical datasets: (1) COVID-19 testing, case, hospitalization, and death data by demographic strata and (2) Facebook symptom survey.  Public access to (1) required the author to submit a data request directly to the state of Indiana.  Through conversations with the state of Indiana, the author's request was one of only five data requests to be approved by Indiana for public release.  Most states do not release such granular data, making selection bias adjustments difficult.  More systematic data collection and reporting is critical in future efforts. We acknowledge that this proposal will lead to data privacy issues that will need to be addressed.
 
- While we are eternally grateful to Indiana for the release, symptom information was not made available.  This severely limits our ability to estimate correct selection propensity models.  What is required in the future is a more detailed effort to collect relevant measures of an individual's past history that may impact their likelihood of seeking testing and being a positive COVID-19 case.  Such data collection and dissemination is critical to address selection bias.
+ While we are eternally grateful to Indiana for the release, symptom information was not made available.  This severely limits our ability to estimate correct selection propensity models and strata-specific infection rates.  A more sustained effort to collect relevant measures of an individual's past history that may impact their likelihood of seeking testing and being COVID-19 positive is required.  Such data collection and dissemination is critical to address selection bias.
 
- A valid criticism of the proposed approach is that recording covariates on every tested individual is too time-consuming and costly, i.e., the data collection does not scale well.  We argue that the list of relevant factors is not too long.  For example, symptom status and COVID-19 contact are clearly relevant factors in testing selection.  Future work may consider how to include/exclude various factors over time that are not significant to limit citizen burden in reporting.  Moreover, equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected for all individuals in the nonprobability sample; however, this is often not feasible for state and local governments where rapid sample collection is prioritized over additional collection of covariate information.  We can easily extend~\eqref{eq:auxinfoprob} by randomly sampling a subset of the nonprobability sample on which to collect the covariate information, yielding a new pseudo-likelihood
- \begin{equation*}
- % \label{eq:auxinfoprob2}
- \sum_{j=1}^N I_j I_j^{(2)} W_j^{(2)} \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right)  + \sum_{i=1}^N \tilde I_j \tilde W_j \log ( 1 - \pi (X_j; \theta)).
- \end{equation*}
- Here, $I_j^{(2)}$ is an indicator that the individual is in the probability subsample and $W_j^{(2)}$ is the probability of inclusion.  Estimation proceeds by maximizing the pseudo-likelihood which now depends on random sampling in both the first and second term.  This would allow for rapid testing and minimizes cost of covariate collection.
+ A valid criticism of the proposed approach is that recording covariates on every tested individual is too time-consuming and costly, i.e., the data collection does not scale well.  We argue that the list of relevant factors is not too long.  For example, symptom status and COVID-19 contact are clearly relevant factors in testing selection.  Future work may consider how to include/exclude various factors over time that are not significant to limit citizen burden in reporting.  Moreover, equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected for all individuals in the nonprobability sample; however, this is often not feasible for state and local governments where rapid sample collection is prioritized over additional collection of covariate information.  We can easily extend~\eqref{eq:auxinfoprob} by randomly sampling a subset of the nonprobability sample on which to collect the covariate information.
+ %yielding a new pseudo-likelihood
+ % \begin{equation*}
+ % % \label{eq:auxinfoprob2}
+ % \sum_{j=1}^N I_j I_j^{(2)} W_j^{(2)} \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right)  + \sum_{i=1}^N \tilde I_j \tilde W_j \log ( 1 - \pi (X_j; \theta)).
+ % \end{equation*}
+ % Here, $I_j^{(2)}$ is an indicator that the individual is in the probability subsample and $W_j^{(2)}$ is the probability of inclusion. Estimation proceeds by maximizing the pseudo-likelihood which now depends on random sampling in both the first and second term.
+ This would allow for rapid testing and minimizes cost of covariate collection.
 
 \newpage
 % \textcolor{red}{Fix references!}

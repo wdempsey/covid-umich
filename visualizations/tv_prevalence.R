@@ -105,7 +105,7 @@ ggplot(data = ratio_long, aes(x = date, y = estimate, col = Method)) +
   labs(x = "Date",
        y = "Active Infection Rate Estimate") + 
   theme(text = element_text(size=25)) +
-  scale_color_manual(values=wes_palette(n = 5, "IsleofDogs1"))
+  scale_color_manual(values=my_palette)
 
 dev.off()
 
