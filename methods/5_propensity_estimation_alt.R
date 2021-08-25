@@ -100,6 +100,7 @@ indiana_data$startdate = mdy(indiana_data$startdate)
 indiana_data = indiana_data[!is.na(indiana_data$covid_tests),]
 
 fb_data = readRDS("../data/fb_weeklycomplete.RDS")
+names(fb_data)[3] = "symptoms"
 
 ## How do we match ages?
 ## FB <--> INDIANA
@@ -137,4 +138,4 @@ names(results) = c("week", "year", "feverFALSE", "feverTRUE",
                    "genderF", "NotHoL", "raceAA", "raceOther", "raceWhite", 
                    "25to34", "35to44", "45to54", "55to64", "65to74", "75plus")
 
-saveRDS(results, "../data/smoothedpropensities_alt_071521.RDS")
+saveRDS(results, "../data/smoothedpropensities_alt_08252021.RDS")
