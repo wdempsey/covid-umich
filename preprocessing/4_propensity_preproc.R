@@ -50,6 +50,9 @@ indiana_data$age = as.numeric(indiana_data$age)
 levels(indiana_data$gender) = c(2,1)
 in_gender = as.numeric(indiana_data$gender)
 indiana_data$gender = 2*(in_gender == 1) + 1*(in_gender == 2)
+indiana_data = indiana_data[-which(week(indiana_data$startdate) > 5 & year(indiana_data$startdate) == 2021),] # REMOVE THE WEEK 6 in 2021
+
+
 indiana_data_w_sympcontact = rbind(indiana_data,indiana_data, indiana_data, indiana_data) 
 indiana_data_w_sympcontact$fever = c(rep(TRUE, 2*nrow(indiana_data)), rep(FALSE, 2*nrow(indiana_data)))
 indiana_data_w_sympcontact$contact = c(rep(TRUE, nrow(indiana_data)), rep(FALSE, nrow(indiana_data)), 
