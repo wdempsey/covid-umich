@@ -1,5 +1,4 @@
 ## Building a combined dataset
-
 library("lubridate")
 
 all_data_pos_symptom = readRDS("../data/fb_alldata_weekly_pos_symptom_alt.RDS")

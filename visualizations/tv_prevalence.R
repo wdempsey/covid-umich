@@ -9,7 +9,7 @@ library(rstan)
 
 my_palette <- brewer.pal(name="Greys",n=9)[seq(1,9,2)]
 
-prevalence = readRDS("../data/invweights_071521.RDS")
+prevalence = readRDS("../data/invweights_08262021.RDS")
 prevalence_alt = readRDS("../data/invweights_alt.RDS")
 
 prevalence = data.frame(prevalence)
