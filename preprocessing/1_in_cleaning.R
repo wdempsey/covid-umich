@@ -69,7 +69,7 @@ construct_combos <- function(week, year) {
   gender_test = aggregate(COVID_TEST~GENDER, data = subset_gender, sum)
   ethnicity_test = aggregate(COVID_TEST~ETHNICITY, data = subset_ethnicity, sum)
   race_test = aggregate(COVID_TEST~RACE, data = subset_race, sum)
-  total_tests = sum(subset_totals$COVID_TEST)*addweight
+  total_tests = sum(subset_totals$COVID_TEST, na.rm = TRUE)*addweight
   
   ## COMPUTE TESTING FRACTIONS IGNORING UNKNOWN
   age_test$test_frac = age_test$COVID_TEST / sum(age_test$COVID_TEST[!age_test$age == 'Unknown'])
