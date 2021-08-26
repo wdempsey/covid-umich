@@ -1,15 +1,17 @@
 ### Input: 
 ### Daily total tests, positive tests, deaths
-### Aggregate by age, gender, ethnicitiy, and race separately
+### Aggregate by age, gender, ethnicity, and race separately
 
 ### Output: 
 ### Weekly total tests, positive tests, deaths
-### Aggregate by age, gender, ethnicitiy, and race separately
+### Aggregate by age, gender, ethnicity, and race separately
 
+### Total data before 
 age_data = read.csv("../data/covid_indiana_age.csv")
 gender_data = read.csv("../data/covid_indiana_gender.csv")
 ethnicity_data = read.csv("../data/covid_indiana_ethnicity.csv")
 race_data = read.csv("../data/covid_indiana_race.csv")
+totals_data = read.csv("../data/covid_indiana_all_testing_data.csv")
 
 names(age_data)[2] = "age"
 
@@ -21,6 +23,7 @@ age_data$date = ymd(age_data$DATE)
 gender_data$date = ymd(gender_data$DATE)
 ethnicity_data$date = ymd(ethnicity_data$DATE)
 race_data$date = ymd(race_data$DATE)
+totals_data$date = mdy(totals_data$DATE)
 
 age_data$week = week(age_data$date)
 gender_data$week = week(gender_data$date)
@@ -32,8 +35,9 @@ gender_data$year = year(gender_data$date)
 ethnicity_data$year = year(ethnicity_data$date)
 race_data$year = year(race_data$date)
 
-age_data$day = day(age_data$date)
-age_data$week = week(age_data$date) 
+totals_data$day = day(totals_data$date)
+totals_data$week = week(totals_data$date)
+totals_data$year = year(totals_data$date)
 weekweight = aggregate(day ~ week, age_data, function(x){length(unique(x))})
 
 
@@ -58,13 +62,14 @@ construct_combos <- function(week, year) {
   subset_gender = gender_data[gender_data$week == week & gender_data$year == year,]
   subset_ethnicity = ethnicity_data[ethnicity_data$week == week & ethnicity_data$year == year,]
   subset_race = race_data[race_data$week == week & race_data$year == year,]
+  subset_totals = totals_data[totals_data$week == week & totals_data$year == year,]
   
   ## FIX TESTING
   age_test = aggregate(COVID_TEST~age, data = subset_age, sum)
   gender_test = aggregate(COVID_TEST~GENDER, data = subset_gender, sum)
   ethnicity_test = aggregate(COVID_TEST~ETHNICITY, data = subset_ethnicity, sum)
   race_test = aggregate(COVID_TEST~RACE, data = subset_race, sum)
-  total_tests = sum(age_test$COVID_TEST)*addweight
+  total_tests = sum(subset_totals$COVID_TEST)*addweight
   
   ## COMPUTE TESTING FRACTIONS IGNORING UNKNOWN
   age_test$test_frac = age_test$COVID_TEST / sum(age_test$COVID_TEST[!age_test$age == 'Unknown'])
