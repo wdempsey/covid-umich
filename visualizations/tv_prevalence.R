@@ -69,7 +69,7 @@ ratio_long = rbind(ratio_long, ratio_temp)
 prevalence_long = rbind(prevalence_long, prevalence_temp)
 
 ## ADD IN DOUBLY ROBUST
-prevalence_temp = readRDS("../data/drestimates_alt_071521.RDS")
+prevalence_temp = readRDS("../data/drestimates_alt_082621.RDS")
 prevalence_temp = data.frame(date = dates, Method = rep("Doubly Robust", nrow(prevalence_temp)), 
                              estimate = prevalence_temp[,5])
 ratio = prevalence_temp$estimate[2:length(prevalence_temp$estimate)]/prevalence_temp$estimate[1:(length(prevalence_temp$estimate)-1)]
@@ -81,9 +81,6 @@ ratio_temp = data.frame(date = date, Method = rep("Doubly Robust", length(date))
                         estimate = ratio)
 ratio_long = rbind(ratio_long, ratio_temp)
 prevalence_long = rbind(prevalence_long, prevalence_temp)
-
-
-prevalence_long = prevalence_long[prevalence_long$Method != "Doubly Robust",] # JUST FOR NOW
 
 ## FINAL FIGURES
 png(filename = "../figs/tv_air.png",

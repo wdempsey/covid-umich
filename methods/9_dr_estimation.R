@@ -10,7 +10,7 @@ library(MMWRweek)
 ## INDIANA AND PROPENSITIES
 indiana_data = readRDS("../data/weeklycoviddata_withsymptoms_alt.RDS")
 indiana_data$startdate = mdy(indiana_data$startdate)
-propensities = readRDS("../data/smoothedpropensities_alt.RDS")
+propensities = readRDS("../data/smoothedpropensities_alt_08262021.RDS")
 
 ### MODEL BASED ESTIMATES
 aggregate_air = readRDS("../data/aggregate_air.RDS")
@@ -114,6 +114,8 @@ current_year = 2020
 weeks = c(14:53,1:5)
 years = c(rep(2020, length = length(c(14:53))),rep(2021, length = length(1:5)))
 results = matrix(nrow = length(weeks), ncol = 5) 
+FP= 0.024
+FN = 0.13
 
 for(i in 1:length(weeks)) {
   current_week = weeks[i]
@@ -127,10 +129,10 @@ for(i in 1:length(weeks)) {
   fb_air = sum(fb_data$air * fb_data$weight, na.rm = TRUE)/ sum(fb_data$weight, na.rm = TRUE)
   results[i,1] = current_week
   results[i,2] = current_year
-  results[i,3] = sum(current_counts)/sum(current_tests)
-  results[i,4] = sum(current_counts*weights)/sum(current_tests*weights)
-  results[i,5] =  fb_air + (results[i,4] - invweighted_air)
+  results[i,3] = (sum(current_counts)/sum(current_tests) - FP)/(1-FP-FN)
+  results[i,4] = (sum(current_counts*weights)/sum(current_tests*weights) - FP)/(1-FP-FN)
+  results[i,5] = fb_air + (results[i,4] - invweighted_air)
 }
 
-saveRDS(results,"../data/drestimates_alt_071521.RDS")
+saveRDS(results,"../data/drestimates_alt_082621.RDS")
 

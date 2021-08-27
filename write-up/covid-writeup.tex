@@ -692,12 +692,24 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  \end{table}
  The discrete-time distribution~$\{ \theta_{j} \}$ is a discretized version of a truncated normal distribution with mean $25$, standard deviation~$5$, minimum value $0$, and maximum value $44$.  This was chosen to closely mimic the distribution from~\cite{Johndrow2020}.
 
- \begin{figure}[!th]
+  \begin{figure}
  \centering
- \includegraphics[width=.6\linewidth]{../figs/deaths_ppc.png}
- \caption{Posterior predictive check on aggregate daily death counts.}
+ \begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../figs/deaths_ppc.png}
+ \caption{PPC on aggregate daily death counts.}
  \label{fig:deathsppc}
+ \end{subfigure}%
+ \begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../figs/cases_ppc.png}
+ \caption{Posterior on daily case counts.}
+ \label{fig:casesppc}
+ \end{subfigure}
+ \caption{Posterior predictive check (PPC) on death counts and posterior distribution of case counts.}
+ \label{fig:ppcs}
  \end{figure}
+
 
  The SEIR model in equation~\eqref{eq:seir} is extended to allow for time-varying transmission rates~$\beta_t$ to account for public policy changes discussed in Section~\ref{section:publicpolicyindiana} over the time period considered.  Here, we insert three change points $(t_1,t_2,t_3)$ on March 23rd, June 15th, and October 1st of 2020 respectively.  Given sensitivity to these choices, instead of considering a multiplicative structure, we allow for delayed implementation and slow change in the transmission rate by using weights:
  $$
