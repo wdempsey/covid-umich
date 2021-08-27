@@ -10,7 +10,7 @@ library(rstan)
 my_palette <- brewer.pal(name="Greys",n=9)[seq(1,9,2)]
 
 prevalence = readRDS("../data/invweights_08262021.RDS")
-prevalence_alt = readRDS("../data/invweights_alt.RDS")
+prevalence_alt = readRDS("../data/invweights_alt_08262021.RDS")
 
 prevalence = data.frame(prevalence)
 prevalence_alt = data.frame(prevalence_alt)
@@ -83,6 +83,8 @@ ratio_long = rbind(ratio_long, ratio_temp)
 prevalence_long = rbind(prevalence_long, prevalence_temp)
 
 
+prevalence_long = prevalence_long[prevalence_long$Method != "Doubly Robust",] # JUST FOR NOW
+
 ## FINAL FIGURES
 png(filename = "../figs/tv_air.png",
     width = 960, height = 480, units = "px", pointsize = 25)
@@ -97,20 +99,14 @@ ggplot(data = prevalence_long, aes(x = date, y = estimate, col = Method)) +
 dev.off()
 
 
-png(filename = "../figs/tv_air_ratio.png",
-    width = 960, height = 480, units = "px", pointsize = 25)
-
-ggplot(data = ratio_long, aes(x = date, y = estimate, col = Method)) +
-  geom_line(size = 2) +
-  labs(x = "Date",
-       y = "Active Infection Rate Estimate") + 
-  theme(text = element_text(size=25)) +
-  scale_color_manual(values=my_palette)
-
-dev.off()
-
-
-
-
-
-
+# png(filename = "../figs/tv_air_ratio.png",
+#     width = 960, height = 480, units = "px", pointsize = 25)
+# 
+# ggplot(data = ratio_long, aes(x = date, y = estimate, col = Method)) +
+#   geom_line(size = 2) +
+#   labs(x = "Date",
+#        y = "Active Infection Rate Estimate") + 
+#   theme(text = element_text(size=25)) +
+#   scale_color_manual(values=my_palette)
+# 
+# dev.off()

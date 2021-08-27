@@ -3,7 +3,7 @@ library(MMWRweek)
 library(ggplot2)
 library("RColorBrewer")
 
-propensities = readRDS("../data/smoothedpropensities_alt_08252021.RDS")
+propensities = readRDS("../data/smoothedpropensities_alt_08262021.RDS")
 
 propensities$date = MMWRweek::MMWRweek2Date(MMWRyear = propensities$year,
                                             MMWRweek = propensities$week,

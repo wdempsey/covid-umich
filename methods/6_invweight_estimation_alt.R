@@ -1,5 +1,5 @@
 indiana_data = readRDS("../data/weeklycoviddata_withsymptoms_alt.RDS")
-propensities = readRDS("../data/smoothedpropensities_alt_08252021.RDS")
+propensities = readRDS("../data/smoothedpropensities_alt_08262021.RDS")
 
 library(MMWRweek)
 library(lubridate)
@@ -12,6 +12,7 @@ model = ~ -1+as.factor(symptoms) + as.factor(gender) + ethnicity + race + as.fac
 indiana_X = model.matrix(model, indiana_data)
 
 library(lubridate)
+indiana_data$startdate = mdy(indiana_data$startdate)
 indiana_data$week = week(indiana_data$startdate)
 indiana_data$year = year(indiana_data$startdate)
 
