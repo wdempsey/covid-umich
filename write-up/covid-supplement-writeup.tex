@@ -534,7 +534,7 @@ $$
 $$
 Combining this, $E \left[ \Phi(\eta_0)  - \tilde \Phi (\eta_0) \right] \to 0$ which implies consistency as desired.
 
-Then by a first-order Taylor expansion we have $\hat \eta - \eta_0 = \left[ \phi (\eta) \right]^{-1} \Phi(\eta_0) + o_p (\tilde n^{-1/2})$ where $\phi(\eta) = \partial \Phi (\eta)/\partial \eta$ and $\tilde n = n \sum_{l=1}^L \tilde K_{t,t_l}$.  To calculate
+Then by a first-order Taylor expansion we have $\hat \eta - \eta_0 = \left[ \phi (\eta) \right]^{-1} \Phi(\eta_0) + o_p (\bar n^{-1/2})$ where $\phi(\eta) = \partial \Phi (\eta)/\partial \eta$ and $\bar n = n \sum_{l=1}^L K_{t,t_l}$.  To calculate
 $$
 \frac{\partial \Phi (\eta)}{\partial \mu_t} =
 \left (
@@ -801,6 +801,16 @@ First, we computed the probability of fever given COVID-19 positive test and hos
 
 Based on mean-imputation of COVID-19 fever using hospitalization records indicators, we can use the proposed pseudo-likelihood approach to compute the likelihood of getting tested for COVID-19 given age, ethnicity, race, gender, and fever status.  Figure~\ref{fig:testinglik1_mainpaper} and~\ref{fig:testinglik1_mainpaper} in Section~\ref{section:tvipw} of the manuscript plots the likelihood of testing given fever and no fever respectfully for all age ranges.  We see that the likelihood is time-varying and depends heavily on both fever status.
 
+Figure~\ref{fig:air_cis} in the supplementary materials presents the confidence intervals per time point for the IPW2 estimator.  The confidence interval length decreases substantially over time, reflecting the increased testing capacity.  Due to the number of surveys per week, under correct model specification there is minimal uncertainty in the parameter estimates.  As the number of tests per week increases to over one hundred thousand, there is minimal uncertainty in the active infection rate estimates. This points to the importance of the statistical decomposition~\eqref{eq:statdecomp2} and the discussion in Section~\ref{section:IPWerrordecomp}.
+
+\begin{figure}[!th]
+ \centering
+ \includegraphics[width=.9\linewidth]{../figs/tv_air_cis.png}
+ \caption{IPW2 estimate with confidence intervals}
+ \label{fig:air_cis}
+\end{figure}
+
+
 % \begin{figure}[!th]
 % \centering
 % \begin{subfigure}{.5\textwidth}
@@ -841,6 +851,15 @@ For simplicity, we list the priors used in STAN below:
   \item \code{xi = xi\_raw + 0.5;}
 \end{itemize}
 where \code{beta, eta, eta\_two, eta\_three} refer to the four values that form the time-varying parameter $\beta_t$ when combined with \code{xi, eta, eta\_two, eta\_three} in the SEIR model as described in Section~\ref{section:modelbased}.
+
+Figure~\ref{fig:undercounting} below is a plot of undercount based on the SEIR model.  We see the undercount goes away by January; however, this points to potential misspecification of the IFR.
+
+\begin{figure}[!th]
+ \centering
+ \includegraphics[width=.7\linewidth]{../figs/undercounting.png}
+ \caption{Undercount based on SEIR model}
+ \label{fig:undercounting}
+\end{figure}
 
 \bibliographystyle{plainnat}
 \bibliography{covid-refs}

@@ -88,7 +88,7 @@ png(filename = "../figs/cases_ppc.png",
     width = 6.5, height = 4, units = "in", res = 1200, pointsize = 12)
 par(mar = c(2,2,1,1)+0.1)
 
-smr_pred <- cbind(agg_cases)
+smr_pred <- agg_cases
 smr_pred$date = date(dates)
 smr_pred = smr_pred[smr_pred$date < "2021-02-01",]
 c_posterior = my_palette # "orange"
@@ -100,6 +100,58 @@ ggplot(smr_pred, mapping = aes(x = date)) +
   #geom_ribbon(aes(ymin = X10., ymax = X90.), fill = c_light) +
   geom_line(mapping = aes(x = date, y = X50.), color = c_posterior) +
   labs(x = "Day", y = "Cases") +
+  scale_x_date(date_labels = "%b %Y")
+
+dev.off()
+
+## Aggregate Undercount calculation
+library(MMWRweek)
+df_case_counts = read.csv("../data/covid_indiana_age.csv", header = T)
+names(df_case_counts) = c("date", "Age", "covid_test", "covid_count", "covid_deaths")
+df_case_counts$date = ymd(df_case_counts$date)
+df_case_counts_total = aggregate(covid_count ~ date, df_case_counts, sum)
+
+
+weeks_for_undercount = unique(week(smr_pred$date[smr_pred$date >= "2020-04-01"]))
+years_for_undercount = c(rep(2020, 40), rep(2021, 5))
+number_of_dates = length(weeks_for_undercount)
+undercount = data.frame(week = weeks_for_undercount, year = years_for_undercount, 
+                        undercountfactor = rep(0, number_of_dates),
+                        undercountfactor.X5 = rep(0, number_of_dates),
+                        undercountfactor.X95 = rep(0, number_of_dates))
+
+for(i in 1:nrow(undercount)) {
+  observed_count = sum(df_case_counts_total$covid_count[week(df_case_counts_total$date) == weeks_for_undercount[i] &
+                                                      year(df_case_counts_total$date) == years_for_undercount[i]
+                                                    ], na.rm = TRUE)
+  mean_latent_count = sum(smr_pred$mean[week(smr_pred$date) == weeks_for_undercount[i] &
+                                      year(smr_pred$date) == years_for_undercount[i]], na.rm = TRUE)
+  X5_latent_count = sum(smr_pred$X5.[week(smr_pred$date) == weeks_for_undercount[i] &
+                                          year(smr_pred$date) == years_for_undercount[i]], na.rm = TRUE)
+  X95_latent_count = sum(smr_pred$X95.[week(smr_pred$date) == weeks_for_undercount[i] &
+                                          year(smr_pred$date) == years_for_undercount[i]], na.rm = TRUE)
+  
+  undercount$undercountfactor[i] = mean_latent_count/observed_count
+  undercount$undercountfactor.X5[i] = X5_latent_count/observed_count
+  undercount$undercountfactor.X95[i] = X95_latent_count/observed_count
+}
+
+
+undercount$date = MMWRweek::MMWRweek2Date(MMWRyear = undercount$year,
+                                              MMWRweek = undercount$week,
+                                              MMWRday = 1)
+
+png(filename = "../figs/undercounting.png",
+    width = 6.5, height = 4, units = "in", res = 1200, pointsize = 12)
+par(mar = c(2,2,1,1)+0.1)
+
+ggplot(undercount, mapping = aes(x = date)) +
+  #geom_ribbon(aes(ymin = X2.5., ymax = X97.5.), fill = c_dark, ) +
+  geom_ribbon(aes(ymin = undercountfactor.X5, ymax = undercountfactor.X95), fill = c_posterior, alpha=0.35) +
+  #geom_ribbon(aes(ymin = X10., ymax = X90.), fill = c_light) +
+  geom_line(mapping = aes(x = date, y = undercountfactor), color = c_posterior) +
+  labs(x = "Day", y = "Cases") +
+  geom_hline(yintercept=c(1), linetype="dotted") +
   scale_x_date(date_labels = "%b %Y")
 
 dev.off()

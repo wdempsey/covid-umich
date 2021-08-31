@@ -55,7 +55,7 @@ tempdf$x = as.vector(tempdf$x)
 model.np <- npreg(y~x, regtype = 'll', bwmethod = 'cv.aic', gradients = TRUE, data = subset(tempdf, age == 1))
 
 plot(date(numerage$date[numerage$blockage == 1]), fitted(model.np), type = "l", 
-     bty= 'n', axes = FALSE, ylab = "Reported Fever", xlab = "Date",
+     bty= 'n', axes = FALSE, ylab = "Reported Symptoms", xlab = "Date",
      ylim = c(0.0,0.030), lwd = 3)
 axis.Date(1, at=seq(min(date(numerage$date[numerage$blockage == 1])), max(date(numerage$date[numerage$blockage == 1])), by="months"), format="%b")
 axis(side = 2)

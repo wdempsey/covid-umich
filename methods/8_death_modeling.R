@@ -61,9 +61,9 @@ df_coviddeath_age_plot %>%
   geom_vline(aes(xintercept = date(date_switch_three)), linetype="dotted") +
   scale_fill_manual(values=wes_palette(n = 3, "IsleofDogs1"))
 
+death_rates = readRDS("../data/mean_ifr.RDS")
 
-death_rates = c(0.01631191, 0.14419778, 0.45623168,
-                1.44348510, 4.56708582, 15.46815604)/100
+death_rates = death_rates/100
 
 data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths, 
                      tswitch = tswitch+max_death_day, tswitch_two = tswitch_two + max_death_day,
@@ -81,4 +81,4 @@ fit_forcing <- sampling(model_forcing,
                         seed=2,
                         chains = 1)
 
-saveRDS(fit_forcing, "../data/fit_forcing_byage_072621.RDS")
+saveRDS(fit_forcing, "../data/fit_forcing_byage_083121.RDS")

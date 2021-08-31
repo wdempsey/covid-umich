@@ -107,3 +107,25 @@ dev.off()
 #   scale_color_manual(values=my_palette)
 # 
 # dev.off()
+
+my_palette <- brewer.pal(name="Greys",n=9)[7]
+
+prevalence_alt_cis = readRDS("../data/ipw_cis.RDS")
+prevalence_alt_cis = data.frame(prevalence_alt_cis)
+names(prevalence_alt_cis)  = c("week", "year", "estimate", "stderr", "lowci", "upperci")
+prevalence_alt_cis$date = MMWRweek::MMWRweek2Date(MMWRyear = prevalence_alt_cis$year,
+                                          MMWRweek = prevalence_alt_cis$week,
+                                          MMWRday = 1)
+
+pd <- position_dodge(0.1) # move them .05 to the left and right
+
+png(filename = "../figs/tv_air_cis.png",
+    width = 960, height = 480, units = "px", pointsize = 25)
+
+ggplot(data = prevalence_alt_cis, aes(x = date, y = estimate)) +
+  geom_point(size = 2, color = my_palette) +
+  geom_errorbar(aes(ymin=lowci, ymax=upperci), width=.2, position = pd) +  labs(x = "Date",
+       y = "Active Infection Rate Estimate") + 
+  theme(text = element_text(size=25))
+
+dev.off()
