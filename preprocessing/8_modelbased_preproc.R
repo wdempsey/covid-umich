@@ -54,7 +54,7 @@ df_coviddeath$date = ymd(df_coviddeath$startdate)
 df_coviddeath_agg <- aggregate(covid_deaths ~ date, data = df_coviddeath, FUN = sum)
 dates = df_coviddeath_agg$date[-length(df_coviddeath_agg$date)]
 
-fit_forcing = readRDS("../data/fit_forcing_byage_072621.RDS")
+fit_forcing = readRDS("../data/fit_forcing_byage_083121.RDS")
 summary_fit = summary(fit_forcing, pars = "pred_cases_per_agegroup", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary
 n_days = nrow(summary_fit)/6
 dates = c(min(dates)-1:(n_days - length(dates)), dates) ## EXTEND BACKWARDS FOR CASES
@@ -265,3 +265,6 @@ saveRDS(prevalence_temp, "../data/aggregate_air.RDS")
 
 
 plot(prevalence_temp$date, prevalence_temp$estimate)
+
+
+cumsum(prevalence_temp$mean)[10]/N
