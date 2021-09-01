@@ -1,5 +1,5 @@
 ## INDIANA DEATH DATA
-library(wesanderson)
+# library(wesanderson)
 library(tidyverse)
 library(tidybayes)
 library(gridExtra)
@@ -46,20 +46,20 @@ tswitch_two <- subset(df_coviddeath_age, age == "80+") %>% filter(date < date_sw
 date_switch_three <- "2020-10-01" # date of ending of control measures
 tswitch_three <- subset(df_coviddeath_age, age == "80+") %>% filter(date < date_switch_three) %>% nrow() + 1 # convert time to number
 
-## PLOTTING DEATH DATA BY AGE CATEGORY
-df_coviddeath_age_plot = df_coviddeath_age
-levels(df_coviddeath_age_plot$age) = c(1,2,2,2,3,3)
-levels(df_coviddeath_age_plot$age) = c("0-39", "40-69", "70+")
-
-df_coviddeath_age_plot %>% 
-  ggplot() + 
-  geom_bar(mapping = aes(x = date, y = death_dt, fill = age), stat = "identity") +
-  labs(y="Number of COVID-19 Reported Deaths") + 
-  scale_x_date(date_breaks = "months" , date_labels = "%b-%y")+ 
-  geom_vline(aes(xintercept = date(date_switch)), linetype="dotted") + 
-  geom_vline(aes(xintercept = date(date_switch_two)), linetype="dotted") + 
-  geom_vline(aes(xintercept = date(date_switch_three)), linetype="dotted") +
-  scale_fill_manual(values=wes_palette(n = 3, "IsleofDogs1"))
+# ## PLOTTING DEATH DATA BY AGE CATEGORY
+# df_coviddeath_age_plot = df_coviddeath_age
+# levels(df_coviddeath_age_plot$age) = c(1,2,2,2,3,3)
+# levels(df_coviddeath_age_plot$age) = c("0-39", "40-69", "70+")
+# 
+# df_coviddeath_age_plot %>% 
+#   ggplot() + 
+#   geom_bar(mapping = aes(x = date, y = death_dt, fill = age), stat = "identity") +
+#   labs(y="Number of COVID-19 Reported Deaths") + 
+#   scale_x_date(date_breaks = "months" , date_labels = "%b-%y")+ 
+#   geom_vline(aes(xintercept = date(date_switch)), linetype="dotted") + 
+#   geom_vline(aes(xintercept = date(date_switch_two)), linetype="dotted") + 
+#   geom_vline(aes(xintercept = date(date_switch_three)), linetype="dotted") +
+#   scale_fill_manual(values=wes_palette(n = 3, "IsleofDogs1"))
 
 death_rates = readRDS("../data/mean_ifr.RDS")
 
@@ -81,4 +81,4 @@ fit_forcing <- sampling(model_forcing,
                         seed=2,
                         chains = 1)
 
-saveRDS(fit_forcing, "../data/fit_forcing_byage_083121.RDS")
+saveRDS(fit_forcing, "../data/fit_forcing_byage_090121.RDS")
