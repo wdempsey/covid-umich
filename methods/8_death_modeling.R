@@ -39,27 +39,13 @@ t <- seq(1, n_days+max_death_day, by = 1)
 t0 = 0
 t <- t
 
+## Switch Dates
 date_switch <- "2020-03-23" # date of introduction of control measures (empirical)
 tswitch <- subset(df_coviddeath_age, age == "80+") %>% filter(date < date_switch) %>% nrow() + 1 # convert time to number
 date_switch_two <- "2020-06-15" # date of ending of control measures
 tswitch_two <- subset(df_coviddeath_age, age == "80+") %>% filter(date < date_switch_two) %>% nrow() + 1 # convert time to number
 date_switch_three <- "2020-10-01" # date of ending of control measures
 tswitch_three <- subset(df_coviddeath_age, age == "80+") %>% filter(date < date_switch_three) %>% nrow() + 1 # convert time to number
-
-# ## PLOTTING DEATH DATA BY AGE CATEGORY
-# df_coviddeath_age_plot = df_coviddeath_age
-# levels(df_coviddeath_age_plot$age) = c(1,2,2,2,3,3)
-# levels(df_coviddeath_age_plot$age) = c("0-39", "40-69", "70+")
-# 
-# df_coviddeath_age_plot %>% 
-#   ggplot() + 
-#   geom_bar(mapping = aes(x = date, y = death_dt, fill = age), stat = "identity") +
-#   labs(y="Number of COVID-19 Reported Deaths") + 
-#   scale_x_date(date_breaks = "months" , date_labels = "%b-%y")+ 
-#   geom_vline(aes(xintercept = date(date_switch)), linetype="dotted") + 
-#   geom_vline(aes(xintercept = date(date_switch_two)), linetype="dotted") + 
-#   geom_vline(aes(xintercept = date(date_switch_three)), linetype="dotted") +
-#   scale_fill_manual(values=wes_palette(n = 3, "IsleofDogs1"))
 
 death_rates = readRDS("../data/mean_ifr.RDS")
 
@@ -74,6 +60,7 @@ data_forcing <- list(n_days = n_days, t0 = t0, ts = t, N = N, deaths = deaths,
                      alpha = rep(1, length(death_rates)))
 model_forcing <- stan_model("./8_sir_model.stan")
 
+set.seed(17194871)
 fit_forcing <- sampling(model_forcing, 
                         data_forcing, 
                         iter=2000,

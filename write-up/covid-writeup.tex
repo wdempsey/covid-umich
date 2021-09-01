@@ -426,7 +426,7 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  \subsubsection{Asymptotics}
  \label{section:asymptotics}
 
- Suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$.  For each finite population, we assume there are $L_\nu$ non-probability samples and probability samples of size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^{L_{\nu}}$ over the study window~$[0,T]$. Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:ipw} shows that the IPW estimator is consistent as $\nu$ goes to infinity (i.e., $N_{\nu}$ and $L_{\nu} \to \infty$) and calculates the estimator's variance.  In Lemma~\ref{lemma:ipw}, sensitivity and specificity are not assumed known.  Instead, we suppose that these are estimated using a pseudo-likelihood on two random samples from the population whose size (denoted~$n_{FP}$ and $n_{FN}$ respectively) is chosen so the resulting estimated sensitivity and specificity have desired levels of uncertainty.  See Appendix~\ref{app:asympderivations} for additional details.
+ Here we suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$ and that there are $L_\nu$ non-probability samples and probability samples of size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^{L_{\nu}}$ over the study window~$[0,T]$. Assuming the selection model is correctly specified, then under the design of the probability sample and propensities of the nonprobability sample, Lemma~\ref{lemma:ipw} shows that the IPW estimator is consistent as $\nu$ goes to infinity (i.e., $N_{\nu}, L_{\nu} \to \infty$) and calculates the estimator's variance.  In Lemma~\ref{lemma:ipw}, sensitivity/specificity are not assumed known but estimated using a pseudo-likelihood on two random samples whose size (denoted~$n_{FP}$ and $n_{FN}$) is chosen so the estimated sensitivity/specificity have desired levels of uncertainty. On each sample, a binary outcome denoted $Z_j$ and $\tilde Z_j$ is observed representing a false positive/negative. See Appendix~\ref{app:asympderivations} for additional details.
 
  \begin{lemma}[Variance of IPW estimator] \normalfont
  \label{lemma:ipw}
@@ -500,7 +500,7 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  Unfortunately, the first term of the doubly robust estimator cannot be computed as covariate information is not collected on the entire population.  Here, we suppose the same asymptotic regime as in Section~\ref{section:asymptotics} and use the probability samples and consider the following estimator at time~$t$
  \begin{align*}
  &\frac{1}{\sum_{l=1}^L K_{h} (|t - t_l^\prime|) \sum_{j=1}^N \tilde I_{j,t_l^\prime} \tilde W_{j,t_l^\prime}} \sum_{l=1}^L K_{h} (|t - t_l^\prime|) \sum_{j=1}^N  \tilde I_{j,t_l^\prime} \tilde W_{j,t_l^\prime} \hat \mu_{t^\prime_l} (X_{j,t^\prime}) \\
- + &\quad \frac{1}{\sum_{j=1}^N I_{j,t} w (X_{j,t})} \sum_{j=1}^N I_{j,t} w(X_{j,t}) \left( \frac{Y_{j,t} - FP}{1 - FP - FN} - \mu_t(X_{j,t}) \right).
+ + &\quad \frac{1}{\sum_{j=1}^N I_{j,t} w (X_{j,t})} \sum_{j=1}^N I_{j,t} w(X_{j,t}) \left( \frac{Y_{j,t} - FP}{1 - FP - FN} - \hat \mu_t(X_{j,t}) \right).
  \end{align*}
  where $\tilde I_{j,t_l^\prime}$ indicates an individual is included in the random sample at time~$t_l^\prime$ and $\tilde W_{j,t_l^\prime}$ is the associated weight for that unit. Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:dr} shows that the doubly robust estimator is consistent and calculates the estimator's variance. See Appendix~\ref{app:asympderivations} for additional details.
 
@@ -512,7 +512,7 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  \Phi_n (\eta_t) =
  \left (
  \begin{array}{c}
- \frac{1}{N} \left[ \sum_{j=1}^N \frac{I_{j,t}}{\pi_{j,t}} \left( \left( \frac{Y_{j,t} - FP}{1-FP-FN} - \hat \mu_{j,t}  \right)  - \mu_t \right) + \frac{1}{\sum_{j=1}^N \tilde I_j \tilde W_j} \sum_{j=1}^N  \tilde I_j \tilde W_j \hat \mu_t (X_{j,t}) \right] \\
+ \frac{1}{N} \left[ \sum_{j=1}^N \frac{I_{j,t}}{\pi_{j,t}} \left( \left( \frac{Y_{j,t} - FP}{1-FP-FN} - \hat \mu_{j,t}  \right)  - \mu_t \right) + \frac{\sum_{l=1}^L K_{h} (|t - t_l^\prime|) \sum_{j=1}^N \tilde I_{j,t_l^\prime} \tilde W_{j,t_l^\prime} \hat \mu_{j,t_l^\prime}}{\sum_{l=1}^L K_{h} (|t - t_l^\prime|) \sum_{j=1}^N \tilde I_{j,t_l^\prime} \tilde W_{j,t_l^\prime}} \right] \\
  \frac{1}{N \times \sum_{l=1}^L K_{h} (|t - t_l^\prime|)} \sum_{l=1}^L K_{h} (|t - t_l^\prime|) \sum_{j=1}^N I_{j,t^\prime} X_{j,t^\prime} - \frac{1}{N} \sum_{j = 1}^N \tilde I_{j,t^\prime} \tilde W_{j,t^\prime}  \pi_{j,t^\prime} X_{j,t^\prime}  \\
  \frac{1}{n_{FP}} \sum_{j=1}^{n_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
  \frac{1}{n_{FN}} \sum_{j=1}^{n_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
@@ -711,7 +711,7 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  $$
  where~$(\beta_0,\beta_1, \beta_2, \beta_3)$ is the vector of transmission rate parameters, $\nu \geq 0$ is the potential delay, $\xi$ is the rate of change, and ${\bf 1}[\cdot]$ is an indicator function.  Each weight~$w_t^{(k)} = 0$ for $t < t_k$ and $w_t^{(k)} \to 1$ as $t \to \infty$. See Section~\ref{app:prior_modelbased} in the supplementary materials for details on prior specification.
 
- To check how well our model fits the observed data, a posterior predictive check on aggregate death counts was performed. Figure~\ref{fig:deathsppc} shows the results which suggests chosen SEIR model fits the observed data well. Figure~\ref{fig:casesppc} presents the posterior distribution of total cases which can be used to estimate the active infection rate.  Figure~\ref{fig:undercounting} in the supplementary materials computes the weekly undercount factor of observed case cases.  Posterior distributions for the age-specific case counts will be used as part of the doubly-robust estimator of the active infection rate.
+ To check how well our model fits the observed data, a posterior predictive check on aggregate death counts was performed. Figure~\ref{fig:deathsppc} shows the results which suggests chosen SEIR model fits the observed data well. Figure~\ref{fig:casesppc} presents the posterior distribution of total new cases.  Figure~\ref{fig:undercounting} in the supplementary materials computes the weekly undercount factor of observed case counts.  Posterior distributions for the age-specific number of infected individuals will be used as part of the doubly-robust estimator of the active infection rate.
 
 
  \subsection{Time-varying prevalence estimates}
