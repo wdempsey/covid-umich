@@ -494,16 +494,16 @@ From prior derivations, we then have the desired result.
 
 Here, we take the suggested measures from~\cite{Arevalo2020} which report 87\% sensitivity is a reasonable estimates and~\cite{Cohen2020} which report 97.6\% specificity.  This corresponds to a false negative rate of $13\%$ and false positive rate of $2.4\%$.  To allow for potential uncertainty, we assume two \emph{synthetic} simple random samples.  The first is a simple random sample of true negative cases denoted $S_{FP}$; the second is simple random sample of true positive cases denoted $S_{FN}$.  As $\mu_t$ and $\theta_{t}$ are estimated independently at each time $t$, we can focus on the estimating equations per time point~$t$ separately.
 
-Suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$.  Each finite population has an associated non-probability sample at time $t$ of  size~$\tilde n$ and $L_\nu$ probability samples of fixed size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^L$ over the study window~$[0,T]$. Let~$\Delta_\nu$ denote the gap times between consecutive sample times such that as $\nu \to \infty$ we have that $\Delta_\nu \to 0$. Finally, let~$n_{FP}$ and $n_{FN}$ denote the sample sizes of $S_{FP}$ and $S_{FN}$ respectively.  For simplicity, dependency on $\nu$ is suppressed and the limiting process is represented by $N \to \infty$. The asymptotic argument below relies on regularity conditions C1-C6 from~\cite{Chen2019}, smoothness of the population-level distribution of the time-varying covariates~$\{ X_{j,t} \}$ as a function of $t > 0$, and smoothness of the propensity function~$\pi(x; \theta)$ as a function of $x \in \mathbb{R}^p$.
+Suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$.  Each finite population has $L_\nu$ non-probability samples and  probability samples of fixed size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^L$ over the study window~$[0,T]$. Let~$\Delta_\nu$ denote the gap times between consecutive sample times such that as $\nu \to \infty$ we have that $\Delta_\nu \to 0$. Finally, let~$n_{FP}$ and $n_{FN}$ denote the sample sizes of $S_{FP}$ and $S_{FN}$ respectively.  For simplicity, dependency on $\nu$ is suppressed and the limiting process is represented by $N \to \infty$. The asymptotic argument below relies on regularity conditions C1-C6 from~\cite{Chen2019}, smoothness of the population-level distribution of the time-varying covariates~$\{ X_{j,t} \}$ as a function of $t > 0$, and smoothness of the propensity function~$\pi(x; \theta)$ as a function of $x \in \mathbb{R}^p$.
 
 For each~$\nu$ and $t$, the estimates of $\eta = (\mu_t, \theta_t, FP, FN)$ are given by:
 $$
 \Phi (\eta) = \left (
 \begin{array}{c}
 \frac{1}{N} \sum_{j=1}^N I_{j,t} \frac{Y_{j,t} - FP - (1-FP-FN) \cdot \mu_t}{\pi_{j,t}} \\
-\frac{1}{N \sum_{l=1}^L K_{t,t_l^\prime}} \sum_{l=1}^L K_{t,t_l^\prime} \left[ \sum_{j=1}^N I_{j,t^\prime} X_{j,t^\prime_l} - \sum_{j = 1}^N \tilde I_{j,t_l^\prime} \tilde W_{j,t_l^\prime}  \pi_{j,t_l^\prime} X_{j,t_l^\prime} \right] \\
-\frac{1}{n_{FP}} \sum_{j \in S_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
-\frac{1}{n_{FN}} \sum_{j \in S_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
+\frac{1}{N \times \sum_{l=1}^L K_{h} \left(|t - t_l^\prime| \right)} \sum_{l=1}^L K_{h} \left(|t - t_l^\prime| \right) \left[ \sum_{j=1}^N I_{j,t^\prime} X_{j,t^\prime_l} - \sum_{j = 1}^N \tilde I_{j,t_l^\prime} \tilde W_{j,t_l^\prime}  \pi_{j,t_l^\prime} X_{j,t_l^\prime} \right] \\
+\frac{1}{n_{FP}} \sum_{i=1}^{n_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
+\frac{1}{n_{FN}} \sum_{i=1}^{n_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
 \end{array}
 \right ) = {\bf 0}
 $$
@@ -511,30 +511,30 @@ where $\pi_{j,t^\prime} = \pi (X_{j,t^\prime}; \theta_t)$, $Z_j$ is an indicator
 
 To prove consistency, first consider the setting where a single random sample of size $n$ is observed at time $t$.  Let $\tilde \Phi (\eta)$ denote the corresponding estimating equations, which is the same as $\Phi(\eta)$ except for the second component which is now given by
 $$
-\frac{1}{N} \left[ \sum_{j=1}^N I_{j,t} X_{j,t} - \frac{1}{N} \sum_{j = 1}^N \tilde I_{j,t} \tilde W_{j,t}  \pi_{j,t} X_{j,t} \right].
+\frac{1}{N} \left[ \sum_{j=1}^N I_{j,t} X_{j,t} - \sum_{j = 1}^N \tilde I_{j,t} \tilde W_{j,t}  \pi_{j,t} X_{j,t} \right].
 $$
 Then under joint randomization of propensity score model and sampling designs, we have $E [ \tilde \Phi (\eta_0) ] = {\bf 0}$.  Consistency then follows by arguments in Section 3.2 of Tsiatis (2006). Under conditions C1-C6 from~\cite{Chen2019} and as $n$ increases, we have $\tilde \Phi (\hat \eta^\prime) = 0$ and $\tilde \Phi(\eta_0) = O_p ( n^{-1/2} )$ where $\hat \eta^\prime$ here refers to the solution to $\tilde \Phi (\eta)$.
 
 To prove consistency under the sequence of sampling regimes, we need to show that $E[ \Phi (\eta_0) ] \to 0$ as $N \to \infty$.  First, we study the difference in the 2nd term:
 \begin{align*}
-&\frac{1}{N}  E \left[ \sum_{j = 1}^N \tilde I_{j,t} \tilde W_{j,t}  \pi_{j,t} X_{j,t} - \sum_{l=1}^L  \sum_{j = 1}^N \tilde K_{t,t^\prime_l} \tilde I_{j,t^\prime_l} \tilde W_{j,t^\prime_l}  \pi_{j,t^\prime_l} X_{j,t^\prime_l} \right] \\
-= &\frac{1}{N} \sum_{j = 1}^N \left[ \pi_{j,t} X_{j,t} - \sum_{l=1}^L \tilde K_{t,t^\prime_l} \pi_{j,t^\prime_l} X_{j,t^\prime_l} \right], \\
-= &\frac{1}{N} \sum_{j = 1}^N \left[ \sum_{l=1}^L \tilde K_{t,t^\prime_l} \pi_{j,t} X_{j,t} \pm \sum_{l=1}^L \tilde K_{t,t^\prime_l} \pi_{j,t_l^\prime} X_{j,t}  - \sum_{l=1}^L \tilde K_{t,t^\prime_l} \pi_{j,t^\prime_l} X_{j,t^\prime_l} \right], \\
-= &\frac{1}{N} \sum_{j = 1}^N \left[ \left( \sum_{l=1}^L \tilde K_{t,t^\prime_l}  \left( \pi (X_{j,t}; \theta) - \pi (X_{j,t^\prime_l}; \theta) \right) \right) X_{j,t} + \sum_{l=1}^L \tilde K_{t,t^\prime_l} \pi_{j,t^\prime_l} (X_{j,t} - X_{j,t^\prime_l} ) \right],
+&\frac{1}{N}  E \left[ \sum_{j = 1}^N \tilde I_{j,t} \tilde W_{j,t}  \pi_{j,t} X_{j,t} - \sum_{l=1}^L  \sum_{j = 1}^N K_{h,l} \tilde I_{j,t^\prime_l} \tilde W_{j,t^\prime_l}  \pi_{j,t^\prime_l} X_{j,t^\prime_l} \right] \\
+= &\frac{1}{N} \sum_{j = 1}^N \left[ \pi_{j,t} X_{j,t} - \sum_{l=1}^L K_{h,l} \pi_{j,t^\prime_l} X_{j,t^\prime_l} \right], \\
+= &\frac{1}{N} \sum_{j = 1}^N \left[ \sum_{l=1}^L K_{h,l} \pi_{j,t} X_{j,t} \pm \sum_{l=1}^L K_{h,l} \pi_{j,t_l^\prime} X_{j,t}  - \sum_{l=1}^L K_{h, l} \pi_{j,t^\prime_l} X_{j,t^\prime_l} \right], \\
+= &\frac{1}{N} \sum_{j = 1}^N \left[ \left( \sum_{l=1}^L K_{h,l}  \left( \pi (X_{j,t}; \theta) - \pi (X_{j,t^\prime_l}; \theta) \right) \right) X_{j,t} + \sum_{l=1}^L K_{h,l} \pi_{j,t^\prime_l} (X_{j,t} - X_{j,t^\prime_l} ) \right],
 \end{align*}
-where $\tilde K_{t, t^\prime_l}$ is the normalized kernel such that $\sum_{l=1}^L \tilde K_{t, t^\prime_l} = 1$. The difference in the 1st term is similarly defined.
+where~$K_{h,l} := K_h(|t - t_l^\prime|) / \sum_{l=1}^L K_{h} \left(|t - t_l^\prime| \right)$ is the normalized kernel for shorthand. The difference in the 1st term is similarly defined.
 
 Let~$X_{j,t,l}$ denote the $l$th component of the vector $X_{j,t}$.  Then consider the population-level distribution $\{ X_{j,t,l} \}_{j=1}^N$.  We make the additional assumption that
 $$
 \lim_{\epsilon \to 0} \lim_{N \to \infty} \frac{1}{N} \sum_{j=1}^N X_{j,t+\epsilon, l}  = \lim_{N \to \infty} \frac{1}{N} \sum_{j=1}^N X_{j,t, l}.
 $$
-That is, the limiting distributions are continuous as a function of $t$. If $\pi(x; \theta)$ is a continuous function in~$x$ and under suitable conditions on the kernel density~$\tilde K_{t, \cdot}$ with the bandwidth $h_\nu \to \infty$ such that $\sum_{l=1}^L \tilde K_{t,t_l} \to \infty$ as $\nu \to \infty$, we have
+That is, the limiting distributions are continuous as a function of $t$. If $\pi(x; \theta)$ is a continuous function in~$x$ and under suitable conditions on the kernel density~$K_{h_\nu} (\cdot)$ with the bandwidth $h_\nu \to \infty$ such that $\sum_{l=1}^L K_{h_{\nu}} \left( | t - t_l^\prime | \right) \to \infty$ as $\nu \to \infty$, we have
 $$
-\left | \sum_{l=1}^L \tilde K_{t, t_l^\prime} \pi (X_{j, t_l^\prime}; \theta) - \pi (X_{j, t}; \theta) \right|  \to 0
+\left | \sum_{l=1}^L K_{h, l} \pi (X_{j, t_l^\prime}; \theta) - \pi (X_{j, t}; \theta) \right|  \to 0
 $$
 Combining this, $E \left[ \Phi(\eta_0)  - \tilde \Phi (\eta_0) \right] \to 0$ which implies consistency as desired.
 
-Then by a first-order Taylor expansion we have $\hat \eta - \eta_0 = \left[ \phi (\eta) \right]^{-1} \Phi(\eta_0) + o_p (\bar n^{-1/2})$ where $\phi(\eta) = \partial \Phi (\eta)/\partial \eta$ and $\bar n = n \sum_{l=1}^L K_{t,t_l}$.  To calculate
+Then by a first-order Taylor expansion we have $\hat \eta - \eta_0 = \left[ \phi (\eta) \right]^{-1} \Phi(\eta_0) + o_p (\bar n^{-1/2})$ where $\phi(\eta) = \partial \Phi (\eta)/\partial \eta$ and $\bar n = n \sum_{l=1}^L K_{h,l}$.  To calculate
 $$
 \frac{\partial \Phi (\eta)}{\partial \mu_t} =
 \left (
@@ -565,7 +565,7 @@ $$
 \begin{array}{c}
 -\frac{1}{N} \sum_{j=1}^N I_{j,t} \frac{(1-\mu_t)}{\pi_{j,t}} \\
 0\\
--\frac{1}{n_{FP}} \sum_{j \in S_{FP}} \left( \frac{Z_j}{FP^2} + \frac{1-Z_j}{(1-FP)^2} \right)  \\
+-\frac{1}{n_{FP}} \sum_{j=1}^{n_{FP}} \left( \frac{Z_j}{FP^2} + \frac{1-Z_j}{(1-FP)^2} \right)  \\
 0
 \end{array}
 \right )
@@ -578,7 +578,7 @@ $$
 - \frac{1}{N} \sum_{j=1}^N I_{j,t} \frac{\mu_t}{\pi_{j,t}} \\
 0\\
 0 \\
--\frac{1}{n_{FN}}  \sum_{j \in S_{FN}} \left( \frac{\tilde Z_j}{FN^2} + \frac{1-\tilde Z_j}{(1-FN)^2} \right)
+-\frac{1}{n_{FN}}  \sum_{j =1}^{n_{FN}} \left( \frac{\tilde Z_j}{FN^2} + \frac{1-\tilde Z_j}{(1-FN)^2} \right)
 \end{array}
 \right )
 $$
@@ -637,7 +637,7 @@ $$
 A_{3,t} = \left( \begin{array}{c}
 0 \\
 0 \\
-\frac{1}{n_{FP}} \sum_{j \in S_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
+\frac{1}{n_{FP}} \sum_{j=1}^{n_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
 0
 \end{array}
 \right),
@@ -648,7 +648,7 @@ A_{4,t} = \left( \begin{array}{c}
 0 \\
 0 \\
 0 \\
-\frac{1}{n_{FN}} \sum_{j \in S_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
+\frac{1}{n_{FN}} \sum_{j=1}^{n_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
 \end{array}
 \right),
 $$
@@ -711,7 +711,7 @@ $$
 In this section, we describe the two mean-imputation methods.
 \subsection{Model 1}
 
-First, we use the pseudo-likelihood to compute the likelihood of contact given age, gender, and test result.  Figure~\ref{fig:contactlik1} and~\ref{fig:contactlik2} plots the likelihood for 25-34 year olds given a negative test and positive test respectfully.  We see that the likelihood of COVID-19 is much higher for those with a positive test and the likelihood is time-varying.
+First, we use the pseudo-likelihood to compute the likelihood of contact given age, gender, and test result.  Figure~\ref{fig:contactlik1} and~\ref{fig:contactlik2} plots the likelihood for 25-34 years old given a negative test and positive test respectfully.  We see that the likelihood of COVID-19 is much higher for those with a positive test and the likelihood is time-varying.
 
 \begin{figure}[!th]
 \centering
@@ -777,7 +777,7 @@ Based on mean-imputation of COVID-19 contact and fever indicators, we can use th
 
 \subsection{Model 2 (Hospitalization)}
 
-This model uses hospitalization records to try and improve our mean-imputation strategy.  First, we use the pseudo-likelihood to compute the likelihood of fever given age, gender, and test result.  The model only depends on hospitalization status for positive tests.  Figure~\ref{fig:symptomlik1_model2} and~\ref{fig:symptomlik2_model2} plots the likelihood for 35-44 year olds given a negative test and positive test respectfully.  We see that the likelihood of fever is time-varying.  For a negative test, the likelihood of ever fever is very high in early April, which accounts for testing restrictions. We see that hospitalization significantly increases the risk of fever given a positive test.
+This model uses hospitalization records to try and improve our mean-imputation strategy.  First, we use the pseudo-likelihood to compute the likelihood of fever given age, gender, and test result.  The model only depends on hospitalization status for positive tests.  Figure~\ref{fig:symptomlik1_model2} and~\ref{fig:symptomlik2_model2} plots the likelihood for 35-44 years old given a negative test and positive test respectfully.  We see that the likelihood of fever is time-varying.  For a negative test, the likelihood of ever fever is very high in early April, which accounts for testing restrictions. We see that hospitalization significantly increases the risk of fever given a positive test.
 
 \begin{figure}[!th]
 \centering
@@ -797,7 +797,7 @@ This model uses hospitalization records to try and improve our mean-imputation s
 \label{fig:symptomlik_model2}
 \end{figure}
 
-First, we computed the probability of fever given COVID-19 positive test and hospitalization as well as COVID-19 positive test and no hospitalization.  We then computed the lieklihood of symptom given a COVID-19 positive test by weighting these two likelihoods by the fraction of COVID-19 positive hospitalizations to COVID-19 total positive cases per week.  Mean imputation of fever status for COVID-19 negative tests was performed based on the above model without use of hospitalization data.
+First, we computed the probability of fever given COVID-19 positive test and hospitalization as well as COVID-19 positive test and no hospitalization.  We then computed the likelihood of symptom given a COVID-19 positive test by weighting these two likelihoods by the fraction of COVID-19 positive hospitalizations to COVID-19 total positive cases per week.  Mean imputation of fever status for COVID-19 negative tests was performed based on the above model without use of hospitalization data.
 
 Based on mean-imputation of COVID-19 fever using hospitalization records indicators, we can use the proposed pseudo-likelihood approach to compute the likelihood of getting tested for COVID-19 given age, ethnicity, race, gender, and fever status.  Figure~\ref{fig:testinglik1_mainpaper} and~\ref{fig:testinglik1_mainpaper} in Section~\ref{section:tvipw} of the manuscript plots the likelihood of testing given fever and no fever respectfully for all age ranges.  We see that the likelihood is time-varying and depends heavily on both fever status.
 
