@@ -81,7 +81,11 @@ parameters {
 transformed parameters{
   real y[n_days+max_death_day, 4];
   real incidence[n_days+max_death_day - 1];
-  real incidence_by_age[num_ages, n_days+max_death_day-1]; 
+  real infected[n_days+max_death_day - 1];
+  real recovered[n_days+max_death_day - 1];
+  real new_recovered[n_days+max_death_day - 1];
+  real incidence_by_age[num_ages, n_days+max_death_day-1];
+  real infected_by_age[num_ages, n_days+max_death_day-1]; 
   real death_incidence[num_ages, n_days - 1];
   real phi = 1. / phi_inv;
   real xi = xi_raw + 0.5;
@@ -90,10 +94,14 @@ transformed parameters{
   y = integrate_ode_rk45(sir, rep_array(0.0, 4), t0, ts, theta, x_r, x_i);
   for (i in 1:(n_days+max_death_day)-1){
     incidence[i] = -(y[i+1, 2] - y[i, 2] + y[i+1, 1] - y[i, 1]); //-(E(t+1) - E(t) + S(t+1) - S(t))
+    infected[i] = y[i, 3];
+    recovered[i] = y[i, 4];
+    new_recovered[i] = -(y[i+1,4] - y[i,4] + y[i+1,3] - y[i,3]);
   }
   for (k in 1:num_ages) {
     for (i in 1:(n_days+max_death_day)-1){
       incidence_by_age[k,i] = incidence[i] * varphi[1][k];
+      infected_by_age[k,i] = infected[i] * varphi[1][k];
     }
   }
   for (k in 1:num_ages) {
@@ -138,15 +146,23 @@ generated quantities {
   real recovery_time = 1 / gamma;
   real incubation_time = 1 / a;
   real pred_cases[n_days+max_death_day-1];
+  real pred_active_infections[n_days+max_death_day-1];
+  real pred_recovered[n_days+max_death_day-1];
+  real pred_new_recovered[n_days+max_death_day-1];
   real pred_cases_per_agegroup[num_ages, n_days+max_death_day-1];
+  real pred_infected_per_agegroup[num_ages, n_days+max_death_day-1];
   real pred_deaths[num_ages, n_days-1];
   pred_cases = neg_binomial_2_rng(incidence, phi);
+  pred_active_infections = neg_binomial_2_rng(infected, phi);
+  pred_recovered = neg_binomial_2_rng(recovered, phi);
+  pred_new_recovered = neg_binomial_2_rng(new_recovered, phi);
   for (k in 1:num_ages) {
     for (i in 1:n_days-1) {
       pred_deaths[k,i] = neg_binomial_2_rng(death_incidence[k,i], phi);
     }
     for (i in 1:(n_days+max_death_day-1)) {
       pred_cases_per_agegroup[k,i] = neg_binomial_2_rng(incidence_by_age[k,i], phi);
+      pred_infected_per_agegroup[k,i] = neg_binomial_2_rng(infected_by_age[k,i], phi);
     }
   }
   for (i in 1:n_days)
