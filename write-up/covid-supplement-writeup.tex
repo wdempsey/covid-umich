@@ -708,7 +708,22 @@ $$
 \section{Indiana COVID-19 Analysis: Additional details}
 \label{app:in_add_details}
 
-In this section, we describe the two mean-imputation methods.
+Table~\ref{tab:comparison} demonstrates minimal bias in the Facebook symptom survey with respect to symptom distributions.
+
+ \begin{table}[!th]
+ \centering
+ \begin{tabular}{c | c c c | c}
+ & \multicolumn{3}{c}{Facebook} & Random \\ \cline{2-4}
+ & Lower CI & Estimate & Upper CI & Estimate \\ \hline
+ Fever &  0.017 & 0.020 & 0.024 & 0.018 \\
+ Cough &  0.142 & 0.148 & 0.154 & 0.149 \\
+ Shortness & 0.058 & 0.060 & 0.062 & 0.062 \\ \hline
+ \end{tabular}
+ \caption{Comparison of Facebook survey and random sample}
+ \label{tab:comparison}
+ \end{table}
+
+Next, we describe the two mean-imputation methods.
 \subsection{Model 1}
 
 First, we use the pseudo-likelihood to compute the likelihood of contact given age, gender, and test result.  Figure~\ref{fig:contactlik1} and~\ref{fig:contactlik2} plots the likelihood for 25-34 years old given a negative test and positive test respectfully.  We see that the likelihood of COVID-19 is much higher for those with a positive test and the likelihood is time-varying.
@@ -850,7 +865,7 @@ For simplicity, we list the priors used in STAN below:
   \item \code{phi = 1/phi\_inv;}
   \item \code{xi = xi\_raw + 0.5;}
 \end{itemize}
-where \code{beta, eta, eta\_two, eta\_three} refer to the four values that form the time-varying parameter $\beta_t$ when combined with \code{xi, eta, eta\_two, eta\_three} in the SEIR model as described in Section~\ref{section:modelbased}.
+where \code{beta, eta, eta\_two, eta\_three} refer to the four values that form the time-varying parameter $\beta_t$ when combined with \code{xi, eta, eta\_two, eta\_three} in the SEIR model as described in Section~\ref{section:modelbased}. Following~\cite{Song2020}, we employ Runge-Kutta (RK4) approximations for discretization.
 
 Figure~\ref{fig:undercounting} below is a plot of undercount based on the SEIR model.  We see the undercount goes away by January; however, this points to potential misspecification of the IFR.
 

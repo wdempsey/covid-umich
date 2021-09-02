@@ -379,7 +379,7 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  \label{eq:auxinfoprob}
  \sum_{j=1}^N I_j \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right)  + \sum_{i=1}^N \tilde I_j \tilde W_j \log ( 1 - \pi (X_j; \theta)).
  \end{equation}
- Taking an expectation with respect to the sampling design yields~\eqref{eq:propensity}. Solving~\eqref{eq:auxinfoprob} can be done by iteratively re-weighted least squares (IRLS); see Section~\ref{app:irls} in the supplementary materials for algorithmic details.
+ Expectation of~\ref{eq:auxinfoprob} with respect to the sampling design yields~\eqref{eq:propensity}. Solving~\eqref{eq:auxinfoprob} is done by iteratively re-weighted least squares (IRLS); see Section~\ref{app:irls} in the supplementary materials for details.
 
  % Under simple random sampling and non-parametric selection propensity on a stratification variable, the weight is given by estimator of the $\hat \pi_k = (d_k / \tilde d_k) (n / N)$ where $\tilde d_k$ is the number of observations in strata $k$ in the random sample.
 
@@ -430,12 +430,12 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  \subsubsection{Asymptotics}
  \label{section:asymptotics}
 
- Here we suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$ and that there are $L_\nu$ non-probability samples and probability samples of size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^{L_{\nu}}$ over the study window~$[0,T]$. Assuming the selection model is correctly specified, then under the design of the probability sample and propensities of the nonprobability sample, Lemma~\ref{lemma:ipw} shows that the IPW estimator is consistent as $\nu$ goes to infinity (i.e., $N_{\nu}, L_{\nu} \to \infty$) and calculates the estimator's variance.  In Lemma~\ref{lemma:ipw}, sensitivity/specificity are not assumed known but estimated using a pseudo-likelihood on two random samples whose size (denoted~$n_{FP}$ and $n_{FN}$) is chosen so the estimated sensitivity/specificity have desired levels of uncertainty. On each sample, a binary outcome denoted $Z_j$ and $\tilde Z_j$ is observed representing a false positive/negative. See Appendix~\ref{app:asympderivations} for additional details.
+ Here we suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$ and that there are $L_\nu$ non-probability samples and probability samples of size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^{L_{\nu}}$ over the study window~$[0,T]$. Assuming correct selection model specification, then under the probability sample design and nonprobability sample propensities, Lemma~\ref{lemma:ipw} shows that the IPW estimator at a time~$t \in \{ t^\prime_l \}$ is consistent as $\nu$ goes to infinity (i.e., $N_{\nu}, L_{\nu} \to \infty$) and calculates the estimator's variance.  In Lemma~\ref{lemma:ipw}, sensitivity/specificity are unknown and estimated using a pseudo-likelihood on two random samples whose sizes (denoted~$n_{FP}$ and $n_{FN}$) reflect uncertainty in these quantities.  See Appendix~\ref{app:asympderivations} for additional details.
 
  \begin{lemma}[Variance of IPW estimator] \normalfont
  \label{lemma:ipw}
  % \textcolor{red}{Must check.}
- The estimates~$\hat \mu_t := \bar y_{n,t}^\star$, $\hat \pi_{j,t}$, $\hat FP$, and $\hat FN$ are solutions to the following set of estimating equations
+The estimates~$\hat \mu_t := \bar y_{n,t}^\star$, $\hat \pi_{j,t}$, $\hat FP$, and $\hat FN$ at a time~$t \in \{t_l^\prime\}$ are solutions to the following set of estimating equations
  $$
  \Phi_n (\eta_t) =
  \left (
@@ -456,12 +456,13 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  Up to this point, the primary focus has been selection bias in coronavirus case-count data from a survey sampling perspective.  Here, we consider compartmental model approaches from infectious disease epidemiology.  Our primary objective is a model-based forecast of strata-level prevalence $\bar y_k$. To do this, a probabilistic extension of a standard epidemiological state-space model -- the susceptible, exposed, infected, and removed (recovered and death) model, or SEIR model -- is presented. A probabilistic SIR model was originally proposed by~\cite{Osthus2017} with only one-dimensional time series of infected proportions; this formulation was extended by~\cite{Song2020} to model coronavirus case-counts.
 
  Let $s_t$, $e_t$, $i_t$, and $r_t$ denote the proportion of survivors, exposed, infected, and removed cases (i.e., including both recovered cases and deaths) at time $t$.  The population-level SEIR dynamics are then given by the following set of differential equations:
- \begin{align}
+\begin{align}
  \frac{\partial s_t}{\partial t} &= - \beta s_t i_t; \quad \frac{\partial e_t}{\partial t} = \beta s_t i_t - \sigma e_t; \quad \label{eq:seir} \\
  \frac{\partial i_t}{\partial t} &= \sigma e_t - \gamma i_t; \quad
  \frac{\partial r_t}{\partial t} = - \gamma i_t. \nonumber
- \end{align}
- Following~\cite{Song2020}, we employ Runge-Kutta (RK4) approximations for discretization. Here, we consider covariate information that takes the form of a stratification variable with $K$ strata.  Let $I_{k,t}$ to denote the number of new infections on day $t$ in the $k$th strata.  As there are a total of $N \cdot i_t := I_t$ new infections on day $t$, we assume the joint distribution of strata-specific new infection totals takes a multinomial distribution with
+\end{align}
+%Following~\cite{Song2020}, we employ Runge-Kutta (RK4) approximations for discretization.
+Here, we consider covariate information that takes the form of a stratification variable with $K$ strata.  Let $I_{k,t}$ to denote the number of new infections on day $t$ in the $k$th strata.  The joint distribution of strata-specific new infection totals follows a multinomial distribution with
  $$
  ( I_{1,t}, \ldots, I_{K,t} ) \sim \text{Multinomial} \left( I_t, (p_{1,t}, \ldots, p_{K, t}) \right).
  $$
@@ -485,7 +486,7 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  $$
  \bar y_{n}^{(DR)} = \frac{1}{N} \sum_{j=1}^N \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j w (x_j)} \sum_{j=1}^N I_j w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \hat \mu(x_j) \right).
  $$
- where the estimates $\hat \mu(x_j)$ are not corrected for measurement-error as they are built to estimate true case count from death-only data. This estimator is called ``doubly-robust'' because it is consistent if either the model-based forecasts or the time-varying propensities are correctly specified. A statistical error decomposition can be derived
+ where $\hat \mu(x_j)$ is not corrected for measurement-error as it estimates true case counts. This estimator is called ``doubly-robust'' because it is consistent if either the model-based forecasts or the time-varying propensities are correctly specified. A statistical error decomposition can be derived
  \begin{align}
  \label{eq:statdecomp3}
  \begin{split}
@@ -501,12 +502,11 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  Interestingly, the impact of measurement-error on data quality now depends on a relative comparison of the data quality and problem difficulty of the weighted estimator and the doubly-robust estimator.
  % For decent models, one would expect this ratio to be greater than one.  Therefore, $\tilde \Delta < 0$ implies an expected increase in impact of measurement-error and $\tilde \Delta > 0$ implies the magnitude could shrink toward zero or change sign and have an even large magnitude in the opposite direction.  Again, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from a DR estimator are likely to put too much confidence in the sheer size of the data.
 
- Unfortunately, the first term of the doubly robust estimator cannot be computed as covariate information is not collected on the entire population.  Here, we suppose the same asymptotic regime as in Section~\ref{section:asymptotics} and use the probability samples and consider the following estimator at time~$t$
- \begin{align*}
- &\frac{1}{\sum_{l=1}^L K_{h} (|t - t_l^\prime|) \sum_{j=1}^N \tilde I_{j,t_l^\prime} \tilde W_{j,t_l^\prime}} \sum_{l=1}^L K_{h} (|t - t_l^\prime|) \sum_{j=1}^N  \tilde I_{j,t_l^\prime} \tilde W_{j,t_l^\prime} \hat \mu_{t^\prime_l} (X_{j,t^\prime}) \\
- + &\quad \frac{1}{\sum_{j=1}^N I_{j,t} w (X_{j,t})} \sum_{j=1}^N I_{j,t} w(X_{j,t}) \left( \frac{Y_{j,t} - FP}{1 - FP - FN} - \hat \mu_t(X_{j,t}) \right).
- \end{align*}
- where $\tilde I_{j,t_l^\prime}$ indicates an individual is included in the random sample at time~$t_l^\prime$ and $\tilde W_{j,t_l^\prime}$ is the associated weight for that unit. Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:dr} shows that the doubly robust estimator is consistent and calculates the estimator's variance. See Appendix~\ref{app:asympderivations} for additional details.
+ Unfortunately, the first term of the doubly robust estimator cannot be computed as covariate information is not collected on the entire population.  Here, we suppose the same asymptotic regime as in Section~\ref{section:asymptotics} and use the probability sample at the time~$t \in \{t_l^\prime\}$ to estimate this term:
+ $$
+ \frac{1}{\sum_{j=1}^N \tilde I_{j,t} \tilde W_{j,t}} \sum_{j=1}^N  \tilde I_{j,t} \tilde W_{j,t} \hat \mu_{t} (X_{j,t}) + \frac{1}{\sum_{j=1}^N I_{j,t} w (X_{j,t})} \sum_{j=1}^N I_{j,t} w(X_{j,t}) \left( \frac{Y_{j,t} - FP}{1 - FP - FN} - \hat \mu_t(X_{j,t}) \right).
+ $$
+ Assuming the selection propensity model is correctly specified, then under the design of the probability sample and design of the subsample from the nonprobability sample, Lemma~\ref{lemma:dr} shows that the doubly robust estimator is consistent and calculates the estimator's variance. See Appendix~\ref{app:asympderivations} for additional details.
 
  \begin{lemma}[Variance of doubly-robust estimator] \normalfont
  \label{lemma:dr}
@@ -560,28 +560,28 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  \label{fig:in-data}
  \end{figure}
 
- \item {\bf Random/Nonrandom statewide sample}: Table~\ref{tab:indiana} summarizes data from a random sample from April 25--29th as well as a nonrandom sample obtained between May 2--3 in racial/ethnic minority communities~\cite{Yiannoutsos2021}. The nonrandom sample is not a random subsample of the overall case-counts; however, this data provides important supplementary covariate information.
+ \item {\bf Random/Nonrandom statewide sample}: Table~\ref{tab:indiana} summarizes data from a random sample from April 25--29th as well as a nonrandom sample obtained between May 2--3 in racial/ethnic minority communities~\citep{Yiannoutsos2021}. The nonrandom sample is not a random subsample of the overall case-counts; however, this data provides important supplementary covariate information.
  % Namely, the samples collected included covariate information on (1) prior symptoms, (2) COVID-19 positive individual in household, and (3) prior COVID-19 positive test.
  To account for the nonrandom sample being from high risk areas, we adjust estimates to match the statewide positivity rate of 11.7\% on August 30th. These adjusted rates are presented in parentheses in Table~\ref{tab:indiana} along with the relevant covariate information.
 
- \item {\bf Facebook symptom survey}: From the daily symptom surveys completed on Facebook (see Section~\ref{subsection:fbsymptom} for details), we extract survey responses for individuals who identify as living in Indiana.  We collect age, sex, and demographic information as well as COVID-19 related symptoms, which Facebook defines as having (1) a fever and cough, (2) shortness of breath, \emph{or} (3) difficulty breathing. To assess potential bias, we compare the random sample from Indiana to the Facebook symptom survey data collected from April 25th to April 29th.  Table~\ref{tab:comparison} demonstrates minimal bias in the Facebook symptom survey with respect to symptom distributions.
+ \item {\bf Facebook symptom survey}: From the daily symptom surveys completed on Facebook (see Section~\ref{subsection:fbsymptom} for details), we extract survey responses for individuals who identify as living in Indiana.  We collect age, sex, and demographic information as well as COVID-19 related symptoms, which Facebook defines as having (1) a fever and cough, (2) shortness of breath, \emph{or} (3) difficulty breathing. Table~\ref{tab:comparison} in Section~\ref{app:in_add_details} of the supplementary materials shows minimal bias with respect to symptom distributions when comparing to Indiana's random sample to the Facebook symptom survey data collected from April 25th to April 29th.
 
- \begin{table}[!th]
- \centering
- \begin{tabular}{c | c c c | c}
- & \multicolumn{3}{c}{Facebook} & Random \\ \cline{2-4}
- & Lower CI & Estimate & Upper CI & Estimate \\ \hline
- Fever &  0.017 & 0.020 & 0.024 & 0.018 \\
- Cough &  0.142 & 0.148 & 0.154 & 0.149 \\
- Shortness & 0.058 & 0.060 & 0.062 & 0.062 \\ \hline
- \end{tabular}
- \caption{Comparison of Facebook survey and random sample}
- \label{tab:comparison}
- \end{table}
+ % \begin{table}[!th]
+ % \centering
+ % \begin{tabular}{c | c c c | c}
+ % & \multicolumn{3}{c}{Facebook} & Random \\ \cline{2-4}
+ % & Lower CI & Estimate & Upper CI & Estimate \\ \hline
+ % Fever &  0.017 & 0.020 & 0.024 & 0.018 \\
+ % Cough &  0.142 & 0.148 & 0.154 & 0.149 \\
+ % Shortness & 0.058 & 0.060 & 0.062 & 0.062 \\ \hline
+ % \end{tabular}
+ % \caption{Comparison of Facebook survey and random sample}
+ % \label{tab:comparison}
+ % \end{table}
 
  % \item {\bf Hospitalization data}: On each day, we observe the number of individuals who are COVID-19 positive that visited a hospital on that day.  Unfortunately, hospitalization data is not broken out by age, gender, and racial demographic information.  Instead, we rely on combining Facebook data to calculate the fraction of those who sought the hospital per week in each strata. We then use this to figure out how many individuals per strata were hospitalized and then back out how many
 
- \item {\bf Death data}: Daily COVID-19 related deaths are observed by age, gender, and racial demographics.  Figure~\ref{fig:in-deaths} plots the cumulative number of COVID-19 related deaths over time by age group. While most COVID-19 tests and positive cases are within the younger age strata, most deaths are within the 70+ age strata.
+ \item {\bf Death data}: Daily COVID-19 related deaths are observed by age, gender, and racial demographics.  Figure~\ref{fig:in-deaths} plots COVID-19 related deaths over time by age group. While most tests and positive cases are within the younger age strata, most deaths are within the 70+ age strata.
  \end{itemize}
 
 
@@ -624,23 +624,23 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  $$
  Using the constructed weights and the adjusted strata-level prevalence estimates, the IPW estimate under no measurement-error is $7.7\%$, a decrease of four percentage points from the observed prevalence of $11.7\%$. We also make use of Facebook's symptom survey over that window of time to construct a second IPW estimate conditional on demographics and fever but ignoring the household and prior testing information, which under no measurement-error is $6.5$\%.
 
- The Indiana study did not report sensitivity and specificity; therefore, we take the suggested measures from~\cite{Arevalo2020} which report 87\% sensitivity is a reasonable estimates and~\cite{Cohen2020} which report 97.6\% specificity.  This corresponds to a false negative rate of $13$\% and false positive rate of $2.4\%$.  Therefore, the IPW estimates accounting for measurement-error are $6.2\%$ and $4.9\%$ respectively.
+ The Indiana study did not report sensitivity and specificity; therefore, we take the suggested measures from~\cite{Arevalo2020} which report 87\% sensitivity is a reasonable estimates and~\cite{Cohen2020} which report 97.6\% specificity.  This corresponds to a false negative rate of $13$\% and false positive rate of $2.4\%$, resulting in estimates of $6.2\%$ and $4.9\%$ respectively.
 
  \subsubsection{Disease prevalence by April 2020}
 
- Indiana's population as of 2019 was $6.732$ million.  A total of $19,649$ tests were administered in Indiana between April 25th to 29th. Subtracting off the $95,879$ tests that had already performed yields a sampling fraction of $f = 2.96 \times 10^{-3}$.  Here we consider estimation of data quality $E_{\I} \left[ \rho_{\tilde I(X),Y} \right]$. In \cite{Meng2018}, estimation relied on observing the true outcome (i.e., election vote totals), which is not possible in the current crisis.  Here, we use the random sample which estimates the true prevalence of active COVID-19 disease at 1.81\%~\cite{Yiannoutsos2021}.  Our goal is not inferential. Instead, we aim to build sensitivity analyses that can aid in understanding the amount of information in observational COVID case-count data.
+ Indiana's population as of 2019 was $6.732$ million.  A total of $19,649$ tests were administered in Indiana between April 25th to 29th. Subtracting off the $95,879$ tests that had already performed yields a sampling fraction of $f = 2.96 \times 10^{-3}$.  Here we consider estimation of data quality $E_{\I} \left[ \rho_{\tilde I(X),Y} \right]$. In \cite{Meng2018}, estimation relied on observing the true outcome (i.e., election vote totals). Here, we use the random sample which estimates the true prevalence of active COVID-19 disease at 1.81\%~\cite{Yiannoutsos2021}.  Our goal is to build sensitivity analyses to understand the amount of information in observational case-count data.
 
- The unweighted estimate for the true prevalence of active COVID-19 disease between April 25th and April 29th is 11.7\%.  Assuming a false negative rate of $13$\% and false positive rate of $2.4$\%, the unweighted estimate is $11.0$\%, leading to an error of $9.2$\%.  Using~\eqref{eq:statdecomp}, we construct an estimate of the relative sampling rate as follows
+ The unweighted estimate for the true prevalence of active COVID-19 disease between April 25th and April 29th is 11.7\%.  Assuming a false negative rate of $13$\% and false positive rate of $2.4$\%, the unweighted estimate is $11.0$\%, leading to an error of $9.2$\%.  Using~\eqref{eq:statdecomp}, an estimate of the relative sampling rate is
  \begin{equation*}
  \rho D_M = \sqrt{\frac{f}{1-f}} \frac{\text{0.092}}{\sigma_Y} = 3.75 \times 10^{-2} \Rightarrow \Delta = 1.39 \times 10^{-2} \Rightarrow M = 6.1.
  \end{equation*}
- Using inverse-probability weights, the IPW estimates for the true prevalence of active COVID-19 disease between April 25th and April 29th are $7.7$\% and $6.5\%$ respectively.  Under the same sensitivity and specificity, the weighted estimates adjusted for measurement-error are $6.2$\% and $4.9$\%, leading to errors $4.4$\% and $3.1$\% respectively.  Using~\eqref{eq:statdecomp2}, we construct an estimate of the relative sampling rate as follows
+ The IPW estimates for the prevalence of active COVID-19 disease between April 25th and April 29th adjusted for measurement-error are $6.2$\% and $4.9$\%, leading to errors $4.4$\% and $3.1$\% respectively.  Using~\eqref{eq:statdecomp2}, an estimate of the relative sampling rate is
  \begin{equation*}
  \tilde \rho D_M = \sqrt{\frac{f}{1-f+CV_W^2}} \frac{\text{0.044}}{\sigma_Y} = 8.14 \times 10^{-3} \Rightarrow \tilde \Delta = 8.22 \times 10^{-3}  \Rightarrow \tilde M = 3.9,
  \end{equation*}
- using the Indiana non-random sample.  For the IPW estimate using Facebook data, we have $\tilde M = 3.3$. Therefore, the impact of self selection on bias of $\hat R_t$ appears strong using unweighted data, remaining moderate even using the weighted estimates.
+ using the Indiana non-random sample.  For the IPW estimate using Facebook data, $\tilde M = 3.3$. Therefore, bias is high using unweighted data and remains moderate using the weighted estimates.
 
- A sensitivity analysis is performed by considering the range of false negative and false positive rates.  Here, sensitivity is assumed to fall between $81$\% and $91$\% and specificity between $95$\% and $98.8$\%~\cite{Katz2020}, which leads to a range for $M$ of $(5.60, 6.44)$ for the unweighted analysis, and $(3.63,4.07)$ and $(3.10, 3.45)$ for the weighted analyses respectively.
+ A sensitivity analysis can be performed by considering the range of false negative/positive rates.  Here, sensitivity ranges between $81$\% and $91$\% and specificity between $95$\% and $98.8$\%~\cite{Katz2020}. This leads to a range for $M$ of $(5.60, 6.44)$ for the unweighted analysis, and $(3.63,4.07)$ and $(3.10, 3.45)$ for the weighted analyses.
 
  \subsubsection{Time-varying IPW estimator}
  \label{section:tvipw}
@@ -678,8 +678,7 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  \subsection{Application of SEIR model}
  \label{section:application_of_modelbased}
 
- Here we consider the multinomial SEIR model using observed death data as presented in Figure~\ref{fig:in-deaths}. The model, presented in Section~\ref{section:modelbased}, requires infection fatality rates to be specified per-strata.  In this paper, similar to~\cite{Johndrow2020}, we specify fixed per-strata infection fatality rates.  Based on published age-specific IFRs~\citep{Levin2020}, IFR closely follows a log-linear relationship with age. \cite{Ironse2103272118} uses Indiana's random survey and death data to estimate a marginal IFR of $0.84\%$.  Combining across published age-specific IFRs and anchoring our analysis to the estimated marginal IFR of $0.84\%$ for Indiana, Table~\ref{tab:ifrperage} presents the age-specific IFRs used in the analysis. Note the model-based approach collapses strata for ages less than $40$ given the limited number of COVID-19 related deaths in this age range.
- \begin{table}[!th]
+ Here we consider the multinomial SEIR model using observed death data as presented in Figure~\ref{fig:in-deaths}. The model, presented in Section~\ref{section:modelbased}, requires infection fatality rates to be specified per-strata.  In this paper, similar to~\cite{Johndrow2020}, we specify fixed per-strata infection fatality rates.  Based on published age-specific IFRs~\citep{Levin2020}, IFR closely follows a log-linear relationship with age. \cite{Ironse2103272118} uses Indiana's random survey and death data to estimate a marginal IFR of $0.84\%$.  Combining across published age-specific IFRs and anchoring our analysis to the estimated marginal IFR of $0.84\%$ for Indiana, Table~\ref{tab:ifrperage} presents the age-specific IFRs used in the analysis. \begin{table}[!th]
  \begin{tabular}{c | c c c c c c c c}
  Age Strata & 0-40 & 50-59 & 60-69 & 70-79 & 80+ \\ \hline
  IFR & $0.014\%$ & $0.120\%$ & $1.206\%$ & $3.815\%$ & $12.920\%$
@@ -688,7 +687,8 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  \label{tab:ifrperage}
  \vspace{-1cm}
  \end{table}
- The discrete-time distribution~$\{ \theta_{j} \}$ is a discretized version of a truncated normal distribution with mean $25$, standard deviation~$5$, minimum value $0$, and maximum value $44$.  This was chosen to closely mirror the distribution from~\cite{Johndrow2020}.
+ The discrete-time distribution~$\{ \theta_{j} \}$ is a discretized version of a truncated normal distribution with mean $25$, standard deviation~$5$, minimum value $0$, and maximum value $44$.  This closely mirrors the distribution from~\cite{Johndrow2020}. Strata for ages less than $40$ are collapsed due to the limited number of COVID-19 related deaths in this age range. For similar reasons, the multinomial parameter~${\bf p}_t$ is assumed to be constant in time with a Dirichlet prior.
+
 
   \begin{figure}
  \centering
@@ -715,12 +715,12 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  $$
  where~$(\beta_0,\beta_1, \beta_2, \beta_3)$ is the vector of transmission rate parameters, $\nu \geq 0$ is the potential delay, $\xi$ is the rate of change, and ${\bf 1}[\cdot]$ is an indicator function.  Each weight~$w_t^{(k)} = 0$ for $t < t_k$ and $w_t^{(k)} \to 1$ as $t \to \infty$. See Section~\ref{app:prior_modelbased} in the supplementary materials for details on prior specification.
 
- To check how well our model fits the observed data, a posterior predictive check on aggregate death counts was performed. Figure~\ref{fig:deathsppc} shows the results which suggests chosen SEIR model fits the observed data well. Figure~\ref{fig:casesppc} presents the posterior distribution of total new cases.  Figure~\ref{fig:undercounting} in the supplementary materials computes the weekly undercount factor of observed case counts.  Posterior distributions for the age-specific number of infected individuals will be used as part of the doubly-robust estimator of the active infection rate.
+ To check model fit, a posterior predictive check on aggregate death counts was performed. Figure~\ref{fig:deathsppc} shows the results which suggests chosen SEIR model fits the observed data well. Figure~\ref{fig:casesppc} presents the posterior distribution of total new cases.  Figure~\ref{fig:undercounting} in the supplementary materials computes the weekly undercount factor of observed case counts.  Posterior distributions for the age-specific case counts are used as part of the doubly-robust estimator of the active infection rate.
 
 
  \subsection{Time-varying prevalence estimates}
 
- Here, we construct active infection rate estimates using the unweighted, inverse-probability weighted, model-based, and doubly robust estimators.  Figure~\ref{fig:tvestimates} presents the results. The inverse-probability weighting methods does reduce bias compared to the unweighted estimates. Bias, however, does remain which we conjecture is due to the limited availability of symptom and other important covariate information to estimate strata-specific infection rates. This suggests better data collection in the future may strongly improve performance of the IPW methodology.
+ Here, we construct active infection rate estimates using the unweighted, inverse-probability weighted, model-based, and doubly robust estimators.  Figure~\ref{fig:tvestimates} presents the results. The inverse-probability weighting methods does reduce bias compared to the unweighted estimates. Bias, however, does remain which we conjecture is due to the limited availability of symptom and other important covariate information to estimate strata-specific infection rates. This suggests better data collection in the future may strongly improve performance.
 
  While the model-based estimates appear more reasonable outside the summer months, note that the estimate on the last week of April is $0.30\%$ which is a severe underestimate compared to the estimated prevalence using the stratified random sample of $1.81\%$. Caution is therefore warranted when interpreting these estimates.  Infection fatality rates are likely time-varying and may vary by other factors such as quality of healthcare.  Therefore, improvements could be made by using more accurate IFR estimates, but there is currently minimal publicly available data to do so.  Moreover, the (thankfully) low number of deaths per strata make uncertainty in these estimates quite high.  Finally, the doubly robust estimate appears similar to the IPW estimate.
 
@@ -742,7 +742,7 @@ Figure~\ref{fig:air_cis} in the supplementary materials presents the confidence 
  % \caption{IPW2 estimate with confidence intervals}
  % \label{fig:air_cis}
  % \end{subfigure}
- \caption{Time-varying active infectionrate estimates based on unweighted, model-based, IPW and doubly robust methods.}
+ \caption{Time-varying active infection rate estimates based on unweighted, model-based, IPW and doubly robust methods.}
  \label{fig:tvestimates}
  \end{figure}
 
@@ -767,19 +767,13 @@ Figure~\ref{fig:air_cis} in the supplementary materials presents the confidence 
 
  \subsection*{Real-world implementation of the proposed method}
 
- Application of the proposed methods relied on access to two critical datasets: (1) COVID-19 testing, case, hospitalization, and death data by demographic strata and (2) Facebook symptom survey.  Public access to (1) required the author to submit a data request directly to the state of Indiana.  Through conversations with the state of Indiana, the author's request was one of only five data requests to be approved by Indiana for public release.  Most states do not release such granular data, making selection bias adjustments difficult. Coordinated, systematic data collection and reporting is critical.
- Lack of covariate information including symptom and COVID-19 contacts on individuals seeking COVID-19 tests is unacceptable.  Random samples over time to supplement this data with auxiliary information is desperately needed.  We acknowledge that this proposal will lead to data privacy concenrs that will need to be addressed.
+ The proposed methodology relied on access to two critical datasets: (1) COVID-19 testing, case, hospitalization, and death data by demographic strata and (2) Facebook symptom survey.  Public access to (1) required submission of data requests to the state of Indiana.  The author's request was one of only five data requests to be approved by Indiana for public release.  Most states do not release such granular data, making selection bias adjustments difficult.  Coordinated, systematic data collection and reporting is critical.
+ Lack of covariate information on individuals seeking COVID-19 tests is unacceptable.  Random samples over time to supplement this data with auxiliary information is desperately needed.  We acknowledge that this proposal will lead to data privacy concenrs that will need to be addressed.
 
  % While we are eternally grateful to Indiana for the release, symptom information was not made available.  This severely limits our ability to estimate correct selection propensity models and strata-specific infection rates.  A more sustained effort to collect relevant measures of an individual's past history that may impact their likelihood of seeking testing and being COVID-19 positive is required.  Such data collection and dissemination is critical to address selection bias.
 
- A valid criticism of the proposed approach is that recording covariates on every tested individual is too time-consuming and costly, i.e., the proposed data collection protocol does not scale well.  We argue that the list of relevant factors is not too long.  For example, symptom status and COVID-19 contact are clearly relevant factors in testing selection.  Future work may consider how to include/exclude various factors over time that are not significant to limit citizen burden in reporting.  Moreover, equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected for all individuals in the nonprobability sample; however, this is often not feasible for state and local governments where rapid sample collection is prioritized over additional collection of covariate information.  We can easily extend~\eqref{eq:auxinfoprob} by randomly sampling a subset of the nonprobability sample on which to collect the covariate information.
- %yielding a new pseudo-likelihood
- % \begin{equation*}
- % % \label{eq:auxinfoprob2}
- % \sum_{j=1}^N I_j I_j^{(2)} W_j^{(2)} \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right)  + \sum_{i=1}^N \tilde I_j \tilde W_j \log ( 1 - \pi (X_j; \theta)).
- % \end{equation*}
- % Here, $I_j^{(2)}$ is an indicator that the individual is in the probability subsample and $W_j^{(2)}$ is the probability of inclusion. Estimation proceeds by maximizing the pseudo-likelihood which now depends on random sampling in both the first and second term.
- This would allow for rapid testing and minimize data collection costs.
+ A valid criticism of the proposed approach is that recording covariates on every tested individual is time-consuming and costly.  We argue that the list of relevant factors is of reasonable length.  For example, symptom status and COVID-19 contact are clearly relevant factors in testing selection.  Future work may consider how to include/exclude factors over time that are not significant to limit citizen reporting burden.  Moreover, equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected for all individuals in the nonprobability sample, which is often not feasible for state/local governments where rapid sample collection is prioritized.  One can easily extend~\eqref{eq:auxinfoprob} by randomly sampling a subset of the nonprobability sample on which to collect the covariate information.
+ This would balance goals of rapid testing and auxiliary data collection.
 
 \newpage
 % \textcolor{red}{Fix references!}
