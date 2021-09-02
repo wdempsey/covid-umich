@@ -29,7 +29,7 @@ dates = df_coviddeath$date[-length(df_coviddeath$death_dt)]
 # times
 n_days <- length(deaths)
 
-fit_forcing = readRDS("../data/fit_forcing_byage_083121.RDS")
+fit_forcing = readRDS("../data/fit_forcing_byage_090121.RDS")
 
 test = summary(fit_forcing, pars = "pred_deaths", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary
 n_days = nrow(test)/6

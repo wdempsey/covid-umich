@@ -83,7 +83,6 @@ transformed parameters{
   real incidence[n_days+max_death_day - 1];
   real infected[n_days+max_death_day - 1];
   real recovered[n_days+max_death_day - 1];
-  real new_recovered[n_days+max_death_day - 1];
   real incidence_by_age[num_ages, n_days+max_death_day-1];
   real death_incidence[num_ages, n_days - 1];
   real phi = 1. / phi_inv;
