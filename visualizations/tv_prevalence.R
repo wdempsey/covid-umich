@@ -96,18 +96,7 @@ ggplot(data = prevalence_long, aes(x = date, y = estimate, col = Method)) +
 dev.off()
 
 
-# png(filename = "../figs/tv_air_ratio.png",
-#     width = 960, height = 480, units = "px", pointsize = 25)
-# 
-# ggplot(data = ratio_long, aes(x = date, y = estimate, col = Method)) +
-#   geom_line(size = 2) +
-#   labs(x = "Date",
-#        y = "Active Infection Rate Estimate") + 
-#   theme(text = element_text(size=25)) +
-#   scale_color_manual(values=my_palette)
-# 
-# dev.off()
-
+## Confidence Interval Visualization for Appendix.
 my_palette <- brewer.pal(name="Greys",n=9)[7]
 
 prevalence_alt_cis = readRDS("../data/ipw_cis.RDS")
