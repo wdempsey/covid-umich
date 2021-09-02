@@ -226,6 +226,8 @@ for(current_location in 1:length(set_of_weeks)) {
   full_first_term[1:nrow(first_term), 1:ncol(first_term)] = first_term
   full_first_term[nrow(first_term)+1, ncol(first_term)+1] = (FP*(1-FP))^(-1)
   full_first_term[nrow(first_term)+2, ncol(first_term)+2] = (FN*(1-FN))^(-1)
+  full_first_term[1, ncol(first_term)+1] = 1-prev_estimate
+  full_first_term[1, ncol(first_term)+2] = prev_estimate
   
   complete_variance = solve(full_first_term, full_var)%*%solve(full_first_term)
   
