@@ -788,8 +788,6 @@ Based on mean-imputation of COVID-19 contact and fever indicators, we can use th
 \label{fig:testinglik}
 \end{figure}
 
-\newpage
-
 \subsection{Model 2 (Hospitalization)}
 
 This model uses hospitalization records to try and improve our mean-imputation strategy.  First, we use the pseudo-likelihood to compute the likelihood of fever given age, gender, and test result.  The model only depends on hospitalization status for positive tests.  Figure~\ref{fig:symptomlik1_model2} and~\ref{fig:symptomlik2_model2} plots the likelihood for 35-44 years old given a negative test and positive test respectfully.  We see that the likelihood of fever is time-varying.  For a negative test, the likelihood of ever fever is very high in early April, which accounts for testing restrictions. We see that hospitalization significantly increases the risk of fever given a positive test.
@@ -820,7 +818,7 @@ Figure~\ref{fig:air_cis} in the supplementary materials presents the confidence 
 
 \begin{figure}[!th]
  \centering
- \includegraphics[width=.9\linewidth]{../figs/tv_air_cis.png}
+ \includegraphics[width=.6\linewidth]{../figs/tv_air_cis.png}
  \caption{IPW2 estimate with confidence intervals}
  \label{fig:air_cis}
 \end{figure}
@@ -871,7 +869,7 @@ Figure~\ref{fig:undercounting} below is a plot of undercount based on the SEIR m
 
 \begin{figure}[!th]
  \centering
- \includegraphics[width=.7\linewidth]{../figs/undercounting.png}
+ \includegraphics[width=.6\linewidth]{../figs/undercounting.png}
  \caption{Undercount based on SEIR model}
  \label{fig:undercounting}
 \end{figure}
