@@ -1,0 +1,80 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plain Cover Letter
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Original author:
+% Rensselaer Polytechnic Institute (http://www.rpi.edu/dept/arc/training/latex/resumes/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[10pt]{letter} % Default font size of the document, change to 10pt to fit more text
+
+\usepackage{newcent} % Default font is the New Century Schoolbook PostScript font
+%\usepackage{helvet} % Uncomment this (while commenting the above line) to use the Helvetica font
+
+% Margins
+\topmargin=-0.5in % Moves the top of the document 1 inch above the default
+\textheight=8.75in % Total height of the text on the page before text goes on to the next page, this can be increased in a longer letter
+\oddsidemargin=0in % Position of the left margin, can be negative or positive if you want more or less room
+\textwidth=6.5in % Total width of the text, increase this if the left margin was decreased and vice-versa
+
+\let\raggedleft\raggedright % Pushes the date (at the top) to the left, comment this line to have the date on the right
+
+%\address{Rutgers University and University of Michigan}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	ADDRESSEE SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{letter}{Professor Karen Kafadar \\
+    Editor-In-Chief, {\em Annals of Applied Statistics}
+         }
+%----------------------------------------------------------------------------------------
+%	YOUR NAME & ADDRESS SECTION
+%----------------------------------------------------------------------------------------
+
+%\begin{center}
+%\large
+%\end{center}
+%\vfill
+
+\signature{Walter Dempsey\\
+University of Michigan \\
+Department of Biostatistics\\
+M4057 SPH II \\
+1415 Washington Heights \\
+wdem@umich.edu} % Your name for the signature at the bottom
+
+%----------------------------------------------------------------------------------------
+%	LETTER CONTENT SECTION
+%----------------------------------------------------------------------------------------
+
+\date\today
+
+\opening{Dear Dr. Kafadar:}
+
+Kindly find enclosed the revised version of the manuscript number AOAS2006-048 titled ``Statistical paradoxes in coronavirus case-counts: selection bias, measurement error, and the COVID-19 pandemic.''  We have revised the article to address the referees’ requests about content, exposition, and other points of clarification.  The reports called for a major revision to re-structure the manuscript around a timely data analysis and related methodology, a more careful discussion of COVID-19 molecular versus serological testing, and to more carefully distinguish the current work from past work on the issues of selection bias and measurement error. The new version complies with this request.
+
+The revision focuses on taking the statistical decomposition previously derived and answering the question of what is to be done given potential selection bias and known measurement-error.  To start, we worked directly with the state of Indiana and are one of only five data requests to be approved by the Governor's office.  The newly public dataset reports daily COVID-19 testing, case counts, and deaths broken out by demographic strata.  To address selection bias and estimate active infection rates, we introduce a novel inverse-probability weighting method that uses auxiliary information to form selection propensities.  The necessary auxiliary information comes from Facebook's large-scale symptom survey which provides relevant information on time-varying covariates such as the fraction of individuals in the population reporting COVID-19 symptoms and/or recent contact with a COVID-19 positive individual.  We extend to a doubly robust method that allows researchers to incorporate compartmental models into their estimation.  The statistical error decomposition is extended to each setting and guides our discussion. The revision now goes well beyond a reframing of the classical problems of selection bias and measurement error by providing health policy experts with new tools to leverage auxiliary information in addressing the ongoing COVID-19 pandemic and future infectious disease outbreaks.
+
+We believe the work presents an important advance in how researchers should think about addressing time-varying selection bias to better understanding the COVID-19 pandemic trajectory. Attached please find a detailed response to the referees outlining how the changes to the manuscript address the concerns raised in their reports.
+
+Thank you for your consideration. We look forward to hearing back from you.
+
+\closing{Sincerely,}
+
+
+\end{letter}
+
+\end{document}
+
+

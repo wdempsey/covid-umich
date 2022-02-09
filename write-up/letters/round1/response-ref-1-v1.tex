@@ -1,0 +1,330 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plain Cover Letter
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Original author:
+% Rensselaer Polytechnic Institute (http://www.rpi.edu/dept/arc/training/latex/resumes/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt]{letter} % Default font size of the document, change to 10pt to fit more text
+
+\usepackage{newcent} % Default font is the New Century Schoolbook PostScript font
+%\usepackage{helvet} % Uncomment this (while commenting the above line) to use the Helvetica font
+
+% Margins
+\topmargin=-1in % Moves the top of the document 1 inch above the default
+\textheight=8.5in % Total height of the text on the page before text goes on to the next page, this can be increased in a longer letter
+\oddsidemargin=-10pt % Position of the left margin, can be negative or positive if you want more or less room
+\textwidth=6.5in % Total width of the text, increase this if the left margin was decreased and vice-versa
+
+\let\raggedleft\raggedright % Pushes the date (at the top) to the left, comment this line to have the date on the right
+\usepackage{amsthm, amsfonts}
+
+\def\Y{{\bf Y}}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	ADDRESSEE SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{letter}{Professor
+	Peter Glynn\\
+	Editor, {\em Journal of Applied Probability}}
+
+%----------------------------------------------------------------------------------------
+%	YOUR NAME & ADDRESS SECTION
+%----------------------------------------------------------------------------------------
+
+%\begin{center}
+%\large
+%\end{center}
+%\vfill
+
+\signature{Walter Dempsey\\
+University of Michigan\\
+Department of Biostatistics\\
+1415 Washington Heights\\
+Ann Arbor, MI 48103} % Your name for the signature at the bottom
+
+%----------------------------------------------------------------------------------------
+%	LETTER CONTENT SECTION
+%----------------------------------------------------------------------------------------
+
+\vspace{5mm}
+
+\newpage
+
+{\bf Response to Referees}
+
+We appreciate all of the very helpful comments from the editor-in-chief, four associate editors, and the referee which has helped improve the paper substantially. We have addressed the concerns as best as possible in this revision. We provide a further point-by-point explanation below. Any comments in {\it italics} indicate a quote from the referee report.
+
+{\bf Response to Editor-in-Chief}
+\begin{enumerate}
+\item {\it Selection bias and measurement error are certainly well known.
+Certainly worth pointing out as both apply here.  But both should be acknowledged as being very well known.}
+
+\vspace{5mm}
+We thank the editor-in-chief as this is an excellent point.  We now acknowledge that both topics are well known and cite relevant literature in Section 1.1; however, while infectious disease researchers and survey statisticians have been aware of the perils of self-selection and measurement error, the interplay in this context has been less well studied.   By extending the statistical decomposition of Meng (2018), we help shed light on how measurement error does not act to simply alter the magnitude of error but may in fact change the sign as well.  This decomposition motivates the new inverse-probability and doubly robust methodologies in the revised manuscript.
+\vspace{5mm}
+
+\item {\it My reaction after reading the introduction was: "OK, we know that.
+But, what do you suggest we do?  Throw up our hands and go home?
+Just tell people, `We can't help you.  The data won't help us to
+model the epidemic or to forecast what will happen. Forget the data,
+we'll just have to wait and see what happens.'" I don't think that's
+the message you want to convey.  And we certainly do not want non-
+statisticians (interested in Covid-19 data) to read your paper and
+advise public health officials against collecting data altogether
+because it has too many biases!  Rather, I think you want to alert
+the reader that adjustments need to be made before modeling the
+data, and, more importantly, we may need to develop new models
+for this situation where most of the outcomes refer to suspected
+individuals, not asymptomatic cases.}
+
+\vspace{5mm}
+We agree that the original manuscript was too focused on the scientific communication perspective and may have given the wrong impression to non-statisticians.  The revised manuscript now fits well within the mission of AOAS by focusing on novel methods that provide a route forward.  We then apply these methods to a current and important scientific problem. In particular, we use the decomposition to motivate new methodology that leverages auxiliary information to address selection bias. In Section 2, we now introduce the data streams that illustrate this methodology. First, we worked with the state of Indiana to release daily COVID-19 testing, case-count, and deaths by demographic strata. Second, we were granted access to the Facebook symptom survey which provides daily measures of important time-varying covariates such as the fraction of individuals currently experiencing COVID-19 related symptoms and/or in recent contact with a COVID-19 positive individual.  The Facebook survey provides auxiliary information that is used to construct selection propensities, which are then incorporated into an inverse-probability weighting method (introduced in Section 4.1) to estimate time-varying active infection rates. Of course, many infectious disease experts prefer compartmental model-based approaches built from differential equations such as the susceptible-exposed-infected-recovered (SEIR) model.  In Section 4.2, we build a novel compartmental model to take advantage of strata-level COVID-19 death count data.  In Section 4.3, we show how to combine these models with inverse weighting to construct doubly-robust estimates of active infection rates.  We extend the decompositions to the weighting and doubly robust setting which then guide our discussion of practical implications.
+\vspace{5mm}
+
+\item {\it BTW, this surely is not a new problem - likely HIV testing is
+generally done on only those individuals suspected to be in
+high-risk groups.  Nor is the problem of reporting delays;
+CDC routinely adjusts monthly counts of AIDS for reporting delays.
+You may need to reference that literature.}
+
+\vspace{5mm}
+Thank you for raising this issue.  We discuss reporting delays and the relevant literature in Remark 1 in Section 2.2.  Given currently available public data, one cannot correct at the daily level for reporting delays.  Instead, we analyze COVID-19 data at the weekly level to account for potential reporting delays.  While not a perfect solution, it avoids clear reporting variation across day-of-week which can be seen in Figure 5.
+\vspace{5mm}
+
+\item {\it Another point that may be worth mentioning is the potential
+effect of length-biased sampling: the longer an individual
+has been exposed, the more likely (s)he is to seek symptomatic
+testing).  This effect hopefully will be absent in context of
+random selection of individuals for asymptomatic testing.}
+
+\vspace{5mm}
+This is an excellent point and was the motivation for considering how to address length-biased sampling and other potential reasons that make individuals more likely to seek out testing.  Here, we address this by building selection propensities that may depend both on symptom status and the length of exposure as reported by the individual at the time of testing.   The lack of data to address length-biased sampling is pointed out in Section 6 and guides the suggested real-world improvements to data collection that will enable our proposed approach to combine survey statistical methods with infectious disease modeling to improve our understanding of active infection rates over time.
+\vspace{5mm}
+
+\item {\it Incidentally, I see the most frustrating part of the case count
+reports as lack of two critical covariates on each case: (i) age;
+(ii) presence or absence of relevant co-morbidity (auto-immune
+condition, suppressed immune system, compromised respiratory or
+lung condition).  I think the case count data, adjusted for
+reporting delays and incorporating undertainty due to measurement
+error as best we can, would be far more useful with these two
+covariates.  And if we can get a handle on how to adjust for
+selection bias, even better.}
+
+\vspace{5mm}
+We agree wholeheartedly with this critique.  To try and improve covariate reporting, we worked with the state of Indiana to release daily COVID-19 testing, case-count, and deaths by demographic strata. We acknowledge the limitations of available demographic information and use the Facebook symptom survey to try and impute the remaining important covariates.  For a separate stratified random sample from Indiana that we were able to access, these critical covariates are available and we show how this data can be used to improve over unweighted approaches.  Overall, the proposed methodology uses these critical covariates to account for selection bias.  Model-based approaches are extended to handle this information and combined to build doubly robust estimation strategies as well.  These new methods, aimed directly at this frustrating issue, motivate our practical recommendations to improve policy making and increase accuracy in estimation using case count data.
+\vspace{5mm}
+
+\end{enumerate}
+
+
+\noindent {\bf Editor-in-Chief: Specific comments}
+
+\begin{itemize}
+\item {\it Abstract, l.3: "Throughout this" this what? "this pandemic"?}
+
+\vspace{5mm}
+Yes, we meant pandemic.  This has now been made explicit.
+\vspace{5mm}
+
+\item {\it p2, p.5-6: "For simplicity, the dynamic nature of the outbreak and recoverability of individuals are initially ignored." Drastic oversimplification, don't you think?}
+
+\vspace{5mm}
+We agree that this is a simplification.  However, we continue to start in this setting as a means to help readers understand the statistical decomposition in Section 3.1 as well as the pseudo-likelihood approach detailed in Section 4.  Both are extended to account for the dynamic nature of the outbreak in subsequent sections.
+\vspace{5mm}
+
+\item {\it p3, l.-3: Generally, $X_j = \mu_j + \epsilon_j$.Here, it seems as those you are saying: $P_j = 1$ if $\epsilon_j \neq 0$ and $P_j = 0$ if $\epsilon_j = 0$, is that right?}
+
+\vspace{5mm}
+We are focused exclusively on the binary outcome setting where $Y_j \in \{0,1\}$ as one is either COVID-19 positive~($Y_j = 1$) or negative~($Y_j = 0$).  Under measurement error, we observe $Y_j^\star \in \{0,1\}$ which is equal to $Y_j (1-P_j) + (1-Y_j) P_j$ where $P_j$ is the binary indicator of observing the incorrect value.
+\vspace{5mm}
+
+\item {\it p5, l.-2:  I must have missed the def'n of $D_M$ -- I looked back
+three times and still cannot find it.}
+
+\vspace{5mm}
+The term $D_M$ is defined in equation (3.1) and represents the \emph{imperfect testing adjustment} which is a complex function of the sampling rate differential, the odds ratio, and the ratio of measurement error interaction with prevalence and sampling rates interaction with prevalence.  Figure 2 visualizes the adjustment as a contour plot to help the reader understand how the adjustment
+\vspace{5mm}
+
+\item {\it You'll also need to define SIR.  See AE2's note.}
+
+\vspace{5mm}
+We apologize for the oversight.  We thank you and AE2 for bringing this to our attention.  We now mathematically define the susceptible-infected-recovered (SIR) model in Section 3.2 as well as the susceptible-exposed-infected-recovered (SEIR) in Section 4.2.
+\vspace{5mm}
+
+\item {\it p6, Fig 1 has no legend.  It also looks like most of the action is in the region (Sampling Frequency 0.5 to 5), (Odds Ratio 1-50). I also think that a plot with contour levels would both avoid the need for color altogether and would be much easier to read.  Did you try to read the labels on the axes?  It's impossible unless you magnify the pdf 8-fold.}
+
+
+\vspace{5mm}
+We have fixed Figure 1 (now Figure 2) to be a contour plot with appropriately sized labels on the axes. We apologize for needing a magnifying glass to read it before.
+\vspace{5mm}
+
+\item {\it p10, Fig 2: you definitely do not need color here; different
+line types suffice.  Likewise for Fig 3 (p14) and Fig 4 (p15).}
+
+\vspace{5mm}
+We have fixed all figures to be in grayscale and use different line types.
+\vspace{5mm}
+
+\item {\it p18: Please follow AOAS Guidelines for references; see the
+web page from where you submitted your MS.}
+
+\vspace{5mm}
+The references now follow AOAS Guidelines.
+\vspace{5mm}
+
+\item {\it p20: Appendices can go into a Supplementary File (unless
+you have a strong reason for including them here after the References).}
+
+\vspace{5mm}
+The appendices have been moved to a supplementary file as suggested.
+\vspace{5mm}
+
+\end{itemize}
+\newpage
+
+{\bf Response to AE1}
+\begin{itemize}
+\item {\it I was confused about what prevalence and case numbers the author is addressing. My understanding is that there are primary two assays, one for serology (evidence of ever having the virus) measured in the blood, and the other is presence of the active virus measured by swabbing the throat.  The characteristics of the assays, in terms of measurement error, are different.  In addition, there exist several different laboratory procedures for doing these two types of assays with varying accuracy.  The paper does not seem to address these basic issues.}
+
+\vspace{5mm}
+We thank the reviewer for points this out. Section 2.1 now discusses diagnostic testing.  Given the revision is focused mostly on molecular tests, we limit our discussion to these types of assays and their scientific use in managing the pandemic.  We discuss reasons behind false positives/negatives and cite the most recent systematic reviews of sensitivity and specificity for RT-PCR tests.
+\vspace{5mm}
+
+\item {\it My primary concern relates to the fundamental mission of AOAS. The manuscript has very limited data analysis, limited primarily to pp.14-15, in part because the data are very limited: it is difficult to obtain data about the various aspects of the testing for this virus. The data analysis that is presented on pp.14-15 is mostly about accounting for sensitivity and specificity of the serology assays, not the testing for presence of the Covid-19 virus at a particular time.  There is an assumption with the serology that anyone who has had Covid-19 at some time would have antibodies. These assumptions need to be explicitly made.  I am not sure if anyone knows whether this assumption is even correct or to what degree it might be correct. How does this fit into the measurement error that is discussed and illustrated in the data analysis?}
+
+\vspace{5mm}
+We agree that the original manuscript was too focused on the scientific communication perspective although it did contain original derivations related to extending the statistical error decomposition of Meng (2018) to account for measurement error.  The revised manuscript now fits well within the mission of AOAS by focusing on novel methods and clear application to a current and important scientific problem. In particular, we use the decomposition to motivate new methodology that leverages auxiliary information to address selection bias. In Section 2, we now introduce the data streams that illustrate this methodology. First, we worked with the state of Indiana to release daily COVID-19 testing, case-count, and deaths by demographic strata. Second, we were granted access to the Facebook symptom survey which provides daily measures of important time-varying covariates such as the fraction of individuals currently experiencing COVID-19 related symptoms and/or in recent contact with a COVID-19 positive individual.  The Facebook survey provides auxiliary information that is used to construct selection propensities, which are then incorporated into an inverse-probability weighting method (introduced in Section 4.1) to estimate time-varying active infection rates. Of course, many infectious disease experts prefer compartmental model-based approaches built from differential equations such as the susceptible-exposed-infected-recovered (SEIR) model.  In Section 4.2, we build a novel compartmental model to take advantage of strata-level COVID-19 death count data.  In Section 4.3, we show how to combine these models with inverse weighting to construct doubly-robust estimates of active infection rates.  We extend the decompositions to the weighting and doubly robust setting which then guide our discussion of practical implications.
+\vspace{5mm}
+
+
+\item {\it The beginning of the manuscript describes the very important issue of selection bias.  But the discussion is regrettably limited.  It is unfortunate that the manuscript only refers to the Covid-19 data (not the analysis) and offers insufficient attention to what I view as the most important issue.  The manuscript could have offered both greater depth and wider coverage of selection bias and other issues raised by the author.}
+
+\vspace{5mm}
+We now expand our coverage of selection bias issue by considering what it will take to overcome it with respect to COVID-19 case count data.  The auxiliary information helps address selection bias by allowing us to build selection propensity models while the doubly robust methodology helps us incorporate well known infectious disease models.  Overall, the paper has moved from just acknowledging the issue of selection bias and measurement error -- albeit from a new lens using the decomposition of Meng (2018)) -- to providing solutions and practical recommendations based on the proposed methodology.
+\vspace{5mm}
+
+\item {\it All in all, I don't see enough innovation in the data analysis and methods described here that would make AOAS a good home for it.  This manuscript appears to be a methodological review of data issues related to the measuring of the public health impact of the Covid-19 pandemic. I think this manuscript would be better suited for quantitative epidemiology journal or a quantitative journal in infectious diseases.}
+
+\vspace{5mm}
+As stated above, we agree that the original manuscript was too focused on the scientific communication perspective.  The revised manuscript, with its methodological innovation and application to a current and important relevant scientific application, now fits well within the mission of AOAS.
+\vspace{5mm}
+
+
+\end{itemize}
+
+\newpage
+
+{\bf Response to AE2}
+\begin{enumerate}
+\item {\it I read the paper (AOAS2006-048) but did not study any derivations. It seems straightforward, but I'm not well acquainted with the statistical area and do not have much intuition for the author's development. I'm not suggesting that it is incorrect. To get a reasonable understanding of it, I would have to work carefully through the logic and details.  In the interest of time, I've not done so.}
+
+\vspace{5mm}
+The original derivations were straightforward and followed from some arithmetic calculations, but the main point was the resulting statistical error decomposition.  While infectious disease researchers and survey statisticians have been aware of the perils of self-selection and measurement error, the interplay in this context has been less well studied.  By extending the statistical decomposition of Meng (2018), we help shed light on how measurement error does not act to simply alter the magnitude of error but may in fact change the sign as well.  This decomposition motivates the new inverse-probability and doubly robust methodologies in the revised manuscript.
+\vspace{5mm}
+
+\item {\it I noticed quite a few rough edges.}
+
+\begin{itemize}
+\item {\it Page 4, line 4: The summation variable should be j.}
+
+\vspace{5mm}
+We thank the reviewer for pointing this out.  This has been fixed.
+\vspace{5mm}
+
+\item {\it Page 8, middle: It should not be difficult to guess what "SIR" means (if one doesn't know), but the author should explain it.}
+
+\vspace{5mm}
+We thank the reviewer for pointing this out.  We now mathematically define the susceptible-infected-recovered (SIR) model in Section 3.2 as well as the susceptible-exposed-infected-recovered (SEIR) in Section 4.2.  The SEIR model motivates a new compartmental model that uses daily demographic strata-level COVID-19 death data to estimate daily COVID-19 case counts.  These models are then used in a novel doubly robust method to estimate weekly active infection rates over time.
+\vspace{5mm}
+
+\item {\it Figure 3: The caption should explain the dashed curves in part B.}
+
+\vspace{5mm}
+We thank the reviewer for pointing this out.  These are the ratio estimator and effective reproductive rate estimator under different relative sampling fractions $M = f_1/f_0$. We see the bias increases as a function of the relative sampling fraction.  We now explain the dashed curves in Figure 3a and 3b.
+\vspace{5mm}
+
+\item {\it Page 14, bottom: I wonder about the validity of the estimates of specificity and sensitivity from the Santa Clara study. I recall seeing criticism when the results appeared, but I may be mistaken.}
+
+\vspace{5mm}
+We agree that the study has come under significant criticism.  We have updated our choices of specificity and sensitivity to mirror the recent literature on specificity and sensitivity of RT-PCR testing which has grown substantially over the past few months.
+\vspace{5mm}
+\end{itemize}
+
+\end{enumerate}
+\newpage
+
+{\bf Response to AE3}
+\begin{itemize}
+\item {\it I took some time to read the paper this evening.  The problem considered in this paper is very important and I appreciated that someone is looking into it.  However, I am not sure AOAS is the best home for the paper.  In my humble opinion, epidemiology or general science journals, or maybe medical journals, might be a better fit.  It might receive even more attention if published in those journals than a statistical journal.}
+
+\vspace{5mm}
+We agree that the original manuscript was too focused on the scientific communication perspective although it did contain original derivations related to extending the statistical error decomposition of Meng (2018) to account for measurement error.  The revised manuscript now fits well within the mission of AOAS by focusing on novel methods and clear application to a current and important scientific problem. In particular, we use the decomposition to motivate new methodology that leverages auxiliary information to address selection bias. In Section 2, we now introduce the data streams that illustrate this methodology. First, we worked with the state of Indiana to release daily COVID-19 testing, case-count, and deaths by demographic strata. Second, we were granted access to the Facebook symptom survey which provides daily measures of important time-varying covariates such as the fraction of individuals currently experiencing COVID-19 related symptoms and/or in recent contact with a COVID-19 positive individual.  The Facebook survey provides auxiliary information that is used to construct selection propensities, which are then incorporated into an inverse-probability weighting method (introduced in Section 4.1) to estimate time-varying active infection rates. Of course, many infectious disease experts prefer compartmental model-based approaches built from differential equations such as the susceptible-exposed-infected-recovered (SEIR) model.  In Section 4.2 we build a novel compartmental model to take advantage of strata-level COVID-19 death count data.  In Section 4.3, we show how to combine these models with inverse weighting to construct doubly-robust estimates of active infection rates.  We extend the decompositions to the weighting and doubly robust setting which then guide our discussion of practical implications.
+\vspace{5mm}
+
+\end{itemize}
+\newpage
+
+{\bf Response to AE4}
+\begin{itemize}
+\item {\it I’ve read through it now, and think there is value to what they are doing.  It is not rocket science, but that is OK to me if there is applied impact. I think that the author is trying to substantively think deeply about the measurement error and selection bias in case counts, which I constantly encounter and see is a major issue in managing this pandemic.  But I would like to see more practical guidelines in the discussion.  I see some promise here but no guarantees.}
+
+\vspace{5mm}
+
+\vspace{5mm}
+We agree that the original work was not rocket science. While infectious disease researchers and survey statisticians have been aware of the perils of self-selection and measurement error, the interplay in this context has been less well studied.  By extending the statistical decomposition of Meng (2018), we help shed light on how measurement error does not act to simply alter the magnitude of error but may in fact change the sign as well.
+\vspace{5mm}
+
+To build practical guidelines, we first worked on accessing high quality data.
+To this end, we worked with the state of Indiana to release daily COVID-19 testing, case-count, and deaths by demographic strata. Second, we were granted access to the Facebook symptom survey which provides daily measures of important time-varying covariates such as the fraction of individuals currently experiencing COVID-19 related symptoms and/or in recent contact with a COVID-19 positive individual.
+\vspace{5mm}
+
+This data motivated our practical proposal: use time-varying surveys such as the Facebook symptom survey to provide auxiliary information that allows us to construct our inverse-probability weights (introduced in Section 4.1) to estimate time-varying active infection rates. Of course, many infectious disease experts prefer compartmental model-based approaches built from differential equations such as the susceptible-exposed-infected-recovered (SEIR) model.  In Section 4.2, we build a novel compartmental model to take advantage of strata-level COVID-19 death count data.  In Section 4.3, we show how to combine these models with inverse weighting to construct doubly-robust estimates of active infection rates.
+\vspace{5mm}
+
+The main limitation of our proposed approach is the limited covariate information being currently reported with case counts.  Specifically, symptom status, contact with a COVID-19 positive individual, and other covariate information is either not collected or not reported.  This guides the suggested real-world improvements to data collection that will enable our proposed approach to combine survey statistical methods with infectious disease modeling to improve our understanding of active infection rates over time.
+\vspace{5mm}
+
+
+\end{itemize}
+\newpage
+
+{\bf Response to Referee}
+\begin{itemize}
+\item {\it I skimmed through the MS very quickly. Although it doesn’t seem like rocket science, and may also be making points that are very well known to infectious disease researchers, it may be that the author is making some good points and, more importantly, may be translating a message well known in one field to another field. If si, then the MS might be worthwhile from a science communication perspective.}
+
+\vspace{5mm}
+We agree that the original work was not rocket science. While infectious disease researchers and survey statisticians have been aware of the perils of self-selection and measurement error, the interplay in this context has been less well studied.  By extending the statistical decomposition of Meng (2018), we help shed light on how measurement error does not act to simply alter the magnitude of error but may in fact change the sign as well.
+\vspace{5mm}
+
+We have now moved well beyond the science communication perspective.  In particular, we use the decomposition to motivate new methodology that leverages auxiliary information to address selection bias. In Section 2, we now introduce the data streams that illustrate this methodology. First, we worked with the state of Indiana to release daily COVID-19 testing, case-count, and deaths by demographic strata. Second, we were granted access to the Facebook symptom survey which provides daily measures of important time-varying covariates such as the fraction of individuals currently experiencing COVID-19 related symptoms and/or in recent contact with a COVID-19 positive individual.  The Facebook survey provides auxiliary information that is used to construct selection propensities, which are then incorporated into an inverse-probability weighting method (introduced in Section 4.1) to estimate time-varying active infection rates.  Of course, many infectious disease experts prefer compartmental model-based approaches built from differential equations such as the susceptible-exposed-infected-recovered (SEIR) model.  In Section 4.2, we build a novel compartmental model to take advantage of strata-level COVID-19 death count data.  In Section 4.3, we show how to combine these models with inverse weighting to construct doubly-robust estimates of active infection rates.  We extend the decompositions to the weighting and doubly robust setting which then guide our discussion of practical implications.
+\vspace{5mm}
+
+The main limitation of our proposed approach is the limited covariate information being currently reported with case counts.  Specifically, symptom status, contact with a COVID-19 positive individual, and other covariate information is either not collected or not reported.  This guides the suggested real-world improvements to data collection that will enable our proposed approach to combine survey statistical methods with infectious disease modeling to improve our understanding of active infection rates over time.
+\vspace{5mm}
+
+\end{itemize}
+
+\end{letter}
+
+
+
+\end{document}
+
+
+
+
+

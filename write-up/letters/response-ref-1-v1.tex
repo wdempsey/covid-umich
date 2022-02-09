@@ -1,0 +1,173 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plain Cover Letter
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Original author:
+% Rensselaer Polytechnic Institute (http://www.rpi.edu/dept/arc/training/latex/resumes/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt]{letter} % Default font size of the document, change to 10pt to fit more text
+
+\usepackage{newcent} % Default font is the New Century Schoolbook PostScript font
+%\usepackage{helvet} % Uncomment this (while commenting the above line) to use the Helvetica font
+
+% Margins
+\topmargin=-1in % Moves the top of the document 1 inch above the default
+\textheight=8.5in % Total height of the text on the page before text goes on to the next page, this can be increased in a longer letter
+\oddsidemargin=-10pt % Position of the left margin, can be negative or positive if you want more or less room
+\textwidth=6.5in % Total width of the text, increase this if the left margin was decreased and vice-versa
+
+\let\raggedleft\raggedright % Pushes the date (at the top) to the left, comment this line to have the date on the right
+\usepackage{amsthm, amsfonts}
+\usepackage{hyperref}
+
+
+\def\Y{{\bf Y}}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	ADDRESSEE SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{letter}{Professor
+	Peter Glynn\\
+	Editor, {\em Journal of Applied Probability}}
+
+%----------------------------------------------------------------------------------------
+%	YOUR NAME & ADDRESS SECTION
+%----------------------------------------------------------------------------------------
+
+%\begin{center}
+%\large
+%\end{center}
+%\vfill
+
+\signature{Walter Dempsey\\
+University of Michigan\\
+Department of Biostatistics\\
+1415 Washington Heights\\
+Ann Arbor, MI 48103} % Your name for the signature at the bottom
+
+%----------------------------------------------------------------------------------------
+%	LETTER CONTENT SECTION
+%----------------------------------------------------------------------------------------
+
+\vspace{5mm}
+
+\newpage
+
+{\bf Response to Referees}
+
+We appreciate all of the very helpful comments from the editor, associate editor, and the two referees which has helped improve the paper substantially. We have addressed the concerns as best as possible in this revision. We provide a further point-by-point explanation below. Any comments in {\it italics} indicate a statement from the referee report.
+
+{\bf Response to Editor and Associate Editor}
+\begin{enumerate}
+\item {\it The referees have many specific concerns they are asking to address, and their expertise and viewpoints are important to revise this manuscript to improve its clarity and impact.}
+
+\vspace{5mm}
+We thank the editor-in-chief as this is an excellent point.  We now acknowledge that both topics are well known and cite relevant literature in Section 1.1; however, while infectious disease researchers and survey statisticians have been aware of the perils of self-selection and measurement error, the interplay in this context has been less well studied.   By extending the statistical decomposition of Meng (2018), we help shed light on how measurement error does not act to simply alter the magnitude of error but may in fact change the sign as well.  This decomposition motivates the new inverse-probability and doubly robust methodologies in the revised manuscript.
+\vspace{5mm}
+
+\item {\it Some of these deal with the fast-evolving nature of the pandemic with new information emerging every week and changing variants with different characteristics also changing our understanding of the disease course and spread and timing, that affect the content in the paper. I understand that it is not feasible for a peer-reviewed paper like this to include all the latest information in a fast-changing environment like this in which understanding can change quickly, but it is important in this revision to update the KEY points as much as possible based on updated knowledge, but otherwise revise the language to make it “forward compatible” in terms of relevance as things continue to change, e.g. by acknowledging some details of spread dynamics may change with future variants, but presenting the current work based on a particular SARS-CoV-2 variant as illustrative of the issues that arise with each new variant and other viruses, as well. That is, recognizing it may not be feasible to keep updating based on emerging knowledge from each new strain, but to lock down the discussion context but add enough explanation so the reader can see its relevance for new strains.}
+
+\vspace{5mm}
+x
+\vspace{5mm}
+
+\item {\it The AE also mentions a few comments as well:}
+\begin{itemize}
+	\item {\it Title: As noted by one of the reviewers, the “paradox” is never discussed/defined in the manuscript. Consider changing to “Statistical estimation of Coronavirus Case Counts: Measurement…” or some alternative.}
+	\item {\it Organization: The figures and tables are not located anywhere near much of their introduction/discussion. For example, Table 1 was discussed on page 7 and is itself located on page 22. Consider the reorganization such that Figures and Tables are located near their discussion.}
+	\item {\it Discussion on the Indiana Random Sample: On page 22, table 1, it appears that the random sample is not similar to the census estimates, potentially indicating non-response bias.}
+	\item {\it Additionally, there may be significant potentially non-ignorable variables (e.g., political opinions and rural status) that drive non-response and are not presented. Is there any comment/discussion on the success of the randomization to be used as the “gold-standard” in this example? Much of the results appear to rely on the SRS and it ignores the potential for nonresponse bias.}
+\end{itemize}
+
+\vspace{5mm}
+Thank you for raising this issue.  We discuss reporting delays and the relevant literature in Remark 1 in Section 2.2.  Given currently available public data, one cannot correct at the daily level for reporting delays.  Instead, we analyze COVID-19 data at the weekly level to account for potential reporting delays.  While not a perfect solution, it avoids clear reporting variation across day-of-week which can be seen in Figure 5.
+\vspace{5mm}
+\end{enumerate}
+\newpage
+{\bf Response to Reviewer 1}
+I am incredibly grateful for this review. (PRAISE OUT THE WAZZOOO).
+
+\begin{enumerate}
+\item {\bf Section 1: Introduction.} {\it It may be useful in the introduction to briefly discuss the various purposes of testing for diseases – for COVID we have largely focused on diagnostic testing of people who are symptomatic or have a known or suspect exposure. Diagnostic testing will never provide valid prevalence or incidence estimates, especially for a disease where a significant proportion of cases are asymptomatic or pauci-symptomatic and thus unlikely to present for diagnostic testing. Screening tests are more appropriate as a potential tool for reconstructing prevalence or incidence tests, although these are seldom conducted at random. The random and non-random testing samples appear to represent screening and diagnostic testing goals, respectively, and this is part of why they can be expected not to deliver the same prevalence estimates.}
+
+\vspace{5mm}
+Section XX now discusses the purposes of testing.
+\vspace{5mm}
+
+\item {\bf Section 1.1}
+\begin{itemize}
+	\item {\it For the first goal of the paper, it might be helpful to link the biases with those outlined in a set of papers from the Harvard Center for Disease Dynamics: \url{https://doi.org/10.1007/s10654-021-00727-7} and DOI:\url{10.1093/aje/kwaa188}}
+	\vspace{5mm}
+	We now connect with XX
+	\vspace{5mm}
+	\item {\it For the second goal of the paper, it would be useful to discuss how the proposed method differs from the more traditional epidemiologic method of obtaining a validation sample. As I see it, the chief distinction is that here the “gold standard” is not a different test (although one could argue that the gold standard being used here is a screening test), but rather it is a less biased selection mechanism. Clarifying the links with validation studies could be helpful for epidemiologists \& statisticians alike, as the use of a validation study to correct for selection bias is a fairly novel suggestion.}
+	\vspace{5mm}
+	Remark wihtin validation subsection to contrast with validation sample.
+	\vspace{5mm}
+	\item {\it Finally, consider linking the arguments you are making with recent work on ‘target validity’ (see: \url{https://doi.org/10.1093/aje/kwy228}). Literature on target validity has largely been focused on specifying the problem of tackling internal and external validity together, but the method you propose here is a concrete attempt to address both types of validity and extends this conversation nicely.}
+	\vspace{5mm}
+	Validation subsection
+	\vspace{5mm}
+\end{itemize}
+\item {\bf Section 2.1}
+\begin{itemize}
+	\item {\it Please clarify in the first paragraph the distinction between incubation period (time to symptom onset) and latent period (time to infectiousness). The viral load will be detectable by at least the end of the latent period which for SARS-CoV-2 occurs before the end of the incubation period. However, individuals are unlikely to present for diagnostic testing until after the end of the incubation period.}
+	\vspace{5mm}
+	We now connect with XX
+	\vspace{5mm}
+	\item {\it Please also clarify the terminology ‘active infection’ which in some instances appears to refer to individuals in the symptomatic period of infection, and in other instances appears to refer to individuals in the infectious period of infection. We know that these are not identical in SARS-CoV-2 infection and that difference is a key reason why screening and diagnostic tests are not easily comparable.}
+	\vspace{5mm}
+	Remark wihtin validation subsection to contrast with validation sample.
+	\vspace{5mm}
+	\item {\it Consider adding some additional information on screening tests, particular anything relevant to the random sample conducted in Indiana which is used as the validation set. Were the screening tests conducted using nasopharyngeal swabs (in many places screening tests use nasal swabs instead and often self-collected samples)? Were the molecular tests used to assay the samples the same for screening and diagnostic tests? Differences in sample collection and testing processes could undermine the utility of this random sample as a validation set.}
+	\vspace{5mm}
+	Validation subsection
+	\vspace{5mm}
+\end{itemize}
+\item {\bf Section 2.1}
+\begin{itemize}
+	\item {\it This section could benefit from a few remarks on why it is important / useful to focus on publicly available testing data. There are certainly distinct statistical issues, if public data are aggregated, but are the selection bias and measurement error issues different between public and government datasets? If so, how do the solutions presented here apply to government datasets? Can similar or the same approaches be used by health departments to assess the pandemic and guide responses?}
+	\vspace{5mm}
+	Clarify that Indiana released a lot of aggregate information.  Two distinct goals: (1) what can we say with additional surveys but not additional testing, (2) guide health departments who have access to
+	\vspace{5mm}
+	\item {\it A timeline of restrictions and testing eligibility would be a useful addition to Section 2.2.1. Also, what there no time period where testing in Indiana was restricted on the basis of travel history or suspected exposure?}
+	\vspace{5mm}
+	Remark wihtin validation subsection to contrast with validation sample.
+	\vspace{5mm}
+\end{itemize}
+
+\end{enumerate}
+\newpage
+
+{\bf Response to AE3}
+\begin{itemize}
+\item {\it XX}
+
+\vspace{5mm}
+WXX
+\vspace{5mm}
+
+\end{itemize}
+
+\end{letter}
+
+
+
+\end{document}
+
+
+
+
+
