@@ -114,38 +114,79 @@ Section XX now discusses the purposes of testing.
 	\vspace{5mm}
 	\item {\it For the second goal of the paper, it would be useful to discuss how the proposed method differs from the more traditional epidemiologic method of obtaining a validation sample. As I see it, the chief distinction is that here the “gold standard” is not a different test (although one could argue that the gold standard being used here is a screening test), but rather it is a less biased selection mechanism. Clarifying the links with validation studies could be helpful for epidemiologists \& statisticians alike, as the use of a validation study to correct for selection bias is a fairly novel suggestion.}
 	\vspace{5mm}
-	Remark wihtin validation subsection to contrast with validation sample.
+	Remark within validation subsection to contrast with validation sample.
 	\vspace{5mm}
 	\item {\it Finally, consider linking the arguments you are making with recent work on ‘target validity’ (see: \url{https://doi.org/10.1093/aje/kwy228}). Literature on target validity has largely been focused on specifying the problem of tackling internal and external validity together, but the method you propose here is a concrete attempt to address both types of validity and extends this conversation nicely.}
 	\vspace{5mm}
 	Validation subsection
 	\vspace{5mm}
 \end{itemize}
-\item {\bf Section 2.1}
+\item {\bf Section 2.1: Diagnostic testing}
 \begin{itemize}
 	\item {\it Please clarify in the first paragraph the distinction between incubation period (time to symptom onset) and latent period (time to infectiousness). The viral load will be detectable by at least the end of the latent period which for SARS-CoV-2 occurs before the end of the incubation period. However, individuals are unlikely to present for diagnostic testing until after the end of the incubation period.}
 	\vspace{5mm}
+
 	We now connect with XX
 	\vspace{5mm}
 	\item {\it Please also clarify the terminology ‘active infection’ which in some instances appears to refer to individuals in the symptomatic period of infection, and in other instances appears to refer to individuals in the infectious period of infection. We know that these are not identical in SARS-CoV-2 infection and that difference is a key reason why screening and diagnostic tests are not easily comparable.}
 	\vspace{5mm}
-	Remark wihtin validation subsection to contrast with validation sample.
+
+	We clarify that here we are interested in all individuals who .
+
+
 	\vspace{5mm}
 	\item {\it Consider adding some additional information on screening tests, particular anything relevant to the random sample conducted in Indiana which is used as the validation set. Were the screening tests conducted using nasopharyngeal swabs (in many places screening tests use nasal swabs instead and often self-collected samples)? Were the molecular tests used to assay the samples the same for screening and diagnostic tests? Differences in sample collection and testing processes could undermine the utility of this random sample as a validation set.}
 	\vspace{5mm}
-	Validation subsection
+
+	We clarify the means. These were individuals who report to the exact same set of locations as in the non-random sample.  So they are representative.
+	Note, we do not use the outcome data in the method for validation, only for adjustment for self-selection in the diagnostic tests.
 	\vspace{5mm}
 \end{itemize}
 \item {\bf Section 2.1}
 \begin{itemize}
 	\item {\it This section could benefit from a few remarks on why it is important / useful to focus on publicly available testing data. There are certainly distinct statistical issues, if public data are aggregated, but are the selection bias and measurement error issues different between public and government datasets? If so, how do the solutions presented here apply to government datasets? Can similar or the same approaches be used by health departments to assess the pandemic and guide responses?}
 	\vspace{5mm}
+
 	Clarify that Indiana released a lot of aggregate information.  Two distinct goals: (1) what can we say with additional surveys but not additional testing, (2) guide health departments who have access to
 	\vspace{5mm}
 	\item {\it A timeline of restrictions and testing eligibility would be a useful addition to Section 2.2.1. Also, what there no time period where testing in Indiana was restricted on the basis of travel history or suspected exposure?}
 	\vspace{5mm}
-	Remark wihtin validation subsection to contrast with validation sample.
+
+	We have a timeline
 	\vspace{5mm}
+\end{itemize}
+\item {\bf Section 2.3: Probabilistic Samples}
+\begin{itemize}
+	\item {\it The $\approx 30\%$ response rate in the supposedly random sample requires some remarks. Even if the original list of eligible individuals was random, it seems unlikely that the final sample remains random with such low response. Is it possible to describe any characteristics that may differ between the intended sample and the final sample? Certainly the final random sample differs in many ways from the Census data presented in Table 1. Also, please clarify if the Census data is US total or Indiana specific. }
+	\vspace{5mm}
+
+	We can discuss the non-response weights used in their paper to adjust.  And that this is a different and solvable issue (we can just weight by the )
+	\vspace{5mm}
+	\item {\it For the Facebook / CMU survey sample, please present the age breakdown of sampled individuals. It is well-known that the age-distribution of Facebook users differs from the general population, so this is unlikely to be a representative sample of the Indiana population. Other demographic information on this sample would be valuable too. (Why is it not included in Table 1?)}
+	\vspace{5mm}
+
+	We include an age breakdown of the data.  Note that weights are used to adjust and we are using these in the calculations.  We now include a table in the appendix a breakdown of the demographic information for each sample.
+	\vspace{5mm}
+\end{itemize}
+\item {\bf Section 3: Analysis of case count data}
+\begin{itemize}
+	\item {\it Please clarify the definition of ‘active infection’ (any infection, vs infectious, vs symptomatic, vs detectable by molecular testing?). This has important implications for the construction of the compartmental model and for the definition of your period prevalence (AIR).}
+	\vspace{5mm}
+
+	XXXXX
+	\vspace{5mm}
+	\item {\it Throughout, there is a general issue of too few distinct variable identifiers – for example, using Y to refer to infection status and y to refer to test status will likely lead to confusion.}
+	\vspace{5mm}
+
+	We clarify our choice of notation by adding an appendix with notation.
+	\vspace{5mm}
+
+	\item {\it The “natural candidate for AIR” presented is the quantity that has more commonly been referred to as the “test positivity rate” (assuming that yi does in fact indicate test status rather than infection status which is obviously unknown). It would be helpful to mention this.}
+	\vspace{5mm}
+
+	This is now stated explicitly
+	\vspace{5mm}
+	\item {\it }
 \end{itemize}
 
 \end{enumerate}
