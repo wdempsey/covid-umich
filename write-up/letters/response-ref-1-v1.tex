@@ -67,7 +67,7 @@ Ann Arbor, MI 48103} % Your name for the signature at the bottom
 
 {\bf Response to Referees}
 
-We appreciate all of the very helpful comments from the editor, associate editor, and the two referees which has helped improve the paper substantially. We have addressed the concerns as best as possible in this revision. We provide a further point-by-point explanation below. Any comments in {\it italics} indicate a statement from the referee report.
+Let us start by saying that these are the most thorough and helpful reviews we have ever received on a submitted manuscript.  We appreciate all of the very helpful comments from the editor, associate editor, and the two referees which has helped improve the paper substantially. We have addressed the concerns as best as possible in this revision. We provide a further point-by-point explanation below. Any comments in {\it italics} indicate a statement from the referee report.
 
 {\bf Response to Editor and Associate Editor}
 \begin{enumerate}
@@ -185,10 +185,133 @@ Section XX now discusses the purposes of testing.
 	\vspace{5mm}
 
 	This is now stated explicitly
-	\vspace{5mm}
-	\item {\it }
 \end{itemize}
+\item {\bf Section 3.1: Imperfect testing}
+\begin{itemize}
+	\item {\it Here, the value of distinguishing between test status and infection status becomes clearer. By using $P_j$ to mean ‘error status of testing’, the derivations in this section lead to a focus on false positives and false negatives. However, the real quantity of interest both for individuals and for determining prevalence is surely the positive predictive value and the negative predictive value – that is, Pr($Y_j$=1|positive test result) and Pr($Y_j$=0|negative test result). Unlike the FP and FN which (because they are strictly functions of sensitivity and specificity) are only affected by test characteristics, the PPV and NPV are affected also by prevalence. Acknowledging this leads more directly to the benefit of an iterative method for validating the test results (since FP \& FN should not depend on Y or y \& thus not need an iterative method).}
+	\vspace{5mm}
 
+	The adjustment is exactly related to the Bayes rule PPV/NPV relationship with FP, FN, and $\bar Y$.
+	\vspace{5mm}
+	\item {\it Also worth noting that test positivity is not strictly binary (since it’s generally based on an underlying continuous cycle threshold), and so measurement error could potentially lead towards bias away from, or across, the null even in the absence of selection bias.}
+	\vspace{5mm}
+
+	We now include a discussion of the underlying continuous cycle (with proper credit).  The binary variable of interest can depend on infectious is what is often most important.  So we highlight that most but acknowledge the binary variable can be defined....
+	\vspace{5mm}
+
+	\item {\it The estimator $y = (yn-FP) /(1-(FP+FN))$ is a standard estimator for correcting for measurement error using FP \& FN estimated from a validation sample, where yn is the mis-measured average \& y is the corrected average. The use of this estimator to iteratively estimate the point prevalence is a good contribution of this paper, but the failure to distinguish between infection \& test status in the variable names somewhat obscures that this is what the author is doing.}
+	\vspace{5mm}
+
+	We now more carefully distinguish.  And yes, this is the standard estimator.  We have simply derived it from a new perspective (the decomposition perspective which didn't require any Bayesian machinery).
+	\vspace{5mm}
+
+	\item {\it Finally, in the section on effective sample size, please clarify why the FP and FN would be dependent on testing capacity. False positive and false negative rates, as well as sensitivity and specificity, are strictly characteristics of a given test – if increased test capacity or burden would alter the sample collection quality then FP \& FN could change. But if increased test capacity simply changes the underlying prevalence in the group tested (because of opening up testing to uninfected individuals), then the FP \& FN should not change, but the PPV and the NPV will change since these are dependent on prevalence.}
+	\vspace{5mm}
+
+	I now give an explicit example.  The test characteristics may change based on the nurse (cite) and/or what exact test is used.  For example, a center that moves from nasal swab to spit to increase testing capacity will see a ...(cite).
+\end{itemize}
+\item {\bf Section 3.2: Regrettable Rates}
+\begin{itemize}
+	\item {\it Here, and throughout the theoretical example, the model is an SIR model. However, we know that SARS-CoV-2 is better represented with an SEIR model, and indeed the applied example later in the manuscript uses an SEIR approach. Since this paper is very particularly addressing an issue with COVID data it would be beneficial to use an SEIR model throughout rather than the simpler SIR model.}
+	\vspace{5mm}
+
+	We now match the SEIR and still see the same thing for the ratio.
+\end{itemize}
+\item {\bf Section 3.3: Effective Reproduction Number}
+\begin{itemize}
+	\item {\it Here again, an SEIR model would be valuable. It is also important to clarify that the effective reproductive number can be defined in a number of subtly different ways, and that these impact both the method of estimation and the interpretation of the effect. See for example Cori et al; Am J Epi, 178(9):1505-12. 2013 and Wallinga \& Tuenis Am J Epi; 160(6):509-16. 2004 for methods that, while similar, estimate subtly different quantities. It would be helpful to clarify exactly what effective reproductive number is being estimated here – from the formulae, I suspect it is the type described by Cori et al rather than Wallinga \& Tuenis.}
+	\vspace{5mm}
+
+	We clarify the subtle differences and that we are of the Cori type.
+	\vspace{5mm}
+	\item {\it The Rt estimator will differ if an SEIR model is used, and it is not clear (to me) that the same intuition about the error will hold.}
+	\vspace{5mm}
+
+	This estimator is motivated by the SIR but is used more generally in COVID plots (see \href{here}{https://academic.oup.com/aje/article/189/11/1438/5864525?searchresult=1} for use in plots).  This is closely related to Cori paper \href{as reviewer identified}{https://academic.oup.com/aje/article/178/9/1505/89262?searchresult=1}.  See \href{here}{https://www.nature.com/articles/s41598-020-76563-8.pdf?origin=ppub} where we have the basic reproduction number for SEIR and SIR.  We used this to alter the proposed moment-based estimator to be more appropriate for SEIR in two ways.  First, the constant is now $(1/\gamma + 1/\sigma)$.  Second, we acknowledge the estimator $K_t/K_{t-1}$ may have issues of smoothness.  We can smooth these by considering aggregate differences. We provide estimates of ratio and eff repro number in the appendix for 3- and 7- day window lengths.  We see a similar story.
+\end{itemize}
+\item {\bf Section 3.4: Rate comparisons}
+\begin{itemize}
+	\item {\it This section would also be more relevant with an SEIR model}
+	\vspace{5mm}
+
+	You got it dude.
+	\vspace{5mm}
+\end{itemize}
+\item {\bf Section 4.1: Selection propensity estimation}
+\begin{itemize}
+	\item {\it The use of weights to correct for sampling bias is an established practice in epidemiology. It would be helpful to discuss how the proposed method differs from survey sampling weights or transportability weights (see Am J Epidemiol 2017 Oct 15;186(8):1010-1014. doi: 10.1093/aje/kwx164.).}
+	\vspace{5mm}
+
+	Inverse probability of selection weights describe by Cole and Stuart are exactly what we are building.  However, how to build them is the question.
+	As far as we are aware, the \href{approaches}{https://academic.oup.com/aje/article/172/1/107/82724} require knowledge of the selection mechanism which is not available in our setting.  Instead, we require auxiliary information.  Here, (cite elliott stuff).  A key different is the time-varying nature which we highlight.
+	\vspace{5mm}
+	\item {\it This section, and the sections below, also become somewhat confusing to follow because of the multiple different variables which are all denoted Ij. Since a chief goal is to describe and correct for errors in the sampling process, it would be much more useful for the reader if there were different notation for each of the different sampling mechanisms being discussed / used (eg, inclusion in the random sample, inclusion in the non-random validation sample, inclusion in the original diagnostic testing data, inclusion in ?? on day x).}
+	\vspace{5mm}
+
+	We have no built a notation table and made the notation different.  Apologies for the confusion. We use $I_j^{R}$ and $I_j^{NR}$.
+	\vspace{5mm}
+	\item {\it In the final formula (eq 4.3), I am not clear on why the weights are applied to both yk and FP (ie why sum(w*(yk-FP)) and not sum(w*yk) – FP)? This is very likely just me not understanding the derivation in Appendix C, but some explanation of the intuition would be helpful.}
+	\vspace{5mm}
+
+	Since we normalizing the weights, this is just to write it in simple form but basically $\sum w y$ is the estimate and we subtract FP.  So you are right!
+	\vspace{5mm}
+	\item {\it The time-varying section seems somewhat unnecessary since it is simply taking the expectation of the data over some time period – the daily data also does this, but where the time-period is 1 day. }
+	\vspace{5mm}
+
+	Necessary for smoothing.
+	\vspace{5mm}
+\end{itemize}
+\item {\bf Section 4.2: model-based estimation}
+\begin{itemize}
+	\item {\it The SEIR model described in the text and in the supplement differ in a way that I find confusing – the code and equations describe a simple SEIR model but the written text describes an SEmInR model with stratum-specific covariates which appear to apply to at least the I compartments and possibly the E compartments. From the code and equations, presumably the assumption is that all strata mix with identical probability and all strata experience the same probabilities of infection, exposure, and transmission. However, these assumptions are (1) unlikely to hold and (2) make it hard to understand why the model includes strata at all. }
+	\vspace{5mm}
+
+	Prior is Dirichlet (uniform) but not time-varying.  This allows us to learn the links.
+	\vspace{5mm}
+\end{itemize}
+\item {\bf Section 4.3: Doubly Robust Estimation}
+\begin{itemize}
+	\item {\it The term $\mu(x_j)$ in the unnumbered equation does not seem to be defined anywhere – this is presumably coming from the SEIR model given that the rest of the equation is essentially the IPW-based estimator. However, it is unclear to me what output from the SEIR this term includes.}
+	\vspace{5mm}
+
+	The SEIR model is used to generate the number of new weekly cases which allows us to calculate the active infection rate.  $\mu(x_j)$ is the model-based estimate.
+	\vspace{5mm}
+\end{itemize}
+\item {\bf Section 5: Applied analysis}
+\begin{itemize}
+	\item {\it The applied example relies heavily on the idea that the random sample is a true random sample of the population of Indiana eligible to be infected with COVID, and that the non-random sample and the Facebook / CMU sample similarly provide representative measures of covariate data. This is not well-established by the short data descriptions given and deserves further emphasis.}
+	\vspace{5mm}
+
+	We provide further emphasis and evidence.  A key point is that this data is used to illustrate the 'what to do' point that was raised in the first round.
+	\vspace{5mm}
+\end{itemize}
+\item {\bf Section 5.1.1. Disease Prevalence}
+\begin{itemize}
+	\item {\it This section seems to assume that individuals can only be tested once but that assumption is unlikely to be true. In particular, people with higher exposures will get tested more frequently than people with lower exposures, and similarly people at higher risk of severe outcomes may be tested more frequently than people with lower risk. Calculating the sampling fraction as the (number of tests)/(total pop – previously tested) thus seems likely to provide a biased sampling fraction estimate.}
+	\vspace{5mm}
+
+	We acknowledge this limitation.  As an alternative we assume the risk set is always total pop.  This presents a range.
+	\vspace{5mm}
+	\item {\it Also, it would be useful to clarify whether the random sample, which is being used as the gold standard, was corrected for measurement error, as well as how the issue of 30\% response rate was dealt with in obtaining the prevalence estimate. Given these issues, the random sample estimate could easily also be biased.}
+	\vspace{5mm}
+
+	Cite PNAS for measurement error and response rate cleaning.
+	\vspace{5mm}
+\end{itemize}
+\item {\bf Section 5.1.2 Time varying estimate}
+\begin{itemize}
+	\item {\it 5.1.2. In the second approach, using hospitalization data to attempt to back-predict fever status seems highly likely to be subject to survivor bias as well as biases driven by differential access to care. Some discussion of the issues with this approach is warranted.}
+	\vspace{5mm}
+
+	We have added Remark XX to discuss the bias.  In Remark XX, we state that availability of symptom status (which we know the state collects but has told us is unavailable due to data privacy / confidentiality issues) is important to use.
+	\vspace{5mm}
+	\item {\it Also, focusing on the non-Hispanic, white male groups seems potentially to limit understanding of the scope of error. Although Indiana has a very high percent of white individuals, the individuals who present for testing (as well as those who test positive, are exposed in the workplace and home, and hospitalized or die) are disproportionately non-white. It is important to show the performance of the method in both white and non-white individuals because non-white individuals are the ones who are experiencing higher rates of illness and death and therefore will likely be more negatively impacted by biased estimates of disease prevalence.}
+	\vspace{5mm}
+
+	We acknowledge this shortcoming.  We now include versions of Figure 6 for non-white fr
+
+
+\end{itemize}
 \end{enumerate}
 \newpage
 
@@ -199,10 +322,14 @@ Section XX now discusses the purposes of testing.
 \vspace{5mm}
 WXX
 \vspace{5mm}
-
 \end{itemize}
 
 \end{letter}
+
+5.2 SEIR model
+As stated above, some description of the assumptions related to contact patterns and transmission between and among age strata is needed. In addition, please clarify which compartments of the model the infection-fatality rate applies to (E \& I or I only), as well as how the model handles death from non-COVID causes from these and other model compartments.
+Also, the discussion of IFR would benefit greatly from being contextualized to the rest of the paper – the goal of the manuscript is specifically to provide a better estimate of who is infected. Such an estimate would therefore be expected to provide a more valid infection fatality rate, and this in turn implies the IFR used here must be biased. This should be discussed.
+
 
 
 
