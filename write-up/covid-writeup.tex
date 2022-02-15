@@ -268,7 +268,7 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  \subsection{Regrettable rates: complex biases resulting from self-selection}
  \label{section:rates}
 
- The prior analysis demonstrates the limited information regarding COVID-19 prevalence in observational case-count data.  Scientists, however, may claim that daily observed case-counts simply undercount daily total cases by a constant multiple over time.  If true then the ratio of case-counts at consecutive times may be a good estimate of the true change in prevalence, helping scientists understand the disease trajectory.  We next demonstrate how selection bias and imperfect testing impact such estimates.
+ The prior analysis demonstrates the potentially limited information regarding COVID-19 prevalence in observational case-count data.  Scientists, however, may claim that daily observed case-counts simply undercount daily total cases by a constant multiple over time (i.e., undercounting).  If true then the ratio of case-counts at consecutive times may be a good estimate of the true change in prevalence, helping scientists understand the disease trajectory.  We next demonstrate how selection bias and imperfect testing impact such estimates.
 
  Let $\bar Y_{t-1}$ and $\bar Y_{t}$ denote the prevalence on two consecutive days and consider the estimator $r = \tilde y_t / \tilde y_{t-1}$.  Using a second-order Taylor series approximation, the error between ${\tilde y_t}/{\tilde y_{t-1}}$ and ${\bar Y_{t}}/{\bar Y_{t-1}}$ can be expressed approximately as
  $$
@@ -279,46 +279,53 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  $$
  where $\rho_{I_j, Y_j}$ is the data quality, $f_j$ is the sampling fraction, $D_{M_j}$ is the measurement error adjustment, and $CV(Y_j) = \sigma_{Y_j}/ \bar Y_j$ is the coefficient of variation on day $j$.  See Appendix~\ref{app:ratio} for the derivation. The error magnitude depends on the true rate $\bar Y_{t} / \bar Y_{t-1}$ so a large decrease will have a small error relative to a large increase. The second term represents potential \emph{cancellation} which can  occur when data quality, sampling fraction, measurement error, and prevalence are constant across time.
 
- Figure~\ref{fig:ratio-bias} displays the trajectory of the true ratio and the potential biased estimators under a susceptible-infected-recovered (SIR) model~\citep{Pastor2001,Newman2002,Parshani2010} for the epidemic dynamics, with state evolution given by
- \begin{equation}
- \label{eq:sir}
- \frac{\partial s_t}{\partial t} = - \beta s_t i_t; \quad
- \frac{\partial i_t}{\partial t} = \beta s_t i_t - \gamma i_t; \quad
- \frac{\partial r_t}{\partial t} = - \gamma i_t
- \end{equation}
- where $s_t, i_t$ and $r_t$ are the fraction of susceptible, infected, and removed (recovered or deceased) individuals in the population at time $t$ respectively.  In terms of bias, the rate is overestimated prior to the peak and underestimated afterwards; the bias increases dramatically when the relative fraction exceeds $2$.  Such biases may have a substantial impact on policy making.  Overestimation pre-peak may give policy makers more leverage in proposing aggressive actions to reduce prevalence.  Underestimation post-peak puts pressure on policy makers to prematurely relax social distancing measures.  Estimates at the peak time appear to have minimal bias.
+ Figure~\ref{fig:ratio-bias} displays the trajectory of the true ratio and the potential biased estimators under a susceptible-exposed-infected-recovered (SEIR) model~\citep{Pastor2001,Newman2002,Parshani2010} for the epidemic dynamics, with state evolution given by
+ \begin{align}
+ \frac{\partial s_t}{\partial t} &= - \beta s_t i_t; \quad \frac{\partial e_t}{\partial t} = \beta s_t i_t - \sigma e_t; \quad \label{eq:seir} \\
+ \frac{\partial i_t}{\partial t} &= \sigma e_t - \gamma i_t; \quad
+ \frac{\partial r_t}{\partial t} = - \gamma i_t. \nonumber
+\end{align}
+ % \begin{equation}
+ % \label{eq:sir}
+ % \frac{\partial s_t}{\partial t} = - \beta s_t i_t; \quad
+ % \frac{\partial i_t}{\partial t} = \beta s_t i_t - \gamma i_t; \quad
+ % \frac{\partial r_t}{\partial t} = - \gamma i_t
+ % \end{equation}
+ where $s_t, e_t, i_t$ and $r_t$ are the fraction of susceptible, exposed infected, and removed (recovered or deceased) individuals in the population at time $t$ respectively.  In terms of bias, the rate is overestimated prior to the peak and underestimated afterwards; the bias increases dramatically when the relative fraction exceeds $2$.  Such biases may have a substantial impact on policy making.  Overestimation pre-peak may give policy makers more leverage in proposing aggressive actions to reduce prevalence.  Underestimation post-peak puts pressure on policy makers to prematurely relax social distancing measures.  Estimates at the peak time appear to have minimal bias.
  %Note, however, that the standard errors will be large due to small effective sample sizes.
 
  \subsection{Estimation of effective reproduction number}
  \label{section:r0-estimation}
- Many epidemiologists argue that tracking the effective reproduction number $R_t$ is the only way to manage through the crisis~\citep{Gabriel2020}.  Under a Poisson likelihood, a simple relation between the trajectory of new cases and the effective reproduction number can be derived \citep{Bettencourt2008}.  In particular, under an SIR model the number of case counts on day $t$, denoted $K_t$, is Poisson distributed with rate $K_{t-1} \exp \left( \gamma (R_t - 1) \right)$ where $K_{t-1} = Y_{t-1}-Y_{t-2}$ is the number of new cases on day $t-1$ and $\gamma$ is the serial interval, which is approximately $7$ days for COVID-19~\citep{Sanche2020}.  Using this relation, a moment-based estimator is given by
- $$
- R_t = 1 + \frac{1}{\gamma} \log \left( \frac{K_t}{K_{t-1}} \right).
- $$
- Of course, we do not observe $K_t$ and $K_{t-1}$.  Under SRS of new cases among those susceptible on day $t$, the natural estimator is $S_t \tilde y_t$.  Unfortunately the number of susceptible individuals on day $t$ is unknown. Here, we study the estimator $\hat R_t = 1 + \frac{1}{\gamma} \log \left( \tilde y_t / \tilde y_{t-1} \right)$. We can again express the statistical error of $\hat R_t - R_t$ in useful terms as follows
+ Many epidemiologists argue that tracking the effective reproduction number $R_t$ is the only way to manage through the crisis~\citep{Gabriel2020}.  Under a Poisson likelihood, a simple relation between the trajectory of new cases and the effective reproduction number can be derived \citep{Bettencourt2008}.  In particular, under an SIR model the number of case counts on day $t$, denoted $K_t$, is Poisson distributed with rate $K_{t-1} \exp \left( \gamma (R_t - 1) \right)$ where $K_{t-1} = Y_{t-1}-Y_{t-2}$ is the number of new cases on day $t-1$ and $\gamma$ is the serial interval, which is approximately $7$ days for COVID-19~\citep{Sanche2020}.
+
+\cite{Heng2020} derive an approximate formula for the basic reproduction number under SEIR dynamics such that for $S_0 \approx 1$ and $I_0 \ll 1$, we have the approximate realtionship, which ``corresponds to [...] the solution for the SIR model assuming an infectious period of $1/\gamma + 1/\sigma$. Using this connection, a moment-based estimator is given by
+$$
+R_t \approx 1 + \left( \frac{1}{\gamma} + \frac{1}{\sigma} \right) \log \left( \frac{K_t}{K_{t-1}} \right).
+$$
+This approximation ignores a term that is quadratic in the epidemic growth rate and inversely linear in $\sigma \times \gamma$; for realistic values of these quantities, however, the term is relatively negligible and therefore ignored. Of course, we do not observe $K_t$ and $K_{t-1}$.  Under SRS of new cases among those susceptible on day $t$, the natural estimator is $S_t \tilde y_t$.  Unfortunately the number of susceptible individuals on day $t$ is unknown. Here, we study the estimator $\hat R_t = 1 + \frac{1}{\gamma} \log \left( \tilde y_t / \tilde y_{t-1} \right)$. We can again express the statistical error of $\hat R_t - R_t$ in useful terms as follows
  $$
  \begin{aligned}
- \frac{1}{\gamma}\log &\bigg( 1 + \bigg[ \rho_{I_t,K_t} D_{M_t} \sqrt{\frac{1-f_t}{f_t}} CV (K_t)  -\rho_{I_{t-1},K_{t-1}} D_{M_{t-1}} \sqrt{\frac{1-f_{t-1}}{f_{t-1}}} CV (K_{t-1}) \bigg] \\
- &\times \left[ 1 - \rho_{I_{t-1},K_{t-1}} D_{M_{t-1}} \sqrt{\frac{1-f_{t-1}}{f_{t-1}}} CV (K_{t-1}) \right] \bigg) - \frac{1}{\gamma} \log \left( \frac{S_t}{S_{t-1}} \right).
+ \left( \frac{1}{\gamma} + \frac{1}{\sigma} \right)\log &\bigg( 1 + \bigg[ \rho_{I_t,K_t} D_{M_t} \sqrt{\frac{1-f_t}{f_t}} CV (K_t)  -\rho_{I_{t-1},K_{t-1}} D_{M_{t-1}} \sqrt{\frac{1-f_{t-1}}{f_{t-1}}} CV (K_{t-1}) \bigg] \\
+ &\times \left[ 1 - \rho_{I_{t-1},K_{t-1}} D_{M_{t-1}} \sqrt{\frac{1-f_{t-1}}{f_{t-1}}} CV (K_{t-1}) \right] \bigg) - \left( \frac{1}{\gamma} + \frac{1}{\sigma} \right) \log \left( \frac{S_t}{S_{t-1}} \right).
  \end{aligned}
  $$
- This implies a similar trade-off as before but on the logarithmic scale.  The error is no longer scaled by $\bar Y_t/\bar Y_{t-1}$ but by the serial interval and does not depend on prevalence but on the fraction of new cases out of those susceptible. This leads to differences in when the bias is most pronounced. Figure~\ref{fig:r0-bias} displays the bias as a function of the relative sampling fraction assuming the population fraction that is susceptible remains large (i.e., $S_t / S_{t-1} \approx 1$).
+ This implies a similar trade-off as before but on the logarithmic scale.  The error is no longer scaled by $\bar Y_t/\bar Y_{t-1}$ but by the serial interval and does not depend on prevalence but on the fraction of new cases out of those susceptible. This leads to differences in when the bias is most pronounced. Figure~\ref{fig:r0-bias} displays the bias as a function of the relative sampling fraction ignoring the final term (i.e., $S_t / S_{t-1} \approx 1$).
 
  \begin{figure}
  \centering
  \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.9\linewidth]{../figs/sir_ratio.png}
+  \includegraphics[width=.9\linewidth]{../figs/seir_ratio.png}
   \caption{Ratio estimator}
   \label{fig:ratio-bias}
  \end{subfigure}%
  \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.9\linewidth]{../figs/sir_rt.png}
+  \includegraphics[width=.9\linewidth]{../figs/seir_rt.png}
   \caption{Effective reproductive rate estimator}
   \label{fig:r0-bias}
  \end{subfigure}
- \caption{Potential bias in ratio and effective reproductive rate estimators under an SIR model with $\beta = 1.2$ (black) and $\gamma = 0.15$.  Here, $f = 0.02$, $FP = 0.024$, $FN = 0.13$, and a range of relative sampling fractions $M = f_1/f_0$ are considered.}
+ \caption{Potential bias in ratio and effective reproductive rate estimators under an SEIR model with $\beta = 1.2$, $\gamma = 0.15$, and $\sigma = 0.3$.  Here, $f = 0.02$, $FP = 0.024$, $FN = 0.13$, and a range of relative sampling fractions $M = f_1/f_0$ are considered.}
  \label{fig:rates}
  \end{figure}
 
@@ -331,23 +338,23 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  %Here we demonstrate the interaction of biases in estimation of the two trajectories when the peak infection times differ slightly.
  %First, we can write the difference in the rates as $R_{t1} - R_{t2} = \frac{1}{\gamma} \log \left( \frac{1 + e_{1t}}{1+e_{2t}} \right)$ where $e_{jt}$ is the error associated given in Section \ref{section:r0-estimation}.
  %Recall that the error allowed for over-estimation prior to the peak and then under-estimation post-peak.  Here, these errors can mingle in interesting ways.
- Consider two countries (A and B) in which the peak occurs 2 weeks prior for country A than country B.  Figure~\ref{fig:comparison} presents such a comparison where each country's disease trajectory follows an SIR model (A=black and B=grey). Figure~\ref{fig:eff} shows how biases interact in complex ways.  At first, the difference is correctly estimated; then the gap is over-estimated as country A sees a rapid rise in cases; then the magnitude of over-estimation increases as country A sees declining case-count while country B sees rapidly increasing case-count; then country A's rate is correctly estimated while country B's rate is under-estimated as it sees declining case-count; finally, the gap disappears.  While this may not always be the case, the analysis demonstrates how estimates can tell a more complex story than the truth (i.e., country A's peak is 2 weeks prior to country B's peak).
+ Consider two countries (A and B) in which the peak occurs 2 weeks prior for country A than country B.  Figure~\ref{fig:comparison} presents such a comparison where each country's disease trajectory follows an SEIR model (A=black and B=grey). Figure~\ref{fig:eff} shows how biases interact in complex ways.  At first, the difference is correctly estimated; then the gap is over-estimated as country A sees a rapid rise in cases; then the magnitude of over-estimation increases as country A sees declining case-count while country B sees rapidly increasing case-count; then country A's rate is correctly estimated while country B's rate is under-estimated as it sees declining case-count; finally, the gap disappears.  While this may not always be the case, the analysis demonstrates how estimates can tell a more complex story than the truth (i.e., country A's peak is 2 weeks prior to country B's peak).
 
  \begin{figure}
  \centering
  \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.9\linewidth]{../figs/sir.png}
+  \includegraphics[width=.9\linewidth]{../figs/seir.png}
   \caption{Fraction of new cases in population}
   \label{fig:fracpop}
  \end{subfigure}%
  \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.9\linewidth]{../figs/sir_rt_comparison.png}
+  \includegraphics[width=.9\linewidth]{../figs/seir_rt_comparison.png}
   \caption{Effective reproduction rate estimators}
   \label{fig:eff}
  \end{subfigure}
- \caption{Left: fraction infected in two SIR models with $\beta = 1.2$ and $0.9$ respectively and $\gamma = 0.15$ with same initial conditions. Right: comparison of $\hat R_t$ across time with $FN = 0.30$, $FP = 0.024$, and $M = 4$.}
+ \caption{Left: fraction infected in two SEIR models with $\beta = 1.2$ and $0.9$ respectively, $\sigma = 0.3$, and $\gamma = 0.15$ with same initial conditions. Right: comparison of $\hat R_t$ across time with $FN = 0.30$, $FP = 0.024$, and $M = 4$.}
  \label{fig:comparison}
  \end{figure}
 
@@ -455,12 +462,12 @@ The estimates~$\hat \mu_t := \bar y_{n,t}^\star$, $\hat \pi_{j,t}$, $\hat FP$, a
 
  Up to this point, the primary focus has been selection bias in coronavirus case-count data from a survey sampling perspective.  Here, we consider compartmental model approaches from infectious disease epidemiology.  Our primary objective is a model-based forecast of strata-level prevalence $\bar y_k$. To do this, a probabilistic extension of a standard epidemiological state-space model -- the susceptible, exposed, infected, and removed (recovered and death) model, or SEIR model -- is presented. A probabilistic SIR model was originally proposed by~\cite{Osthus2017} with only one-dimensional time series of infected proportions; this formulation was extended by~\cite{Song2020} to model coronavirus case-counts.
 
- Let $s_t$, $e_t$, $i_t$, and $r_t$ denote the proportion of survivors, exposed, infected, and removed cases (i.e., including both recovered cases and deaths) at time $t$.  The population-level SEIR dynamics are then given by the following set of differential equations:
-\begin{align}
- \frac{\partial s_t}{\partial t} &= - \beta s_t i_t; \quad \frac{\partial e_t}{\partial t} = \beta s_t i_t - \sigma e_t; \quad \label{eq:seir} \\
- \frac{\partial i_t}{\partial t} &= \sigma e_t - \gamma i_t; \quad
- \frac{\partial r_t}{\partial t} = - \gamma i_t. \nonumber
-\end{align}
+ Let $s_t$, $e_t$, $i_t$, and $r_t$ denote the proportion of survivors, exposed, infected, and removed cases (i.e., including both recovered cases and deaths) at time $t$.  The population-level SEIR dynamics are given by the set of differential equations in~\eqref{eq:seir}.
+% \begin{align}
+%  \frac{\partial s_t}{\partial t} &= - \beta s_t i_t; \quad \frac{\partial e_t}{\partial t} = \beta s_t i_t - \sigma e_t; \quad \label{eq:seir} \\
+%  \frac{\partial i_t}{\partial t} &= \sigma e_t - \gamma i_t; \quad
+%  \frac{\partial r_t}{\partial t} = - \gamma i_t. \nonumber
+% \end{align}
 %Following~\cite{Song2020}, we employ Runge-Kutta (RK4) approximations for discretization.
 Here, we consider covariate information that takes the form of a stratification variable with $K$ strata.  Let $I_{k,t}$ to denote the number of new infections on day $t$ in the $k$th strata.  The joint distribution of strata-specific new infection totals follows a multinomial distribution with
  $$
