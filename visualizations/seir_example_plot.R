@@ -26,7 +26,8 @@ init       <- c(S = 1-1e-6, E = 1e-6, I = 0.0, R = 0.0)
 parameters1 <- c(beta = 1.2, sigma = 0.3, gamma = 0.15)
 parameters2 <- c(beta = 0.9, sigma = 0.3, gamma = 0.15)
 ## Time frame
-times      <- seq(0, 100, by = 1)
+gap = 1
+times      <- seq(0, 100, by = gap)
 
 ## Solve using ode (General Solver for Ordinary Differential Equations)
 out1 <- ode(y = init, times = times, func = sir, parms = parameters1)
@@ -80,8 +81,8 @@ bias_fn <- function(M, bary, f, FP = 0.01, FN = 0.15) {
   
   bias = (lin_term+quad_term) * cur_bary/lag_bary
   
-  Rt = 1+log(cur_bary/lag_bary)* (1/7 + 1/3)
-  logbias = log(1+lin_term+quad_term) * (1/7 + 1/3)
+  Rt = 1+log(cur_bary/lag_bary)* (1/7 + 1/3) / gap
+  logbias = log(1+lin_term+quad_term) * (1/7 + 1/3) / gap
   
   return(list("r"=cur_bary/lag_bary, "bias" = bias,
               "Rt"=Rt, "logbias"=logbias))
