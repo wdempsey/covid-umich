@@ -215,14 +215,16 @@ Section XX now discusses the purposes of testing.
 	\item {\it Here, and throughout the theoretical example, the model is an SIR model. However, we know that SARS-CoV-2 is better represented with an SEIR model, and indeed the applied example later in the manuscript uses an SEIR approach. Since this paper is very particularly addressing an issue with COVID data it would be beneficial to use an SEIR model throughout rather than the simpler SIR model.}
 	\vspace{5mm}
 
-	The SIR model in Section 3.2 is replaced by the SEIR model.  We highlight that the SEIR model has been shown to better represent the SARS-CoV-2 dynamics.  Figure XX which presents the ratio estimate and potential bias has been updated accordingly.   The conclusions remain largely the same. The only difference from the prior manuscript is that the peak in bias prior to the ratio going less than 1 is less pronounced (was up to 5, now up to 2).
+	The SIR model in Section 3.2 is replaced by the SEIR model.  We highlight that the SEIR model has been shown to better represent the SARS-CoV-2 dynamics.  Figure 3a presents updated versions of the potnetial bias in ratio estimators under an SEIR model.   The conclusion remains largely the same. The only difference from the prior manuscript is that the peak in bias prior to the ratio going less than 1 is less pronounced (was up to 5, now up to 2).
+	\vspace{5mm}
 \end{itemize}
 \item {\bf Section 3.3: Effective Reproduction Number}
 \begin{itemize}
 	\item {\it Here again, an SEIR model would be valuable. It is also important to clarify that the effective reproductive number can be defined in a number of subtly different ways, and that these impact both the method of estimation and the interpretation of the effect. See for example Cori et al; Am J Epi, 178(9):1505-12. 2013 and Wallinga \& Tuenis Am J Epi; 160(6):509-16. 2004 for methods that, while similar, estimate subtly different quantities. It would be helpful to clarify exactly what effective reproductive number is being estimated here – from the formulae, I suspect it is the type described by Cori et al rather than Wallinga \& Tuenis.}
 	\vspace{5mm}
 
-	We clarify the subtle differences between the definitions of the effective reproductive number and establish the approach is in line with the type described by Cor et. al (2013).
+	We clarify the subtle differences between the definitions of the instantaneous and case reproductive numbers.  We establish that our approach aims to estimate the instantaneous reproduction number, i.e., is closely related to the proposal by Cori et al. (2013)).
+
 	\vspace{5mm}
 	\item {\it The Rt estimator will differ if an SEIR model is used, and it is not clear (to me) that the same intuition about the error will hold.}
 	\vspace{5mm}
@@ -231,18 +233,19 @@ Section XX now discusses the purposes of testing.
 	%https://academic.oup.com/aje/article/178/9/1505/89262?searchresult=1, CORI
 	%https://www.nature.com/articles/s41598-020-76563-8.pdf?origin=ppub, Althaus approximate
 
-	This estimator is originally motivated by the SIR model and is exact under the poisson likelihood; however, the moment-based estimator has been proposed as a general tool for assessing epidemic trends in real time (\href{https://academic.oup.com/aje/article/189/11/1438/5864525?searchresult=1}{cite}).  The estimator is closely related to the instantaneous reproduction numbers proposed by Cori et. al. (20) \href{https://academic.oup.com/aje/article/178/9/1505/89262?searchresult=1}{cite}.  We now rely on recent work \href{https://www.nature.com/articles/s41598-020-76563-8.pdf?origin=ppub}{(cite)} to propose an approximate moment-based estimator in the SEIR setting.
-	\vspace{5mm}
-
-	\noindent Heng and Althaus (2020) derive the following approximate formula for the basic reproduction number under SEIR dynamics:
+	This estimator is originally motivated by the SIR model and is exact under the poisson likelihood; however, the moment-based estimator has been proposed as a general tool for assessing epidemic trends in real time (Xinhua Yu, Assessing Epidemic Trends in Real Time With a Simple Ratio Plot, Am J of Epid, 189(11), 2020).  The estimator is closely related to the instantaneous reproduction numbers proposed by Cori et. al. (2013), but we now rely on recent work (Heng and Althaus, The approximately universal shapes of epidemic curves in the SEIR model, Sci Reports, 2020) to propose an approximate moment-based estimator in the SEIR setting. Specifically, Heng and Althaus (2020) derive the following approximate formula for the basic reproduction number under SEIR dynamics:
 	$$
 	R_0 = \frac{1 + \Lambda \left(\frac{1}{\sigma} + \frac{1}{\gamma} \right)}{S_0 + I_0 (1 + \gamma/\sigma)}.
 	$$
-	where~$\Lambda$ is the epidemic growth rate, and $S_0$/$I_0$ are the initial fractions of the population that are susceptible and infectious respectively.  For $S_0 \approx 1$ and $I_0 \ll 1$, we have the approximate realtionship $R_0 \approx 1 + (\frac{1}{\gamma} + \frac{1}{\sigma})\Lambda$.
+	where~$\Lambda$ is the epidemic growth rate, and $S_0$/$I_0$ are the initial fractions of the population that are susceptible and infectious respectively.  For $S_0 \approx 1$ and $I_0 \ll 1$, we have the approximate relationship $R_0 \approx 1 + (\frac{1}{\gamma} + \frac{1}{\sigma})\Lambda$.
 	, this is an approximate solution which lacks the term $\Lambda^2 \frac{1}{\gamma \sigma}$.  ``It corresponds to the case of an exponentially distributed generation time with mean duration $1/\gamma + 1/\sigma$, which is the same as the solution for the SIR model assuming an infectious period of $1/\gamma + 1/\sigma$. For realistic growth rates and choices of $\sigma$ and $\gamma$ for the COVID-19 pandemic, this term is negligible and therefore we work with the approximate formula.
 	\vspace{5mm}
 
-	\noindent Using the connection to the SIR model with infectious period $1/\gamma + 1/\sigma$, and replacing the true epidemic growth rate~$\Lambda$ by the estimated growth rate~$\hat \Lambda = \log \left( K_t / K_{t-1} \right)$ yields our new moment-based estimator. The updated $R_t$ estimator shows that the same intuition about the error holds when we are considering an SEIR rather than an SIR model.  Figure XX shows the reproduction number estimates and potential biases under SEIR dynamics which shows the same general conclusions hold.
+	\noindent Note that for the SIR model, the basic reproduction number is~$R_0 = 1 + \frac{1}{\gamma} \Lambda$. So estimate of the instantaneous reproduction number is obatined by replacing $\Lambda$ by an estimate of the  instantaneous growth rate $\hat \Lambda_t = \log (K_t / K_{t-1})$.  Then using the approximate relationship between the SEIR model and an SIR model with infectious period $1/\gamma + 1/\sigma$, we arrive at the new moment-based estimator
+	$$
+    R_t \approx 1 + \left( \frac{1}{\gamma} + \frac{1}{\sigma} \right) \log \left( \frac{K_t}{K_{t-1}} \right).
+	$$
+	The updated $R_t$ estimator shows that the same intuition about the error holds when we are considering an SEIR rather than an SIR model.  Figure 3b shows the reproduction number estimates and potential biases under SEIR dynamics which shows the same general conclusions hold.
 \end{itemize}
 \item {\bf Section 3.4: Rate comparisons}
 \begin{itemize}
