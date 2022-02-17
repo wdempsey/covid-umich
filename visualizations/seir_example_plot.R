@@ -79,6 +79,17 @@ bias_fn <- function(M, bary, f, FP = 0.01, FN = 0.15) {
   cur_bary = bary[2:length(error)]
   lag_bary = bary[1:(length(error)-1)]
   
+  cori = vector(length = length(bary)-1)
+  for(i in 2:length(bary)) {
+    temp_cur_bary = bary[i]
+    prior_bary = bary[1:(i-1)]
+    prior_times = 1:(i-1)
+    weights = dgamma((i-1):1, shape = 4)
+    weights = weights/sum(weights)
+    denominator = sum(prior_bary*weights)
+    cori[i-1] = temp_cur_bary/denominator
+  }
+  plot(cori)
   bias = (lin_term+quad_term) * cur_bary/lag_bary
   
   Rt = 1+log(cur_bary/lag_bary)* (1/7 + 1/3) / gap
