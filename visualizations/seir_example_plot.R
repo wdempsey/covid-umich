@@ -79,17 +79,6 @@ bias_fn <- function(M, bary, f, FP = 0.01, FN = 0.15) {
   cur_bary = bary[2:length(error)]
   lag_bary = bary[1:(length(error)-1)]
   
-  cori = vector(length = length(bary)-1)
-  for(i in 2:length(bary)) {
-    temp_cur_bary = bary[i]
-    prior_bary = bary[1:(i-1)]
-    prior_times = 1:(i-1)
-    weights = dgamma((i-1):1, shape = 4)
-    weights = weights/sum(weights)
-    denominator = sum(prior_bary*weights)
-    cori[i-1] = temp_cur_bary/denominator
-  }
-  plot(cori)
   bias = (lin_term+quad_term) * cur_bary/lag_bary
   
   Rt = 1+log(cur_bary/lag_bary)* (1/7 + 1/3) / gap
@@ -168,4 +157,75 @@ axis(side =2, cex.axis = 1)
 mtext(expression(R[t]), side =2, line = 2, cex = 1.5)
 mtext("Time", side = 1, line = 1, cex = 1.5)
 legend(55, 1.3, legend = c("M=1", "M=2", "M=3", "M=4"), lty = c(1,2,2,3), col = c("black", "black", "grey50", "grey50"), cex = 1.5, bty = "n", lwd = c(1,1,2,2))
+dev.off()
+
+
+#### CORI BIAS
+library(lubridate)
+library(EpiEstim)
+## Time frame
+gap = 1/7
+times <- seq(0, 100, by = gap)
+
+## Solve using ode (General Solver for Ordinary Differential Equations)
+cori_out1 <- ode(y = init, times = times, func = sir, parms = parameters1)
+cori_out1 <- as.data.frame(cori_out1)
+cori_bary <- cori_out1$I[-1]
+dates = seq(ymd('2009-04-07'),ymd('2009-04-07')+length(cori_bary)-1, by = '1 day')
+
+cori_bias_fn <- function(M, bary, f, FP = 0.01, FN = 0.15) {
+  const = (bary*M + (1-bary))
+  f0 = f/const
+  f1 = M*f0
+  Delta = f1 - f0
+  D_M1 = 1 - Delta * bary/(1-bary) * (FP*(1-bary) + FN * bary)/ (f0 * (1-bary) + f1 * bary)
+  D_M2 = 1/(1-FP-FN)
+  D_M = D_M1 * D_M2
+  rho = Delta*sqrt(bary*(1-bary))/sqrt(f*(1-f))
+  error = rho*sqrt((1-f)/f) * sqrt(1-bary)/sqrt(bary)*D_M
+  
+  cori_bias = cori = vector(length = length(bary)-1)
+  for(i in 2:length(bary)) {
+    temp_cur_bary = bary[i]
+    prior_bary = bary[1:(i-1)]
+    cur_weights = discr_si((i-1):1,7,2)
+    cur_weights = cur_weights/sum(cur_weights)
+    denominator = sum(prior_bary*cur_weights)
+    cori[i-1] = temp_cur_bary/denominator
+    
+    weighted_prior_error= sum(error[1:(i-1)] * cur_weights)
+    cur_error = error[i]
+    
+    lin_term = cur_error - weighted_prior_error
+    quad_term = weighted_prior_error^2 - cur_error*weighted_prior_error
+    
+    cori_bias[i-1] = (lin_term+quad_term) * cori[i-1]
+    
+  }
+  
+  return(list("cori"=cori, "cori_bias" = cori_bias))
+}
+
+
+cori_bias1 = cori_bias_fn(M1, cori_bary, f, FP, FN)
+cori_bias2 = cori_bias_fn(M2, cori_bary, f, FP, FN)
+cori_bias3 = cori_bias_fn(M3, cori_bary, f, FP, FN)
+good_times = 5:99
+extract = is.element(cori_out1$time, good_times)[-1]
+
+ymax = max((cori_bias3$cori+cori_bias3$cori_bias)[extract])
+ymin = min((cori_bias3$cori+cori_bias3$cori_bias)[extract])
+png(filename = "../figs/seir_cori_rt.png",
+    width = 6.5, height = 4, units = "in", res = 1200, pointsize = 12)
+par(mar = c(3,4,1,1)+0.1)
+plot(5:99, cori_bias3$cori[extract], type = "l", xlim = c(1,100), ylim = c(0.5, 2.5), axes = FALSE, bty = "n", ylab = "")
+lines(5:99, (cori_bias1$cori + cori_bias1$cori_bias)[extract], lty = 2)
+abline(h = 1.0, col = "grey", lty = 2)
+lines(5:99, (cori_bias2$cori+cori_bias2$cori_bias)[extract], lty = 2, col = "grey50", lwd = 2)
+lines(5:99, (cori_bias3$cori+cori_bias3$cori_bias)[extract], lty = 3, col = "grey50", lwd = 2)
+axis(side =1, labels = FALSE)
+axis(side =2, cex.axis = 1, at = seq(0.5,2.5,0.5) )
+mtext(expression(R[t]), side =2, line = 2, cex = 1.5)
+mtext("Time", side = 1, line = 1, cex = 1.5)
+legend(65, 2.0, legend = c("M=1", "M=2", "M=3", "M=4"), lty = c(1,2,2,3), col = c("black", "black", "grey50", "grey50"), cex = 1.5, bty = "n", lwd = c(1,1,2,2))
 dev.off()
