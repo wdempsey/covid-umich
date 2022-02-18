@@ -312,7 +312,7 @@ This approximation ignores a term that is quadratic in the epidemic growth rate 
  &\times \left[ 1 - \rho_{I_{t-1},K_{t-1}} D_{M_{t-1}} \sqrt{\frac{1-f_{t-1}}{f_{t-1}}} CV (K_{t-1}) \right] \bigg) - \left( \frac{1}{\gamma} + \frac{1}{\sigma} \right) \log \left( \frac{S_t}{S_{t-1}} \right).
  \end{aligned}
  $$
- This implies a similar trade-off as before but on the logarithmic scale.  The error is no longer scaled by $\bar Y_t/\bar Y_{t-1}$ but by the serial interval and does not depend on prevalence but on the fraction of new cases out of those susceptible. This leads to differences in when the bias is most pronounced. Figure~\ref{fig:r0-bias} displays the bias as a function of the relative sampling fraction ignoring the final term (i.e., $S_t / S_{t-1} \approx 1$).
+ This implies a similar trade-off as before but on the logarithmic scale.  The error is no longer scaled by $\bar Y_t/\bar Y_{t-1}$ but by the serial interval and does not depend on prevalence but on the fraction of new cases out of those susceptible. This leads to differences in when the bias is most pronounced. Figure~\ref{fig:r0-bias} displays the bias as a function of the relative sampling fraction ignoring the final term (i.e., $S_t / S_{t-1} \approx 1$). Section~\ref{app:cori_rt} in the supplementary materials presents an alternative estimator of the instantaneous effective reproductive number and shows similar bias~\cite{Cori20113}.
 
  \begin{figure}
  \centering
