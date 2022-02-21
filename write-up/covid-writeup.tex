@@ -104,7 +104,7 @@ The second objective is to demonstrate how random samples provide necessary \emp
 
 The proposed approach requires covariate information to be collected on individuals who receive a COVID-19 test.  Unfortunately, many states do not require or report auxiliary covariate information beyond basic demographic information (e.g., gender, age, race, and ethnicity).  We end with a brief list of suggestions of changes to current practice based on the proposed methodology. While we demonstrate empirical improvements over simple disease prevalence estimates, we also highlight how selection bias may persist and impact uncertainty quantification.
 
- \subsection{Related work}
+\subsection{Related work}
 
  This article discusses the relationship between three statistical concepts: selection bias, measurement error, and population size.  While the impact of measurement error~\citep{Smeden2019} and selection bias~\citep{Keiding2016} on estimation are both well-studied topics, here we provide a new perspective by building on the work of \cite{Meng2018} who studied an error decomposition to understand the relationship between selection bias and population size.  Specifically, we quantify the interaction between measurement-error and selection bias on statistical error, showing how the sign and magnitude can change drastically.
  % the impact on the effective sample size can therefore be quite large.
@@ -118,6 +118,9 @@ Given a probability sampling design, individual predictions can be leveraged to 
 
 Recent work by \cite{Zhao2021} pointed out that estimation of key epidemiological parameters such as the incubation time using standard epidemiological models can suffer from severe bias due to issues beyond selection bias and measurement error.  Namely, right truncation and epidemic growth leading to patients ``being more likely to be infected towards the end of their exposure period''~\citep[pp. 3]{Zhao2021}.  Their approach carefully constructs the study sample and statistical model to account for these issues.  In this paper, rather than focusing on construction of a study sample, we ask whether one can collect auxiliary information to address selection bias in the observed case count data directly.
 
+\begin{remark}[An evolving pandemic]
+
+\end{remark}
 
 
  % \subsection{Outline}
@@ -135,16 +138,22 @@ Recent work by \cite{Zhao2021} pointed out that estimation of key epidemiologica
  \section{COVID-19 testing and data}
  \label{section:data}
 
- Here we provide the necessary background to understand COVID-19 diagnostic testing, its scientific use in managing the pandemic, and the data streams considered in this manuscript.
+Here we provide the necessary background to understand COVID-19 diagnostic and serological testing, its scientific use in managing the pandemic, and the data streams considered in this manuscript.
 
- \subsection{Diagnostic testing}
- \label{section:testinginfo}
+\subsection{Purposes of testing}
+
+\subsection{Diagnostic testing}
+\label{section:testinginfo}
 
  Upon infection with SARS-CoV-2, an incubation period starts and lasts approximately five days~\citep{Lauer2020} before the viral load is high enough to be detected.  A \emph{molecular test} refers to diagnostic tests that aim to detect increased viral load (e.g., RT-PCR or antigen tests).  If someone has an active infection then after the incubation period, a molecular test with perfect sensitivity will yield a positive result for the next few weeks.  After that, the viral load will decrease and a molecular test with perfect specificity will come back negative. While an infected individual may yield a positive molecular test for several weeks, they will likely stop transmitting the disease within a few days of infection, meaning a positive molecular test does not imply transmissibility.
 
  A molecular test conducted on an actively infected individual may return a negative result.  Such false negatives are very strongly associated with when the test is conducted.  In the incubation phase, most molecular tests will return a false negative result.  Molecular tests are most sensitive when the viral loads are highest which occurs during the first few days of transmissibility~\citep{Mina2020}.   Moreover, most molecular tests are performed via nasopharyngeal swab.  Specimen collection by swab is known to impact false negative/positive rates regardless of test timing.   Systematic reviews suggest that 87\% sensitivity and 97.6\% specificity are reasonable estimates for current RT-PCR tests~\citep{Arevalo2020, Woloshin2020,Cohen2020}.
 
  The primary goal of molecular tests is diagnosis of active infections in the population.  Such diagnostic tests generate important information about the presence of SARS-CoV-2 in the population, and help scientists and policy-makers understand patterns of transmission and propagation. Rapid and frequent molecular testing is cited as a key component~\citep{OECD2021} in effective strategies to identify active infections and prevent systemic outbreaks.
+
+\emph{Serological tests} look for an immunological response to the virus.  A week or so after an individual is infected with SARS-CoV-2, the individual will start producing antibodies.  At this point, a serological test with perfect sensitivity will come back positive.  This test provides evidence of past infection while the molecular test provides evidence of an \emph{active} infection.
+
+To better estimate SARS-CoV-2 immunity in a population, seroprevalence studies that generate a probabilistic population sample and perform serological tests on the sample can be collected.  These studies are useful for disease surveillance. To date, the CDC has conducted ten large-scale geographic serological surveys with three rounds.  While population-based sampling strategies provide a more representative nationwide sample, they are very time intensive and expensive.
 
  \subsection{Publicly available data on COVID-19}
  \label{subsection:testinginfo}
