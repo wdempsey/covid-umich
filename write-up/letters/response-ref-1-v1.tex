@@ -119,11 +119,13 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it For the second goal of the paper, it would be useful to discuss how the proposed method differs from the more traditional epidemiologic method of obtaining a validation sample. As I see it, the chief distinction is that here the “gold standard” is not a different test (although one could argue that the gold standard being used here is a screening test), but rather it is a less biased selection mechanism. Clarifying the links with validation studies could be helpful for epidemiologists \& statisticians alike, as the use of a validation study to correct for selection bias is a fairly novel suggestion.}
 	\vspace{5mm}
 
-	Remark within validation subsection to contrast with validation sample. We state that this is a fairly novel
+	We now clarify this point in Section 1.1.  We make it clear that our goal is to use a probability sample to correct for selection bias. We connect this with validation samples to build auxiliary data to address selection bias.
+
 	\vspace{5mm}
 	\item {\it Finally, consider linking the arguments you are making with recent work on ‘target validity’ (see: \url{https://doi.org/10.1093/aje/kwy228}). Literature on target validity has largely been focused on specifying the problem of tackling internal and external validity together, but the method you propose here is a concrete attempt to address both types of validity and extends this conversation nicely.}
 	\vspace{5mm}
-	Validation subsection
+
+	We now do this at the end of Section 1.1 in order to help statisticians thinking about validity connect our arguments to this literature.
 	\vspace{5mm}
 \end{itemize}
 \item {\bf Section 2.1: Diagnostic testing}
@@ -131,23 +133,21 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it Please clarify in the first paragraph the distinction between incubation period (time to symptom onset) and latent period (time to infectiousness). The viral load will be detectable by at least the end of the latent period which for SARS-CoV-2 occurs before the end of the incubation period. However, individuals are unlikely to present for diagnostic testing until after the end of the incubation period.}
 	\vspace{5mm}
 
-	We now connect with XX
+	We now clarify this distinction between incubation and latent period.
 	\vspace{5mm}
 	\item {\it Please also clarify the terminology ‘active infection’ which in some instances appears to refer to individuals in the symptomatic period of infection, and in other instances appears to refer to individuals in the infectious period of infection. We know that these are not identical in SARS-CoV-2 infection and that difference is a key reason why screening and diagnostic tests are not easily comparable.}
 	\vspace{5mm}
 
-	We clarify that here we are interested in all individuals who .
-
+	We clarify that we define active infection as individuals infected with SARS-CoV-2 who have yet to fall below a threshold for detectable viral load levels by RT-PCR testing.
 
 	\vspace{5mm}
 	\item {\it Consider adding some additional information on screening tests, particular anything relevant to the random sample conducted in Indiana which is used as the validation set. Were the screening tests conducted using nasopharyngeal swabs (in many places screening tests use nasal swabs instead and often self-collected samples)? Were the molecular tests used to assay the samples the same for screening and diagnostic tests? Differences in sample collection and testing processes could undermine the utility of this random sample as a validation set.}
 	\vspace{5mm}
 
-	We clarify the means. These were individuals who report to the exact same set of locations as in the non-random sample.  So they are representative.
-	Note, we do not use the outcome data in the method for validation, only for adjustment for self-selection in the diagnostic tests.
+	We clarify that, to the best of our knowledge, both Indiana Department of Health's (IDOH) molecular testing and the random state-wide sample relied primarily on nasopharyngeal swab using the same set of RT-PCR tests. This was primarily due to the random sampling being done by a scientific team working closely with the IDOH.
 	\vspace{5mm}
 \end{itemize}
-\item {\bf Section 2.1}
+\item {\bf Section 2.2: Publicly available data}
 \begin{itemize}
 	\item {\it This section could benefit from a few remarks on why it is important / useful to focus on publicly available testing data. There are certainly distinct statistical issues, if public data are aggregated, but are the selection bias and measurement error issues different between public and government datasets? If so, how do the solutions presented here apply to government datasets? Can similar or the same approaches be used by health departments to assess the pandemic and guide responses?}
 	\vspace{5mm}
