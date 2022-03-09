@@ -1,5 +1,7 @@
-fb_data = read.csv("../data/fb_indiana_data.csv")
-
+work_dir = "/home/wdem/Dropbox/Fb-Data/"
+home_dir = "../data/"
+fb_data = read.csv(paste(work_dir, "fb_indiana_data.csv", sep = ""))
+fb_data = read.csv(paste(home_dir, "fb_indiana_data.csv", sep = ""))
 
 ## Gender Summary
 ## 1 = MALE, 2 = Female, 3 = Non-binary, 4 = Self-Describe, 5 = Prefer not to answer
@@ -16,8 +18,10 @@ agg_age_strata = c(sum(agg_age$weight[1:2]) + agg_age$weight[3]/2,
   agg_age$weight[5]/2 + sum(agg_age$weight[6:7]))
 agg_age_strata/sum(agg_age_strata)
 
-## Fever (Only  )
-fb_data$date 
+## Fever (Only April 25th to 29th)
+library(lubridate)
+fb_data$date  = ymd(fb_data$date )
+window = fb_data$date >= ymd("2020-04-25") & fb_data$date <= ymd("2020-04-29") 
 agg_fever = aggregate(weight ~ fever, subset(, sum)
 agg_age_strata = c(sum(agg_age$weight[1:2]) + agg_age$weight[3]/2, 
                    agg_age$weight[3]/2 + agg_age$weight[4] +  agg_age$weight[5]/2,
