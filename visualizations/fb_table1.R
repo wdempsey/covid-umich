@@ -22,8 +22,14 @@ agg_age_strata/sum(agg_age_strata)
 library(lubridate)
 fb_data$date  = ymd(fb_data$date )
 window = fb_data$date >= ymd("2020-04-25") & fb_data$date <= ymd("2020-04-29") 
-agg_fever = aggregate(weight ~ fever, subset(, sum)
-agg_age_strata = c(sum(agg_age$weight[1:2]) + agg_age$weight[3]/2, 
-                   agg_age$weight[3]/2 + agg_age$weight[4] +  agg_age$weight[5]/2,
-                   agg_age$weight[5]/2 + sum(agg_age$weight[6:7]))
-agg_age_strata/sum(agg_age_strata)
+agg_fever = aggregate(weight ~ fever, subset(fb_data, window), sum)
+agg_fever$weight/sum(agg_fever$weight)
+
+agg_cough = aggregate(weight ~ cough, subset(fb_data, window), sum)
+agg_cough$weight/sum(agg_cough$weight)
+
+agg_shortness = aggregate(weight ~ shortness, subset(fb_data, window), sum)
+agg_shortness$weight/sum(agg_shortness$weight)
+
+agg_household = aggregate(weight ~ contact, subset(fb_data, window), sum)
+agg_household$weight/sum(agg_household$weight)
