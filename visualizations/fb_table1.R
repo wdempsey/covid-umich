@@ -23,13 +23,33 @@ library(lubridate)
 fb_data$date  = ymd(fb_data$date )
 window = fb_data$date >= ymd("2020-04-25") & fb_data$date <= ymd("2020-04-29") 
 agg_fever = aggregate(weight ~ fever, subset(fb_data, window), sum)
-agg_fever$weight/sum(agg_fever$weight)
+fever_proportions = (agg_fever$weight/sum(agg_fever$weight))
+print(fever_proportions)
+r = fever_proportions[2]
+sub_fb_data = subset(fb_data, window)
+var_r = sum((sub_fb_data$fever - r)^2 * sub_fb_data$weight^2, na.rm = T)/ sum(sub_fb_data$weight)^2
+c(r - 1.96*sqrt(var_r), r, r + 1.96*sqrt(var_r))
 
 agg_cough = aggregate(weight ~ cough, subset(fb_data, window), sum)
-agg_cough$weight/sum(agg_cough$weight)
+cough_proportions = agg_cough$weight/sum(agg_cough$weight)
+print(cough_proportions)
+r = cough_proportions[2]
+var_r = sum((sub_fb_data$cough - r)^2 * sub_fb_data$weight^2, na.rm = T)/ sum(sub_fb_data$weight)^2
+c(r - 1.96*sqrt(var_r), r, r + 1.96*sqrt(var_r))
 
 agg_shortness = aggregate(weight ~ shortness, subset(fb_data, window), sum)
 agg_shortness$weight/sum(agg_shortness$weight)
+shortness_proportions = agg_shortness$weight/sum(agg_shortness$weight)
+print(shortness_proportions)
+r = shortness_proportions[2]
+var_r = sum((sub_fb_data$shortness - r)^2 * sub_fb_data$weight^2, na.rm = T)/ sum(sub_fb_data$weight)^2
+c(r - 1.96*sqrt(var_r), r, r + 1.96*sqrt(var_r))
 
 agg_household = aggregate(weight ~ contact, subset(fb_data, window), sum)
 agg_household$weight/sum(agg_household$weight)
+household_proportions = agg_household$weight/sum(agg_household$weight)
+print(household_proportions)
+r = household_proportions[1]
+var_r = sum((sub_fb_data$contact - r)^2 * sub_fb_data$weight^2, na.rm = T)/ sum(sub_fb_data$weight)^2
+c(r - 1.96*sqrt(var_r), r, r + 1.96*sqrt(var_r))
+
