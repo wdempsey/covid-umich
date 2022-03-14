@@ -99,6 +99,9 @@ Section~\ref{app:prior_modelbased} provides prior specifications for the SEIR mo
 
 All relevant code can be found at \url{https://github.com/wdempsey/covid-umich}.
 
+\section{Notation Reference}
+\label{app:notation}
+
 \section{Technical details}
 
 Recall that $P_j$ is  an indicator of measurement error, equal to $1$ when we incorrectly measure the outcome and $0$ when we observe the true outcome. We suppose this is a stochastic variable where $\pr(P_j = 1 \mid Y_j = 1) =: FN$ is the false-negative rate and $\pr(P_j = 1 \mid Y_j = 0) =: FP$ is the false-positive rate.  If individual $j$ is selected (i.e., $I_j = 1$) then the observed outcome can be written as $Y_j^{\star} = Y_j(1-P_j) + (1-Y_j) P_j$.

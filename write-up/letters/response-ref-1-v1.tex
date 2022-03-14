@@ -27,6 +27,7 @@
 
 \let\raggedleft\raggedright % Pushes the date (at the top) to the left, comment this line to have the date on the right
 \usepackage{amsthm, amsfonts}
+\usepackage{xcolor}
 \usepackage{hyperref}
 
 
@@ -84,12 +85,12 @@ x
 \vspace{5mm}
 
 \item {\it The AE also mentions a few comments as well:}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it Title: As noted by one of the reviewers, the “paradox” is never discussed/defined in the manuscript. Consider changing to “Statistical estimation of Coronavirus Case Counts: Measurement…” or some alternative.}
 	\item {\it Organization: The figures and tables are not located anywhere near much of their introduction/discussion. For example, Table 1 was discussed on page 7 and is itself located on page 22. Consider the reorganization such that Figures and Tables are located near their discussion.}
 	\item {\it Discussion on the Indiana Random Sample: On page 22, table 1, it appears that the random sample is not similar to the census estimates, potentially indicating non-response bias.}
 	\item {\it Additionally, there may be significant potentially non-ignorable variables (e.g., political opinions and rural status) that drive non-response and are not presented. Is there any comment/discussion on the success of the randomization to be used as the “gold-standard” in this example? Much of the results appear to rely on the SRS and it ignores the potential for nonresponse bias.}
-\end{itemize}
+\end{enumerate}
 
 \vspace{5mm}
 Thank you for raising this issue.  We discuss reporting delays and the relevant literature in Remark 1 in Section 2.2.  Given currently available public data, one cannot correct at the daily level for reporting delays.  Instead, we analyze COVID-19 data at the weekly level to account for potential reporting delays.  While not a perfect solution, it avoids clear reporting variation across day-of-week which can be seen in Figure 5.
@@ -109,7 +110,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 \vspace{5mm}
 
 \item {\bf Section 1.1}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it For the first goal of the paper, it might be helpful to link the biases with those outlined in a set of papers from the Harvard Center for Disease Dynamics: \url{https://doi.org/10.1007/s10654-021-00727-7} and DOI:\url{10.1093/aje/kwaa188}}
 	\vspace{5mm}
 
@@ -127,9 +128,9 @@ In the introduction, we now connect random testing to its purpose as a screening
 
 	We now do this at the end of Section 1.1 in order to help statisticians thinking about validity connect our arguments to this literature.
 	\vspace{5mm}
-\end{itemize}
+\end{enumerate}
 \item {\bf Section 2.1: Diagnostic testing}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it Please clarify in the first paragraph the distinction between incubation period (time to symptom onset) and latent period (time to infectiousness). The viral load will be detectable by at least the end of the latent period which for SARS-CoV-2 occurs before the end of the incubation period. However, individuals are unlikely to present for diagnostic testing until after the end of the incubation period.}
 	\vspace{5mm}
 
@@ -146,9 +147,9 @@ In the introduction, we now connect random testing to its purpose as a screening
 
 	We clarify that, to the best of our knowledge, both Indiana Department of Health's (IDOH) molecular testing and the random state-wide sample relied primarily on nasopharyngeal swab using the same set of RT-PCR tests. This was primarily due to the random sampling being done by a scientific team working closely with the IDOH.
 	\vspace{5mm}
-\end{itemize}
+\end{enumerate}
 \item {\bf Section 2.2: Publicly available data}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it This section could benefit from a few remarks on why it is important / useful to focus on publicly available testing data. There are certainly distinct statistical issues, if public data are aggregated, but are the selection bias and measurement error issues different between public and government datasets? If so, how do the solutions presented here apply to government datasets? Can similar or the same approaches be used by health departments to assess the pandemic and guide responses?}
 	\vspace{5mm}
 
@@ -161,22 +162,24 @@ In the introduction, we now connect random testing to its purpose as a screening
 
 	Section 2.2.1 has a reconstructed timeline of restrictions, which was based on reported restrictions in the local Indiana news.  Between May 12th and April 28th, only high-risk individuals (symptomatic or having one of several important risk factors) were able to test.  After April 28th, suspected exposure was included as a reason for testing. We could not find any article mention travel history as a factor for testing in the public reports.
 	\vspace{5mm}
-\end{itemize}
+\end{enumerate}
 \item {\bf Section 2.3: Probabilistic Samples}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it The $\approx 30\%$ response rate in the supposedly random sample requires some remarks. Even if the original list of eligible individuals was random, it seems unlikely that the final sample remains random with such low response. Is it possible to describe any characteristics that may differ between the intended sample and the final sample? Certainly the final random sample differs in many ways from the Census data presented in Table 1. Also, please clarify if the Census data is US total or Indiana specific. }
 	\vspace{5mm}
 
-	We can discuss the non-response weights used in their paper to adjust.  And that this is a different and solvable issue (we can just weight by the )
+	We now remark on the response rate in Section 5.  Specifically, we cite how Yiannoutsos et al. (2021) handle non-response in prevalence estimation.  We acknowledge the potential for a difference in characteristics between intended and final sample.  We clarify that the Census data is Indiana specific and is presented as a reference to demonstrate the potential difference between intended and final sample.
+
 	\vspace{5mm}
 	\item {\it For the Facebook / CMU survey sample, please present the age breakdown of sampled individuals. It is well-known that the age-distribution of Facebook users differs from the general population, so this is unlikely to be a representative sample of the Indiana population. Other demographic information on this sample would be valuable too. (Why is it not included in Table 1?)}
 	\vspace{5mm}
 
-	We include an age breakdown of the data.  Note that weights are used to adjust and we are using these in the calculations.  We now include a table in the appendix a breakdown of the demographic information for each sample.
+	The difference in age breakdown of sampled individuals in the Facebook / CMU survey, now referred to as Delphi's COVID-19 Trends and Impact Survey (CTIS), from the general population is acknowledged in Section 5.  Table 1 now presents estimates of all demographic and covariate information using Delphi CTIS's weighting procedure.  These weights are used in computing probabilities of selection as shown in Equation (4.2) in Section 4.1.1. Estimates for 'Fever' and 'Household + Case' only use data collected between April 25th and 29th to match the timing of the random survey.  Note that individual-level racial demographics were not provided by CTIS due to data privacy concerns and there was no corresponding question on percent of tests from individuals with a prior positive test.
+
 	\vspace{5mm}
-\end{itemize}
+\end{enumerate}
 \item {\bf Section 3: Analysis of case count data}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it Please clarify the definition of ‘active infection’ (any infection, vs infectious, vs symptomatic, vs detectable by molecular testing?). This has important implications for the construction of the compartmental model and for the definition of your period prevalence (AIR).}
 	\vspace{5mm}
 
@@ -185,16 +188,16 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it Throughout, there is a general issue of too few distinct variable identifiers – for example, using Y to refer to infection status and y to refer to test status will likely lead to confusion.}
 	\vspace{5mm}
 
-	We clarify our choice of notation by adding an appendix with notation.
+	We clarify that this notation was chosen to match standard survey statistics notation: $Y_i$ is the true, fixed outcome value and $y_i$ is the  population-level .  To help the reader, we now include an appendix with all the notation described in detail.
 	\vspace{5mm}
 
 	\item {\it The “natural candidate for AIR” presented is the quantity that has more commonly been referred to as the “test positivity rate” (assuming that yi does in fact indicate test status rather than infection status which is obviously unknown). It would be helpful to mention this.}
 	\vspace{5mm}
 
-	This is now stated explicitly
-\end{itemize}
+	This is now stated explicitly in Section 3, paragraph 2.
+\end{enumerate}
 \item {\bf Section 3.1: Imperfect testing}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it Here, the value of distinguishing between test status and infection status becomes clearer. By using $P_j$ to mean ‘error status of testing’, the derivations in this section lead to a focus on false positives and false negatives. However, the real quantity of interest both for individuals and for determining prevalence is surely the positive predictive value and the negative predictive value – that is, Pr($Y_j$=1|positive test result) and Pr($Y_j$=0|negative test result). Unlike the FP and FN which (because they are strictly functions of sensitivity and specificity) are only affected by test characteristics, the PPV and NPV are affected also by prevalence. Acknowledging this leads more directly to the benefit of an iterative method for validating the test results (since FP \& FN should not depend on Y or y \& thus not need an iterative method).}
 	\vspace{5mm}
 
@@ -203,30 +206,30 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it Also worth noting that test positivity is not strictly binary (since it’s generally based on an underlying continuous cycle threshold), and so measurement error could potentially lead towards bias away from, or across, the null even in the absence of selection bias.}
 	\vspace{5mm}
 
-	We now include a discussion of the underlying continuous cycle (with proper credit).  The binary variable of interest can depend on infectious is what is often most important.  So we highlight that most but acknowledge the binary variable can be defined....
+	Remark 4 is now included to discuss that the binary testing data is generated from an underlying continuous cycle threshold and that the issue of measurement error remains even in the absence of selection bias.
 	\vspace{5mm}
 
-	\item {\it The estimator $y = (yn-FP) /(1-(FP+FN))$ is a standard estimator for correcting for measurement error using FP \& FN estimated from a validation sample, where yn is the mis-measured average \& y is the corrected average. The use of this estimator to iteratively estimate the point prevalence is a good contribution of this paper, but the failure to distinguish between infection \& test status in the variable names somewhat obscures that this is what the author is doing.}
+	\item {\it The estimator $y = (\bar y_n-FP) /(1-(FP+FN))$ is a standard estimator for correcting for measurement error using FP \& FN estimated from a validation sample, where yn is the mis-measured average \& y is the corrected average. The use of this estimator to iteratively estimate the point prevalence is a good contribution of this paper, but the failure to distinguish between infection \& test status in the variable names somewhat obscures that this is what the author is doing.}
 	\vspace{5mm}
 
-	We now more carefully distinguish.  And yes, this is the standard estimator.  We have simply derived it from a new perspective (the decomposition perspective which didn't require any Bayesian machinery).
+	We now more carefully distinguish this and connect with the epidemiologic terminology to help readers from epidemiology.  And yes, this is the standard estimator.  We clarify, as you stated above, that the contribution of this paper was to derive this estimator from a new perspective (i.e., the decomposition perspective which didn't require any Bayesian machinery).
 	\vspace{5mm}
 
 	\item {\it Finally, in the section on effective sample size, please clarify why the FP and FN would be dependent on testing capacity. False positive and false negative rates, as well as sensitivity and specificity, are strictly characteristics of a given test – if increased test capacity or burden would alter the sample collection quality then FP \& FN could change. But if increased test capacity simply changes the underlying prevalence in the group tested (because of opening up testing to uninfected individuals), then the FP \& FN should not change, but the PPV and the NPV will change since these are dependent on prevalence.}
 	\vspace{5mm}
 
-	I now give an explicit example.  The test characteristics may change based on the nurse (cite) and/or what exact test is used.  For example, a center that moves from nasal swab to spit to increase testing capacity will see a ...(cite).
-\end{itemize}
+	We clarify that increasing testing capacity may impact FP and FN rates if altering changes the sample collection quality, e.g., a testing center switches from nasal swab to oropharyngeal swabs or saliva specimen to increase testing capacity will change measurement error due to the different test characteristic.
+\end{enumerate}
 \item {\bf Section 3.2: Regrettable Rates}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it Here, and throughout the theoretical example, the model is an SIR model. However, we know that SARS-CoV-2 is better represented with an SEIR model, and indeed the applied example later in the manuscript uses an SEIR approach. Since this paper is very particularly addressing an issue with COVID data it would be beneficial to use an SEIR model throughout rather than the simpler SIR model.}
 	\vspace{5mm}
 
 	The SIR model in Section 3.2 is replaced by the SEIR model.  We highlight that the SEIR model has been shown to better represent the SARS-CoV-2 dynamics.  Figure 3a presents updated versions of the potnetial bias in ratio estimators under an SEIR model.   The conclusion remains largely the same. The only difference from the prior manuscript is that the peak in bias prior to the ratio going less than 1 is less pronounced (was up to 5, now up to 2).
 	\vspace{5mm}
-\end{itemize}
+\end{enumerate}
 \item {\bf Section 3.3: Effective Reproduction Number}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it Here again, an SEIR model would be valuable. It is also important to clarify that the effective reproductive number can be defined in a number of subtly different ways, and that these impact both the method of estimation and the interpretation of the effect. See for example Cori et al; Am J Epi, 178(9):1505-12. 2013 and Wallinga \& Tuenis Am J Epi; 160(6):509-16. 2004 for methods that, while similar, estimate subtly different quantities. It would be helpful to clarify exactly what effective reproductive number is being estimated here – from the formulae, I suspect it is the type described by Cori et al rather than Wallinga \& Tuenis.}
 	\vspace{5mm}
 
@@ -253,65 +256,66 @@ In the introduction, we now connect random testing to its purpose as a screening
     R_t \approx 1 + \left( \frac{1}{\gamma} + \frac{1}{\sigma} \right) \log \left( \frac{K_t}{K_{t-1}} \right).
 	$$
 	The updated $R_t$ estimator shows that the same intuition about the error holds when we are considering an SEIR rather than an SIR model.  Figure 3b shows the reproduction number estimates and potential biases under SEIR dynamics which shows the same general conclusions hold.  For completeness, we also present the instantaneous reproduction number estimates using the proposal of Cori et. al. (2014) in Section I of the supplementary materials, which shows the same general conclusions.
-\end{itemize}
+\end{enumerate}
 \item {\bf Section 3.4: Rate comparisons}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it This section would also be more relevant with an SEIR model}
 	\vspace{5mm}
 
 	This section has been also updated to consider an SEIR model.  All conclusions remain the same.
 	\vspace{5mm}
-\end{itemize}
+\end{enumerate}
 \item {\bf Section 4.1: Selection propensity estimation}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it The use of weights to correct for sampling bias is an established practice in epidemiology. It would be helpful to discuss how the proposed method differs from survey sampling weights or transportability weights (see Am J Epidemiol 2017 Oct 15;186(8):1010-1014. doi: 10.1093/aje/kwx164.).}
 	\vspace{5mm}
 
-	Inverse probability of selection weights describe by Cole and Stuart are exactly what we are building.  However, how to build them is the question.
-	As far as we are aware, the \href{approaches}{https://academic.oup.com/aje/article/172/1/107/82724} require knowledge of the selection mechanism which is not available in our setting.  Instead, we require auxiliary information.  Here, (cite elliott stuff).  A key different is the time-varying nature which we highlight.
+	Remark 5 in Section 4.1.1 discusses how the proposal is tied closely to the use of weights to correct for sampling bias.  Specifically, in epidemiology literature, the survey sampling weights and transportability weights require knowledge of the selection mechanism, which is not available in our setting.  Instead, we require auxiliary information in the form of a random sample to estimate the probability of selection. A key difference from prior approaches is the need to estimate time-varying probabilities of selection, e.g., Figure 6 shows how the selection propensity of young individuals changes dramatically over the observation window.
 	\vspace{5mm}
-	\item {\it This section, and the sections below, also become somewhat confusing to follow because of the multiple different variables which are all denoted Ij. Since a chief goal is to describe and correct for errors in the sampling process, it would be much more useful for the reader if there were different notation for each of the different sampling mechanisms being discussed / used (eg, inclusion in the random sample, inclusion in the non-random validation sample, inclusion in the original diagnostic testing data, inclusion in ?? on day x).}
+	\item {\it This section, and the sections below, also become somewhat confusing to follow because of the multiple different variables which are all denoted $I_j$. Since a chief goal is to describe and correct for errors in the sampling process, it would be much more useful for the reader if there were different notation for each of the different sampling mechanisms being discussed/used (eg, inclusion in the random sample, inclusion in the non-random validation sample, inclusion in the original diagnostic testing data, inclusion in ?? on day x).}
 	\vspace{5mm}
 
-	We have no built a notation table and made the notation different.  Apologies for the confusion. We use $I_j^{R}$ and $I_j^{NR}$.
+	We have no built a notation table and made the notation different.  Apologies for the confusion. We use $I_j^{R}$ and $I_j^{NR}$.  As stated in our answer to question set XX (subquestion XX) we have
 	\vspace{5mm}
 	\item {\it In the final formula (eq 4.3), I am not clear on why the weights are applied to both yk and FP (ie why sum(w*(yk-FP)) and not sum(w*yk) – FP)? This is very likely just me not understanding the derivation in Appendix C, but some explanation of the intuition would be helpful.}
 	\vspace{5mm}
 
-	Since we normalizing the weights, this is just to write it in simple form but basically $\sum w y$ is the estimate and we subtract FP.  So you are right!
+	Since weights are normalized, these are equivalent, i.e., $\sum w (x_i) FP / \sum w(x_i) = FP$.
 	\vspace{5mm}
 	\item {\it The time-varying section seems somewhat unnecessary since it is simply taking the expectation of the data over some time period – the daily data also does this, but where the time-period is 1 day. }
 	\vspace{5mm}
 
-	Necessary for smoothing.
+	Section 4.1.3 allows researchers to choose to go beyond moving windowed averages (i.e., simply take weekly averages).  The kernel function allows the user to choose weighted averages that may be more robust than the uniform kernel (which is equivalent to the moving averages).
 	\vspace{5mm}
-\end{itemize}
+\end{enumerate}
 \item {\bf Section 4.2: model-based estimation}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it The SEIR model described in the text and in the supplement differ in a way that I find confusing – the code and equations describe a simple SEIR model but the written text describes an SEmInR model with stratum-specific covariates which appear to apply to at least the I compartments and possibly the E compartments. From the code and equations, presumably the assumption is that all strata mix with identical probability and all strata experience the same probabilities of infection, exposure, and transmission. However, these assumptions are (1) unlikely to hold and (2) make it hard to understand why the model includes strata at all. }
 	\vspace{5mm}
 
-	Prior is Dirichlet (uniform) but not time-varying.  This allows us to learn the links.
+	We thank the reviewer for catching this issue.  We now clarify that the model proposed does not assume equal mixing.  Rather due to limited data, we assume a these mixing probabilities are not time varying and that the  prior probability of mixing is chosen from a symmetric Dirichlet distribution (uniform) time-varying.  We clarify this in Section 5.2 and comment on the code to clarify this more carefully in Appendix H.
+	\textcolor{red}{Need To Do.}
 	\vspace{5mm}
-\end{itemize}
+\end{enumerate}
 \item {\bf Section 4.3: Doubly Robust Estimation}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it The term $\mu(x_j)$ in the unnumbered equation does not seem to be defined anywhere – this is presumably coming from the SEIR model given that the rest of the equation is essentially the IPW-based estimator. However, it is unclear to me what output from the SEIR this term includes.}
 	\vspace{5mm}
 
-	The SEIR model is used to generate the number of new weekly cases which allows us to calculate the active infection rate.  $\mu(x_j)$ is the model-based estimate.
+	We clarify this notation in Section 4.2.  Specifically, the SEIR model is used to generate the number of new weekly cases which allows us to calculate the number of individuals with an active infection within each strata (i.e.~$I_{k,t}$ for the $k$th strata).  We then can use this to estimate the active infection rate per strata,~$\mu_k$.
+	\textcolor{red}{Need To Do.}
 	\vspace{5mm}
-\end{itemize}
+\end{enumerate}
 \item {\bf Section 5: Applied analysis}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it The applied example relies heavily on the idea that the random sample is a true random sample of the population of Indiana eligible to be infected with COVID, and that the non-random sample and the Facebook / CMU sample similarly provide representative measures of covariate data. This is not well-established by the short data descriptions given and deserves further emphasis.}
 	\vspace{5mm}
 
 	We provide further emphasis and evidence.  A key point is that this data is used to illustrate the 'what to do' point that was raised in the first round.
 	\vspace{5mm}
-\end{itemize}
+\end{enumerate}
 \item {\bf Section 5.1.1. Disease Prevalence}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it This section seems to assume that individuals can only be tested once but that assumption is unlikely to be true. In particular, people with higher exposures will get tested more frequently than people with lower exposures, and similarly people at higher risk of severe outcomes may be tested more frequently than people with lower risk. Calculating the sampling fraction as the (number of tests)/(total pop – previously tested) thus seems likely to provide a biased sampling fraction estimate.}
 	\vspace{5mm}
 
@@ -322,9 +326,9 @@ In the introduction, we now connect random testing to its purpose as a screening
 
 	Cite PNAS for measurement error and response rate cleaning.
 	\vspace{5mm}
-\end{itemize}
+\end{enumerate}
 \item {\bf Section 5.1.2 Time varying estimate}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it 5.1.2. In the second approach, using hospitalization data to attempt to back-predict fever status seems highly likely to be subject to survivor bias as well as biases driven by differential access to care. Some discussion of the issues with this approach is warranted.}
 	\vspace{5mm}
 
@@ -335,9 +339,9 @@ In the introduction, we now connect random testing to its purpose as a screening
 
 	We acknowledge this shortcoming.  We now include versions of Figure 6 for non-white fr
 	\vspace{5mm}
-\end{itemize}
+\end{enumerate}
 \item {\bf 5.2 SEIR model}
-\begin{itemize}
+\begin{enumerate}
 	\item {\it As stated above, some description of the assumptions related to contact patterns and transmission between and among age strata is needed. In addition, please clarify which compartments of the model the infection-fatality rate applies to (E \& I or I only), as well as how the model handles death from non-COVID causes from these and other model compartments.}
 	\vspace{5mm}
 
@@ -348,7 +352,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 
     We have now acknowledged this along with the fact that IFR is time-varying. So this shows the IFR is likely biased (or was only accurate early).  We performed sensitivity analysis with time-varying IFR based on estimates to improve estimation.
 	\vspace{5mm}
-\end{itemize}
+\end{enumerate}
 \end{enumerate}
 \newpage
 
@@ -356,7 +360,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 
 I am incredibly grateful for this review.  I agree that the paper has evolved beyond the current title.  This was not updated in the prior submission simply to ensure continuity of presentation (i.e., didn't want to change from first submission).  Here we replace with the title ``Good Title''.  We next address the reviewers specific comments.
 
-\begin{itemize}
+\begin{enumerate}
 \item {\it The paper states some facts about the SARS-CoV-2 virus that are outdated, for example “Upon infection with SARS-CoV-2, an incubation period starts and lasts approximately five days [Lauer et al., 2020] before the viral load is high enough to be detected.” (Page 5). Lauer was based on the original
 strain, we see different disease dynamics with the delta strain. Perhaps to be more precise, the author could clarify that this is an example of the original SARS-CoV-2 incubation rather than definitative as there will likely be future variants that will change this further. Similarly, on page 13, the serial
 interval of 7 is stated as fact – this is again based on the original strain rather than the current disease dynamics. Stating these numbers as an example rather than definitive would be preferable, I believe.}
@@ -418,7 +422,7 @@ WXX
 
 		\item {\it In the supplement, page 21, the author refers to “Figure 6a and 6a” – I believe they mean “Figure 6a and 6b”. This also claims to show the likelihood for all age ranges - I believe it is only for males.}
 	\end{enumerate}
-\end{itemize}
+\end{enumerate}
 
 \end{letter}
 
