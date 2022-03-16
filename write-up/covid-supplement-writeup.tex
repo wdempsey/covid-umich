@@ -99,8 +99,39 @@ Section~\ref{app:prior_modelbased} provides prior specifications for the SEIR mo
 
 All relevant code can be found at \url{https://github.com/wdempsey/covid-umich}.
 
-\section{Notation Reference}
+\section{Notation Glossary}
 \label{app:notation}
+
+\paragraph{Notation for Section~\ref{section:casecount} (non-temporal setting)}
+\begin{itemize}
+\item[$Y_j$] \quad Binary COVID-19 status of individual $j$ in the population.
+\item[$N$] \quad Population size
+\item[$\bar Y$] \quad Population average, $\bar Y = N^{-1} \sum_{j=1}^N Y_j$
+\item[$I_j$] \quad Selection indicator of individual $j$ in the population into the sample
+\item[$y_j$] \quad Binary COVID-19 status of sample individual $j=1,\ldots,n$.
+\item[$\bar y_n$] \quad Sample average, $\bar y_n = n^{-1} \sum_{j=1}^N I_j Y_j = n^{-1} \sum_{j=1}^n y_j$
+\item[$\rho_{I,Y}$] \quad \emph{Data quality}, i.e., correlation between selection indicator and population outcome
+\item[$f$] \quad \emph{Data quantity}, i.e., sampling fraction $f = n/N$
+\item[$\sigma_Y$] \quad \emph{Problem Difficulty}, i.e., population variance $\sigma_Y^2 = (N)^{-1} \sum_{j=1}^N (Y_j - \bar Y)^2$.
+\item[$FP$] \quad False Positive Rate
+\item[$FN$] \quad False Negative Rate
+\item[$\tilde y_n$] \quad Sample average adjusted for false negative and positive rates, i.e., $\tilde y_n = (1-FP-FN)^{-1} (\bar y_n - FP)$
+\item[$f_0, f_1$] \quad Sampling fraction among COVID-19 negative and positive individuals respectively, i.e., $f_1 := \sum_{j=1}^N I_j Y_j / \sum_{j=1}^N Y_j$
+and $f_0 := \sum_{j=1}^N I_j (1-Y_j) / \sum_{j=1}^N (1-Y_j)$.
+\item[$\Delta, M$] \quad Sampling rate differential on additive -- $\Delta = f_1 - f_0$ -- and multiplicative -- $M = f_1/f_0$ -- scales.
+\end{itemize}
+
+\paragraph{\bf Notation for Section~\ref{section:improvedcasecount} (temporal setting)}
+\begin{itemize}
+\item[$Y_{j,t}$] \quad Binary COVID-19 status of individual $j$ in the population at time~$t$.
+\item[$I^{NR}_{j,t}$] \quad Selection indicator of individual $j$ in the population into the non-probability sample.
+\item[$X_{j,t}$] \quad Feature vector for individual $j$ in the population at time~$t$ that impact self-selection into the non-probability sample.
+\item[$I_{j,t}^{R}$] \quad Selection indicator of individual $j$ in the population into the probability sample.
+\item[$W_{j,t}^{R}$] \quad Weight of individual $j$ in the population in the probability sample (i.e., inverse-probability of selection)
+\item[$\pi (X_{j,t}; \theta)$] \quad Self-selection propensity of individual~$j$ into the non-probability sample given feature vector~$X_{j,t}$ and Probability of selection model evaluated indicator of selection of the
+\item[$w (X_{j,t})$] \quad Weight of indivdual~$j$ in the population in the non-probability sample, i.e., $w(x) = 1/\pi(x; \theta)$.
+\item[$\mu(X_{j,t})$] \quad The indicator of selection of the
+\end{itemize}
 
 \section{Technical details}
 

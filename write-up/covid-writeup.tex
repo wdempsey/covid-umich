@@ -251,7 +251,9 @@ Note that the COVID-19 response team (and health departments in general) have ac
  \rho_{I,Y} \times \sqrt{\frac{1-f}{f}} \times \sigma_{Y}
  \times \underbrace{\left[ 1 - \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{f_0 (1-\bar Y) + f_1 \bar Y} \right] \times \frac{1}{1-(FP+FN)}}_{D_M},
  \end{equation}
- where $f=n/N$ is the sampling fraction, $f_1$ and $f_0$ are sampling fractions for COVID-19 positive and negative individuals respectively, and $\Delta = f_1 - f_0$ is the sampling rate differential.  See Appendix~\ref{app:memestimator} for the derivation. This extends work by \cite{Meng2018} to account for imperfect testing. The first three terms continue to represent \emph{data quality}, \emph{data quantity}, and \emph{problem difficulty} respectively.  The new term~$D_M$ represents the \emph{imperfect testing adjustment} which is a complex function of the sampling rate differential, the odds ratio, and the ratio of measurement error interaction with prevalence and sampling rates interaction with prevalence. %, which is scaled by the factor $(1 - FP - FN)^{-1}$.
+ where $f=n/N$ is the sampling fraction, $f_1$ and $f_0$ are sampling fractions for COVID-19 positive and negative individuals respectively, and $\Delta = f_1 - f_0$ is the sampling rate differential.  See Appendix~\ref{app:memestimator} for the derivation. This extends work by \cite{Meng2018} to account for imperfect testing. The first three terms continue to represent \emph{data quality}, \emph{data quantity}, and \emph{problem difficulty} respectively.  The new term~$D_M$ represents the \emph{imperfect testing adjustment} which is a complex function of the sampling rate differential, the odds ratio, and the ratio of measurement error interaction with prevalence and sampling rates interaction with prevalence.
+ %, which is scaled by the factor $(1 - FP - FN)^{-1}$.
+ For ease of comprehension, a notation glossary is provided in Section~\ref{app:notation} in the supplementary materials.
 
  \begin{remark}
  \label{rmk:testbinary}
@@ -393,10 +395,10 @@ This approximation ignores a term that is quadratic in the epidemic growth rate 
  % In causal inference~\citep{Hernan2020}, under certain assumptions, the observational data permits direct estimation of treatment propensity.
  In the current context, however, one does not observe those who are not tested.  To estimate selection propensities, auxiliary information is needed.
 
- To see this mathematically, let $X_j$ denote a vector of covariates for the $j$th individual in the population, $j=1,\ldots,N$.  For simplicity, the dynamic nature of the outbreak and recoverability of individuals is ignored for now. Suppose the selection indicator $I_j$ is a Bernoulli random variable that depends only on these covariates, i.e., $P(I_j = 1 \mid X_j = x) = \pi (x; \theta)$. Here, we focus on logistic regression models, i.e., $\pi(x; \theta) = \text{expit} \left( x^\top \theta \right)$. Maximum likelihood estimation follows by maximizing
+ To see this mathematically, let $X_j$ denote a vector of covariates for the $j$th individual in the population, $j=1,\ldots,N$.  For simplicity, the dynamic nature of the outbreak and recoverability of individuals is ignored for now. Let~$I_j^{NR}$ denote the selection indicator for individual~$j$ in the population into the non-probability sample.  Assume it is a Bernoulli random variable that depends only on these covariates, i.e., $P(I^{NR}_j = 1 \mid X_j = x) = \pi (x; \theta)$. Here, we focus on logistic regression models, i.e., $\pi(x; \theta) = \text{expit} \left( x^\top \theta \right)$. Maximum likelihood estimation follows by maximizing
  \begin{equation}
  \label{eq:propensity}
- \sum_{j=1}^N I_j \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right) + \sum_{j=1}^N \log \left( 1 - \pi (X_j; \theta) \right).
+ \sum_{j=1}^N I_j^{NR} \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right) + \sum_{j=1}^N \log \left( 1 - \pi (X_j; \theta) \right).
  \end{equation}
  The first sum only involves individuals observed in the nonprobability sample.
  The second sum is over the entire population.  Maximum likelihood estimation therefore requires knowledge of covariate information for every individual in the population.  Typically, this is not possible.  Here we present a method that uses auxiliary information obtained from probability samples.
@@ -404,12 +406,12 @@ This approximation ignores a term that is quadratic in the epidemic growth rate 
  \subsubsection{Auxiliary information through probability samples}
  \label{subsec:auxprob}
 
- Here we assume access to a probability sample measuring the same set of covariates.  Let $\tilde I_j$ be an indicator that the individual was included in the probability sample and $\tilde W_j$ be the probability of inclusion for the $j$th individual. \cite{Chen2019} use a probability sample to construct a design-unbiased estimator of the second term
+ Here we assume access to a probability sample measuring the same set of covariates.  Let $I_j^{R}$ be an indicator that the individual was included in the probability sample and $W_j^R$ be the probability of inclusion for the $j$th individual. \cite{Chen2019} use a probability sample to construct a design-unbiased estimator of the second term
  \begin{equation}
  \label{eq:auxinfoprob}
- \sum_{j=1}^N I_j \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right)  + \sum_{i=1}^N \tilde I_j \tilde W_j \log ( 1 - \pi (X_j; \theta)).
+ \sum_{j=1}^N I_j^R \log \left( \frac{\pi (X_j; \theta)}{1-\pi(X_j; \theta)} \right)  + \sum_{i=1}^N I_j^R W_j^R \log ( 1 - \pi (X_j; \theta)).
  \end{equation}
- Expectation of~\ref{eq:auxinfoprob} with respect to the sampling design yields~\eqref{eq:propensity}. Solving~\eqref{eq:auxinfoprob} is done by iteratively re-weighted least squares (IRLS); see Section~\ref{app:irls} in the supplementary materials for details.
+ Expectation of~\ref{eq:auxinfoprob} with respect to the sampling design yields~\eqref{eq:propensity}. Solving~\eqref{eq:auxinfoprob} is done by iteratively re-weighted least squares (IRLS); see Section~\ref{app:irls} in the supplementary materials for details.  For ease of comprehension, a notation glossary is provided in Section~\ref{app:notation} in the the supplementary materials.
 
  \begin{remark}
  Weights built from selection propensities~$\{\pi(x_i; \theta)\}_{i=1}^n$ are common practice in the epidemiology literature.  Survey sampling and transportability weights require knowledge of the selection mechanism~\citep{10.1093/aje/kwx164,ColeStuart2010}, which is not available in our setting.  Instead, we require auxiliary information in the form of a random sample to estimate the probability of selection. A key difference from prior approaches is the need to estimate time-varying probabilities of selection, e.g., Figure 6 shows how the selection propensity of young individuals changes dramatically over the observation window.
@@ -422,27 +424,27 @@ This approximation ignores a term that is quadratic in the epidemic growth rate 
  \subsubsection{An IPW estimator and statistical error decomposition}
  \label{section:IPWerrordecomp}
 
- Given a selection propensity, define the inverse probability weight~$w(x) = \pi (x; \hat \theta)^{-1}$. Then the IPW estimator adjusted for measurement error is given by
+ Given a selection propensity, define the inverse probability weight~$w^{NR}(x) = \pi (x; \hat \theta)^{-1}$. Then the IPW estimator adjusted for measurement error is given by
  \begin{equation}
  \label{eq:ipwest}
  \bar y_n^\star
- = \frac{1}{1-FP-FN} \cdot \frac{\sum_{i=1}^n w(x_i) (y_i - FP)}{\sum_{i=1}^n w (x_i)}
+ = \frac{1}{1-FP-FN} \cdot \frac{\sum_{i=1}^n w^{NR} (x_i) (y_i - FP)}{\sum_{i=1}^n w^{NR} (x_i)}
  \stackrel{(2)}{=} \frac{1}{1-FP-FN} \sum_{k=1}^K \frac{d_k w_k}{w} (\bar y_k - FP),
  \end{equation}
  where equality (2) is under the assumption that $x_i$ is a stratification variable with $k$ indexing the strata, $w_k$ is the weight and $d_k$ is the number of samples in strata $k$, and $w = \sum_{k=1}^K d_k w_k$.
  % Under simple random sampling with one strata~$\hat \pi_k = n/N$ and we recover the estimator $\tilde y_n$ from Section~\ref{section:imperfecttesting}.
 
- Let $\tilde I_j (X_j) = I_j  \cdot W(X_j)$ for $j=1,\ldots,N$.  Then the error when comparing weighted estimator~$\bar y_n^\star$ to the true prevalence $\bar Y$ can be expressed as:
+ Let $I_j^{NR} (X_j) = I_j^{NR}  \cdot w^{NR}(X_j)$ for $j=1,\ldots,N$.  Then the error when comparing weighted estimator~$\bar y_n^\star$ to the true prevalence $\bar Y$ can be expressed as:
  \begin{equation}
  \label{eq:statdecomp2}
- \rho_{\tilde I (X), Y} \times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y} \times \underbrace{\left[ 1 - \tilde \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{\tilde f_0 (1-\bar Y) + \tilde f_1 \bar Y} \right] \times \frac{1}{1-(FP+FN)}}_{\tilde D_M}
+ \rho_{I^{NR} (X), Y} \times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y} \times \underbrace{\left[ 1 - \tilde \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{\tilde f_0 (1-\bar Y) + \tilde f_1 \bar Y} \right] \times \frac{1}{1-(FP+FN)}}_{\tilde D_M}
  \end{equation}
- where $CV_W$ is the coefficient of variation (i.e., standard deviation/mean) of $W_J$ given $I_J = 1$, $\rho_{\tilde I(X), Y}$ is the empirical correlation which here depends on covariate distribution, $\tilde f_k = E[ W_J I_J \mid Y_j = k]$ for $k=0,1$, and $\tilde \Delta = \tilde f_1 - \tilde f_0$.  See Appendix~\ref{app:ipwderivation} for the derivation.
+ where $CV_W$ is the coefficient of variation (i.e., standard deviation/mean) of $w^{NR} (X_J)$ given $I_J = 1$, $\rho_{I^{NR} (X), Y}$ is the empirical correlation which here depends on covariate distribution, $\tilde f_k = E[ w^{NR} (X_J) I_J \mid Y_J = k]$ for $k=0,1$, and $\tilde \Delta = \tilde f_1 - \tilde f_0$.  See Appendix~\ref{app:ipwderivation} for the derivation.
 
  Comparing~\eqref{eq:statdecomp2} to~\eqref{eq:statdecomp} shows that weighting impacts the estimation error in three ways.  First, there is a negative impact on the data quantity component; taking the ratio of these quantities yields
- $\sqrt{1 + \frac{CV_W^2}{1-f}} \geq 1$.  Hence, if the data quality does not increase (i.e., $| \rho_{\tilde I (X), Y} | = | \rho_{I,Y}|$ ) then weighting increases the error magnitude.  Second, the relative error increase depends on the fraction of population sampled $f$, implying that for large samples there is a larger potential increase in the error if the weights do not improve data quality. Third, the impact of measurement-error on data quality is changed when considering a weighted estimand. In particular, weighting may result in $\text{sgn}(\Delta) \neq \text{sgn} (\tilde \Delta)$ which implies the impact of measurement-error may be in a different direction.
+ $\sqrt{1 + \frac{CV_W^2}{1-f}} \geq 1$.  Hence, if the data quality does not increase (i.e., $| \rho_{I^{NR} (X), Y} | = | \rho_{I,Y}|$ ) then weighting increases the error magnitude.  Second, the relative error increase depends on the fraction of population sampled $f$, implying that for large samples there is a larger potential increase in the error if the weights do not improve data quality. Third, the impact of measurement-error on data quality is changed when considering a weighted estimand. In particular, weighting may result in $\text{sgn}(\Delta) \neq \text{sgn} (\tilde \Delta)$ which implies the impact of measurement-error may be in a different direction.
 
- As demonstrated below in Lemma~\ref{lemma:ipw}, if the propensity model is correctly specified then the $E_{\bf R} [ \rho_{\tilde I (X), Y} ] = 0$ and therefore $\rho_{\tilde I(X), Y} = O(N^{-1})$; however, if the weights are not correctly specified then the data quality index is unlikely to inversely scale with population size.
+ As demonstrated below in Lemma~\ref{lemma:ipw}, if the propensity model is correctly specified then the $E_{\bf R} [ \rho_{I^{NR} (X), Y} ] = 0$ and therefore $\rho_{I^{NR} (X), Y} = O(N^{-1})$; however, if the weights are not correctly specified then the data quality index is unlikely to inversely scale with population size.
  % Indeed, Horvitz-Thompson estimators are sensitive to errors in the estimated weights.  Low selection propensity imply large weights which can have deleterious impacts by certain observations dominating estimation.
  Similar to~\cite{Meng2018}, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from an IPW estimator are likely to put too much confidence in the sheer data size.
 
@@ -451,13 +453,13 @@ This approximation ignores a term that is quadratic in the epidemic growth rate 
  Here we extend the IPW approach to the temporal setting to account for the dynamic nature of the outbreak by considering the joint likelihood
  \begin{equation}
  \label{eq:tvpropensity}
- \sum_{t=1}^T \left[ \sum_{j=1}^N I_{j,t} \log \left( \frac{\pi_t (X_{j,t}; \theta)}{1-\pi_t(X_{j,t}; \theta)} \right) + \sum_{j=1}^N \log \left( 1 - \pi_t (X_{j,t}; \theta) \right) \right]
+ \sum_{t=1}^T \left[ \sum_{j=1}^N I^{NR}_{j,t} \log \left( \frac{\pi_t (X_{j,t}; \theta)}{1-\pi_t(X_{j,t}; \theta)} \right) + \sum_{j=1}^N \log \left( 1 - \pi_t (X_{j,t}; \theta) \right) \right]
  \end{equation}
- where $t=1,\ldots,T$ are the days when case-count data is reported.  Here, $I_{j,t}$ denotes self-selection into testing on day $t$, which is highly correlated with prior testing and results.  For example, an individual who tests positive may be unlikely to seek testing in the subsequent few days/weeks.  Moreover, an individual in a high prevalence area may be more likely to seek out testing.  Here, we assume that the covariate vector $X_{j,t}$ contains all features of the past relevant for selection.
+ where $t=1,\ldots,T$ are the days when case-count data is reported, and $I^{NR}_{j,t}$ denotes self-selection into testing on day $t$, which is highly correlated with prior testing and results.  For example, an individual who tests positive may be unlikely to seek testing in the subsequent few days/weeks.  Moreover, an individual in a high prevalence area may be more likely to seek out testing.  Here, we assume that the covariate vector $X_{j,t}$ contains all features of the past relevant for selection.
 
  If sufficiently large random samples are collected at each time $t =1,\ldots,T$, then the pseudo-likelihood can be re-written as in~\eqref{eq:auxinfoprob} and propensities estimated separately per time point.  Unfortunately, large probabilistic samples are not available at every time within a given region.  To address this, here we consider a non-parametric kernel-based approach where the selection propensity at time~$t$, denoted $\hat \theta_t$, maximizes the smoothed pseudo-likelihood
  $$
- \sum_{t^\prime=1}^T K_h(|t^\prime - t|) \left[ \sum_{j=1}^N I_{j,t^\prime} \log \left( \frac{\pi_t (X_{j,t^\prime}; \theta)}{1-\pi_t(X_{j,t^\prime}; \theta)} \right) + \sum_{j=1}^N \tilde W_{j,t^\prime} \tilde I_{j,t^\prime} \log \left( 1 - \pi_t (X_{j,t^\prime}; \theta) \right) \right]
+ \sum_{t^\prime=1}^T K_h(|t^\prime - t|) \left[ \sum_{j=1}^N I_{j,t^\prime}^{NR} \log \left( \frac{\pi_t (X_{j,t^\prime}; \theta)}{1-\pi_t(X_{j,t^\prime}; \theta)} \right) + \sum_{j=1}^N W^{R}_{j,t^\prime} I^R_{j,t^\prime} \log \left( 1 - \pi_t (X_{j,t^\prime}; \theta) \right) \right]
  $$
  where $K_h$ is a kernel function with tunable parameter $h$. Given $\pi (x;\hat \theta_t)$, the prevalence estimator $\bar y_{n,t}^\star$ is given by~\ref{eq:ipwest} using case-count data observed on day~$t$.
 
@@ -475,7 +477,7 @@ The estimates~$\hat \mu_t := \bar y_{n,t}^\star$, $\hat \pi_{j,t}$, $\hat FP$, a
  \left (
  \begin{array}{c}
  \frac{1}{N} \sum_{j=1}^N I_{j,t} \frac{Y_{j,t} - FP - (1-FP-FN) \cdot \mu_t}{\pi_{j,t}} \\
- \frac{1}{N \times \sum_{l = 1}^L K_h \left(|t - t_l^\prime| \right)} \sum_{l = 1}^L K_h \left(|t - t_l^\prime| \right) \left[ \sum_{j=1}^N I_{j,t_l^\prime} X_{j,t_l^\prime} - \sum_{j = 1}^N \tilde I_{j,t_l^\prime} \tilde W_{j,t_l^\prime}  \pi_{j,t_l^\prime} X_{j,t_l^\prime}  \right] \\
+ \frac{1}{N \times \sum_{l = 1}^L K_h \left(|t - t_l^\prime| \right)} \sum_{l = 1}^L K_h \left(|t - t_l^\prime| \right) \left[ \sum_{j=1}^N I^{NR}_{j,t_l^\prime} X_{j,t_l^\prime} - \sum_{j = 1}^N I^{R}_{j,t_l^\prime} W^{R}_{j,t_l^\prime}  \pi_{j,t_l^\prime} X_{j,t_l^\prime}  \right] \\
  \frac{1}{n_{FP}} \sum_{i=1}^{n_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
  \frac{1}{n_{FN}} \sum_{i=1}^{n_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
  \end{array}
