@@ -302,8 +302,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it The term $\mu(x_j)$ in the unnumbered equation does not seem to be defined anywhere – this is presumably coming from the SEIR model given that the rest of the equation is essentially the IPW-based estimator. However, it is unclear to me what output from the SEIR this term includes.}
 	\vspace{5mm}
 
-	We clarify this notation in Section 4.2.  Specifically, the SEIR model is used to generate the number of new weekly cases which allows us to calculate the number of individuals with an active infection within each strata (i.e.~$I_{k,t}$ for the $k$th strata).  We then can use this to estimate the active infection rate per strata,~$\mu_k$.
-	\textcolor{red}{Need To Do.}
+	We clarify this notation in Section 4.3.  Specifically, the SEIR model is used to generate the number of new weekly cases which allows us to calculate the number of individuals with an active infection within each strata (i.e.~$I_{k,t}$ for the $k$th strata).  We then can use this to calculate the posterior mean for the active infection rate per strata,~$\mu_k$.
 	\vspace{5mm}
 \end{enumerate}
 \item {\bf Section 5: Applied analysis}
@@ -311,7 +310,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it The applied example relies heavily on the idea that the random sample is a true random sample of the population of Indiana eligible to be infected with COVID, and that the non-random sample and the Facebook / CMU sample similarly provide representative measures of covariate data. This is not well-established by the short data descriptions given and deserves further emphasis.}
 	\vspace{5mm}
 
-	We provide further emphasis and evidence.  A key point is that this data is used to illustrate the 'what to do' point that was raised in the first round.
+	We added Remark 6 to emphasize these potential limitations. A key point is that the case study is to demonstrate our framework for answering the \emph{what to do with this knowledge of selection bias and measurement error} point that was raised in the first round of submission.  In Remark 6, we urge health policy experts and government officials to assess these issues when applying this framework in their own future work.
 	\vspace{5mm}
 \end{enumerate}
 \item {\bf Section 5.1.1. Disease Prevalence}
@@ -319,12 +318,12 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it This section seems to assume that individuals can only be tested once but that assumption is unlikely to be true. In particular, people with higher exposures will get tested more frequently than people with lower exposures, and similarly people at higher risk of severe outcomes may be tested more frequently than people with lower risk. Calculating the sampling fraction as the (number of tests)/(total pop – previously tested) thus seems likely to provide a biased sampling fraction estimate.}
 	\vspace{5mm}
 
-	We acknowledge this limitation.  As an alternative we assume the risk set is always total pop.  This presents a range.
+	Section 5.1.1 studies testing between April 25th to 29th 2020 during which testing was limited.  This led us to the assumption that the individuals who already tested were unlikely to be available for testing.  We continue to calculate the sampling fraction as number of tests divided by the total population minus prior tests, but note at the end of Section 5.1.1 that using the total population in the denominator yields a very similar sampling fraction and the calculations have negligible change.
 	\vspace{5mm}
 	\item {\it Also, it would be useful to clarify whether the random sample, which is being used as the gold standard, was corrected for measurement error, as well as how the issue of 30\% response rate was dealt with in obtaining the prevalence estimate. Given these issues, the random sample estimate could easily also be biased.}
 	\vspace{5mm}
 
-	Cite PNAS for measurement error and response rate cleaning.
+	See answers to Quesitons 5a and 14a above.  The prevalence estimate comes from Yiannoutsos et al. (2021) who detail their adjustments for response rates in estimation of active prevalence.
 	\vspace{5mm}
 \end{enumerate}
 \item {\bf Section 5.1.2 Time varying estimate}
@@ -332,12 +331,13 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it 5.1.2. In the second approach, using hospitalization data to attempt to back-predict fever status seems highly likely to be subject to survivor bias as well as biases driven by differential access to care. Some discussion of the issues with this approach is warranted.}
 	\vspace{5mm}
 
-	We have added Remark XX to discuss the bias.  In Remark XX, we state that availability of symptom status (which we know the state collects but has told us is unavailable due to data privacy / confidentiality issues) is important to use.
+	We thank the reviewer for raising this issue.  We have added a remark in sction 5.1.2 that raises this as a limitation.  We restart here that the need for the approaches is due to the lack of availability of symptom status (which we know the state collects but has told us is unavailable due to data privacy / confidentiality issues).  Therefore, as a framework for health policy experts and government officials who have access to the complete government datasets (i.e., not just the public data), these steps will not be necessary.
 	\vspace{5mm}
 	\item {\it Also, focusing on the non-Hispanic, white male groups seems potentially to limit understanding of the scope of error. Although Indiana has a very high percent of white individuals, the individuals who present for testing (as well as those who test positive, are exposed in the workplace and home, and hospitalized or die) are disproportionately non-white. It is important to show the performance of the method in both white and non-white individuals because non-white individuals are the ones who are experiencing higher rates of illness and death and therefore will likely be more negatively impacted by biased estimates of disease prevalence.}
 	\vspace{5mm}
 
-	We acknowledge this shortcoming.  We now include versions of Figure 6 for non-white fr
+	We acknowledge this shortcoming.  We now include versions of Figure 6 for non-white groups in Section XX of the supplementary materials.
+	\textcolor{red}{NEED TO DO}
 	\vspace{5mm}
 \end{enumerate}
 \item {\bf 5.2 SEIR model}
@@ -345,7 +345,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it As stated above, some description of the assumptions related to contact patterns and transmission between and among age strata is needed. In addition, please clarify which compartments of the model the infection-fatality rate applies to (E \& I or I only), as well as how the model handles death from non-COVID causes from these and other model compartments.}
 	\vspace{5mm}
 
-	We now describe the model in more detail.
+	See answers to Question XX above.  In Section 5.2, we now clarify how we calculate the infection-fatality rate. Similar to Johndrow (2021), the model only uses COVID-19 related deaths.  Deaths to non-COVID causes are not modeled but would appear in the R component.
 	\vspace{5mm}
 	\item {\it Also, the discussion of IFR would benefit greatly from being contextualized to the rest of the paper – the goal of the manuscript is specifically to provide a better estimate of who is infected. Such an estimate would therefore be expected to provide a more valid infection fatality rate, and this in turn implies the IFR used here must be biased. This should be discussed.}
 	\vspace{5mm}

@@ -77,14 +77,14 @@
 
 \begin{document}
 
-\title[Statistical paradoxes in coronavirus case-counts]{Statistical paradoxes in coronavirus case-counts: selection bias, measurement error, and the COVID-19 pandemic} %
+\title[Addressing selection bias and measurement error in COVID-19 case counts]{Addressing selection bias and measurement error in COVID-19 case count data using auxiliary information} %
 
 \author{Walter Dempsey}
 \address{Department of Biostatistics, University of Michigan, Ann Arbor, MI 48109}
 % \email{wdem@umich.edu}
 
 \begin{abstract}
-  Coronavirus case-count data has influenced government policies and drives most epidemiological forecasts. Limited testing is cited as the key driver behind minimal information on the COVID-19 pandemic. While expanded testing is laudable, measurement error and selection bias are the two greatest problems limiting our understanding of the COVID-19 pandemic; neither can be fully addressed by increased testing capacity. In this paper, we demonstrate their impact on estimation of point prevalence and the effective reproduction number. We show that estimates based on the millions of molecular tests in the US has the same mean square error as a small simple random sample.  To address this, a procedure is presented that combines case-count data and random samples over time to estimate selection propensities based on key covariate information. We then combine these selection propensities with epidemiological forecast models to construct a \emph{doubly robust} estimation method that accounts for both measurement-error and selection bias.  This method is then applied to estimate Indiana's prevalence using case-count, hospitalization, and death data with demographic information, a statewide random molecular sample collected from April 25--29th, and Facebook's COVID-19 symptom survey.  We end with a series of recommendations based on the proposed methodology.
+  Coronavirus case-count data has influenced government policies and drives most epidemiological forecasts. Limited testing is cited as the key driver behind minimal information on the COVID-19 pandemic. While expanded testing is laudable, measurement error and selection bias are the two greatest problems limiting our understanding of the COVID-19 pandemic; neither can be fully addressed by increased testing capacity. In this paper, we demonstrate their impact on estimation of point prevalence and the effective reproduction number. We show that estimates based on the millions of molecular tests in the US has the same mean square error as a small simple random sample.  To address this, a procedure is presented that combines case-count data and random samples over time to estimate selection propensities based on key covariate information. We then combine these selection propensities with epidemiological forecast models to construct a \emph{doubly robust} estimation method that accounts for both measurement-error and selection bias.  This method is then applied to estimate Indiana's prevalence using case-count, hospitalization, and death data with demographic information, a statewide random molecular sample collected from April 25--29th, and Delphi's COVID-19 Trends and Impact Survey.  We end with a series of recommendations based on the proposed methodology.
 \end{abstract}
 
 \maketitle
@@ -210,14 +210,14 @@ Note that the COVID-19 response team (and health departments in general) have ac
  Table~\ref{tab:indiana} summarizes the data.
  % In this paper, the nonrandom sample is used to assess whether the cumulative summary statistics are appropriate in constructing the inverse-probability weights as well as in constructing appropriate weights using symptom information.
 
- \subsubsection{Facebook/CMU symptom survey.}
+ \subsubsection{Delphi's COVID-19 Trends and Impact Survey}
  \label{subsection:fbsymptom}
- Since April 2020, Facebook has started randomly showing an opt-in symptom survey to its users~\citep{delphisurvey}.  Data collected includes basic demographic information and if the respondent has symptoms such as fever, coughing, shortness of breath, or loss of smell which are associated with COVID-19.  The survey defines an individual as displaying \emph{COVID-like symptoms} if they exhibit a fever along with a cough, or shortness of breath, or difficulty breathing.  Figure~\ref{fig:fbsymptoms} displays smoothed estimates of the fraction of individuals who report COVID-like symptoms within the past 24-hours by age and gender.  The Facebook symptom survey is used as the main source of auxiliary information on time-varying characteristics of the population of Indiana, e.g., displaying COVID-like symptoms or in contact with COVID-19 positive individuals.
+ Since April 2020, in collaboration with Facebook, the Delphi group at Carnegie Mellon University has conducted the COVID-19 Trends and Impact Survey (CTIS) to monitor the spread and impact of the COVID-19 pandemic in the United States.  The survey is advertised through Facebook, who automatically select a random sample of its users to see the advertisement~\citep{doi:10.1073/pnas.2111454118}.  Data collected includes basic demographic information and if the respondent has symptoms such as fever, coughing, shortness of breath, or loss of smell which are associated with COVID-19.  The survey defines an individual as displaying \emph{COVID-like symptoms} if they exhibit a fever along with a cough, or shortness of breath, or difficulty breathing.  Figure~\ref{fig:fbsymptoms} displays smoothed estimates of the fraction of individuals who report COVID-like symptoms within the past 24-hours by age and gender.  The Delphi's COVID-19 Trends and Impact Survey (CTIS) is used as the main source of auxiliary information on time-varying characteristics of the population of Indiana, e.g., displaying COVID-like symptoms or in contact with COVID-19 positive individuals.
 
  \begin{figure}[!th]
  \centering
  \includegraphics[width = 0.9\textwidth]{../figs/fbcovid19symptoms.png}
- \caption{Rate of reported COVID-19 symptoms per strata.  Daily rates were estimated using weighted method suggested by~\citep{delphisurvey} on each day separately and then smoothed over time using local-linear nonparametric regression.}
+ \caption{Rate of reported COVID-19 symptoms per strata.  Daily rates were estimated using weighted method suggested by~\citep{doi:10.1073/pnas.2111454118} on each day separately and then smoothed over time using local-linear nonparametric regression.}
  \label{fig:fbsymptoms}
  \vspace{-0.3cm}
  \end{figure}
@@ -518,7 +518,8 @@ Here, we consider covariate information that takes the form of a stratification 
 
 
  \subsection{Doubly robust estimation.}
- Rather than relying solely on IPW or epidemiological forecasts, here we combine forecasting and inverse-probability weighting by extending recent work by~\cite{Chen2019} to account time-varying propensities and measurement-error. In this context, the doubly-robust estimator is given by
+ Rather than relying solely on IPW or epidemiological forecasts, here we combine forecasting and inverse-probability weighting by extending recent work by~\cite{Chen2019} to account time-varying propensities and measurement-error.
+ Let~$\mu(x)$ denote the posterior mean of the active infection rate individuals with covariate value~$x$ (i.e., age strata) based on the SEIR model described in SEction~\ref{section:modelbased}. In this context, the doubly-robust estimator is given by
  $$
  \bar y_{n}^{(DR)} = \frac{1}{N} \sum_{j=1}^N \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j w (x_j)} \sum_{j=1}^N I_j w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \hat \mu(x_j) \right).
  $$
@@ -600,7 +601,7 @@ Here, we consider covariate information that takes the form of a stratification 
  % Namely, the samples collected included covariate information on (1) prior symptoms, (2) COVID-19 positive individual in household, and (3) prior COVID-19 positive test.
  To account for the nonrandom sample being from high risk areas, we adjust estimates to match the statewide positivity rate of 11.7\% on August 30th. These adjusted rates are presented in parentheses in Table~\ref{tab:indiana} along with the relevant covariate information.
 
- \item {\bf Facebook symptom survey}: From the daily symptom surveys completed on Facebook (see Section~\ref{subsection:fbsymptom} for details), we extract survey responses for individuals who identify as living in Indiana.  We collect age, sex, and demographic information as well as COVID-19 related symptoms, which Facebook defines as having (1) a fever and cough, (2) shortness of breath, \emph{or} (3) difficulty breathing. Table~\ref{tab:comparison} in Section~\ref{app:in_add_details} of the supplementary materials shows minimal bias with respect to symptom distributions when comparing to Indiana's random sample to the Facebook symptom survey data collected from April 25th to April 29th.
+ \item {\bf Delphi's COVID-19 Trends and Impact Survey}: From the daily symptom surveys completed as part of Delphi's CTIS (see Section~\ref{subsection:fbsymptom} for details), we extract survey responses for individuals who identify as living in Indiana.  We collect age, sex, and demographic information as well as COVID-19 related symptoms, which Delphi defines as having (1) a fever and cough, (2) shortness of breath, \emph{or} (3) difficulty breathing. Table~\ref{tab:comparison} in Section~\ref{app:in_add_details} of the supplementary materials shows minimal bias with respect to symptom distributions when comparing to Indiana's random sample to the CTIS data collected from April 25th to April 29th.
 
  % \begin{table}[!th]
  % \centering
@@ -620,12 +621,11 @@ Here, we consider covariate information that takes the form of a stratification 
  \item {\bf Death data}: Daily COVID-19 related deaths are observed by age, gender, and racial demographics.  Figure~\ref{fig:in-deaths} plots COVID-19 related deaths over time by age group. While most tests and positive cases are within the younger age strata, most deaths are within the 70+ age strata.
  \end{itemize}
 
-
  \begin{table}[th]
  \begin{tabular}{c | c | r r r | r | r r }
  & & \multicolumn{3}{c}{Total Tests (\%)} & US & \multicolumn{2}{c}{Positive Test Rate (\%)}\\
  \cline{3-5} \cline{7-8}
- & & NonRandom & Random & Facebook & Census & NonRandom & Random \\ \hline
+ & & NonRandom & Random & CTIS & Census & NonRandom & Random \\ \hline
  \multirow{2}{*}{Sex} & Female & 58.2 & 55.0 & 54.0 & 50.7 & 21.7 (11.2) & 1.4 \\
  & Male & 41.8 & 45.0  & 46.0 & 49.3 & 24.2 (12.4) & 2.1 \\ \hline
  \multirow{3}{*}{Age} & $<40$ & 39.4 & 28.0  & 36.2 & 52.7
@@ -643,9 +643,13 @@ Here, we consider covariate information that takes the form of a stratification 
  Prior $+$ & Yes & 6.1 & 1.4  & - & - & 39.2 (20.2) & 24.4 \\
  Test & No & 93.9 & 98.6  & - & - & 21.6 (11.1) & 1.3 \\ \hline
  \end{tabular}
- \caption{Estimated point prevalence of active infection with SARS-CoV-2 by demographics in Indiana~\citep{Yiannoutsos2021}.}
+ \caption{Estimated total tests ($\%$) and point prevalence of active infection with SARS-CoV-2 by demographics in Indiana~\citep{Yiannoutsos2021}.}
  \label{tab:indiana}
  \end{table}
+
+\begin{remark}
+ We acknowledge several limitations with respect to the representativeness.  First, the random sample had significant missingness ($3,658/15,495 \approx 24\%$ response rate). See~\cite{Yiannoutsos2021} for a discussion of how the scientific team handled missing data. Second, the hit rate on randomly selected Facebook users is likely low and Facebook's Indiana user population may differ from the Indiana population of interest.  To address these concerns, the Delphi team provided respondent weights calculated by Facebook.  See~\cite{Barkay2020} for a description of the weights and corresponding methodology.  Further adjustments are beyond the scope of this paper but are considered important future work. We urge health policy experts and government officials to assess these issues when applying this framework in their own work.
+ \end{remark}
 
 
  \subsection{Inverse-probability weighting approach}
@@ -665,7 +669,7 @@ Here, we consider covariate information that takes the form of a stratification 
 
  \subsubsection{Disease prevalence by April 2020}
 
- Indiana's population as of 2019 was $6.732$ million.  A total of $19,649$ tests were administered in Indiana between April 25th to 29th. Subtracting off the $95,879$ tests that had already performed yields a sampling fraction of $f = 2.96 \times 10^{-3}$.  Here we consider estimation of data quality $E_{\I} \left[ \rho_{\tilde I(X),Y} \right]$. In \cite{Meng2018}, estimation relied on observing the true outcome (i.e., election vote totals). Here, we use the random sample which estimates the true prevalence of active COVID-19 disease at 1.81\%~\cite{Yiannoutsos2021}.  Our goal is to build sensitivity analyses to understand the amount of information in observational case-count data.
+ Indiana's population as of 2019 was $6.732$ million.  A total of $19,649$ tests were administered in Indiana between April 25th to 29th. Subtracting off the $95,879$ tests that had already performed yields a sampling fraction of $f = 2.96 \times 10^{-3}$. Here we consider estimation of data quality $E_{\I} \left[ \rho_{I^{NR} (X),Y} \right]$. In \cite{Meng2018}, estimation relied on observing the true outcome (i.e., election vote totals). Here, we use the random sample which estimates the true prevalence of active COVID-19 disease at 1.81\%~\cite{Yiannoutsos2021}.  Our goal is to build sensitivity analyses to understand the amount of information in observational case-count data.
 
  The unweighted estimate for the true prevalence of active COVID-19 disease between April 25th and April 29th is 11.7\%.  Assuming a false negative rate of $13$\% and false positive rate of $2.4$\%, the unweighted estimate is $11.0$\%, leading to an error of $9.2$\%.  Using~\eqref{eq:statdecomp}, an estimate of the relative sampling rate is
  \begin{equation*}
@@ -677,7 +681,7 @@ Here, we consider covariate information that takes the form of a stratification 
  \end{equation*}
  using the Indiana non-random sample.  For the IPW estimate using Facebook data, $\tilde M = 3.3$. Therefore, bias is high using unweighted data and remains moderate using the weighted estimates.
 
- A sensitivity analysis can be performed by considering the range of false negative/positive rates.  Here, sensitivity ranges between $81$\% and $91$\% and specificity between $95$\% and $98.8$\%~\cite{Katz2020}. This leads to a range for $M$ of $(5.60, 6.44)$ for the unweighted analysis, and $(3.63,4.07)$ and $(3.10, 3.45)$ for the weighted analyses.
+ A sensitivity analysis can be performed by considering the range of false negative/positive rates.  Here, sensitivity ranges between $81$\% and $91$\% and specificity between $95$\% and $98.8$\%~\cite{Katz2020}. This leads to a range for $M$ of $(5.60, 6.44)$ for the unweighted analysis, and $(3.63,4.07)$ and $(3.10, 3.45)$ for the weighted analyses.  Note that in calculating the sampling fraction~$f$, we assumed individuals who tested recently are unlikely to test in this time window. If we instead do not subtract off these tests, the sampling fraction is $f = 2.92 \times 10^{-3}$ and the above calculations have negligible change.
 
  \subsubsection{Time-varying IPW estimator}
  \label{section:tvipw}
@@ -706,7 +710,7 @@ Here, we consider covariate information that takes the form of a stratification 
  \end{figure}
 
 
- In the second approach, we leverage hospitalization information. We first estimate the probability of fever given demographic and COVID-19 test status.  When the COVID-19 test status is positive, the probability of fever is allowed to depend on whether the individual was hospitalized.  Figure~\ref{fig:symptomlik1_model2} and~\ref{fig:symptomlik2_model2} in Section~\ref{app:in_add_details} in the supplementary materials presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that hospitalization significantly increases the likelihood of fever as expected.  We use these models and the case-to-hospitalization rates by demographic strata to perform mean imputation of the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. Inverse probability weights are then computed based on the resulting dataset (termed IPW2).
+ In the second approach, we leverage hospitalization information. We first estimate the probability of fever given demographic and COVID-19 test status.  When the COVID-19 test status is positive, the probability of fever is allowed to depend on whether the individual was hospitalized.  Figure~\ref{fig:symptomlik1_model2} and~\ref{fig:symptomlik2_model2} in Section~\ref{app:in_add_details} in the supplementary materials presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that hospitalization significantly increases the likelihood of fever as expected.  We use these models and the case-to-hospitalization rates by demographic strata to perform mean imputation of the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. The use of hospitalization data to estimate the probability of fever may be subject to survivor bias as well as biases driven by differential care.  AGain   Inverse probability weights are then computed based on the resulting dataset (termed IPW2).
 
  Figure~\ref{fig:testinglik_mainpaper} presents the testing propensity for non-Hispanic, white males across age strata and fever status using the second approach.  Note that the ratio of testing propensity within strata across fever status is time-varying, starting 50 times more likely in early April and dropping to ten times more likely by end of 2020.
 
