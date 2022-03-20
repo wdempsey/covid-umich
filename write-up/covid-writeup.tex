@@ -120,7 +120,7 @@ Recent work by \cite{Zhao2021} pointed out that estimation of key epidemiologica
 
 
 \begin{remark}[An evolving pandemic]
-
+This manuscript focuses on COVID-19 case count, testing, and death data collected from April through February 2021.  Numbers presented on disease dynamics are therefore based on the original strain.  Selection bias and measurement error persist in data arising from the delta and omicron strains and will likely persist for future variants. While not discussed in this manuscript, the framework presented will remain an appropriate tool for addressing selection bias and measurement error in these settings.
 \end{remark}
 
 
@@ -144,7 +144,7 @@ Here we provide the necessary background to understand COVID-19 diagnostic testi
 \subsection{Diagnostic testing}
 \label{section:testinginfo}
 
- Upon infection with SARS-CoV-2, an incubation period (time to symptom onset) starts and lasts approximately five days~\citep{Lauer2020}.  The viral load will be detectable by at least the end of the latent period (time to infectiousness), which for SARS-CoV-2 occurs before the end of the incubation period.  A \emph{molecular test} refers to diagnostic tests that aim to detect viral load above a certain threshold (e.g., RT-PCR or antigen tests).  If someone has an active infection -- here defined as individuals infected with SARS-CoV-2 who's viral load has yet to fall below detectable levels by molecular test -- then after the incubation period, a molecular test with perfect sensitivity will yield a positive result for the next few weeks.  After that, the viral load will decrease and a molecular test with perfect specificity will come back negative. While an infected individual may yield a positive molecular test for several weeks, they will likely stop transmitting the disease within a few days of infection, meaning a positive molecular test does not imply transmissibility.
+ Upon infection with SARS-CoV-2, an incubation period (time to symptom onset) starts and lasts approximately five days~\citep{Lauer2020}.  The viral load will be detectable by at least the end of the latent period (time to infectiousness), which for SARS-CoV-2 occurs before the end of the incubation period.  A \emph{molecular test} refers to diagnostic tests that aim to detect viral load above a certain threshold (e.g., RT-PCR or antigen tests); see~\cite{Mina2020} for a detailed discussion of cycle thresholds. If someone has an active infection -- \textcolor{red}{here defined as individuals infected with SARS-CoV-2 who's viral load has yet to fall below detectable levels by molecular test} -- then after the incubation period, a molecular test with perfect sensitivity will yield a positive result for the next few weeks.  After that, the viral load will decrease and a molecular test with perfect specificity will come back negative. While an infected individual may yield a positive molecular test for several weeks, they will likely stop transmitting the disease within a few days of infection, meaning a positive molecular test does not imply transmissibility.
 
  A molecular test conducted on an actively infected individual may return a negative result.  Such false negatives are very strongly associated with when the test is conducted.  In the incubation phase, most molecular tests will return a false negative result.  Molecular tests are most sensitive when the viral loads are highest which occurs during the first few days of transmissibility~\citep{Mina2020}.   Moreover, most molecular tests are performed via nasopharyngeal swab.  Specimen collection by swab is known to impact false negative/positive rates regardless of test timing.   Systematic reviews suggest that 87\% sensitivity and 97.6\% specificity are reasonable estimates for current RT-PCR tests~\citep{Arevalo2020, Woloshin2020,Cohen2020}.  \textcolor{red}{To the best of our knowledge, both Indiana Department of Health's molecular testing and the random state-wide sample relied primarily on nasopharyngeal swab using the same set of RT-PCR tests.}
 
@@ -313,8 +313,27 @@ Note that the COVID-19 response team (and health departments in general) have ac
  % \frac{\partial i_t}{\partial t} = \beta s_t i_t - \gamma i_t; \quad
  % \frac{\partial r_t}{\partial t} = - \gamma i_t
  % \end{equation}
- where $s_t, e_t, i_t$ and $r_t$ are the fraction of susceptible, exposed infected, and removed (recovered or deceased) individuals in the population at time $t$ respectively.  The SEIR model has been used extensively as a model for SARS-CoV-2 dynamics~\cite{Song2020}.  In terms of bias, the rate is overestimated prior to the peak and underestimated afterwards; the bias increases dramatically when the relative fraction exceeds $2$.  Such biases may impact policy making.  Overestimation pre-peak may give policy makers more leverage in proposing aggressive actions to reduce prevalence.  Underestimation post-peak puts pressure on policy makers to prematurely relax social distancing measures.  Estimates at the peak time appear to have minimal bias.
+ where $s_t, e_t, i_t$ and $r_t$ are the fraction of susceptible, exposed infected, and removed (recovered or deceased) individuals in the population at time $t$ respectively.  The SEIR model has been used extensively as a model for SARS-CoV-2 dynamics~\cite{Song2020}.  In terms of bias, the rate is overestimated prior to the peak in the fraction infected and underestimated afterwards; the bias increases dramatically when the relative fraction exceeds $2$.  Such biases may impact policy making.  Overestimation pre-peak may give policy makers more leverage in proposing aggressive actions to reduce prevalence.  Underestimation post-peak puts pressure on policy makers to prematurely relax social distancing measures.  Estimates at the peak time appear to have minimal bias.
  %Note, however, that the standard errors will be large due to small effective sample sizes.
+
+
+ \begin{figure}[!th]
+ \centering
+ \begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../figs/seir_ratio.png}
+  \caption{Ratio estimator}
+  \label{fig:ratio-bias}
+ \end{subfigure}%
+ \begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../figs/seir_rt.png}
+  \caption{Effective reproductive rate estimator}
+  \label{fig:r0-bias}
+ \end{subfigure}
+ \caption{Potential bias in ratio and effective reproductive rate estimators under an SEIR model with $\beta = 1.2$, $\gamma = 0.15$, and $\sigma = 0.3$.  Here, $f = 0.02$, $FP = 0.024$, $FN = 0.13$, and a range of relative sampling fractions $M = f_1/f_0$ are considered.}
+ \label{fig:rates}
+ \end{figure}
 
  \subsection{Estimation of effective reproduction number}
  \label{section:r0-estimation}
@@ -336,23 +355,6 @@ This approximation ignores a term that is quadratic in the epidemic growth rate 
  $$
  This implies a similar trade-off as before but on the logarithmic scale.  The error is no longer scaled by $\bar Y_t/\bar Y_{t-1}$ but by the serial interval and does not depend on prevalence but on the fraction of new cases out of those susceptible. This leads to differences in when the bias is most pronounced. Figure~\ref{fig:r0-bias} displays the bias as a function of the relative sampling fraction ignoring the final term (i.e., $S_t / S_{t-1} \approx 1$). Section~\ref{app:cori_rt} in the supplementary materials presents an alternative estimator of the instantaneous effective reproductive number and shows similar bias~\cite{Cori20113}.
 
- \begin{figure}
- \centering
- \begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{../figs/seir_ratio.png}
-  \caption{Ratio estimator}
-  \label{fig:ratio-bias}
- \end{subfigure}%
- \begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{../figs/seir_rt.png}
-  \caption{Effective reproductive rate estimator}
-  \label{fig:r0-bias}
- \end{subfigure}
- \caption{Potential bias in ratio and effective reproductive rate estimators under an SEIR model with $\beta = 1.2$, $\gamma = 0.15$, and $\sigma = 0.3$.  Here, $f = 0.02$, $FP = 0.024$, $FN = 0.13$, and a range of relative sampling fractions $M = f_1/f_0$ are considered.}
- \label{fig:rates}
- \end{figure}
 
  \subsection{Rate comparisons}
 
@@ -729,6 +731,10 @@ Here, we consider covariate information that takes the form of a stratification 
  \vspace{-1cm}
  \end{table}
  The discrete-time distribution~$\{ \theta_{j} \}$ is a discretized version of a truncated normal distribution with mean $25$, standard deviation~$5$, minimum value $0$, and maximum value $44$.  This closely mirrors the distribution from~\cite{Johndrow2020}. Strata for ages less than $40$ are collapsed due to the limited number of COVID-19 related deaths in this age range. For similar reasons, the multinomial parameter~${\bf p}_t$ is assumed to be constant in time with a Dirichlet prior.
+
+ \begin{remark}[Sensitivity to IFR]
+
+ \end{remark}
 
 
   \begin{figure}

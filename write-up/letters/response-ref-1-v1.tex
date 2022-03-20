@@ -75,21 +75,45 @@ Let us start by saying that these are the most thorough and helpful reviews we h
 \item {\it The referees have many specific concerns they are asking to address, and their expertise and viewpoints are important to revise this manuscript to improve its clarity and impact.}
 
 \vspace{5mm}
-We thank the editor-in-chief as this is an excellent point.  We now acknowledge that both topics are well known and cite relevant literature in Section 1.1; however, while infectious disease researchers and survey statisticians have been aware of the perils of self-selection and measurement error, the interplay in this context has been less well studied.   By extending the statistical decomposition of Meng (2018), we help shed light on how measurement error does not act to simply alter the magnitude of error but may in fact change the sign as well.  This decomposition motivates the new inverse-probability and doubly robust methodologies in the revised manuscript.
+We thank the editor-in-chief.  We have addressed the two reviewers specific comments.  Responses to their concerns are detailed below and have significantly improved the clarify of this manuscript.
 \vspace{5mm}
 
 \item {\it Some of these deal with the fast-evolving nature of the pandemic with new information emerging every week and changing variants with different characteristics also changing our understanding of the disease course and spread and timing, that affect the content in the paper. I understand that it is not feasible for a peer-reviewed paper like this to include all the latest information in a fast-changing environment like this in which understanding can change quickly, but it is important in this revision to update the KEY points as much as possible based on updated knowledge, but otherwise revise the language to make it “forward compatible” in terms of relevance as things continue to change, e.g. by acknowledging some details of spread dynamics may change with future variants, but presenting the current work based on a particular SARS-CoV-2 variant as illustrative of the issues that arise with each new variant and other viruses, as well. That is, recognizing it may not be feasible to keep updating based on emerging knowledge from each new strain, but to lock down the discussion context but add enough explanation so the reader can see its relevance for new strains.}
 
 \vspace{5mm}
-x
+Remark 1 has been added at the end of the introduction to contextualize the manuscript. Specifically we clarify that our manuscript focuses on COVID-19 case count, testing, and death data collected from April through February 2021 and therefore the numbers presented on disease dynamics are based on the original strain. While using the framework to account for selection bias and measurement error for data arising from the delta and omicron strains would require additional work, the framework would remain an appropriate tool for this task.
 \vspace{5mm}
 
 \item {\it The AE also mentions a few comments as well:}
 \begin{enumerate}
 	\item {\it Title: As noted by one of the reviewers, the “paradox” is never discussed/defined in the manuscript. Consider changing to “Statistical estimation of Coronavirus Case Counts: Measurement…” or some alternative.}
+	\vspace{5mm}
+
+	We agree with the reviewer. This was not updated in the prior submission simply to ensure continuity of presentation (i.e., didn’t want to change from first submission). Here we replace with the title “Addressing selection bias and measurement error in COVID-19 case count data using auxiliary information”.
+
 	\item {\it Organization: The figures and tables are not located anywhere near much of their introduction/discussion. For example, Table 1 was discussed on page 7 and is itself located on page 22. Consider the reorganization such that Figures and Tables are located near their discussion.}
+	\vspace{5mm}
+
+	Tables and figures
+	\textcolor{red}{Need to do!}
 	\item {\it Discussion on the Indiana Random Sample: On page 22, table 1, it appears that the random sample is not similar to the census estimates, potentially indicating non-response bias.}
+
+
+    We comment on raking techniques
+
+    Yian
+
+    See our answer to Question 5a from Reviewer \#1.
+    We now remark on the response rate in Section 5.  Specifically, we cite how Yiannoutsos et al. (2021) handle non-response in prevalence estimation.  We acknowledge the potential for a difference in characteristics between intended and final sample.  We clarify that the Census data is Indiana specific and is presented as a reference to demonstrate the potential difference between intended and final sample.
+
+
 	\item {\it Additionally, there may be significant potentially non-ignorable variables (e.g., political opinions and rural status) that drive non-response and are not presented. Is there any comment/discussion on the success of the randomization to be used as the “gold-standard” in this example? Much of the results appear to rely on the SRS and it ignores the potential for nonresponse bias.}
+
+	We added remark XX to discuss the issue of ran
+	Non-response bias due to unobserved missing
+
+	we see randomization as less a ``gold-standard'' and more as a starting point.
+
 \end{enumerate}
 
 \vspace{5mm}
@@ -323,7 +347,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it Also, it would be useful to clarify whether the random sample, which is being used as the gold standard, was corrected for measurement error, as well as how the issue of 30\% response rate was dealt with in obtaining the prevalence estimate. Given these issues, the random sample estimate could easily also be biased.}
 	\vspace{5mm}
 
-	See answers to Quesitons 5a and 14a above.  The prevalence estimate comes from Yiannoutsos et al. (2021) who detail their adjustments for response rates in estimation of active prevalence.
+	See answers to Questions 5a and 14a above.  The prevalence estimate comes from Yiannoutsos et al. (2021) who detail their adjustments for response rates in estimation of active prevalence.
 	\vspace{5mm}
 \end{enumerate}
 \item {\bf Section 5.1.2 Time varying estimate}
@@ -345,12 +369,13 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it As stated above, some description of the assumptions related to contact patterns and transmission between and among age strata is needed. In addition, please clarify which compartments of the model the infection-fatality rate applies to (E \& I or I only), as well as how the model handles death from non-COVID causes from these and other model compartments.}
 	\vspace{5mm}
 
-	See answers to Question XX above.  In Section 5.2, we now clarify how we calculate the infection-fatality rate. Similar to Johndrow (2021), the model only uses COVID-19 related deaths.  Deaths to non-COVID causes are not modeled but would appear in the R component.
+	See our answer to Question 12 above.  In Section 5.2, we now clarify how we calculate the infection-fatality rate from the compartments of the model. Similar to Johndrow (2021), the model only uses COVID-19 related deaths.  Deaths to non-COVID causes are not directly modeled but would appear as part of the R component in the global SEIR model.
 	\vspace{5mm}
 	\item {\it Also, the discussion of IFR would benefit greatly from being contextualized to the rest of the paper – the goal of the manuscript is specifically to provide a better estimate of who is infected. Such an estimate would therefore be expected to provide a more valid infection fatality rate, and this in turn implies the IFR used here must be biased. This should be discussed.}
 	\vspace{5mm}
 
-    We have now acknowledged this along with the fact that IFR is time-varying. So this shows the IFR is likely biased (or was only accurate early).  We performed sensitivity analysis with time-varying IFR based on estimates to improve estimation.
+    We contextualize the discussion of IFR in Remark 7 in Section 5.2. We acknowledge that these IFR estimates are likely biased (or potentially accurate in very different circumstances).  A sensitivity analysis focused on the issue of choosing an appropriate IFR given the potential biases in available IFR estimates is now performed.
+    \textcolor{red}{To Do!}
 	\vspace{5mm}
 \end{enumerate}
 \end{enumerate}
@@ -358,7 +383,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 
 {\bf Response to Reviewer \#2}
 
-I am incredibly grateful for this review.  I agree that the paper has evolved beyond the current title.  This was not updated in the prior submission simply to ensure continuity of presentation (i.e., didn't want to change from first submission).  Here we replace with the title ``Good Title''.  We next address the reviewers specific comments.
+I am incredibly grateful for this review.  I agree that the paper has evolved beyond the current title.  This was not updated in the prior submission simply to ensure continuity of presentation (i.e., didn't want to change from first submission).  Here we replace with the title ``Addressing selection bias and measurement error in COVID-19 case count data using auxiliary information''.  We next address the reviewers specific comments.
 
 \begin{enumerate}
 \item {\it The paper states some facts about the SARS-CoV-2 virus that are outdated, for example “Upon infection with SARS-CoV-2, an incubation period starts and lasts approximately five days [Lauer et al., 2020] before the viral load is high enough to be detected.” (Page 5). Lauer was based on the original
@@ -366,52 +391,56 @@ strain, we see different disease dynamics with the delta strain. Perhaps to be m
 interval of 7 is stated as fact – this is again based on the original strain rather than the current disease dynamics. Stating these numbers as an example rather than definitive would be preferable, I believe.}
 \vspace{5mm}
 
-We have added remark XX and more carefully put this paper within proper context.
+Remark 1 has been added at the end of the introduction to contextualize the manuscript.  Specifically we clarify that our manuscript focuses on COVID-19 case count, testing, and death data collected from April through February 2021 and therefore the numbers presented on disease dynamics are based on the original strain.  While using the framework to account for selection bias and measurement error for data arising from the delta and omicron strains would require additional work, the framework would remain an appropriate tool for this task.
+
+
 \vspace{5mm}
-\item {\it The author states: “If someone has an active infection then after the incubation period, a molecular test with perfect sensitivity will yield a positive result for the next few weeks.” (Page 5) The author states “A molecular test refers to diagnostic tests that aim to detect increased viral load” (page 5) - I think a more precise deinition is needed, for example aim to detect viral load above a certain threshold.}
+\item {\it The author states: “If someone has an active infection then after the incubation period, a molecular test with perfect sensitivity will yield a positive result for the next few weeks.” (Page 5) The author states “A molecular test refers to diagnostic tests that aim to detect increased viral load” (page 5) - I think a more precise definition is needed, for example aim to detect viral load above a certain threshold.}
 \vspace{5mm}
 
-We use Figure XX to make precise the importance of viral threshold.
+We thank the reviewer for this point. A more precise definition is provided in Section 2.1.  We also point readers to Mina et al. (2020) where the issue of testing thresholds is discussed in detail.
+
 \vspace{5mm}
 \item {\it The author states “If someone has an active infection then after the incubation period, a molecular test with perfect sensitivity will yield a positive result for the next few weeks.” (page 5) I’m not sure it is accurate that the patient will have a positive result for the next few weeks, perhaps “If someone has an active infection then after the incubation period, a molecular test with perfect sensitivity will yield a positive result while the patient has a viral load above the threshold of detection”.}
 \vspace{5mm}
 
-We thank the reviewer and now match this more careful language to be more exact in our description.
+We thank the reviewer and now match this more careful language to be more exact in our description found in Section 2.
 \vspace{5mm}
 \item {\it The author lumps RT-PCR and antigen tests in together and discusses that a patients will likely have positive tests for several weeks while not infectious (able to transmit) – for the most part this is the case for RT-PCR tests, however antigen tests give a clearer picture of infectiousness as the viral threshold is higher and often correlates with the likelihood to transmit.}
 
 \vspace{5mm}
 We now make this distinction much clearer.
 \vspace{5mm}
-\item {\it XX}
 
-\vspace{5mm}
-WXX
-\vspace{5mm}
 \item {\it I’m not sure this statement “The primary goal of molecular tests is diagnosis of active infections in the population.” (page 5) is entirely true. I definitely think this is a worthwhile goal, but many in the medical community use molecular tests to determine the diagnosis of an individual patient, regardless if the infection is “active” or not (i.e. whether they are currently infectious rather than infected which is what I assume the author means by “active”).}
 
 \vspace{5mm}
-WXX
+We apologize for the confusion.  See answer to Question 3b where we clarify the definition of active infection.  An active infection was meant to refer to individuals who were infected with SARS-CoV-2 who have yet to fall below a threshold for detectable viral load levels by RT-PCR testing.  This includes the infectious period as well as a pre-infectious and post-infectious periods of time.
+
 \vspace{5mm}
 \item {\it On page 13, the author discusses the bias relative to the “peak” – is this the peak in cases? I believe so, but it would be nice to define a bit more clearly.}
 
 \vspace{5mm}
-WXX
+We clarify in Section 3.2 that this is the peak in the fraction of infected individuals in the population which is presented in Figure 4a.
 \vspace{5mm}
 \item {\it We would expect the IFR to dramatically change after the introductions of vaccines in December 2020, making this method less applicable without introducing a time-varying component.}
 
 \vspace{5mm}
-WXX
-\vspace{5mm}
-\item {\it I found Figure 3 in the supplement conusing. Figure 3A shows the profile for a 35-44 white male with symptoms and COVID-19 contact and Figure 3B shows the profile for a 65-74 white female without symptoms nor COVID-19 contact – I would have expected the covariates between these (age, ethnicity, race, gender) to be the same rather than differ with the only thing differing being symptoms 1/ COVID-19 contact? As a minor note, the y-axis labels do not match for this plot.}
+See our answer to Question 17b of Reviewer \#1. We acknowledge that these IFR estimates are likely biased and time-varying due to introduction of vaccines in 2020.  A sensitivity analysis focused on the issue of choosing an appropriate IFR and allowing for the IFR to be time-varying is now performed.
+\textcolor{red}{To Do!}
 
 \vspace{5mm}
-WXX
+\item {\it I found Figure 3 in the supplement [confusing]. Figure 3A shows the profile for a 35-44 white male with symptoms and COVID-19 contact and Figure 3B shows the profile for a 65-74 white female without symptoms nor COVID-19 contact – I would have expected the covariates between these (age, ethnicity, race, gender) to be the same rather than differ with the only thing differing being symptoms 1/ COVID-19 contact? As a minor note, the y-axis labels do not match for this plot.}
+
+\vspace{5mm}
+We have fixed Figure 3b to match on covariates and have matching y-axes.  See our answer to Question 16b from Reviewer \#1 on additional figures we are including in the revision.
+\textcolor{red}{Need to do.}
 \vspace{5mm}
 \item {\it The model based estimates in Figure 8 seem so different from the other estimates that it is potentially implausible and suggests misspecification of the IFR. Is this potentially due to the age distribution of cases and the IFR collapsing choices? Perhaps as a sensitivity analysis different IFR values should be examined}
 
 \vspace{5mm}
-WXX
+See our answer to Question 17b of Reviewer #1 and Question 7 above. A sensitivity analysis focused on the issue of choosing an appropriate IFR is now performed.
+\textcolor{red}{To Do!}
 \vspace{5mm}
 \item {\bf Minor comments:}
 	\begin{enumerate}
