@@ -815,7 +815,7 @@ Based on mean-imputation of COVID-19 contact and fever indicators, we can use th
 \begin{subfigure}{.5\textwidth}
  \centering
 \includegraphics[width=.9\linewidth]{../figs/tvprop_fig2.png}
- \caption{Testing Propensity}
+ \caption{Testing Likelihood Given Fever and COVID-19 Contact}
  \label{fig:testinglik2}
 \end{subfigure}
 \caption{Testing Likelihood Given no Fever nor COVID-19 Contact}
@@ -847,6 +847,76 @@ This model uses hospitalization records to try and improve our mean-imputation s
 First, we computed the probability of fever given COVID-19 positive test and hospitalization as well as COVID-19 positive test and no hospitalization.  We then computed the likelihood of symptom given a COVID-19 positive test by weighting these two likelihoods by the fraction of COVID-19 positive hospitalizations to COVID-19 total positive cases per week.  Mean imputation of fever status for COVID-19 negative tests was performed based on the above model without use of hospitalization data.
 
 Based on mean-imputation of COVID-19 fever using hospitalization records indicators, we can use the proposed pseudo-likelihood approach to compute the likelihood of getting tested for COVID-19 given age, ethnicity, race, gender, and fever status.  Figure~\ref{fig:testinglik1_mainpaper} and~\ref{fig:testinglik1_mainpaper} in Section~\ref{section:tvipw} of the manuscript plots the likelihood of testing given fever and no fever respectfully for all age ranges.  We see that the likelihood is time-varying and depends heavily on both fever status.
+
+\subsubsection{Propensity plots}
+
+Test
+
+\begin{figure}[!th]
+\centering
+\begin{subfigure}{.5\textwidth}
+ \centering
+ \includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig1_supp4.png}
+ \caption{Symptom Likelihood Given Negative Test}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+ \centering
+\includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig2_supp4.png}
+ \caption{Symptom Likelihood Given Positive Test}
+\end{subfigure}
+\caption{Likelihood of COVID-19 contact for Non-Hispanic, White Females}
+\end{figure}
+
+\begin{figure}[!th]
+\centering
+\begin{subfigure}{.5\textwidth}
+ \centering
+ \includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig1_supp1.png}
+ \caption{Symptom Likelihood Given Negative Test}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+ \centering
+\includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig2_supp1.png}
+ \caption{Symptom Likelihood Given Positive Test}
+\end{subfigure}
+\caption{Likelihood of COVID-19 contact for Non-Hispanic, White Females}
+\end{figure}
+
+\begin{figure}[!th]
+\centering
+\begin{subfigure}{.5\textwidth}
+ \centering
+ \includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig1_supp2.png}
+ \caption{Symptom Likelihood Given Negative Test}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+ \centering
+\includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig2_supp2.png}
+ \caption{Symptom Likelihood Given Positive Test}
+\end{subfigure}
+\caption{Likelihood of COVID-19 contact for Non-Hispanic, White Females}
+\end{figure}
+
+\begin{figure}[!th]
+\centering
+\begin{subfigure}{.5\textwidth}
+ \centering
+ \includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig1_supp3.png}
+ \caption{Symptom Likelihood Given Negative Test}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+ \centering
+\includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig2_supp3.png}
+ \caption{Symptom Likelihood Given Positive Test}
+\end{subfigure}
+\caption{Likelihood of COVID-19 contact for Non-Hispanic, White Females}
+\end{figure}
+
+
+
+\newpage
+\subsubsection{Confidence Intervals}
+
 
 Figure~\ref{fig:air_cis} in the supplementary materials presents the confidence intervals per time point for the IPW2 estimator.  The confidence interval length decreases substantially over time, reflecting the increased testing capacity.  Due to the number of surveys per week, under correct model specification there is minimal uncertainty in the parameter estimates.  As the number of tests per week increases to over one hundred thousand, there is minimal uncertainty in the active infection rate estimates. This points to the importance of the statistical decomposition~\eqref{eq:statdecomp2} and the discussion in Section~\ref{section:IPWerrordecomp}.
 
