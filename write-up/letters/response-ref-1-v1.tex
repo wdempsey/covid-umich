@@ -81,7 +81,7 @@ We thank the editor-in-chief.  We have addressed the two reviewers specific comm
 \item {\it Some of these deal with the fast-evolving nature of the pandemic with new information emerging every week and changing variants with different characteristics also changing our understanding of the disease course and spread and timing, that affect the content in the paper. I understand that it is not feasible for a peer-reviewed paper like this to include all the latest information in a fast-changing environment like this in which understanding can change quickly, but it is important in this revision to update the KEY points as much as possible based on updated knowledge, but otherwise revise the language to make it “forward compatible” in terms of relevance as things continue to change, e.g. by acknowledging some details of spread dynamics may change with future variants, but presenting the current work based on a particular SARS-CoV-2 variant as illustrative of the issues that arise with each new variant and other viruses, as well. That is, recognizing it may not be feasible to keep updating based on emerging knowledge from each new strain, but to lock down the discussion context but add enough explanation so the reader can see its relevance for new strains.}
 
 \vspace{5mm}
-Remark 1 has been added at the end of the introduction to contextualize the manuscript. Specifically we clarify that our manuscript focuses on COVID-19 case count, testing, and death data collected from April through February 2021 and therefore the numbers presented on disease dynamics are based on the original strain. While using the framework to account for selection bias and measurement error for data arising from the delta and omicron strains would require additional work, the framework would remain an appropriate tool for this task.
+Remark 1 has been added at the end of the introduction to contextualize the manuscript. Specifically we clarify that our manuscript focuses on COVID-19 case count, testing, and death data collected from April 2020 through February 2021 and therefore the numbers presented on disease dynamics are based on the original strain. While using the framework to account for selection bias and measurement error for data arising from the delta and omicron strains would require additional work, the framework would remain an appropriate tool for this task.
 \vspace{5mm}
 
 \item {\it The AE also mentions a few comments as well:}
@@ -89,21 +89,26 @@ Remark 1 has been added at the end of the introduction to contextualize the manu
 	\item {\it Title: As noted by one of the reviewers, the “paradox” is never discussed/defined in the manuscript. Consider changing to “Statistical estimation of Coronavirus Case Counts: Measurement…” or some alternative.}
 	\vspace{5mm}
 
-	We agree with the reviewer. This was not updated in the prior submission simply to ensure continuity of presentation (i.e., didn’t want to change from first submission). Here we replace with the title “Addressing selection bias and measurement error in COVID-19 case count data using auxiliary information”.
+	We agree with the AE. This was not updated in the prior submission simply to ensure continuity of presentation (i.e., didn’t want to change from first submission). Here we replace with the title ``Addressing selection bias and measurement error in COVID-19 case count data using auxiliary information.''
+	\vspace{5mm}
 
 	\item {\it Organization: The figures and tables are not located anywhere near much of their introduction/discussion. For example, Table 1 was discussed on page 7 and is itself located on page 22. Consider the reorganization such that Figures and Tables are located near their discussion.}
 	\vspace{5mm}
 
-	We apologize.  We kept figures/tables related to the case study in Section 5 (the case study section) but can now see this led to confusion as we discuss them early in the paper. Tables and figures have been moved to be located much closer to their introduction.  \textcolor{red}{Need to do!}
+	We apologize.  We kept figures/tables related to the case study in Section 5 (the case study section) but can now see this led to confusion as we discuss them early in the paper. Tables and figures have been moved to be located much closer to their introduction.
+	\vspace{5mm}
 
 	\item {\it Discussion on the Indiana Random Sample: On page 22, table 1, it appears that the random sample is not similar to the census estimates, potentially indicating non-response bias.}
+	\vspace{5mm}
 
     See our answer to Question 5a from Reviewer \#1. We now remark on the response rate in Section 5.  Specifically, we cite how Yiannoutsos et al. (2021) handle non-response in prevalence estimation.  We acknowledge the potential for a difference in characteristics between intended and final sample.
+    \vspace{5mm}
 
 
 	\item {\it Additionally, there may be significant potentially non-ignorable variables (e.g., political opinions and rural status) that drive non-response and are not presented. Is there any comment/discussion on the success of the randomization to be used as the “gold-standard” in this example? Much of the results appear to rely on the SRS and it ignores the potential for nonresponse bias.}
+	\vspace{5mm}
 
-	We do not see random sampling as a ``gold-standard'' nor a panacea that will fix every issue.  Instead, we see it as a means to remove one very important source of potential bias in the estimation of population quantities of interest.  A key takeaway of our paper is that with access to \emph{only} a non-probabilistic sample, we know there is potential bias but have little hope of reducing said bias.  With a probability sample, we have means to reduce said bias.  Statisticians, epidemioligists, and government officials, and health policy experts can then focus on practical issues such as non-ignorable missingness.  If we thought, for example, political opinions and rural status are important predictors of missingness, then these should be collected as part of the random sampling protocol.  Note, even collecting strata information that is correlates with testing propensity (e.g., symptom status) in the non-probabilistic sample is insufficient to address selection bias.  This is not true for probability samples.  We have added this important discussion to Section 6.
+	We do not see random sampling as a ``gold-standard'' nor a panacea that will fix every issue.  Instead, we see it as a means to remove one very important source of potential bias in the estimation of population quantities of interest.  A key takeaway of our paper is that with access to \emph{only} a non-probabilistic sample, we know there is potential bias but have little hope of reducing said bias.  With a probability sample, we have means to reduce said bias.  Statisticians, epidemioligists, and government officials, and health policy experts can then focus on practical issues such as non-ignorable missingness.  If we thought, for example, political opinions and rural status are important predictors of missingness, then these should be collected as part of the random sampling protocol.  Note, even collecting strata information that correlates with testing propensity (e.g., symptom status) in the non-probabilistic sample is insufficient to address selection bias.  This is not true for probability samples.  We have added this important discussion to Section 6.
 \end{enumerate}
 
 \end{enumerate}
@@ -111,7 +116,7 @@ Remark 1 has been added at the end of the introduction to contextualize the manu
 {\bf Response to Reviewer 1}
 \vspace{5mm}
 
-I am incredibly grateful for this review. (PRAISE OUT THE WAZZOOO).
+I am very grateful for this review.  The detailed suggestions and comments helped improve the paper in numerous ways.  See below for our responses to each particular reviewer comment.
 
 \begin{enumerate}
 \item {\bf Section 1: Introduction.} {\it It may be useful in the introduction to briefly discuss the various purposes of testing for diseases – for COVID we have largely focused on diagnostic testing of people who are symptomatic or have a known or suspect exposure. Diagnostic testing will never provide valid prevalence or incidence estimates, especially for a disease where a significant proportion of cases are asymptomatic or pauci-symptomatic and thus unlikely to present for diagnostic testing. Screening tests are more appropriate as a potential tool for reconstructing prevalence or incidence tests, although these are seldom conducted at random. The random and non-random testing samples appear to represent screening and diagnostic testing goals, respectively, and this is part of why they can be expected not to deliver the same prevalence estimates.}
@@ -150,7 +155,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it Please also clarify the terminology ‘active infection’ which in some instances appears to refer to individuals in the symptomatic period of infection, and in other instances appears to refer to individuals in the infectious period of infection. We know that these are not identical in SARS-CoV-2 infection and that difference is a key reason why screening and diagnostic tests are not easily comparable.}
 	\vspace{5mm}
 
-	We clarify that we define active infection as individuals infected with SARS-CoV-2 who have yet to fall below a threshold for detectable viral load levels by RT-PCR testing.
+	\textcolor{red}{We clarify that we define active infection as individuals infected with SARS-CoV-2 who have yet to fall below a threshold for detectable viral load levels by RT-PCR testing.}
 
 	\vspace{5mm}
 	\item {\it Consider adding some additional information on screening tests, particular anything relevant to the random sample conducted in Indiana which is used as the validation set. Were the screening tests conducted using nasopharyngeal swabs (in many places screening tests use nasal swabs instead and often self-collected samples)? Were the molecular tests used to assay the samples the same for screening and diagnostic tests? Differences in sample collection and testing processes could undermine the utility of this random sample as a validation set.}
@@ -164,14 +169,14 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it This section could benefit from a few remarks on why it is important / useful to focus on publicly available testing data. There are certainly distinct statistical issues, if public data are aggregated, but are the selection bias and measurement error issues different between public and government datasets? If so, how do the solutions presented here apply to government datasets? Can similar or the same approaches be used by health departments to assess the pandemic and guide responses?}
 	\vspace{5mm}
 
-	We have added Remark 3 in Section 2.2 discussing public versus government data.  Specifically, we clarify that data privacy restrictions enforce publicly released testing and case count data be aggregated by strata-level covariates and have potentially important missing information (i.e., symptom status and )
-	While these choices impact our data analytic plan, we clarify that the data analytic framework is expressly designed to guide health departments and policy makers to assess the pandemic and guide future resposnes.
+	We have added Remark 3 in Section 2.2 discussing public versus government data.  Specifically, we clarify that data privacy restrictions enforce publicly released testing and case count data be aggregated to strata-level covariates and have potentially important missing information (i.e., symptom status and indicator of contact with COVID-19 positive individual).
+	While these choices impact our data analytic plan, we clarify that the data analytic framework is expressly designed to guide health departments and policy makers to assess the pandemic and guide future responses.
 
 	\vspace{5mm}
 	\item {\it A timeline of restrictions and testing eligibility would be a useful addition to Section 2.2.1. Also, what there no time period where testing in Indiana was restricted on the basis of travel history or suspected exposure?}
 	\vspace{5mm}
 
-	Section 2.2.1 has a reconstructed timeline of restrictions, which was based on reported restrictions in the local Indiana news.  Between May 12th and April 28th, only high-risk individuals (symptomatic or having one of several important risk factors) were able to test.  After April 28th, suspected exposure was included as a reason for testing. We could not find any article mention travel history as a factor for testing in the public reports.
+	Section 2.2.1 has a reconstructed timeline of restrictions, which was based on news reports of state-level testing restrictions.
 	\vspace{5mm}
 \end{enumerate}
 \item {\bf Section 2.3: Probabilistic Samples}
@@ -194,18 +199,19 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it Please clarify the definition of ‘active infection’ (any infection, vs infectious, vs symptomatic, vs detectable by molecular testing?). This has important implications for the construction of the compartmental model and for the definition of your period prevalence (AIR).}
 	\vspace{5mm}
 
-	XXXXX
+	\textcolor{red}{We clarify that we define active infection as individuals infected with SARS-CoV-2 who have yet to fall below a threshold for detectable viral load levels by RT-PCR testing.}
 	\vspace{5mm}
 	\item {\it Throughout, there is a general issue of too few distinct variable identifiers – for example, using Y to refer to infection status and y to refer to test status will likely lead to confusion.}
 	\vspace{5mm}
 
-	We clarify that this notation was chosen to match standard survey statistics notation: $Y_i$ is the true, fixed outcome value and $y_i$ is the  population-level .  To help the reader, we now include an appendix with all the notation described in detail.
+	We clarify that this notation was chosen to match standard survey statistics notation: $Y_i$ is the true, fixed value for individual $i$ from the population, while $y_i$ is the observed value for individual $i$ from the sample. To help the reader, we now include a notation glossary in Appendix B.
 	\vspace{5mm}
 
 	\item {\it The “natural candidate for AIR” presented is the quantity that has more commonly been referred to as the “test positivity rate” (assuming that yi does in fact indicate test status rather than infection status which is obviously unknown). It would be helpful to mention this.}
 	\vspace{5mm}
 
 	This is now stated explicitly in Section 3, paragraph 2.
+	\vspace{5mm}
 \end{enumerate}
 \item {\bf Section 3.1: Imperfect testing}
 \begin{enumerate}
@@ -213,6 +219,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\vspace{5mm}
 
 	The adjustment is exactly related to the Bayes rule PPV/NPV relationship with FP, FN, and $\bar Y$.
+	\textcolor{red}{Got to here.}
 	\vspace{5mm}
 	\item {\it Also worth noting that test positivity is not strictly binary (since it’s generally based on an underlying continuous cycle threshold), and so measurement error could potentially lead towards bias away from, or across, the null even in the absence of selection bias.}
 	\vspace{5mm}
