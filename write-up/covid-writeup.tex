@@ -120,7 +120,7 @@ Recent work by \cite{Zhao2021} pointed out that estimation of key epidemiologica
 
 
 \begin{remark}[An evolving pandemic]
-This manuscript focuses on COVID-19 case count, testing, and death data collected from April through February 2021.  Numbers presented on disease dynamics are therefore based on the original strain.  Selection bias and measurement error persist in data arising from the delta and omicron strains and will likely persist for future variants. While not discussed in this manuscript, the framework presented will remain an appropriate tool for addressing selection bias and measurement error in these settings.
+This paper focuses on COVID-19 case count, testing, and death data collected from April through February 2021.  Numbers presented on disease dynamics are therefore based on the original strain.  Selection bias and measurement error persist in data arising from the delta and omicron strains and will likely persist for future variants. While not discussed in this paper, the framework presented will remain an appropriate tool for addressing selection bias and measurement error in these settings.
 \end{remark}
 
 
@@ -139,7 +139,7 @@ This manuscript focuses on COVID-19 case count, testing, and death data collecte
  \section{COVID-19 testing and data}
  \label{section:data}
 
-Here we provide the necessary background to understand COVID-19 diagnostic testing, its scientific use in managing the pandemic, and the data streams considered in this manuscript.
+Here we provide the necessary background to understand COVID-19 diagnostic testing, its scientific use in managing the pandemic, and the data streams considered in this paper.
 
 \subsection{Diagnostic testing}
 \label{section:testinginfo}
@@ -158,7 +158,7 @@ To better estimate SARS-CoV-2 immunity in a population, seroprevalence studies t
  \subsection{Publicly available data on COVID-19}
  \label{subsection:testinginfo}
 
- The primary goal of this manuscript is to produce accurate estimates of the population-level active infection rates over time using \emph{publicly available} viral testing data.  Secondary goals include estimation of rates of change and the effective reproduction number which characterize disease trajectory.
+ The primary goal of this paper is to produce accurate estimates of the population-level active infection rates over time using \emph{publicly available} viral testing data.  Secondary goals include estimation of rates of change and the effective reproduction number which characterize disease trajectory.
  These quantities are fundamental to public health policy and provide critical information on the presence and transmission of SARS-CoV-2.
 
  % {\bf key point: WHAT IS THE GOAL OF CASE COUNT DATA? WHAT IS THE GOAL OF SEROPREVALENCE STUDIES?  are we using it for that reason. cse count data is colelcted as part of surveillance programs wehre teh goal is to identify and isolate active infections.  However, many people are trying to use these to udnerstand the disease.  This is our issue.}
@@ -175,7 +175,7 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
  \end{remark}
 
 \begin{remark}[Public versus government datasets]
-In September 2020, the author submitted a data request to the Indiana Data Hub (IDH).  Over the next three months, we worked with Indiana's COVID-19 response team to refine the request.  In December 2020, the request was officially approved and data streams were made publicly available on the IDH.  In this manuscript, we thus focus on this \emph{publicly-available data}, i.e., data  that anyone can download directly from the IDH. While the scientific community has contributed through independent COVID-19 observational and clinical studies, a significant component of public policy guidance has relied on testing and case count data, e.g., CDC and state guidelines based on test positivity rates and relative changes in the case counts over time.   Addressing selection bias and measurement-error in these public datasets is imperative in better informing public policy debate.
+In September 2020, the author submitted a data request to the Indiana Data Hub (IDH).  Over the next three months, we worked with Indiana's COVID-19 response team to refine the request.  In December 2020, the request was officially approved and data streams were made publicly available on the IDH.  In this paper, we thus focus on this \emph{publicly-available data}, i.e., data  that anyone can download directly from the IDH. While the scientific community has contributed through independent COVID-19 observational and clinical studies, a significant component of public policy guidance has relied on testing and case count data, e.g., CDC and state guidelines based on test positivity rates and relative changes in the case counts over time.   Addressing selection bias and measurement-error in these public datasets is imperative in better informing public policy debate.
 
 Note that the COVID-19 response team (and health departments in general) have access to \emph{government data} which may not be publicly-available and is likely stored at the individual-level. Due to data privacy and legal concerns, some collected covariates may not be reported publicly and others are aggregated and not reported jointly.  While data analytic decisions made in Sections XX--XX were made due to access of publicly-available data, the overall data analysis framework is designed to be a tool for health departments to assess the pandemic and guide responses, e.g.,  account for individual-level covariate information, rather than publicly-reported strata-level information, that may include important covariates such as symptom status and recent COVID-19 contact.
  \end{remark}
@@ -273,16 +273,15 @@ Note that the COVID-19 response team (and health departments in general) have ac
 
  Comparing the mean-squared error (MSE) under a selection mechanism $\I$ with imperfect testing and SRS with perfect testing, we see that
  $$
- \frac{E_{\I} \left[ (\bar y_n - \bar Y)^2 \right]}{\sqrt{V_{SRS} (\bar Y)}} = (N-1) E_{\I} \left[ \rho_{I,Y}^2 D_M^2 \right]
+ \frac{E_{\I} \left[ (\bar y_n - \bar Y)^2 \right]}{\sqrt{V_{SRS} (\bar Y)}} = (N-1) E_{\I} \left[ \rho_{I,Y}^2 D_M^2 \right].
  $$
- implying the error relative to SRS increases as a function of population size~\citep{Meng2018}. That two countries with the same testing strategy can yield wildly different estimates due to population size is too often ignored in current communications of case-count data.
- % Thus, conclusions drawn from observed case-counts may not just be wrong, but very wrong.
-
+ % implying the error relative to SRS increases as a function of population size~\citep{Meng2018}. That two countries with the same testing strategy can yield wildly different estimates due to population size is too often ignored in current communications of case-count data.
+ % % Thus, conclusions drawn from observed case-counts may not just be wrong, but very wrong.
  A key question is ``What is the (effective) sample size from a SRS with perfect testing that would yield equivalent MSE to the current testing strategy?'' In Appendix~\ref{app:effss}, we show the effective sample size $n_{eff}$ can be bounded by
  $$
  \frac{f}{1-f} \times \frac{1}{E_{\I} \left[ \rho_{I,Y}^2 D_M^2 \right]}.
  $$
- Between April 25th to 29th 2020, Indiana performed $95,879$ tests.  Indiana's population is roughly $6.732$ million, so $f = 0.003$.  The active infection rate was estimated to be~$1.81\%$~\citep{Yiannoutsos2021} in this time interval. Recent studies have suggested 87\% sensitivity~\citep{Arevalo2020} and 97.6\% specificity~\citep{Cohen2020} are reasonable measurement error rates for RT-PCR tests. Supposing COVID-19 positive individuals are $1.5$ times more likely to get tested, then the effective sample size is $168$. Recent proposals~\citep{Siddarth2020} have argued for increased testing capacity, which may likely reduce the relative sampling rate.  Even if the relative sampling rate drops to $1.2$ and $f$ increases to $0.01$ then the effective sample size will increase to $1025$.  Thus the effective sample size even in optimistic scenarios is equivalent to a moderate random sample from the population.  Moreover, increased testing capacity may alter false positive and negative rates due to changes in sample collection quality, e.g., a testing center switches from nasal swab to oropharyngeal swabs or saliva specimen to speed up data collection.  Consider the case where $f$ increasing from $0.003$ to $0.01$ and is associated with the false negative rate rising from $13\%$ to $20$\%.  Then the effective sample size is $863$, representing a $5.1$ factor increase rather than the expected $6.1$ factor increase. See Section~\ref{section:effss} in the Supplementary Materials for additional effective sample size calculations.
+ Between April 25th to 29th 2020, Indiana performed $95,879$ tests.  Indiana's population is roughly $6.732$ million, so $f = 0.003$.  The active infection rate was estimated to be~$1.81\%$~\citep{Yiannoutsos2021} in this time interval. Recent studies have suggested 87\% sensitivity~\citep{Arevalo2020} and 97.6\% specificity~\citep{Cohen2020} are reasonable measurement error rates for RT-PCR tests. Supposing COVID-19 positive individuals are $1.5$ times more likely to get tested, then the effective sample size is $168$. Recent proposals~\citep{Siddarth2020} have argued for increased testing capacity, which may likely reduce the relative sampling rate.  Even if the relative sampling rate drops to $1.2$ and $f$ increases to $0.01$ then the effective sample size will increase to $1025$.  Thus the effective sample size even in optimistic scenarios is equivalent to a moderate random sample from the population.  Moreover, increased testing capacity may alter false positive and negative rates due to changes in sample collection quality, e.g., a testing center switches from nasal swab to oropharyngeal swabs or saliva specimen to speed up data collection.  Consider the case where $f$ increasing from $0.003$ to $0.01$ and is associated with the false negative rate rising from $13\%$ to $20$\%.  Then the effective sample size is $863$, representing a $5.1$ factor increase rather than the expected $6.1$ factor increase. See Section~\ref{section:effss} in the Supplementary Materials for additional effective sample size calculations which show that while~\citep{Meng2018} argues the relative error increases as a function of population size, our calculations indicate this is not true for fixed relative frequency~$f_1/f_0$.
  % \begin{wrapfigure}{r}{0.5\textwidth}
 
  % {\bf Figure of individual going through the states? Can discuss exposure length as selection more likely.}
@@ -714,7 +713,7 @@ Here, we consider covariate information that takes the form of a stratification 
 
  In the second approach, we leverage hospitalization information. We first estimate the probability of fever given demographic and COVID-19 test status.  When the COVID-19 test status is positive, the probability of fever is allowed to depend on whether the individual was hospitalized.  Figure~\ref{fig:symptomlik1_model2} and~\ref{fig:symptomlik2_model2} in Section~\ref{app:in_add_details} in the supplementary materials presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that hospitalization significantly increases the likelihood of fever as expected.  We use these models and the case-to-hospitalization rates by demographic strata to perform mean imputation of the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. The use of hospitalization data to estimate the probability of fever may be subject to survivor bias as well as biases driven by differential care.  AGain   Inverse probability weights are then computed based on the resulting dataset (termed IPW2).
 
- Figure~\ref{fig:testinglik_mainpaper} presents the testing propensity for non-Hispanic, white males across age strata and fever status using the second approach.  Note that the ratio of testing propensity within strata across fever status is time-varying, starting 50 times more likely in early April and dropping to ten times more likely by end of 2020.
+ Figure~\ref{fig:testinglik_mainpaper} presents the testing propensity for non-Hispanic, white males across age strata and fever status using the second approach.  Note that the ratio of testing propensity within strata across fever status is time-varying, starting 50 times more likely in early April and dropping to ten times more likely by end of 2020.  Similar plots for other strata and a discussion of their relative testing propensities can be found in Section~\ref{section:propplots} of the supplementary materials.
 
 
 
@@ -802,6 +801,10 @@ Figure~\ref{fig:air_cis} in the supplementary materials presents the confidence 
 
  Governments and policy makers often implicitly argue that increased testing capacity will alleviate selection bias.  Without complete compliance, however, our understanding of future outbreaks may be plagued by self-selection bias, compounded by changing sensitivity and specificity rates of RT-PCR testing. Random testing removes these effect modifiers, giving governments more information to fight the disease.  This paper emphasizes that data quantity is secondary to both data quality and methodological considerations to account for selection bias.
 
+\textcolor{red}{
+ While this paper emphasizes the importance of random sampling, we do not naively view it as a panacea. With access to \emph{only} a non-probabilistic sample, we have no means to reduce self-selection bias.  Adding a probability sample gives us the necessary auxiliary information to do so.  This leaves the data analyst more time to focus on statistical issues related to the random sample such as how to handle non-response bias.  Covariates that the scientific team thinks are correlated with non-response (e.g., political opinion) should be collected as part of the random sampling protocol and corrected for in the data analysis. On the other hand, collecting covariate information that correlates with testing propensity (e.g., symptom status) in the non-probabilistic sample is insufficient to address selection bias.
+}
+
 % \subsection*{Higher quality information on prevalence.}
 
  % Governments are pushing for increased testing capacity and robust contact tracing.  Contact tracing is incredibly useful for identifying carriers early and preventing spread of the disease.  We argue that understanding active infections is also key.  We know that the probability of an outbreak is a function of current prevalence and network connectivity.  Epidemic critical thresholds have been derived for many infectious disease models~\citep{Pastor2001,Newman2002,Parshani2010}.  Knowing prevalence will help governments determine long-term community-level risk and allow for more targeted interventions -- shutting down only certain locations when necessary.
@@ -819,7 +822,7 @@ Figure~\ref{fig:air_cis} in the supplementary materials presents the confidence 
 
  % While we are eternally grateful to Indiana for the release, symptom information was not made available.  This severely limits our ability to estimate correct selection propensity models and strata-specific infection rates.  A more sustained effort to collect relevant measures of an individual's past history that may impact their likelihood of seeking testing and being COVID-19 positive is required.  Such data collection and dissemination is critical to address selection bias.
 
- \textcolor{red}{I want to say that if i have many more random samples, then we should bias towards the random samples and not only smooth the means. But this is future work.}
+ % \textcolor{red}{I want to say that if i have many more random samples, then we should bias towards the random samples and not only smooth the means. But this is future work.}
 
  A valid criticism of the proposed approach is that recording covariates on every tested individual is time-consuming and costly.  We argue that the list of relevant factors is of reasonable length.  For example, symptom status and COVID-19 contact are clearly relevant factors in testing selection.  Future work may consider how to include/exclude factors over time that are not significant to limit citizen reporting burden.  Moreover, equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected for all individuals in the nonprobability sample, which is often not feasible for state/local governments where rapid sample collection is prioritized.  One can easily extend~\eqref{eq:auxinfoprob} by randomly sampling a subset of the nonprobability sample on which to collect the covariate information.
  This would balance goals of rapid testing and auxiliary data collection.

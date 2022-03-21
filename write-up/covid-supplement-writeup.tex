@@ -849,8 +849,9 @@ First, we computed the probability of fever given COVID-19 positive test and hos
 Based on mean-imputation of COVID-19 fever using hospitalization records indicators, we can use the proposed pseudo-likelihood approach to compute the likelihood of getting tested for COVID-19 given age, ethnicity, race, gender, and fever status.  Figure~\ref{fig:testinglik1_mainpaper} and~\ref{fig:testinglik1_mainpaper} in Section~\ref{section:tvipw} of the manuscript plots the likelihood of testing given fever and no fever respectfully for all age ranges.  We see that the likelihood is time-varying and depends heavily on both fever status.
 
 \subsubsection{Propensity plots}
+\label{section:propplots}
 
-Test
+Here we present the testing propensity for four strata: (1) non-Hispanic, white female, (2) non-Hispanic, African American male, (3) Hispanic, White male.   Strata (1) presented in Figure~\ref{fig:nonh-white-female} demonstrates a small gender difference in testing propensities.  Strata (2) and (3) presented in Figures~\ref{fig:nonh-aa-male} and~\ref{fig:h-white-male} demonstrates a lower rate of testing among African Americans and Hispanic white men compared to non-Hispanic, white men respectively (approximately 2 times lower). Strata (4) presented in Figure~\ref{fig:h-other-male} demonstrates a much higher testing rate for Hispanic men who select ``Some Other Race''.
 
 \begin{figure}[!th]
 \centering
@@ -865,6 +866,7 @@ Test
  \caption{Symptom Likelihood Given Positive Test}
 \end{subfigure}
 \caption{Likelihood of COVID-19 contact for Non-Hispanic, White Females}
+\label{fig:nonh-white-female}
 \end{figure}
 
 \begin{figure}[!th]
@@ -879,7 +881,8 @@ Test
 \includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig2_supp1.png}
  \caption{Symptom Likelihood Given Positive Test}
 \end{subfigure}
-\caption{Likelihood of COVID-19 contact for Non-Hispanic, White Females}
+\caption{Likelihood of COVID-19 contact for Non-Hispanic, African American Males}
+\label{fig:nonh-aa-male}
 \end{figure}
 
 \begin{figure}[!th]
@@ -894,7 +897,8 @@ Test
 \includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig2_supp2.png}
  \caption{Symptom Likelihood Given Positive Test}
 \end{subfigure}
-\caption{Likelihood of COVID-19 contact for Non-Hispanic, White Females}
+\caption{Likelihood of COVID-19 contact for Hispanic, White Males}
+\label{fig:h-white-male}
 \end{figure}
 
 \begin{figure}[!th]
@@ -909,7 +913,8 @@ Test
 \includegraphics[width=.9\linewidth]{../figs/tvprop_alt_fig2_supp3.png}
  \caption{Symptom Likelihood Given Positive Test}
 \end{subfigure}
-\caption{Likelihood of COVID-19 contact for Non-Hispanic, White Females}
+\caption{Likelihood of COVID-19 contact for Hispanic, Males who select `Some Other Race'.}
+\label{fig:h-other-male}
 \end{figure}
 
 

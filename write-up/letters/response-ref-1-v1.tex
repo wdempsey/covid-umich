@@ -94,31 +94,18 @@ Remark 1 has been added at the end of the introduction to contextualize the manu
 	\item {\it Organization: The figures and tables are not located anywhere near much of their introduction/discussion. For example, Table 1 was discussed on page 7 and is itself located on page 22. Consider the reorganization such that Figures and Tables are located near their discussion.}
 	\vspace{5mm}
 
-	Tables and figures
-	\textcolor{red}{Need to do!}
+	We apologize.  We kept figures/tables related to the case study in Section 5 (the case study section) but can now see this led to confusion as we discuss them early in the paper. Tables and figures have been moved to be located much closer to their introduction.  \textcolor{red}{Need to do!}
+
 	\item {\it Discussion on the Indiana Random Sample: On page 22, table 1, it appears that the random sample is not similar to the census estimates, potentially indicating non-response bias.}
 
-
-    We comment on raking techniques
-
-    Yian
-
-    See our answer to Question 5a from Reviewer \#1.
-    We now remark on the response rate in Section 5.  Specifically, we cite how Yiannoutsos et al. (2021) handle non-response in prevalence estimation.  We acknowledge the potential for a difference in characteristics between intended and final sample.  We clarify that the Census data is Indiana specific and is presented as a reference to demonstrate the potential difference between intended and final sample.
+    See our answer to Question 5a from Reviewer \#1. We now remark on the response rate in Section 5.  Specifically, we cite how Yiannoutsos et al. (2021) handle non-response in prevalence estimation.  We acknowledge the potential for a difference in characteristics between intended and final sample.
 
 
 	\item {\it Additionally, there may be significant potentially non-ignorable variables (e.g., political opinions and rural status) that drive non-response and are not presented. Is there any comment/discussion on the success of the randomization to be used as the “gold-standard” in this example? Much of the results appear to rely on the SRS and it ignores the potential for nonresponse bias.}
 
-	We added remark XX to discuss the issue of ran
-	Non-response bias due to unobserved missing
-
-	we see randomization as less a ``gold-standard'' and more as a starting point.
-
+	We do not see random sampling as a ``gold-standard'' nor a panacea that will fix every issue.  Instead, we see it as a means to remove one very important source of potential bias in the estimation of population quantities of interest.  A key takeaway of our paper is that with access to \emph{only} a non-probabilistic sample, we know there is potential bias but have little hope of reducing said bias.  With a probability sample, we have means to reduce said bias.  Statisticians, epidemioligists, and government officials, and health policy experts can then focus on practical issues such as non-ignorable missingness.  If we thought, for example, political opinions and rural status are important predictors of missingness, then these should be collected as part of the random sampling protocol.  Note, even collecting strata information that is correlates with testing propensity (e.g., symptom status) in the non-probabilistic sample is insufficient to address selection bias.  This is not true for probability samples.  We have added this important discussion to Section 6.
 \end{enumerate}
 
-\vspace{5mm}
-Thank you for raising this issue.  We discuss reporting delays and the relevant literature in Remark 1 in Section 2.2.  Given currently available public data, one cannot correct at the daily level for reporting delays.  Instead, we analyze COVID-19 data at the weekly level to account for potential reporting delays.  While not a perfect solution, it avoids clear reporting variation across day-of-week which can be seen in Figure 5.
-\vspace{5mm}
 \end{enumerate}
 \newpage
 {\bf Response to Reviewer 1}
@@ -360,8 +347,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it Also, focusing on the non-Hispanic, white male groups seems potentially to limit understanding of the scope of error. Although Indiana has a very high percent of white individuals, the individuals who present for testing (as well as those who test positive, are exposed in the workplace and home, and hospitalized or die) are disproportionately non-white. It is important to show the performance of the method in both white and non-white individuals because non-white individuals are the ones who are experiencing higher rates of illness and death and therefore will likely be more negatively impacted by biased estimates of disease prevalence.}
 	\vspace{5mm}
 
-	We acknowledge this shortcoming.  We now include versions of Figure 6 for non-white groups in Section XX of the supplementary materials.
-	\textcolor{red}{NEED TO DO}
+	We acknowledge this shortcoming.  We now include versions of Figure 6 for other groups in Section H.2.1 of the supplementary materials with a discussion of the relative propensities.  Specifically, as the reviewer states above, individuals who identify as Hispanic, Male, and select `Some other race' were twice as likely to present for testing as non-Hispanic, white men -- empirically confirming that our data captures these systematic differences.
 	\vspace{5mm}
 \end{enumerate}
 \item {\bf 5.2 SEIR model}
@@ -439,7 +425,7 @@ We have fixed Figure 3b to match on covariates and have matching y-axes.  See ou
 \item {\it The model based estimates in Figure 8 seem so different from the other estimates that it is potentially implausible and suggests misspecification of the IFR. Is this potentially due to the age distribution of cases and the IFR collapsing choices? Perhaps as a sensitivity analysis different IFR values should be examined}
 
 \vspace{5mm}
-See our answer to Question 17b of Reviewer #1 and Question 7 above. A sensitivity analysis focused on the issue of choosing an appropriate IFR is now performed.
+See our answer to Question 17b of Reviewer \#1 and Question 7 above. A sensitivity analysis focused on the issue of choosing an appropriate IFR is now performed.
 \textcolor{red}{To Do!}
 \vspace{5mm}
 \item {\bf Minor comments:}
