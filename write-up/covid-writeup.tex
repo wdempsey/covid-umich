@@ -577,7 +577,7 @@ Here, we consider covariate information that takes the form of a stratification 
 
  \subsection{Doubly robust estimation.}
  Rather than relying solely on IPW or epidemiological forecasts, here we combine forecasting and inverse-probability weighting by extending recent work by~\cite{Chen2019} to account time-varying propensities and measurement-error.
- Let~$\mu(x)$ denote the posterior mean of the active infection rate individuals with covariate value~$x$ (i.e., age strata) based on the SEIR model described in SEction~\ref{section:modelbased}. In this context, the doubly-robust estimator is given by
+ Let~$\mu(x)$ denote the posterior mean of the active infection rate individuals with covariate value~$x$ (i.e., age strata) based on the SEIR model described in Section~\ref{section:modelbased}. In this context, the doubly-robust estimator is given by
  $$
  \bar y_{n}^{(DR)} = \frac{1}{N} \sum_{j=1}^N \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j w (x_j)} \sum_{j=1}^N I_j w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \hat \mu(x_j) \right).
  $$
