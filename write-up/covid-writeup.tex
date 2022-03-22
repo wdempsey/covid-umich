@@ -582,10 +582,11 @@ Here, we consider covariate information that takes the form of a stratification 
  \bar y_{n}^{(DR)} = \frac{1}{N} \sum_{j=1}^N \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j w (x_j)} \sum_{j=1}^N I_j w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \hat \mu(x_j) \right).
  $$
  where $\hat \mu(x_j)$ is not corrected for measurement-error as it estimates true case counts. This estimator is called ``doubly-robust'' because it is consistent if either the model-based forecasts or the time-varying propensities are correctly specified. A statistical error decomposition can be derived
+ \textcolor{red}{GOT TO HERE}
  \begin{align}
  \label{eq:statdecomp3}
  \begin{split}
- \rho_{\tilde I (X), Y-\mu(X)} &\times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y-\mu(X)}  \\
+ \rho_{I^{NR} (X), Y-\mu(X)} &\times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y-\mu(X)}  \\
  &\times \underbrace{\left[ 1 - \frac{\rho_{\tilde I(X),Y} \sigma_{Y}}{\rho_{\tilde I(X),Y-\mu(X)} \sigma_{Y-\mu(X)}} \times \tilde \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{\tilde f_0 (1-\bar Y) + \tilde f_1 \bar Y} \right]}_{\tilde D_M}.
  \end{split}
  \end{align}
