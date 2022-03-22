@@ -742,18 +742,18 @@ $$
 \section{Indiana COVID-19 Analysis: Additional details}
 \label{app:in_add_details}
 
-Table~\ref{tab:comparison} demonstrates minimal bias in the Facebook symptom survey with respect to symptom distributions.
+Table~\ref{tab:comparison} demonstrates minimal bias in the Delphi’s COVID-19 Trends and Impact Survey (CTIS) with respect to symptom distributions.
 
  \begin{table}[!th]
  \centering
  \begin{tabular}{c | c c c | c}
- & \multicolumn{3}{c}{Facebook} & Random \\ \cline{2-4}
+ & \multicolumn{3}{c}{CTIS} & Random \\ \cline{2-4}
  & Lower CI & Estimate & Upper CI & Estimate \\ \hline
  Fever &  0.073 & 0.097 & 0.012 & 0.018 \\
  Cough &  0.140 & 0.150 & 0.159 & 0.149 \\
  Shortness & 0.055 & 0.062 & 0.068 & 0.062 \\ \hline
  \end{tabular}
- \caption{Comparison of Facebook survey and random sample}
+ \caption{Comparison of CTIS and random sample restricting CTIS to surveys collected from April 25--29th, 2020.}
  \label{tab:comparison}
  \end{table}
 
@@ -986,7 +986,7 @@ Figure~\ref{fig:undercounting} below is a plot of undercount based on the SEIR m
 \section{Alternative estimator of the instantaneous reproductive number}
 \label{app:cori_rt}
 
-Here we present the estimate of~\cite{Cori20113}.  Let~$I_t$ detnoe the total infectiousness of infected individuals at time~$t$.  Then~$E[I_t] = R_t \sum_{s=1}^{t} I_{t-s} w_s$ where $w_{u}$ is the infectivity function.  Here, we follow~\cite{Cori20113} and choose a discretized shifted Gamma distribution with mean $7$ days and standard deviation $2$ days.  Then a moment-based estimator can be obtained by $\hat R_t = I_t / \sum_{s=1}^t I_{t-s} w_s$, which takes the form of the ratio estimators in Section~\ref{section:rates}.  Therefore, the bias can be readily obtained from the associated Taylor series decomposition, with the terms related to time~$t-1$ replaced by a weighted version.
+Here we present estimates of the instantaneous reproductive number using the approach of~\cite{Cori20113} under the SEIR model from Section~\ref{section:r0-estimation}.  Let~$I_t$ denote the total infectiousness of infected individuals at time~$t$.  Then~$E[I_t] = R_t \sum_{s=1}^{t} I_{t-s} w_s$ where $w_{u}$ is the infectivity function.  Here, we follow~\cite{Cori20113} and choose a discretized shifted Gamma distribution with mean $7$ days and standard deviation $2$ days.  Then a moment-based estimator can be obtained by $\hat R_t = I_t / \sum_{s=1}^t I_{t-s} w_s$, which takes the form of the ratio estimators in Section~\ref{section:rates}.  Therefore, the bias can be readily obtained from the associated Taylor series decomposition, with the terms related to time~$t-1$ replaced by a weighted version.  Figure~\ref{fig:cori-bias} presents the bias.
 
 
 \begin{figure}

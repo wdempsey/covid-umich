@@ -219,7 +219,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\vspace{5mm}
 
 	The adjustment is exactly related to the Bayes rule PPV/NPV relationship with FP, FN, and $\bar Y$.
-	\textcolor{red}{Got to here.}
+	\textcolor{red}{I'm still a bit confused by this point.  Will review further.}
 	\vspace{5mm}
 	\item {\it Also worth noting that test positivity is not strictly binary (since it’s generally based on an underlying continuous cycle threshold), and so measurement error could potentially lead towards bias away from, or across, the null even in the absence of selection bias.}
 	\vspace{5mm}
@@ -236,14 +236,14 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it Finally, in the section on effective sample size, please clarify why the FP and FN would be dependent on testing capacity. False positive and false negative rates, as well as sensitivity and specificity, are strictly characteristics of a given test – if increased test capacity or burden would alter the sample collection quality then FP \& FN could change. But if increased test capacity simply changes the underlying prevalence in the group tested (because of opening up testing to uninfected individuals), then the FP \& FN should not change, but the PPV and the NPV will change since these are dependent on prevalence.}
 	\vspace{5mm}
 
-	We clarify that increasing testing capacity may impact FP and FN rates if altering changes the sample collection quality, e.g., a testing center switches from nasal swab to oropharyngeal swabs or saliva specimen to increase testing capacity will change measurement error due to the different test characteristic.
+	We clarify that increasing testing capacity may impact FP and FN rates if altering changes the sample collection quality, e.g., a testing center switches from nasal swab to oropharyngeal swabs or saliva specimen to increase testing capacity will alter measurement error due to differences in the test characteristics.
 \end{enumerate}
 \item {\bf Section 3.2: Regrettable Rates}
 \begin{enumerate}
 	\item {\it Here, and throughout the theoretical example, the model is an SIR model. However, we know that SARS-CoV-2 is better represented with an SEIR model, and indeed the applied example later in the manuscript uses an SEIR approach. Since this paper is very particularly addressing an issue with COVID data it would be beneficial to use an SEIR model throughout rather than the simpler SIR model.}
 	\vspace{5mm}
 
-	The SIR model in Section 3.2 is replaced by the SEIR model.  We highlight that the SEIR model has been shown to better represent the SARS-CoV-2 dynamics.  Figure 3a presents updated versions of the potnetial bias in ratio estimators under an SEIR model.   The conclusion remains largely the same. The only difference from the prior manuscript is that the peak in bias prior to the ratio going less than 1 is less pronounced (was up to 5, now up to 2).
+	The SIR model in Section 3.2 is replaced by the SEIR model.  We highlight that the SEIR model has been shown to better represent the SARS-CoV-2 dynamics.  Figure 3a presents updated versions of the potential bias in ratio estimators under an SEIR model.   The conclusion remains largely the same. The only difference from the prior manuscript is that the peak in bias prior to the ratio going less than 1 is less pronounced (prior submission with SIR model has an approximate peak of 5 while current manuscript has approximate peak of 2).
 	\vspace{5mm}
 \end{enumerate}
 \item {\bf Section 3.3: Effective Reproduction Number}
@@ -266,10 +266,10 @@ In the introduction, we now connect random testing to its purpose as a screening
 	R_0 = \frac{1 + \Lambda \left(\frac{1}{\sigma} + \frac{1}{\gamma} \right)}{S_0 + I_0 (1 + \gamma/\sigma)}.
 	$$
 	where~$\Lambda$ is the epidemic growth rate, and $S_0$/$I_0$ are the initial fractions of the population that are susceptible and infectious respectively.  For $S_0 \approx 1$ and $I_0 \ll 1$, we have the approximate relationship $R_0 \approx 1 + (\frac{1}{\gamma} + \frac{1}{\sigma})\Lambda$.
-	, this is an approximate solution which lacks the term $\Lambda^2 \frac{1}{\gamma \sigma}$.  ``It corresponds to the case of an exponentially distributed generation time with mean duration $1/\gamma + 1/\sigma$, which is the same as the solution for the SIR model assuming an infectious period of $1/\gamma + 1/\sigma$. For realistic growth rates and choices of $\sigma$ and $\gamma$ for the COVID-19 pandemic, this term is negligible and therefore we work with the approximate formula.
+	, this is an approximate solution which lacks the term $\Lambda^2 \frac{1}{\gamma \sigma}$.  It corresponds to the case of an exponentially distributed generation time with mean duration $1/\gamma + 1/\sigma$, which is the same as the solution for the SIR model assuming an infectious period of $1/\gamma + 1/\sigma$. For realistic growth rates and choices of $\sigma$ and $\gamma$ for the COVID-19 pandemic, this term is negligible and therefore we work with the approximate formula.
 	\vspace{5mm}
 
-	\noindent Note that for the SIR model, the basic reproduction number is~$R_0 = 1 + \frac{1}{\gamma} \Lambda$. So estimate of the instantaneous reproduction number is obatined by replacing $\Lambda$ by an estimate of the  instantaneous growth rate $\hat \Lambda_t = \log (K_t / K_{t-1})$.  Then using the approximate relationship between the SEIR model and an SIR model with infectious period $1/\gamma + 1/\sigma$, we arrive at the new moment-based estimator
+	\noindent Note that for the SIR model, the basic reproduction number is~$R_0 = 1 + \frac{1}{\gamma} \Lambda$. So estimate of the instantaneous reproduction number is obtained by replacing $\Lambda$ by an estimate of the  instantaneous growth rate $\hat \Lambda_t = \log (K_t / K_{t-1})$.  Then using the approximate relationship between the SEIR model and an SIR model with infectious period $1/\gamma + 1/\sigma$, we arrive at the new moment-based estimator
 	$$
     R_t \approx 1 + \left( \frac{1}{\gamma} + \frac{1}{\sigma} \right) \log \left( \frac{K_t}{K_{t-1}} \right).
 	$$
@@ -303,7 +303,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it The time-varying section seems somewhat unnecessary since it is simply taking the expectation of the data over some time period – the daily data also does this, but where the time-period is 1 day. }
 	\vspace{5mm}
 
-	Section 4.1.3 allows researchers to choose to go beyond simpler moving window averages (i.e., weekly averages).  The kernel function allows the user to choose weighted averages that may be more robust than the uniform kernel (which is equivalent to the moving averages).  This approach helps smooth the estimated propensity over time; moreover, the flexibility of the approach for government agencies who may observed random samples at different frequencies is of practical importance.
+	Section 4.1.3 allows researchers to choose to go beyond simpler moving window averages (i.e., daily/weekly averages).  The kernel function allows the user to choose weighted averages that may be more robust than the uniform kernel (which is equivalent to the a moving average over some fixed window of time).  The proposed approach helps smooth the estimated propensity over time; moreover, the flexibility of the approach for government agencies who may observed random samples at different frequencies is of practical importance.
 	\vspace{5mm}
 \end{enumerate}
 \item {\bf Section 4.2: model-based estimation}
