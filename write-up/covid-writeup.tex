@@ -579,15 +579,14 @@ Here, we consider covariate information that takes the form of a stratification 
  Rather than relying solely on IPW or epidemiological forecasts, here we combine forecasting and inverse-probability weighting by extending recent work by~\cite{Chen2019} to account time-varying propensities and measurement-error.
  Let~$\mu(x)$ denote the posterior mean of the active infection rate individuals with covariate value~$x$ (i.e., age strata) based on the SEIR model described in Section~\ref{section:modelbased}. In this context, the doubly-robust estimator is given by
  $$
- \bar y_{n}^{(DR)} = \frac{1}{N} \sum_{j=1}^N \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j w (x_j)} \sum_{j=1}^N I_j w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \hat \mu(x_j) \right).
+ \bar y_{n}^{(DR)} = \frac{1}{N} \sum_{j=1}^N \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j^{NR} w (x_j)} \sum_{j=1}^N I_j^{NR} w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \hat \mu(x_j) \right).
  $$
  where $\hat \mu(x_j)$ is not corrected for measurement-error as it estimates true case counts. This estimator is called ``doubly-robust'' because it is consistent if either the model-based forecasts or the time-varying propensities are correctly specified. A statistical error decomposition can be derived
- \textcolor{red}{GOT TO HERE}
  \begin{align}
  \label{eq:statdecomp3}
  \begin{split}
  \rho_{I^{NR} (X), Y-\mu(X)} &\times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y-\mu(X)}  \\
- &\times \underbrace{\left[ 1 - \frac{\rho_{\tilde I(X),Y} \sigma_{Y}}{\rho_{\tilde I(X),Y-\mu(X)} \sigma_{Y-\mu(X)}} \times \tilde \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{\tilde f_0 (1-\bar Y) + \tilde f_1 \bar Y} \right]}_{\tilde D_M}.
+ &\times \underbrace{\left[ 1 - \frac{\rho_{I^{NR}(X),Y} \sigma_{Y}}{\rho_{I^{NR} (X),Y-\mu(X)} \sigma_{Y-\mu(X)}} \times \tilde \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{\tilde f_0 (1-\bar Y) + \tilde f_1 \bar Y} \right]}_{\tilde D_M}.
  \end{split}
  \end{align}
  See Appendix~\ref{app:DRderivation} for the derivation.
@@ -600,7 +599,7 @@ Here, we consider covariate information that takes the form of a stratification 
 
  Unfortunately, the first term of the doubly robust estimator cannot be computed as covariate information is not collected on the entire population.  Here, we suppose the same asymptotic regime as in Section~\ref{section:asymptotics} and use the probability sample at the time~$t \in \{t_l^\prime\}$ to estimate this term:
  $$
- \frac{1}{\sum_{j=1}^N \tilde I_{j,t} \tilde W_{j,t}} \sum_{j=1}^N  \tilde I_{j,t} \tilde W_{j,t} \hat \mu_{t} (X_{j,t}) + \frac{1}{\sum_{j=1}^N I_{j,t} w (X_{j,t})} \sum_{j=1}^N I_{j,t} w(X_{j,t}) \left( \frac{Y_{j,t} - FP}{1 - FP - FN} - \hat \mu_t(X_{j,t}) \right).
+ \frac{1}{\sum_{j=1}^N I^{R}_{j,t} W^R_{j,t}} \sum_{j=1}^N  I_{j,t}^{R} W_{j,t}^{R} \hat \mu_{t} (X_{j,t}) + \frac{1}{\sum_{j=1}^N I_{j,t}^{NR} w (X_{j,t})} \sum_{j=1}^N I_{j,t}^{NR} w(X_{j,t}) \left( \frac{Y_{j,t} - FP}{1 - FP - FN} - \hat \mu_t(X_{j,t}) \right).
  $$
  Assuming correct selection propensity model specification, then under the probability sample design and nonprobability sample design, Lemma~\ref{lemma:dr} shows that the doubly robust estimator is consistent and calculates the estimator's variance. See Appendix~\ref{app:asympderivations} for additional details.
 
