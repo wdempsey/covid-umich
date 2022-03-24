@@ -155,7 +155,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it Please also clarify the terminology ‘active infection’ which in some instances appears to refer to individuals in the symptomatic period of infection, and in other instances appears to refer to individuals in the infectious period of infection. We know that these are not identical in SARS-CoV-2 infection and that difference is a key reason why screening and diagnostic tests are not easily comparable.}
 	\vspace{5mm}
 
-	\textcolor{red}{We clarify that we define active infection as individuals infected with SARS-CoV-2 who have yet to fall below a threshold for detectable viral load levels by RT-PCR testing.}
+	\textcolor{red}{We now clarify that we define active infection as individuals infected with SARS-CoV-2 who have yet to fall below a threshold for detectable viral load levels by RT-PCR testing. This includes the infectious period as well as a pre-infectious and post-infectious periods of time.}
 
 	\vspace{5mm}
 	\item {\it Consider adding some additional information on screening tests, particular anything relevant to the random sample conducted in Indiana which is used as the validation set. Were the screening tests conducted using nasopharyngeal swabs (in many places screening tests use nasal swabs instead and often self-collected samples)? Were the molecular tests used to assay the samples the same for screening and diagnostic tests? Differences in sample collection and testing processes could undermine the utility of this random sample as a validation set.}
@@ -199,7 +199,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it Please clarify the definition of ‘active infection’ (any infection, vs infectious, vs symptomatic, vs detectable by molecular testing?). This has important implications for the construction of the compartmental model and for the definition of your period prevalence (AIR).}
 	\vspace{5mm}
 
-	\textcolor{red}{We clarify that we define active infection as individuals infected with SARS-CoV-2 who have yet to fall below a threshold for detectable viral load levels by RT-PCR testing.}
+	\textcolor{red}{As stated in answer to Question 3a, we now clarify that we define active infection as individuals infected with SARS-CoV-2 who have yet to fall below a threshold for detectable viral load levels by RT-PCR testing. As stated here, this includes the infectious period as well as a pre-infectious and post-infectious periods of time.  We discuss how this impacts the compartmental model and calculation of the AIR in answer to Questions 6a and 17a.}
 	\vspace{5mm}
 	\item {\it Throughout, there is a general issue of too few distinct variable identifiers – for example, using Y to refer to infection status and y to refer to test status will likely lead to confusion.}
 	\vspace{5mm}
@@ -328,7 +328,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it The applied example relies heavily on the idea that the random sample is a true random sample of the population of Indiana eligible to be infected with COVID, and that the non-random sample and the Facebook / CMU sample similarly provide representative measures of covariate data. This is not well-established by the short data descriptions given and deserves further emphasis.}
 	\vspace{5mm}
 
-	We added Remark 6 to emphasize these potential limitations. A key point is that the case study is to demonstrate our framework for answering the \emph{what to do with this knowledge of selection bias and measurement error} point that was raised in the first round of submission.  In Remark 6, we urge health policy experts and government officials to assess these issues when applying this framework in their own future work.
+	We added Remark 6 to emphasize these potential limitations and highlight how the scientific teams that collected these data sources aimed to address these important issues. A key point is that the case study is to demonstrate our framework for answering the \emph{what to do with this knowledge of selection bias and measurement error} point that was raised by reviewers during the first submission round.  In Remark 6, we urge health policy experts and government officials to assess these issues when applying this framework in their own future work.
 	\vspace{5mm}
 \end{enumerate}
 \item {\bf Section 5.1.1. Disease Prevalence}
@@ -336,12 +336,12 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it This section seems to assume that individuals can only be tested once but that assumption is unlikely to be true. In particular, people with higher exposures will get tested more frequently than people with lower exposures, and similarly people at higher risk of severe outcomes may be tested more frequently than people with lower risk. Calculating the sampling fraction as the (number of tests)/(total pop – previously tested) thus seems likely to provide a biased sampling fraction estimate.}
 	\vspace{5mm}
 
-	Section 5.1.1 studies testing between April 25th to 29th 2020 during which testing was limited.  This led us to the assumption that the individuals who already tested were unlikely to be available for testing.  We continue to calculate the sampling fraction as number of tests divided by the total population minus prior tests, but note at the end of Section 5.1.1 that using the total population in the denominator yields a very similar sampling fraction and the calculations have negligible change.
+	Section 5.1.1 studies testing between April 25th to 29th 2020 during which testing was limited.  This led us to the assumption that the individuals who already tested were unlikely to be available for testing as it had only been available since March 2020 and quite limited in supply.  We continue to calculate the sampling fraction as number of tests divided by the total population minus prior tests.  To address the reviewers concern, we note at the end of Section 5.1.1 that using the total population in the denominator yields a very similar sampling fraction and the calculations change by a negligible amount.
 	\vspace{5mm}
 	\item {\it Also, it would be useful to clarify whether the random sample, which is being used as the gold standard, was corrected for measurement error, as well as how the issue of 30\% response rate was dealt with in obtaining the prevalence estimate. Given these issues, the random sample estimate could easily also be biased.}
 	\vspace{5mm}
 
-	See answers to Questions 5a and 14a above.  The prevalence estimate comes from Yiannoutsos et al. (2021) who detail their adjustments for response rates in estimation of active prevalence.
+	See answers to Questions 5a and 14a above.  The prevalence estimate comes from Yiannoutsos et al. (2021) who detail their adjustments for response rates and measurement error in estimation of active prevalence.  We do not attempt to correct it further, and simply note that (unlike in Meng's case where the ``truth'' is observed) this calculation is approximate and meant to help us understand what the relative sampling rates may be in our setting.
 	\vspace{5mm}
 \end{enumerate}
 \item {\bf Section 5.1.2 Time varying estimate}
@@ -349,7 +349,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it 5.1.2. In the second approach, using hospitalization data to attempt to back-predict fever status seems highly likely to be subject to survivor bias as well as biases driven by differential access to care. Some discussion of the issues with this approach is warranted.}
 	\vspace{5mm}
 
-	We thank the reviewer for raising this issue.  We have added a remark in sction 5.1.2 that raises this as a limitation.  We restart here that the need for the approaches is due to the lack of availability of symptom status (which we know the state collects but has told us is unavailable due to data privacy / confidentiality issues).  Therefore, as a framework for health policy experts and government officials who have access to the complete government datasets (i.e., not just the public data), these steps will not be necessary.
+	We thank the reviewer for raising this issue.  We have added a sentence in section 5.1.2 that raises this as a limitation.  We restate here that the need for the imputation approaches is due to the lack of publicly available symptom status information.  We have confirmed that this data is collected by the state, but were informed that the data could not be released due to data privacy / confidentiality issues.  Therefore, as a framework for health policy experts and government officials who have access to the complete government datasets (i.e., not just the public data), these steps would not be necessary.
 	\vspace{5mm}
 	\item {\it Also, focusing on the non-Hispanic, white male groups seems potentially to limit understanding of the scope of error. Although Indiana has a very high percent of white individuals, the individuals who present for testing (as well as those who test positive, are exposed in the workplace and home, and hospitalized or die) are disproportionately non-white. It is important to show the performance of the method in both white and non-white individuals because non-white individuals are the ones who are experiencing higher rates of illness and death and therefore will likely be more negatively impacted by biased estimates of disease prevalence.}
 	\vspace{5mm}
@@ -362,12 +362,12 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it As stated above, some description of the assumptions related to contact patterns and transmission between and among age strata is needed. In addition, please clarify which compartments of the model the infection-fatality rate applies to (E \& I or I only), as well as how the model handles death from non-COVID causes from these and other model compartments.}
 	\vspace{5mm}
 
-	See our answer to Question 12 above.  In Section 5.2, we now clarify how we calculate the infection-fatality rate from the compartments of the model. Similar to Johndrow (2021), the model only uses COVID-19 related deaths.  Deaths to non-COVID causes are not directly modeled but would appear as part of the R component in the global SEIR model.
+	\textcolor{red}{See our answer to Question 12 above.  In Section 5.2, we now clarify how we calculate the infection-fatality rate from the compartments of the model. Similar to Johndrow (2021), the model only uses COVID-19 related deaths.  Deaths to non-COVID causes are not directly modeled but would appear as part of the R component in the global SEIR model.}
 	\vspace{5mm}
 	\item {\it Also, the discussion of IFR would benefit greatly from being contextualized to the rest of the paper – the goal of the manuscript is specifically to provide a better estimate of who is infected. Such an estimate would therefore be expected to provide a more valid infection fatality rate, and this in turn implies the IFR used here must be biased. This should be discussed.}
 	\vspace{5mm}
 
-    We contextualize the discussion of IFR in Remark 7 in Section 5.2. We acknowledge that these IFR estimates are likely biased (or potentially accurate in very different circumstances).  A sensitivity analysis focused on the issue of choosing an appropriate IFR given the potential biases in available IFR estimates is now performed.
+    \textcolor{red}{We contextualize the discussion of IFR in Remark 7 in Section 5.2. We acknowledge that these IFR estimates are likely biased (or potentially accurate in very different circumstances).  A sensitivity analysis focused on the issue of choosing an appropriate IFR given the potential biases in available IFR estimates is now performed.}
     \textcolor{red}{To Do!}
 	\vspace{5mm}
 \end{enumerate}
@@ -402,13 +402,13 @@ We thank the reviewer and now match this more careful language to be more exact 
 \item {\it The author lumps RT-PCR and antigen tests in together and discusses that a patients will likely have positive tests for several weeks while not infectious (able to transmit) – for the most part this is the case for RT-PCR tests, however antigen tests give a clearer picture of infectiousness as the viral threshold is higher and often correlates with the likelihood to transmit.}
 
 \vspace{5mm}
-We now make this distinction much clearer.
+We now make this distinction much clearer.  The section focuses primarily on RT-PCR tests given they are the primary molecular test offered by the Indiana's State Department of Health (ISDH) and thus the basis for the case count and testing data in this paper.
 \vspace{5mm}
 
 \item {\it I’m not sure this statement “The primary goal of molecular tests is diagnosis of active infections in the population.” (page 5) is entirely true. I definitely think this is a worthwhile goal, but many in the medical community use molecular tests to determine the diagnosis of an individual patient, regardless if the infection is “active” or not (i.e. whether they are currently infectious rather than infected which is what I assume the author means by “active”).}
 
 \vspace{5mm}
-We apologize for the confusion.  See answer to Question 3b where we clarify the definition of active infection.  An active infection was meant to refer to individuals who were infected with SARS-CoV-2 who have yet to fall below a threshold for detectable viral load levels by RT-PCR testing.  This includes the infectious period as well as a pre-infectious and post-infectious periods of time.
+\textcolor{red}{We apologize for the confusion.  See answer to Question 3b where we clarify the definition of active infection.  An active infection was meant to refer to individuals who were infected with SARS-CoV-2 who have yet to fall below a threshold for detectable viral load levels by RT-PCR testing.  This includes the infectious period as well as a pre-infectious and post-infectious periods of time.}
 
 \vspace{5mm}
 \item {\it On page 13, the author discusses the bias relative to the “peak” – is this the peak in cases? I believe so, but it would be nice to define a bit more clearly.}
@@ -419,20 +419,19 @@ We clarify in Section 3.2 that this is the peak in the fraction of infected indi
 \item {\it We would expect the IFR to dramatically change after the introductions of vaccines in December 2020, making this method less applicable without introducing a time-varying component.}
 
 \vspace{5mm}
-See our answer to Question 17b of Reviewer \#1. We acknowledge that these IFR estimates are likely biased and time-varying due to introduction of vaccines in 2020.  A sensitivity analysis focused on the issue of choosing an appropriate IFR and allowing for the IFR to be time-varying is now performed.
+\textcolor{red}{See our answer to Question 17b of Reviewer \#1. We acknowledge that these IFR estimates are likely biased and time-varying due to introduction of vaccines in 2020.  A sensitivity analysis focused on the issue of choosing an appropriate IFR and allowing for the IFR to be time-varying is now performed.}
 \textcolor{red}{To Do!}
 
 \vspace{5mm}
 \item {\it I found Figure 3 in the supplement [confusing]. Figure 3A shows the profile for a 35-44 white male with symptoms and COVID-19 contact and Figure 3B shows the profile for a 65-74 white female without symptoms nor COVID-19 contact – I would have expected the covariates between these (age, ethnicity, race, gender) to be the same rather than differ with the only thing differing being symptoms 1/ COVID-19 contact? As a minor note, the y-axis labels do not match for this plot.}
 
 \vspace{5mm}
-We have fixed Figure 3b to match on covariates and have matching y-axes.  See our answer to Question 16b from Reviewer \#1 on additional figures we are including in the revision.
-\textcolor{red}{Need to do.}
+We have fixed Figure 3b to match on covariates and have matching y-axes.  See our answer to Question 16b from Reviewer \#1 on additional figures we are including in the revision.  The figure now shows that testing propensity is time-varying, increasing from near 0 in the first few months to a peak of 0.01 around December.  This peak is 8 times lower than the peak in December for the same strata given fever and COVID-19 contact.
 \vspace{5mm}
 \item {\it The model based estimates in Figure 8 seem so different from the other estimates that it is potentially implausible and suggests misspecification of the IFR. Is this potentially due to the age distribution of cases and the IFR collapsing choices? Perhaps as a sensitivity analysis different IFR values should be examined}
 
 \vspace{5mm}
-See our answer to Question 17b of Reviewer \#1 and Question 7 above. A sensitivity analysis focused on the issue of choosing an appropriate IFR is now performed.
+\textcolor{red}{See our answer to Question 17b of Reviewer \#1 and Question 7 above. A sensitivity analysis focused on the issue of choosing an appropriate IFR is now performed.}
 \textcolor{red}{To Do!}
 \vspace{5mm}
 \item {\bf Minor comments:}
@@ -440,9 +439,13 @@ See our answer to Question 17b of Reviewer \#1 and Question 7 above. A sensitivi
 		\item {\it Figure 3 mention “$\beta = 1.2$ (black)” – I’m not sure what “black” refers to?}
 		\vspace{5mm}
 
-		We have removed this and simply state the SEIR parameter values ($\beta = 1.2, \gamma = 0.14, \sigma = 0.3$) underlying the Figure.
+		We have removed this and simply state the SEIR parameter values ($\beta = 1.2, \gamma = 0.15, \sigma = 0.3$) underlying the Figure.
 
 		\item {\it In the supplement, page 21, the author refers to “Figure 6a and 6a” – I believe they mean “Figure 6a and 6b”. This also claims to show the likelihood for all age ranges - I believe it is only for males.}
+		\vspace{5mm}
+
+		We have fixed this reference.
+
 	\end{enumerate}
 \end{enumerate}
 

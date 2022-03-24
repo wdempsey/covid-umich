@@ -809,13 +809,13 @@ Based on mean-imputation of COVID-19 contact and fever indicators, we can use th
 \begin{subfigure}{.5\textwidth}
  \centering
  \includegraphics[width=.9\linewidth]{../figs/tvprop_fig1.png}
- \caption{Testing Likelihood Given Fever and COVID-19 Contact}
+ \caption{Testing Likelihood Given Fever and \\COVID-19 Contact}
  \label{fig:testinglik1}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
  \centering
 \includegraphics[width=.9\linewidth]{../figs/tvprop_fig2.png}
- \caption{Testing Likelihood Given Fever and COVID-19 Contact}
+ \caption{Testing Likelihood Given no Fever nor \\  COVID-19 Contact}
  \label{fig:testinglik2}
 \end{subfigure}
 \caption{Testing Likelihood Given no Fever nor COVID-19 Contact}
@@ -846,7 +846,7 @@ This model uses hospitalization records to try and improve our mean-imputation s
 
 First, we computed the probability of fever given COVID-19 positive test and hospitalization as well as COVID-19 positive test and no hospitalization.  We then computed the likelihood of symptom given a COVID-19 positive test by weighting these two likelihoods by the fraction of COVID-19 positive hospitalizations to COVID-19 total positive cases per week.  Mean imputation of fever status for COVID-19 negative tests was performed based on the above model without use of hospitalization data.
 
-Based on mean-imputation of COVID-19 fever using hospitalization records indicators, we can use the proposed pseudo-likelihood approach to compute the likelihood of getting tested for COVID-19 given age, ethnicity, race, gender, and fever status.  Figure~\ref{fig:testinglik1_mainpaper} and~\ref{fig:testinglik1_mainpaper} in Section~\ref{section:tvipw} of the manuscript plots the likelihood of testing given fever and no fever respectfully for all age ranges.  We see that the likelihood is time-varying and depends heavily on both fever status.
+Based on mean-imputation of COVID-19 fever using hospitalization records indicators, we can use the proposed pseudo-likelihood approach to compute the likelihood of getting tested for COVID-19 given age, ethnicity, race, gender, and fever status.  Figure~\ref{fig:testinglik1_mainpaper} and~\ref{fig:testinglik2_mainpaper} in Section~\ref{section:tvipw} of the manuscript plots the likelihood of testing given fever and no fever respectfully for all age ranges.  We see that the likelihood is time-varying and depends heavily on both fever status.
 
 \subsubsection{Propensity plots}
 \label{section:propplots}
