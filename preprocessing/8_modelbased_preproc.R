@@ -55,6 +55,12 @@ df_coviddeath_agg <- aggregate(covid_deaths ~ date, data = df_coviddeath, FUN = 
 dates = df_coviddeath_agg$date[-length(df_coviddeath_agg$date)]
 
 fit_forcing = readRDS("../data/fit_forcing_byage_090121.RDS")
+## USE a in model to see how long exposed/infected
+a = summary(fit_forcing, pars = "a", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary
+a_mean = a[1]
+## Gamma much larger so 
+gamma = summary(fit_forcing, pars = "gamma", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary
+
 summary_fit = summary(fit_forcing, pars = "pred_cases_per_agegroup", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary
 n_days = nrow(summary_fit)/6
 dates = c(min(dates)-1:(n_days - length(dates)), dates) ## EXTEND BACKWARDS FOR CASES
@@ -65,6 +71,17 @@ summary_fit$timepoints = timepoints
 summary_fit$age_group = age_group
 summary_fit$week = week(summary_fit$timepoints)
 summary_fit$year = year(summary_fit$timepoints)
+
+for (i in 1:nrow(prevalence_temp)){
+  current_day = prevalence_temp$date[i]
+  previous_days = as.numeric(difftime(prevalence_temp$date, current_day, units = "days"))
+  exp_rate = a_mean
+  weight = exp(exp_rate*previous_days)
+  active_infection_temp = sum(weight[previous_days <= 0]*prevalence_temp$mean[prevalence_temp$date <= current_day])
+  recovered_temp = sum((1-weight[previous_days <= 0])*prevalence_temp$mean[prevalence_temp$date <= current_day])
+  prevalence_temp$ai_smoothed[i] = active_infection_temp
+  prevalence_temp$recovered_smoothed[i] = recovered_temp
+}
 
 summary_aggregate = aggregate(mean ~ age_group + week + year, data = summary_fit, FUN = sum)
 
@@ -243,25 +260,33 @@ colnames(smr_pred) <- make.names(colnames(smr_pred)) # to remove % in the col na
 smr_pred$current_date = df_coviddeath$date[-c(469:470)]
 
 prevalence_temp = data.frame(date = smr_pred$current_date, Method = rep("Model-based", nrow(smr_pred)), 
-                             mean = smr_pred$mean)
+                             mean = smr_pred$mean, ai_smoothed = rep(NA, nrow(smr_pred)),
+                             recovered_smoothed = rep(NA, nrow(smr_pred)))
+
+for (i in 1:nrow(prevalence_temp)){
+  current_day = prevalence_temp$date[i]
+  previous_days = as.numeric(difftime(prevalence_temp$date, current_day, units = "days"))
+  exp_rate = a_mean
+  weight = exp(exp_rate*previous_days)
+  active_infection_temp = sum(weight[previous_days <= 0]*prevalence_temp$mean[prevalence_temp$date <= current_day])
+  recovered_temp = sum((1-weight[previous_days <= 0])*prevalence_temp$mean[prevalence_temp$date <= current_day])
+  prevalence_temp$ai_smoothed[i] = active_infection_temp
+  prevalence_temp$recovered_smoothed[i] = recovered_temp
+}
 
 prevalence_temp = prevalence_temp[prevalence_temp$date <= "2021-01-31",]
 prevalence_temp$week = week(prevalence_temp$date)
 prevalence_temp$year = year(prevalence_temp$date)
 
-prevalence_temp = aggregate(mean ~ week + year, data = prevalence_temp, FUN = sum)
+prevalence_temp$estimate = prevalence_temp$ai_smoothed/(N-prevalence_temp$recovered_smoothed)
+
+prevalence_temp = aggregate(estimate ~ week + year, data = prevalence_temp, FUN = mean)
 
 prevalence_temp$date = MMWRweek::MMWRweek2Date(MMWRyear = prevalence_temp$year,
                                                MMWRweek = prevalence_temp$week,
                                                MMWRday = 1)
 
-prevalence_temp$estimate = prevalence_temp$mean/(N-c(0,cumsum(prevalence_temp$mean)[-length(prevalence_temp$mean)]))
+# prevalence_temp$estimate[45] = prevalence_temp$estimate[45]*7/2  ## THIS IS A FIX FOR WEEK LENGTH
+# prevalence_temp = prevalence_temp[-50,] # REMOVE FINAL POINT DUE TO EXTRAPOLATION
 
-prevalence_temp$estimate[45] = prevalence_temp$estimate[45]*7/2  ## THIS IS A FIX FOR WEEK LENGTH
-prevalence_temp = prevalence_temp[-50,] # REMOVE FINAL POINT DUE TO EXTRAPOLATION
-
-saveRDS(prevalence_temp, "../data/aggregate_air.RDS")
-
-
-
-
+saveRDS(prevalence_temp, "../data/aggregate_air_2022_24_03.RDS")

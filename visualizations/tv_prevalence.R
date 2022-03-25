@@ -55,7 +55,7 @@ for(method in c("Unweighted", "IPW1", "IPW2")) {
 
 
 ## ADD IN MODEL-BASED
-prevalence_temp = readRDS("../data/aggregate_air.RDS")
+prevalence_temp = readRDS("../data/aggregate_air_2022_24_03.RDS")
 prevalence_temp = data.frame(date = prevalence_temp$date, Method = rep("Model-based", nrow(prevalence_temp)), 
                              estimate = prevalence_temp$estimate)
 ratio = prevalence_temp$estimate[2:length(prevalence_temp$estimate)]/prevalence_temp$estimate[1:(length(prevalence_temp$estimate)-1)]
@@ -83,8 +83,8 @@ ratio_long = rbind(ratio_long, ratio_temp)
 prevalence_long = rbind(prevalence_long, prevalence_temp)
 
 ## FINAL FIGURES
-png(filename = "../figs/tv_air.png",
-    width = 960, height = 480, units = "px", pointsize = 25)
+# png(filename = "../figs/tv_air.png",
+    # width = 960, height = 480, units = "px", pointsize = 25)
 
 ggplot(data = prevalence_long, aes(x = date, y = estimate, col = Method)) +
   geom_line(size = 2) +
@@ -93,7 +93,7 @@ ggplot(data = prevalence_long, aes(x = date, y = estimate, col = Method)) +
   theme(text = element_text(size=25)) +
   scale_color_manual(values=my_palette)
 
-dev.off()
+# dev.off()
 
 
 ## Confidence Interval Visualization for Appendix.
@@ -108,8 +108,8 @@ prevalence_alt_cis$date = MMWRweek::MMWRweek2Date(MMWRyear = prevalence_alt_cis$
 
 pd <- position_dodge(0.1) # move them .05 to the left and right
 
-png(filename = "../figs/tv_air_cis.png",
-    width = 960, height = 480, units = "px", pointsize = 25)
+# png(filename = "../figs/tv_air_cis.png",
+    # width = 960, height = 480, units = "px", pointsize = 25)
 
 ggplot(data = prevalence_alt_cis, aes(x = date, y = estimate)) +
   geom_point(size = 2, color = my_palette) +
@@ -117,4 +117,4 @@ ggplot(data = prevalence_alt_cis, aes(x = date, y = estimate)) +
        y = "Active Infection Rate Estimate") + 
   theme(text = element_text(size=25))
 
-dev.off()
+# dev.off()
