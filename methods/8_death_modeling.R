@@ -47,7 +47,9 @@ tswitch_two <- subset(df_coviddeath_age, age == "80+") %>% filter(date < date_sw
 date_switch_three <- "2020-10-01" # date of ending of control measures
 tswitch_three <- subset(df_coviddeath_age, age == "80+") %>% filter(date < date_switch_three) %>% nrow() + 1 # convert time to number
 
-death_rates = readRDS("../data/mean_ifr.RDS")
+# death_rates = readRDS("../data/mean_ifr.RDS")
+# death_rates = readRDS("../data/mean_ifr_lower.RDS")
+death_rates = readRDS("../data/mean_ifr_upper.RDS")
 
 death_rates = death_rates/100
 
@@ -68,4 +70,6 @@ fit_forcing <- sampling(model_forcing,
                         seed=2,
                         chains = 1)
 
-saveRDS(fit_forcing, "../data/fit_forcing_byage_090121.RDS")
+# saveRDS(fit_forcing, "../data/fit_forcing_byage_090121.RDS")
+# saveRDS(fit_forcing, "../data/fit_forcing_byage_lowerifr_032522.RDS")
+saveRDS(fit_forcing, "../data/fit_forcing_byage_upperifr_032522.RDS")

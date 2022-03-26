@@ -69,7 +69,7 @@ ratio_long = rbind(ratio_long, ratio_temp)
 prevalence_long = rbind(prevalence_long, prevalence_temp)
 
 ## ADD IN DOUBLY ROBUST
-prevalence_temp = readRDS("../data/drestimates_alt_082621.RDS")
+prevalence_temp = readRDS("../data/drestimates_alt_2022_24_03.RDS")
 prevalence_temp = data.frame(date = dates, Method = rep("Doubly Robust", nrow(prevalence_temp)), 
                              estimate = prevalence_temp[,5])
 ratio = prevalence_temp$estimate[2:length(prevalence_temp$estimate)]/prevalence_temp$estimate[1:(length(prevalence_temp$estimate)-1)]
@@ -83,8 +83,8 @@ ratio_long = rbind(ratio_long, ratio_temp)
 prevalence_long = rbind(prevalence_long, prevalence_temp)
 
 ## FINAL FIGURES
-# png(filename = "../figs/tv_air.png",
-    # width = 960, height = 480, units = "px", pointsize = 25)
+png(filename = "../figs/tv_air.png",
+width = 960, height = 480, units = "px", pointsize = 25)
 
 ggplot(data = prevalence_long, aes(x = date, y = estimate, col = Method)) +
   geom_line(size = 2) +
@@ -93,7 +93,7 @@ ggplot(data = prevalence_long, aes(x = date, y = estimate, col = Method)) +
   theme(text = element_text(size=25)) +
   scale_color_manual(values=my_palette)
 
-# dev.off()
+dev.off()
 
 
 ## Confidence Interval Visualization for Appendix.

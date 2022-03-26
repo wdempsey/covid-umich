@@ -52,9 +52,11 @@ kernelweight <- function(distance) {
 df_coviddeath <- readRDS("../data/dailycoviddata.RDS")
 df_coviddeath$date = ymd(df_coviddeath$startdate)
 df_coviddeath_agg <- aggregate(covid_deaths ~ date, data = df_coviddeath, FUN = sum)
-dates = df_coviddeath_agg$date[-length(df_coviddeath_agg$date)]
+dates = ymd(df_coviddeath_agg$date)[-length(df_coviddeath_agg$date)]
 
-fit_forcing = readRDS("../data/fit_forcing_byage_090121.RDS")
+# fit_forcing = readRDS("../data/fit_forcing_byage_090121.RDS")
+fit_forcing = readRDS("../data/fit_forcing_byage_lowerifr_032522.RDS")
+# fit_forcing = readRDS("../data/fit_forcing_byage_upperifr_032522.RDS")
 ## USE a in model to see how long exposed/infected
 a = summary(fit_forcing, pars = "a", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary
 a_mean = a[1]
@@ -63,7 +65,7 @@ gamma = summary(fit_forcing, pars = "gamma", probs = c(0.025, 0.05, 0.1, 0.5, 0.
 
 summary_fit = summary(fit_forcing, pars = "pred_cases_per_agegroup", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary
 n_days = nrow(summary_fit)/6
-dates = c(min(dates)-1:(n_days - length(dates)), dates) ## EXTEND BACKWARDS FOR CASES
+dates = c(min(dates)-(n_days - length(dates)):1, dates) ## EXTEND BACKWARDS FOR CASES
 timepoints = rep(dates, 6)
 age_group = rep(c(1:6), each = length(dates))
 summary_fit = data.frame(summary_fit)
@@ -71,19 +73,27 @@ summary_fit$timepoints = timepoints
 summary_fit$age_group = age_group
 summary_fit$week = week(summary_fit$timepoints)
 summary_fit$year = year(summary_fit$timepoints)
+summary_fit$ai_estimate = rep(NA, nrow(summary_fit))
+summary_fit$recovered = rep(NA, nrow(summary_fit))
 
-for (i in 1:nrow(prevalence_temp)){
-  current_day = prevalence_temp$date[i]
-  previous_days = as.numeric(difftime(prevalence_temp$date, current_day, units = "days"))
+for (i in 1:nrow(summary_fit)){
+  current_day = summary_fit$timepoints[i]
+  current_agegrp = summary_fit$age_group[i]
+  summary_fit_agesubset = subset(summary_fit, age_group == current_agegrp)
+  previous_days = as.numeric(difftime(summary_fit_agesubset$timepoints, current_day, units = "days"))
   exp_rate = a_mean
   weight = exp(exp_rate*previous_days)
-  active_infection_temp = sum(weight[previous_days <= 0]*prevalence_temp$mean[prevalence_temp$date <= current_day])
-  recovered_temp = sum((1-weight[previous_days <= 0])*prevalence_temp$mean[prevalence_temp$date <= current_day])
-  prevalence_temp$ai_smoothed[i] = active_infection_temp
-  prevalence_temp$recovered_smoothed[i] = recovered_temp
+  active_infection_temp = sum(weight[previous_days <= 0]*summary_fit_agesubset$mean[summary_fit_agesubset$timepoints <= current_day])
+  recovered_temp = sum((1-weight[previous_days <= 0])*summary_fit_agesubset$mean[summary_fit_agesubset$timepoints <= current_day])
+  summary_fit$ai_estimate[i] = active_infection_temp
+  summary_fit$recovered[i] = recovered_temp
 }
+# 
+summary_aggregate = aggregate(ai_estimate ~ age_group + week + year, data = summary_fit, FUN = mean)
+summary_aggregate_recovered = aggregate(recovered ~ age_group + week + year, data = summary_fit, FUN = mean)
+summary_aggregate = cbind(summary_aggregate,summary_aggregate_recovered$recovered)
+names(summary_aggregate)[5] = "recovered"
 
-summary_aggregate = aggregate(mean ~ age_group + week + year, data = summary_fit, FUN = sum)
 
 ## WE NOW NEED DEATH FRACTIONS PER SUBGROUP
 ## We DO THIS AS A KERNEL ESTIMATOR 
@@ -139,21 +149,21 @@ age_range = 1:6
 weeks = c(14:53,1:5)
 years = c(rep(2020, length = length(c(14:53))),rep(2021, length = length(1:5)))
 results = rep(0,0)
-for(i in 1:length(weeks)) {
-  current_week = weeks[i]
-  current_year = years[i]
+for(i in 1:nrow(summary_aggregate)) {
+  current_week = summary_aggregate$week[i]
+  current_year = summary_aggregate$year[i]
+  current_age = summary_aggregate$age_group[i]
   print(paste("At week", current_week, "in year", current_year))
-  for (current_age in age_range) {
-     temp = weighteddeaths(current_week, current_year,current_age)     
-     casecount_temp = sum(subset(summary_aggregate, week == current_week & year == current_year & age_group == current_age)$mean)
-     temp$covid_cases = casecount_temp * temp$weights
-     temp$week = current_week
-     temp$year = current_year
-     temp$age = current_age
-     results = rbind(results,temp)
-  }
+  temp = weighteddeaths(current_week, current_year,current_age)     
+  ai_temp = summary_aggregate$ai_estimate[i]
+  recovered_temp = summary_aggregate$recovered[i]
+  temp$ai_estimate = ai_temp * temp$weights
+  temp$recovered = recovered_temp * temp$weights
+  temp$week = current_week
+  temp$year = current_year
+  temp$age = current_age
+  results = rbind(results,temp)
 }
-
 
 # Indiana population
 N <- 6.732E6;
@@ -213,11 +223,11 @@ for(i in 1:nrow(allcombinations)) {
   current_row = allcombinations[i,]
   temp = subset(results, ethnicity == current_row$ethnicity & race == current_row$race &
                   gender == current_row$gender & age == current_row$age)
-  if(current_row$N - sum(temp$covid_cases) < 0 ) {
+  air = temp$ai_estimate/(current_row$N-temp$recovered)
+  if(all(air == 0) | any(air > 1) | any(air < 0)) {
+    print(current_row)
     flagged_user_aggregate_air[i] = TRUE
   } else{
-    cumulative_cases = cumsum(temp$covid_cases)
-    air = temp$covid_cases/(current_row$N-cumulative_cases + temp$covid_cases)
     air_temp = data.frame(cbind(temp$week, temp$year, air))
     air_temp$ethnicity = current_row$ethnicity
     air_temp$race = current_row$race
@@ -228,11 +238,15 @@ for(i in 1:nrow(allcombinations)) {
   }
 }
 
-saveRDS(air_results, "../data/modelbased_air_bystrata.RDS")
+# saveRDS(air_results, "../data/modelbased_air_bystrata_2022_24_03.RDS")
+saveRDS(air_results, "../data/modelbased_air_bystrata_lowerifr_2022_24_03.RDS")
+# saveRDS(air_results, "../data/modelbased_air_bystrata_upperifr_2022_24_03.RDS")
 
 allcombinations$flagged = flagged_user_aggregate_air
 
-saveRDS(allcombinations, "../data/modelbased_flags.RDS")
+# saveRDS(allcombinations, "../data/modelbased_flags_2022_24_03.RDS")
+saveRDS(allcombinations, "../data/modelbased_flags_lowerifr_2022_24_03.RDS")
+# saveRDS(allcombinations, "../data/modelbased_flags_upperifr_2022_24_03.RDS")
 
 
 ### AGGREGATE 
@@ -289,4 +303,6 @@ prevalence_temp$date = MMWRweek::MMWRweek2Date(MMWRyear = prevalence_temp$year,
 # prevalence_temp$estimate[45] = prevalence_temp$estimate[45]*7/2  ## THIS IS A FIX FOR WEEK LENGTH
 # prevalence_temp = prevalence_temp[-50,] # REMOVE FINAL POINT DUE TO EXTRAPOLATION
 
-saveRDS(prevalence_temp, "../data/aggregate_air_2022_24_03.RDS")
+# saveRDS(prevalence_temp, "../data/aggregate_air_2022_24_03.RDS")
+saveRDS(prevalence_temp, "../data/aggregate_air_lowerifr_2022_24_03.RDS")
+# saveRDS(prevalence_temp, "../data/aggregate_air_upperifr_2022_24_03.RDS")

@@ -39,8 +39,34 @@ pop = c(7+7.3+7.3+7.5+7+13.7+15.8/2,
         3.9+6.5/2, 6.5/2 + 4.4/2, 4.4/2+1.5 ) 
 pop = pop/sum(pop)
 
-sum(mean_ifr * pop)  # should match marginal IFR of Raftery.
+marginal_ifr = sum(mean_ifr * pop)  # should match marginal IFR of Raftery.
 
+
+
+
+### OVERESTIMATE by 10%
+for (i in 1:length(lower_age)) {
+  log_ifr = predict(fit, newdata = data.frame(age = seq(lower_age[i], upper_age[i], length.out = 100)) ) - offset + log(1.1)
+  pred_ifr = exp(log_ifr)
+  mean_ifr[i] = mean(pred_ifr)
+}
+
+sum(mean_ifr * pop)
+sum(mean_ifr * pop) / marginal_ifr
+
+saveRDS(mean_ifr, "../data/mean_ifr_upper.RDS")
+
+
+### UNDERESTIMATE by 10%
+for (i in 1:length(lower_age)) {
+  log_ifr = predict(fit, newdata = data.frame(age = seq(lower_age[i], upper_age[i], length.out = 100)) ) - offset + log(0.9)
+  pred_ifr = exp(log_ifr)
+  mean_ifr[i] = mean(pred_ifr)
+}
+
+sum(mean_ifr * pop)  
+sum(mean_ifr * pop) / marginal_ifr
+saveRDS(mean_ifr, "../data/mean_ifr_lower.RDS")
 
 
 

@@ -13,9 +13,20 @@ indiana_data$startdate = mdy(indiana_data$startdate)
 propensities = readRDS("../data/smoothedpropensities_alt_08262021.RDS")
 
 ### MODEL BASED ESTIMATES
-aggregate_air = readRDS("../data/aggregate_air.RDS")
-strata_air = readRDS("../data/modelbased_air_bystrata.RDS")
-air_flags = readRDS("../data/modelbased_flags.RDS")
+# aggregate_air = readRDS("../data/aggregate_air_2022_24_03.RDS")
+# strata_air = readRDS("../data/modelbased_air_bystrata_2022_24_03.RDS")
+# air_flags = readRDS("../data/modelbased_flags_2022_24_03.RDS")
+
+### MODEL BASED ESTIMATES: LOWER IFR
+aggregate_air = readRDS("../data/aggregate_air_lowerifr_2022_24_03.RDS")
+strata_air = readRDS("../data/modelbased_air_bystrata_lowerifr_2022_24_03.RDS")
+air_flags = readRDS("../data/modelbased_flags_lowerifr_2022_24_03.RDS")
+
+### MODEL BASED ESTIMATES: HIGHER IFR
+# aggregate_air = readRDS("../data/aggregate_air_2022_24_03.RDS")
+# strata_air = readRDS("../data/modelbased_air_bystrata_2022_24_03.RDS")
+# air_flags = readRDS("../data/modelbased_flags_2022_24_03.RDS")
+
 
 ### FB Data
 fb_data = readRDS("../data/fb_weeklycomplete.RDS")
@@ -134,5 +145,7 @@ for(i in 1:length(weeks)) {
   results[i,5] = fb_air + (results[i,4] - invweighted_air)
 }
 
-saveRDS(results,"../data/drestimates_alt_082621.RDS")
+# saveRDS(results,"../data/drestimates_alt_2022_24_03.RDS")
+saveRDS(results,"../data/drestimates_alt_lowerifr_2022_24_03.RDS")
+# saveRDS(results,"../data/drestimates_alt_upperifr_2022_24_03.RDS")
 
