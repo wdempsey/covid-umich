@@ -57,11 +57,14 @@ dates = ymd(df_coviddeath_agg$date)[-length(df_coviddeath_agg$date)]
 # fit_forcing = readRDS("../data/fit_forcing_byage_090121.RDS")
 # fit_forcing = readRDS("../data/fit_forcing_byage_lowerifr_032522.RDS")
 fit_forcing = readRDS("../data/fit_forcing_byage_upperifr_032522.RDS")
+
+# HOW LONG AS ACTIVE INFECTION
 ## USE a in model to see how long exposed/infected
-a = summary(fit_forcing, pars = "a", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary
-a_mean = a[1]
+# a = summary(fit_forcing, pars = "a", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary
+# a_mean = a[1]
 ## Gamma much larger so 
-gamma = summary(fit_forcing, pars = "gamma", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary
+# gamma = summary(fit_forcing,pars = "gamma", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary
+a_mean = -log(0.35)/21
 
 summary_fit = summary(fit_forcing, pars = "pred_cases_per_agegroup", probs = c(0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975))$summary
 n_days = nrow(summary_fit)/6
@@ -238,15 +241,15 @@ for(i in 1:nrow(allcombinations)) {
   }
 }
 
-# saveRDS(air_results, "../data/modelbased_air_bystrata_2022_24_03.RDS")
-# saveRDS(air_results, "../data/modelbased_air_bystrata_lowerifr_2022_24_03.RDS")
-saveRDS(air_results, "../data/modelbased_air_bystrata_upperifr_2022_24_03.RDS")
+# saveRDS(air_results, "../data/modelbased_air_bystrata_2022_28_03.RDS")
+# saveRDS(air_results, "../data/modelbased_air_bystrata_lowerifr_2022_28_03.RDS")
+saveRDS(air_results, "../data/modelbased_air_bystrata_upperifr_2022_28_03.RDS")
 
 allcombinations$flagged = flagged_user_aggregate_air
 
-# saveRDS(allcombinations, "../data/modelbased_flags_2022_24_03.RDS")
-# saveRDS(allcombinations, "../data/modelbased_flags_lowerifr_2022_24_03.RDS")
-saveRDS(allcombinations, "../data/modelbased_flags_upperifr_2022_24_03.RDS")
+# saveRDS(allcombinations, "../data/modelbased_flags_2022_28_03.RDS")
+# saveRDS(allcombinations, "../data/modelbased_flags_lowerifr_2022_28_03.RDS")
+saveRDS(allcombinations, "../data/modelbased_flags_upperifr_2022_28_03.RDS")
 
 
 ### AGGREGATE 
@@ -303,6 +306,6 @@ prevalence_temp$date = MMWRweek::MMWRweek2Date(MMWRyear = prevalence_temp$year,
 # prevalence_temp$estimate[45] = prevalence_temp$estimate[45]*7/2  ## THIS IS A FIX FOR WEEK LENGTH
 # prevalence_temp = prevalence_temp[-50,] # REMOVE FINAL POINT DUE TO EXTRAPOLATION
 
-# saveRDS(prevalence_temp, "../data/aggregate_air_2022_24_03.RDS")
-# saveRDS(prevalence_temp, "../data/aggregate_air_lowerifr_2022_24_03.RDS")
-saveRDS(prevalence_temp, "../data/aggregate_air_upperifr_2022_24_03.RDS")
+# saveRDS(prevalence_temp, "../data/aggregate_air_2022_28_03.RDS")
+# saveRDS(prevalence_temp, "../data/aggregate_air_lowerifr_2022_28_03.RDS")
+saveRDS(prevalence_temp, "../data/aggregate_air_upperifr_2022_28_03.RDS")

@@ -12,14 +12,14 @@ prevalence_long = data.frame(date = rep(0,0), Method = rep(0,0), estimate = rep(
 ratio_long = data.frame(date = rep(0,0), Method = rep(0,0), estimate = rep(0,0))
 
 ## ADD IN MODEL-BASED
-prevalence_temp = readRDS("../data/aggregate_air_2022_24_03.RDS")
+prevalence_temp = readRDS("../data/aggregate_air_2022_28_03.RDS")
 prevalence_temp = data.frame(date = prevalence_temp$date, Method = rep("Model-based", nrow(prevalence_temp)), 
                              estimate = prevalence_temp$estimate)
 date = prevalence_temp$date[2:length(prevalence_temp$estimate)]
 prevalence_long = rbind(prevalence_long, prevalence_temp)
 
 ## ADD IN DOUBLY ROBUST
-prevalence_temp = readRDS("../data/drestimates_alt_2022_24_03.RDS")
+prevalence_temp = readRDS("../data/drestimates_alt_2022_28_03.RDS")
 prevalence_temp = data.frame(prevalence_temp)
 prevalence_temp$date = MMWRweek::MMWRweek2Date(MMWRyear = prevalence_temp[,2],
                                           MMWRweek = prevalence_temp[,1],
@@ -29,14 +29,14 @@ prevalence_temp = data.frame(date = prevalence_temp$date, Method = rep("Doubly R
 prevalence_long = rbind(prevalence_long, prevalence_temp)
 
 ## ADD IN MODEL-BASED: LOWER
-prevalence_temp = readRDS("../data/aggregate_air_lowerifr_2022_24_03.RDS")
+prevalence_temp = readRDS("../data/aggregate_air_lowerifr_2022_28_03.RDS")
 prevalence_temp = data.frame(date = prevalence_temp$date, Method = rep("Model-based, Low", nrow(prevalence_temp)), 
                              estimate = prevalence_temp$estimate)
 date = prevalence_temp$date[2:length(prevalence_temp$estimate)]
 prevalence_long = rbind(prevalence_long, prevalence_temp)
 
 ## ADD IN DOUBLY ROBUST: LOWER
-prevalence_temp = readRDS("../data/drestimates_alt_lowerifr_2022_24_03.RDS")
+prevalence_temp = readRDS("../data/drestimates_alt_lowerifr_2022_28_03.RDS")
 prevalence_temp = data.frame(prevalence_temp)
 prevalence_temp$date = MMWRweek::MMWRweek2Date(MMWRyear = prevalence_temp[,2],
                                                MMWRweek = prevalence_temp[,1],
@@ -46,14 +46,14 @@ prevalence_temp = data.frame(date = prevalence_temp$date, Method = rep("Doubly R
 prevalence_long = rbind(prevalence_long, prevalence_temp)
 
 ## ADD IN MODEL-BASED: UPPER
-prevalence_temp = readRDS("../data/aggregate_air_upperifr_2022_24_03.RDS")
+prevalence_temp = readRDS("../data/aggregate_air_upperifr_2022_28_03.RDS")
 prevalence_temp = data.frame(date = prevalence_temp$date, Method = rep("Model-based, High", nrow(prevalence_temp)), 
                              estimate = prevalence_temp$estimate)
 date = prevalence_temp$date[2:length(prevalence_temp$estimate)]
 prevalence_long = rbind(prevalence_long, prevalence_temp)
 
 ## ADD IN DOUBLY ROBUST: UPPER
-prevalence_temp = readRDS("../data/drestimates_alt_upperifr_2022_24_03.RDS")
+prevalence_temp = readRDS("../data/drestimates_alt_upperifr_2022_28_03.RDS")
 prevalence_temp = data.frame(prevalence_temp)
 prevalence_temp$date = MMWRweek::MMWRweek2Date(MMWRyear = prevalence_temp[,2],
                                                MMWRweek = prevalence_temp[,1],

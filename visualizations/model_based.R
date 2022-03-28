@@ -84,7 +84,7 @@ agg_cases$X5. = aggregate(X5. ~ timepoints, data = summary_fit, FUN = sum)$X5.
 agg_cases$X50. = aggregate(X50. ~ timepoints, data = summary_fit, FUN = sum)$X50.
 agg_cases$X95. = aggregate(X95. ~ timepoints, data = summary_fit, FUN = sum)$X95.
 
-png(filename = "../figs/exposures_ppc.png",
+png(filename = "../figs/infections_ppc.png",
     width = 6.5, height = 4, units = "in", res = 1200, pointsize = 12)
 par(mar = c(2,2,1,1)+0.1)
 
@@ -99,7 +99,7 @@ ggplot(smr_pred, mapping = aes(x = date)) +
   geom_ribbon(aes(ymin = X5., ymax = X95.), fill = c_posterior, alpha=0.35) +
   #geom_ribbon(aes(ymin = X10., ymax = X90.), fill = c_light) +
   geom_line(mapping = aes(x = date, y = X50.), color = c_posterior) +
-  labs(x = "Day", y = "New Exposures") +
+  labs(x = "Day", y = "New Infections") +
   scale_x_date(date_labels = "%b %Y")
 
 dev.off()

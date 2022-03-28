@@ -548,7 +548,7 @@ The estimates~$\hat \mu_t := \bar y_{n,t}^\star$, $\hat \pi_{j,t}$, $\hat{FP}$, 
  \subsection{Model-based estimation}
  \label{section:modelbased}
 
- Up to this point, the primary focus has been selection bias in coronavirus case-count data from a survey sampling perspective.  Here, we consider compartmental model approaches from infectious disease epidemiology.  Our primary objective is a model-based forecast of strata-level prevalence $\bar y_k$. To do this, a probabilistic extension of a standard epidemiological state-space model -- the susceptible, exposed, infected, and removed (recovered and death) model, or SEIR model -- is presented. A probabilistic SIR model was originally proposed by~\cite{Osthus2017} with only one-dimensional time series of infected proportions; this formulation was extended by~\cite{Song2020} to model coronavirus case-counts.
+ Up to this point, the primary focus has been selection bias in coronavirus case-count data from a survey sampling perspective.  Here, we consider compartmental model approaches from infectious disease epidemiology.  Our primary objective is a model-based forecast of strata-level active infection rate~$\bar y_k$. To do this, a probabilistic extension of a standard epidemiological state-space model -- the susceptible, exposed, infected, and removed (recovered and death) model, or SEIR model -- is presented. A probabilistic SIR model was originally proposed by~\cite{Osthus2017} with only one-dimensional time series of infected proportions; this formulation was extended by~\cite{Song2020} to model coronavirus case-counts.
 
  Let $s_t$, $e_t$, $i_t$, and $r_t$ denote the proportion of survivors, exposed, infected, and removed cases (i.e., including both recovered cases and deaths) at time $t$.  The population-level SEIR dynamics are given by the set of differential equations in~\eqref{eq:seir}.
 % \begin{align}
@@ -557,15 +557,15 @@ The estimates~$\hat \mu_t := \bar y_{n,t}^\star$, $\hat \pi_{j,t}$, $\hat{FP}$, 
 %  \frac{\partial r_t}{\partial t} = - \gamma i_t. \nonumber
 % \end{align}
 %Following~\cite{Song2020}, we employ Runge-Kutta (RK4) approximations for discretization.
-Here, we consider covariate information that takes the form of a stratification variable with $K$ strata.  Based on these population-level dynamics, we can compute the number of \emph{new exposures} at time~$t$, i.e., $E^\new_{t} := - N \cdot (e_{t+1} - e_{t} + s_{t+1} - s_t)$ to denote the number of new exposures on day $t$ in the $k$th strata.  The joint distribution of strata-specific new exposures~$ \{ E^{\new}_{t,k} \}_{k=1}^K$ follows a multinomial distribution with
+Here, we consider covariate information that takes the form of a stratification variable with $K$ strata.  Based on these population-level dynamics, we can compute the number of \emph{new infections} at time~$t$, i.e., $I^\new_{t} := - N \cdot (e_{t+1} - e_{t} + s_{t+1} - s_t)$ to denote the number of new exposures on day $t$ in the $k$th strata.  The joint distribution of strata-specific new exposures~$ \{ I^{\new}_{t,k} \}_{k=1}^K$ follows a multinomial distribution with
  $$
- ( E^\new_{1,t}, \ldots, E^\new_{K,t} ) \sim \text{Multinomial} \left( E^\new_t, (p_{1,t}, \ldots, p_{K, t}) \right).
+ ( I^\new_{1,t}, \ldots, I^\new_{K,t} ) \sim \text{Multinomial} \left( I^\new_t, (p_{1,t}, \ldots, p_{K, t}) \right).
  $$
  where $( {\bf p}_t )_{t=1}^T = ( (p_{1,t}, \ldots, p_{K, t}) )_{t=1}^T$ are a sequence of parameters on the simplex, i.e., $\sum_{k=1}^K p_{k,t} = 1$.
 
  Selection bias is addressed by analyzing COVID-19 death data rather than case counts.  Let $D_{k,r}$ denote the number of individuals who pass away on day $r$ from strata $k$.  Then
  $$
- D_{k,r} \mid p, \theta, \nu \sim \text{Poisson} \left( \sum_{t=1}^r \text{IFR}_{k} \cdot E^\new_{k,t} \theta_{(r-t)} \right)
+ D_{k,r} \mid p, \theta, \nu \sim \text{Poisson} \left( \sum_{t=1}^r \text{IFR}_{k} \cdot I^\new_{k,t} \theta_{(r-t)} \right)
  $$
  where $\text{IFR}_{k}$ is the infection fatality rate for the $k$th strata and $\theta_{j}$ is a discrete-time distribution for time from infection to death.  This extends prior analysis of death data~\cite{Johndrow2020} by allowing the infection fatality rate to depend on a stratification variable, which is important as IFR depends heavily on age~\citep{Levin2020}. See Section~\ref{section:application_of_modelbased} for discussion of parameter choices.  %Additional details on inference are discussed in Appendix~\ref{app:modelbased}.
 
@@ -754,11 +754,11 @@ To account for potential misspecification of the marginal IFR, we perform the sa
  \end{subfigure}%
  \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.9\linewidth]{../figs/exposures_ppc.png}
- \caption{Posterior on daily new exposures.}
+  \includegraphics[width=.9\linewidth]{../figs/infections_ppc.png}
+ \caption{Posterior on daily new infections.}
  \label{fig:casesppc}
  \end{subfigure}
- \caption{Posterior predictive check (PPC) on death counts and posterior distribution of case counts.}
+ \caption{Posterior predictive check (PPC) on death counts and posterior distribution of infections.}
  \label{fig:ppcs}
  \end{figure}
 
@@ -769,7 +769,7 @@ To account for potential misspecification of the marginal IFR, we perform the sa
  $$
  where~$(\beta_0,\beta_1, \beta_2, \beta_3)$ is the vector of transmission rate parameters, $\nu \geq 0$ is the potential delay, $\xi$ is the rate of change, and ${\bf 1}[\cdot]$ is an indicator function.  Each weight~$w_t^{(k)} = 0$ for $t < t_k$ and $w_t^{(k)} \to 1$ as $t \to \infty$. See Section~\ref{app:prior_modelbased} in the supplementary materials for details on prior specification.
 
- To check model fit, a posterior predictive check on aggregate death counts was performed. Figure~\ref{fig:deathsppc} shows the results which suggests chosen SEIR model fits the observed data well. Figure~\ref{fig:casesppc} presents the posterior distribution of total new exposures. As the active infection rate is defined as all infected individuals who’s viral load has yet to fall below detectable levels by RT-PCR testing, parameters underlying the population-level dynamics are combines with model-estimates of the number of newly exposed individuals to estimate the number of individuals with an active infection on each day. To compare with case count data, Figure~\ref{fig:undercounting} in the supplementary materials computes the weekly cumulative undercount factor of observed case counts.  Posterior distributions for the age-specific case counts are used as part of the doubly-robust estimator of the active infection rate.
+ To check model fit, a posterior predictive check on aggregate death counts was performed. Figure~\ref{fig:deathsppc} shows the results which suggests chosen SEIR model fits the observed data well. Figure~\ref{fig:casesppc} presents the posterior distribution of total new infections. As the active infection rate is defined as all infected individuals who’s viral load has yet to fall below detectable levels by RT-PCR testing, to construct the active infection estimates we exponentially discount the number of newly infected individuals to estimate the number of individuals with an active infection on each day. In our analysis, the exponential discounting is set to $20$ days to match with prior evidence that ``30\% to 40\% of people will still test positive at three weeks''~\citep{wlocneg}. To compare with case count data, Figure~\ref{fig:undercounting} in the supplementary materials computes the cumulative undercount factor of observed case counts as compared to new infections.  Posterior distributions for the age-specific case counts are used as part of the doubly-robust estimator of the active infection rate.
 
 
  \subsection{Time-varying prevalence estimates}
