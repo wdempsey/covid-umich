@@ -311,8 +311,9 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it The SEIR model described in the text and in the supplement differ in a way that I find confusing – the code and equations describe a simple SEIR model but the written text describes an SEmInR model with stratum-specific covariates which appear to apply to at least the I compartments and possibly the E compartments. From the code and equations, presumably the assumption is that all strata mix with identical probability and all strata experience the same probabilities of infection, exposure, and transmission. However, these assumptions are (1) unlikely to hold and (2) make it hard to understand why the model includes strata at all. }
 	\vspace{5mm}
 
-	We thank the reviewer for catching this issue.  We now clarify that the model proposed does not assume equal mixing.  Rather due to limited data, we assume a these mixing probabilities are not time varying and that the  prior probability of mixing is chosen from a symmetric Dirichlet distribution (uniform) time-varying.  We clarify this in Section 5.2 and comment on the code to clarify this more carefully in Appendix H.
-	\textcolor{red}{Need To Do.  Keep model just sensitivity on IFR and smooth over infectious.}
+	\textcolor{red}{
+	We thank the reviewer for catching this issue.  We now clarify that the model proposed does not assume equal mixing.  Due to limited death data, we consider a global SEIR model and only generate strata-specific exposure counts~$E_{t,k}$ via a Multinomial distribution with a parameter~$\{ p_{t,k}  \} $ that has a symmetric Dirichlet prior.  These strata-specific exposure counts are then linked to the observed strata-level death counts via the conditional Poisson model.  We clarify this in Section 5.2 and comment on the code to clarify this more carefully in Appendix H.
+	}
 	\vspace{5mm}
 \end{enumerate}
 \item {\bf Section 4.3: Doubly Robust Estimation}
@@ -362,7 +363,7 @@ In the introduction, we now connect random testing to its purpose as a screening
 	\item {\it As stated above, some description of the assumptions related to contact patterns and transmission between and among age strata is needed. In addition, please clarify which compartments of the model the infection-fatality rate applies to (E \& I or I only), as well as how the model handles death from non-COVID causes from these and other model compartments.}
 	\vspace{5mm}
 
-	\textcolor{red}{See our answer to Question 12 above.  In Section 5.2, we now clarify how we calculate the infection-fatality rate from the compartments of the model. Similar to Johndrow (2021), the model only uses COVID-19 related deaths.  Deaths to non-COVID causes are not directly modeled but would appear as part of the R component in the global SEIR model.}
+	\textcolor{red}{See our answer to Question 12a above.  In Section 5.2, we now clarify hwo the the infection-fatality rate is used in our model. Similar to Johndrow (2021), the model only uses COVID-19 related deaths.  Deaths to non-COVID causes are not directly modeled but would appear as part of the R component in the global SEIR model.}
 	\vspace{5mm}
 	\item {\it Also, the discussion of IFR would benefit greatly from being contextualized to the rest of the paper – the goal of the manuscript is specifically to provide a better estimate of who is infected. Such an estimate would therefore be expected to provide a more valid infection fatality rate, and this in turn implies the IFR used here must be biased. This should be discussed.}
 	\vspace{5mm}
@@ -419,8 +420,8 @@ We clarify in Section 3.2 that this is the peak in the fraction of infected indi
 \item {\it We would expect the IFR to dramatically change after the introductions of vaccines in December 2020, making this method less applicable without introducing a time-varying component.}
 
 \vspace{5mm}
-\textcolor{red}{See our answer to Question 17b of Reviewer \#1. We acknowledge that these IFR estimates are likely biased and time-varying due to introduction of vaccines in 2020.  A sensitivity analysis focused on the issue of choosing an appropriate IFR and allowing for the IFR to be time-varying is now performed.}
-\textcolor{red}{To Do!}
+\textcolor{red}{See our answer to Question 17b of Reviewer \#1. We acknowledge that these IFR estimates may be biased and/or time-varying.  Note the study period ends January 2021 so the bias due to vaccines may be limited.  We now include a sensitivity analysis focused on the issue of choosing an appropriate IFR.}
+% \textcolor{red}{To Do!}
 
 \vspace{5mm}
 \item {\it I found Figure 3 in the supplement [confusing]. Figure 3A shows the profile for a 35-44 white male with symptoms and COVID-19 contact and Figure 3B shows the profile for a 65-74 white female without symptoms nor COVID-19 contact – I would have expected the covariates between these (age, ethnicity, race, gender) to be the same rather than differ with the only thing differing being symptoms 1/ COVID-19 contact? As a minor note, the y-axis labels do not match for this plot.}
@@ -431,8 +432,8 @@ We have fixed Figure 3b to match on covariates and have matching y-axes.  See ou
 \item {\it The model based estimates in Figure 8 seem so different from the other estimates that it is potentially implausible and suggests misspecification of the IFR. Is this potentially due to the age distribution of cases and the IFR collapsing choices? Perhaps as a sensitivity analysis different IFR values should be examined}
 
 \vspace{5mm}
-\textcolor{red}{See our answer to Question 17b of Reviewer \#1 and Question 7 above. A sensitivity analysis focused on the issue of choosing an appropriate IFR is now performed.}
-\textcolor{red}{To Do!}
+\textcolor{red}{See our answer to Question 17b of Reviewer \#1 and Question 7 above. A sensitivity analysis focused on the issue of choosing an appropriate IFR is now performed.  We also note that the active infection estimate being very different for the model-based method in the prior manuscript was a result of how we decided to define the active infection rate using the SEIR model.  With our more precise definition (see answer to Question XX), we now have estimates that are more in line with the IPW estimates.  So while there is likely bias, this bias is likely less pronounced than one woul dhave thought using the calculations from our prior submission.}
+% \textcolor{red}{To Do!}
 \vspace{5mm}
 \item {\bf Minor comments:}
 	\begin{enumerate}
