@@ -972,7 +972,7 @@ For simplicity, we list the priors used in STAN below:
   \item \code{phi = 1/phi\_inv;}
   \item \code{xi = xi\_raw + 0.5;}
 \end{itemize}
-where \code{beta, eta, eta\_two, eta\_three} refer to the four values that form the time-varying parameter $\beta_t$ when combined with \code{xi, eta, eta\_two, eta\_three} in the SEIR model as described in Section~\ref{section:modelbased}. Following~\cite{Song2020}, we employ Runge-Kutta (RK4) approximations for discretization.  Due to the low number of deaths per strata, i.e., based on Race, Age, Sex and Ethnicity, we employ a kernel smoothing of the new infections per age strata into these sub-strata using relative number of observed deaths.  This ensured a suitably complex model that could fit the data while generating strata-specific active infection rates that can be used in the doubly-robust estimation procedure.
+where \code{beta, eta, eta\_two, eta\_three} refer to the four values that form the time-varying parameter $\beta_t$ when combined with \code{xi, eta, eta\_two, eta\_three} in the SEIR model as described in Section~\ref{section:modelbased}. Following~\cite{Song2020}, we employ Runge-Kutta (RK4) approximations for discretization.  Due to the low number of deaths per strata, i.e., based on Race, Age, Sex and Ethnicity, we employ a kernel smoothing of the new infections per age strata into these sub-strata using relative number of observed deaths.  This ensured a suitably complex model that fits the observed death data well while generating strata-specific active infection rates that can be used in the doubly-robust estimation procedure.
 
 \begin{figure}[!th]
  \centering
@@ -988,7 +988,7 @@ Figure~\ref{fig:undercounting} is a plot of undercount based on the SEIR model. 
 \begin{figure}[!th]
  \centering
  \includegraphics[width=.6\linewidth]{../figs/tv_air_sensitivity.png}
- \caption{Undercount based on SEIR model}
+ \caption{Model-based and Doubly Robust active infection rate estimates under~\cite{Ironse2103272118} marginal IFR estimate of $0.84$\%, under a 10\% higher marginal IFR of $0.924$\%, and under a 10\% lower marginal IFR of $0.756$\%.}
  \label{fig:tv_air_sens}
 \end{figure}
 
