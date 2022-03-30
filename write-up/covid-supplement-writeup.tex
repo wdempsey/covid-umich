@@ -128,9 +128,9 @@ and $f_0 := \sum_{j=1}^N I_j (1-Y_j) / \sum_{j=1}^N (1-Y_j)$.
 \item[$X_{j,t}$] \quad Feature vector for individual $j$ in the population at time~$t$ that impact self-selection into the non-probability sample.
 \item[$I_{j,t}^{R}$] \quad Selection indicator of individual $j$ in the population into the probability sample.
 \item[$W_{j,t}^{R}$] \quad Weight of individual $j$ in the population in the probability sample (i.e., inverse-probability of selection)
-\item[$\pi (X_{j,t}; \theta)$] \quad Self-selection propensity of individual~$j$ into the non-probability sample given feature vector~$X_{j,t}$ and Probability of selection model evaluated indicator of selection of the
-\item[$w (X_{j,t})$] \quad Weight of indivdual~$j$ in the population in the non-probability sample, i.e., $w(x) = 1/\pi(x; \theta)$.
-\item[$\mu(X_{j,t})$] \quad The indicator of selection of the
+\item[$\pi (X_{j,t}; \theta)$] \quad Self-selection propensity of individual~$j$ into the non-probability sample given feature vector~$X_{j,t}$ and parameter~$\theta$.
+\item[$w (X_{j,t})$] \quad Weight of individual~$j$ in the population in the non-probability sample, i.e., $w(x) = 1/\pi(x; \theta)$.
+\item[$\hat \mu(X_{j,t})$] \quad Model-based estimate of the active infection rate at time~$t$ for individuals with feature vector~$X_{j,t}$
 \end{itemize}
 
 \section{Technical details}
@@ -851,7 +851,7 @@ Based on mean-imputation of COVID-19 fever using hospitalization records indicat
 \subsubsection{Propensity plots}
 \label{section:propplots}
 
-Here we present the testing propensity for four strata: (1) non-Hispanic, white female, (2) non-Hispanic, African American male, (3) Hispanic, White male.   Strata (1) presented in Figure~\ref{fig:nonh-white-female} demonstrates a small gender difference in testing propensities.  Strata (2) and (3) presented in Figures~\ref{fig:nonh-aa-male} and~\ref{fig:h-white-male} demonstrates a lower rate of testing among African Americans and Hispanic white men compared to non-Hispanic, white men respectively (approximately 2 times lower). Strata (4) presented in Figure~\ref{fig:h-other-male} demonstrates a much higher testing rate for Hispanic men who select ``Some Other Race''.
+Here we present the testing propensity for four strata: (1) non-Hispanic, white female, (2) non-Hispanic, African American male, (3) Hispanic, White male, and (4) Hispanic male who selects `Some other Race'.   Strata (1) presented in Figure~\ref{fig:nonh-white-female} demonstrates a small gender difference in testing propensities.  Strata (2) and (3) presented in Figures~\ref{fig:nonh-aa-male} and~\ref{fig:h-white-male} demonstrates a lower rate of testing among African Americans and Hispanic white men compared to non-Hispanic, white men respectively (approximately 2 times lower). Strata (4) presented in Figure~\ref{fig:h-other-male} demonstrates a much higher testing rate for Hispanic men who select ``Some Other Race''.
 
 \begin{figure}[!th]
 \centering
@@ -981,7 +981,7 @@ where \code{beta, eta, eta\_two, eta\_three} refer to the four values that form 
  \label{fig:undercounting}
 \end{figure}
 
-Figure~\ref{fig:undercounting} is a plot of undercount based on the SEIR model.  We plot relative undercound on a cumulative basis since January due to the case counts reflecting active infections. Figure~\ref{fig:tv_air_sens} is a sensitivity analysis of the active infection rate under SEIR model with 10\% increase and decrease in the average IFR.  We see that the impact on the doubly robust estimates is minimal.
+Figure~\ref{fig:undercounting} is a plot of undercount based on the SEIR model.  We plot relative undercount on a cumulative basis since January due to the case counts reflecting active infections. Figure~\ref{fig:tv_air_sens} is a sensitivity analysis of the active infection rate under SEIR model with 10\% increase and decrease in the average IFR.  We see that the impact on the doubly robust estimates is minimal.
 
 
 
