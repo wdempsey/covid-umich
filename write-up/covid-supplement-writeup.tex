@@ -1014,15 +1014,10 @@ Figure~\ref{fig:cori-bias} presents the potential bias in instantaneous reproduc
 
 \section{Sensitivity Analysis}
 
-The proposed method relies on the assumption $I_{j,t}^{(NR)} \indep Y_{j,t} \, | \, X_{j,t}$, i.e., the sampling indicator in the non-probabilistic survey is conditionally independent of the outcome given the covariates.  However, estimates of population quantities based on inverse-weighting will be biased in the presence of `unobserved confounding'.  We may hope that the bias
-
-
-The purpose of this section is to introduce XXX,
-
-We consider a
+The proposed method relies on the assumption $I_{j,t}^{(NR)} \indep Y_{j,t} \, | \, X_{j,t}$, i.e., the sampling indicator in the non-probabilistic survey is conditionally independent of the outcome given the covariates.  However, estimates of population quantities based on inverse-weighting and/or model-based estimates will be biased in the presence of `unobserved confounding'.  The purpose of this section is to introduce a sensitivity analysis.  To this, we consider the logit-linear model by XXXX adjusted to self-selection rather than causal inference.  That is,
 \begin{align*}
 \logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) &= h_t(x_t) + \alpha u \\
-E[ Y | i_t, x_t, u_t] = l(i_t, x_t)
+E[ Y | i_t, x_t, u_t] &= l(i_t, x_t) + \delta u
 \end{align*}
 for some function~$h_t$, $l_t$ that are allowed to depend on time. Re-arranging the terms we see that .  This can be
 $$
