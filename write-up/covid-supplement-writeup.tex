@@ -75,7 +75,7 @@
 \def\I{\bf I}
 \def\code#1{\texttt{#1}}
 \def\EE{\mathbb{E}}
-\newcommand{\indep}{\perp \!\!\! \perp}
+%\newcommand{\indep}{\perp \!\!\! \perp}
 
 \begin{document}
 
@@ -1014,18 +1014,18 @@ Figure~\ref{fig:cori-bias} presents the potential bias in instantaneous reproduc
 
 \section{Sensitivity Analysis}
 
-The proposed method relies on the assumption $I_{j,t}^{(NR)} \indep Y_{j,t} \, | \, X_{j,t}$, i.e., the sampling indicator in the non-probabilistic survey is conditionally independent of the outcome given the covariates.  However, estimates of population quantities based on inverse-weighting and/or model-based estimates will be biased in the presence of `unobserved confounding'.  The purpose of this section is to introduce a sensitivity analysis.  To this, we consider the logit-linear model by XXXX adjusted to self-selection rather than causal inference.  That is,
+The proposed approcah relies on the assumption $I_{j,t}^{(NR)} \indep Y_{j,t} \, | \, X_{j,t}$, i.e., the sampling indicator in the non-probabilistic survey is conditionally independent of the outcome given the covariates.  However, estimates of population quantities based on inverse-weighting and/or model-based estimates will be biased in the presence of `unobserved confounding'.  The purpose of this section is to introduce a sensitivity analysis.  To this, we consider the logit-linear model by~\cite{Imbens2003} adjusted to self-selection in a time-varying setting rather than causal inference in a single time-point setting.  That is, consider the model
 \begin{align*}
-\logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) &= h_t(x_t) + \alpha u \\
-E[ Y | i_t, x_t, u_t] &= l(i_t, x_t) + \delta u
+\logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) &= h_t(x_t) + \alpha_t u_t \\
+E[ Y_t | i_t, x_t, u_t] &= l_t(i_t, x_t) + \delta_t u_t
 \end{align*}
-for some function~$h_t$, $l_t$ that are allowed to depend on time. Re-arranging the terms we see that .  This can be
+for some functions~$h_t$ and $l_t$ that are allowed to depend on time. Re-arranging the terms we see that
 $$
-E[ Y | i_t x_t, u_t ] = l(t,x)  + \frac{\delta}{\alpha} \left( \logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) - h_t (x_t) \right)
+E[ Y | i_t x_t, u_t ] = l_t(i_t,x)  + \frac{\delta_t}{\alpha_t} \left( \logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) - h_t (x_t) \right)
 $$
-The key idea in XXXX is that positing a distribution on $P(I_t = 1 | x_y, u_t)$ directly allows one to circumvent the need to specify a distribution for~$U_t$, a highly non-trivial task.
+The key idea in~\cite{Imbens2003} is that positing a distribution on $P(I_t = 1 | x_y, u_t)$ directly allows one to circumvent the need to specify a distribution for~$U_t$, a highly non-trivial task.
 
-The logit-linear model does not lead to a tractable sensitivy analysis.  Instead, we define a sensitivity model as:
+The logit-linear model above unfortunately does not lead to a tractable sensitivity analysis.  Instead, we consider a sensitivity model based on work by~\cite{Veitch2020}, again adjusted to deal with the current setting of self-selection, given by:
 \begin{equation}
 \begin{aligned}
 \label{eq:sensmodel}
@@ -1035,35 +1035,32 @@ I_t | X_t, U_t &\sim \text{Bern} (\pi (X_t,U_t)) \\
 Y_t | I_t, X_t, U_t &\sim \text{Bern}(\rho_t(X_t, U_t))
 \end{aligned}
 \end{equation}
-The time-varying sensitivy parameter~$\alpha_t \in (0,1)$  controls the influence of the unobserved confounder~$U_t$ on selection propensity. In particular, $\alpha_t$ measure the change in belief of how likely an individual self-selects into the non-probabilistic sample:
+The time-varying sensitivity parameter~$\alpha_t \in (0,1)$  controls the influence of the unobserved confounder~$U_t$ on selection propensity. In particular, $\alpha_t$ measures the change in belief of how likely an individual self-selects into the non-probabilistic sample at time~$t$:
 $$
 \alpha_t = E[ \pi_t (X_t,U_t) | I = 1] - E[ \pi_t (X_t,U_t) | I = 0].
 $$
 The sensitivity model satisfies the requirement that the self-selection propensity and conditional expectated outcome model can match the observed data:
 \begin{align*}
 P(I_t = 1 | X_t ) &= E[ E[ I_t | X_t, U_t ] | X_t ] = E[ \pi_t(X_t, U_t) | X_t ] = \pi_t (X_t) \\
-E[Y_t = 1 | X_t, I_t = 1 ] &= E[ E[ Y_t | X_t, U_t, I_t =1 ] | X_t, I_t = 1 ] = Q(1,X) \\
+E[Y_t = 1 | X_t, I_t = 1 ] &= E[ E[ Y_t | X_t, U_t, I_t =1 ] | X_t, I_t = 1 ] = Q(1,X).
 \end{align*}
-The sensitivity model is based on XXXX, and is adapted here to the non-probabilistic survey setting with potential time-varying confounding and a binary outcome.
+Moreover, the model satisfies that $Y_t$ does not depend on $I_t$ given $(X_t, U_t)$. This is a key adaptation to the non-probabilistic survey setting with potential time-varying confounding and a binary outcome.
 
-\subsection{Bias}
-
-By assumption, $X_t$ and $U_t$ together lead to consistent estimation via the IPW estimator:
+\noindent {\bf IPW estimator:} By assumption, observing $X_t$ and $U_t$ together leads to consistent estimation via the estimator:
 \begin{align*}
-&\EE\left[\pi^{-1}_t (X_{J,t}, U_{J,t}) I_{J,t} Y_{J,t} \right] \\
+\EE\left[\pi^{-1}_t (X_{J,t}, U_{J,t}) I_{J,t} Y_{J,t} \right]
 = &\EE[ E[ Y_{J,t} | X_{J,t}, U_{J,t}] ] \\
 = &\EE \left[ Q(1,X_{J,t}) + \delta \left( \logit \pi_t (X_{J,t}, U_{J,t}) - \EE \left[ \logit \pi_t (X_{J,t}, U_{J,t}) | X_{J,t}, I_{J,t} = 1 \right] \right) \right]
 \end{align*}
-
-\noindent {\bf IPW estimator:} Investigating the IPW estimator, we have:
+\noindent {\bf IPW-based estimator:} Investigating the IPW estimator using only~$X_t$, we have:
 \begin{align*}
-&\EE\left[\pi^{-1}_t (X_{J,t}) I_{J,t} Y_{J,t} \right] \\
+\EE\left[\pi^{-1}_t (X_{J,t}) I_{J,t} Y_{J,t} \right]
 =&\EE\left[\frac{\pi_t (X_{J,t}, U_{J,t})}{\pi_t (X_{J,t})} \pi^{-1} (X_{J,t}, U_{J,t}) I_{J,t} Y_{J,t} \right] \\
 = &\EE\left[ \frac{\pi_t (X_{J,t}, U_{J,t})}{\pi_t (X_{J,t})} \EE[ Y_{J,t} | X_{J,t}, U_{J,t}] \right].
 \end{align*}
-Using the fact that $\EE \left[ \pi_t (X_{J,t}, U_{J,t}) | X_{J,t} \right] = \pi_{t} (X_{J,t})$, we can see that the bias is given by
+Using the fact that $\EE \left[ \pi_t (X_{J,t}, U_{J,t}) | X_{J,t} \right] = \pi_{t} (X_{J,t})$, the \emph{bias} is
 $$
-\delta \EE \left[ \logit \pi_t (X_t, U_t) - \frac{\pi_t (X_{J,t}, U_{J,t})}{\pi_t (X_{J,t})} \logit \pi_t (X_t, U_t) \right].
+\delta \EE \left[ \logit \pi_t (X_{t,J}, U_{t,J}) - \frac{\pi_t (X_{J,t}, U_{J,t})}{\pi_t (X_{J,t})} \logit \pi_t (X_{t,J}, U_{t,J}) \right].
 $$
 Using the fact that~$Z \sim Beta(\alpha, \beta)$ then $E[ ln(Z) ] = \psi(\alpha) - \psi(\alpha + \beta)$, $E[ ln(1-Z) ] = \psi(\beta) - \psi(\alpha + \beta)$ then~$E[ \logit (Z) ] = \psi(\alpha) - \psi(\beta)$ where~$\psi$ is the digamma function.  Moreover,~$\EE[ Z ln Z ] = \frac{\alpha}{\alpha + \beta} \left[ \psi(\alpha + 1) - \psi(\alpha + \beta +1) \right]$ and
 \begin{align*}
@@ -1080,41 +1077,41 @@ and thus
 \end{align*}
 Plugging in $\alpha = \pi_t (X_t) (1/\alpha_t -1)$ and $\beta = (1-\pi_t (X_t))(1/\alpha_t - 1)$ yields:
 $$
-\pi_t (X_t) \left[ \psi \left(\pi_t (X_t) \left(\frac{1-\alpha_t}{\alpha_t}\right) + 1\right) - \psi \left((1-\pi_t (X_t)) \left(\frac{1-\alpha_t}{\alpha_t}\right)+1\right) \right] + \frac{\alpha_t}{1-\alpha_t}\frac{\pi_t(X_t)}{1-\pi_t(X_t)}.
+\pi_t (X_{t,J}) \left[ \psi \left(\pi_t (X_{t,J}) \left(\frac{1-\alpha_t}{\alpha_t}\right) + 1\right) - \psi \left((1-\pi_t (X_{t,J})) \left(\frac{1-\alpha_t}{\alpha_t}\right)+1\right) \right] + \frac{\alpha_t}{1-\alpha_t}\frac{\pi_t(X_{t,J})}{1-\pi_t(X_{t,J})}.
 $$
 Since $\pi_t(X_t)$ cancels with the denominator term, the first term will match the form of the $E[ \logit (Z)]$ and therefore using the fact that $\psi(x+1) = \psi(x) + 1/x$, we can write the bias simply as
 $$
-\delta \EE \left[\frac{\alpha_t}{1-\alpha_t}\left( \frac{2}{1-\pi_t(X_t)} - \frac{1}{\pi_t(X_t)} \right) \right].
+-\delta_t \frac{\alpha_t}{1-\alpha_t} \EE \left[ \frac{1}{\pi_t(X_{t,J})} \right]
 $$
-Note that this is an expectation over the population-level distribution of the covariate~$X$.  Thus, computation requires use of the
+Note that this is an expectation over the population-level distribution of the covariate~$X$.  Thus, computation requires use of the probabilistic sample in order to estimate the potential bias.
 
-\noindent {\bf Model-based estimator:} Investigating the model-based estimator, we have:
-$$
-\EE\left[ E[ Y_{J,t} | X_{J,t}, I_{J,t} = 1] \right] = \EE\left[ Q(X_{J,t}, 1) \right]
-$$
-and so the bias is given by
-$$
-\delta \EE \left[ \left( \logit \pi_t (X_{J,t}, U_{J,t}) - \EE \left[ \logit \pi_t (X_{J,t}, U_{J,t}) | X_{J,t}, I_{J,t} = 1 \right] \right) \right]
-$$
-Using the above argument and the Beta-Bernoulli conjugacy we can re-write the bias as
-\begin{align*}
-\delta \EE \bigg[ &\psi \left( \frac{1-\alpha_t}{\alpha_t} \pi_t(X_t) \right) - \psi \left( \frac{1-\alpha_t}{\alpha_t} \left( 1 - \pi_t(X_t) \right) \right) \\
-&- \EE \bigg[ \psi \left( \frac{1-\alpha_t}{\alpha_t} \pi_t(X_t) + 1 \right) - \psi \left(\frac{1-\alpha_t}{\alpha_t} \left( 1 - \pi_t(X_t) \right) \right) \big | X_t, I_t = 1 \bigg] \bigg]
-\end{align*}
-Note that the 2nd expectation is over the distribution of $X$ conditional on response~$I=1$ while the first is not conditional.  Therefore, the first expectation requires use of the random sample for computation while the second expectation requires use of the non-probabilistic sample.  If the distribution of $X$ were independent of $I$ then the bias would simplify to
-$$
--\delta_t \frac{1-\alpha_t}{\alpha_t} \EE \left[ \frac{1}{\pi_t (X_t)} \right].
-$$
-So we see that the bias is equal to the 2nd term in the bias under the IPW estimator.
+% \noindent {\bf Model-based estimator:} Investigating the model-based estimator, we have:
+% $$
+% \EE\left[ E[ Y_{J,t} | X_{J,t}, I_{J,t} = 1] \right] = \EE\left[ Q(X_{J,t}, 1) \right]
+% $$
+% and so the bias is given by
+% $$
+% \delta \EE \left[ \left( \logit \pi_t (X_{J,t}, U_{J,t}) - \EE \left[ \logit \pi_t (X_{J,t}, U_{J,t}) | X_{J,t}, I_{J,t} = 1 \right] \right) \right]
+% $$
+% Using the above argument and the Beta-Bernoulli conjugacy we can re-write the bias as
+% \begin{align*}
+% \delta \EE \bigg[ &\psi \left( \frac{1-\alpha_t}{\alpha_t} \pi_t(X_{J,t}) \right) - \psi \left( \frac{1-\alpha_t}{\alpha_t} \left( 1 - \pi_t(X_{J,t}) \right) \right) \\
+% &- \EE \bigg[ \psi \left( \frac{1-\alpha_t}{\alpha_t} \pi_t(X_{J,t}) + 1 \right) - \psi \left(\frac{1-\alpha_t}{\alpha_t} \left( 1 - \pi_t(X_{J,t}) \right) \right) \big | X_{J,t}, I_{J,t} = 1 \bigg] \bigg]
+% \end{align*}
+% Note that the 2nd expectation is over the distribution of $X$ conditional on response~$I=1$ while the first is not conditional.  Therefore, the first expectation requires use of the random sample for computation while the second expectation requires use of the non-probabilistic sample.  If the distribution of $X$ were independent of $I$ then the bias would simplify to
+% $$
+% -\delta_t \frac{1-\alpha_t}{\alpha_t} \EE \left[ \frac{1}{\pi_t (X_t)} \right].
+% $$
+% which is exactly equal to the IPW estimator bias.  In settings where $X$ strongly depends on $I$ this is not the case.
 
 \subsection{Reparametrization}
 
-Following XX and XX, we reexpress the outcome-confounder strength in terms of the partial coefficient of determination
+Following~\cite{Veitch2020}, we re-express the outcome-confounder strength in terms of the partial coefficient of determination
 $$
 R_Y^2 (\alpha, \delta) = \frac{\EE [( Y - Q(1,X) )^2 | I=1 ] - \EE[ (Y - \EE[ Y | X, U ])^2]}{E[(Y - Q(1,X))^2 | I = 1]}
 $$
-in terms of $\delta^2$.  Note the  To do so, write
-\begin{align*}
+in terms of $\delta^2$.  To do so, writ
+em\begin{align*}
 \EE [ (Y - \EE[ Y | X, U] )^2 | I = 1 ] =& \EE [ (Y - Q(1,X))^2 | I = 1 ] \\
 &- 2 \delta \EE \left[ (Y - Q(1,X)) (\logit \pi(X,U) - \EE[ \logit \pi (X,U) | X, I=1 ]) | I = 1 \right] \\
 &+ \delta^2 \EE \left[ (\logit \pi(X,U) - \EE[ \logit \pi (X,U) | X, I=1 ])^2 | I = 1 \right] \\
@@ -1124,8 +1121,11 @@ By Beta-Bernoulli conjugacy, the second term is the variance of the logit-transf
 $$
 \text{var} \left( \logit \pi(X,U) | X, I = 1 \right) = \psi_1 ( \pi(X) (\alpha - 1) + 1 ) + \psi_1 ( (1- \pi(X)) (1/\alpha - 1))
 $$
-where $\psi_1$ is the trigamma function.
-
+where $\psi_1$ is the trigamma function. This implies the outcome influence is
+$$
+R_Y^2 (\alpha, \delta) = \delta^2 \frac{\EE [\psi_1 ( \pi(X) (\alpha - 1) + 1 ) + \psi_1 ( (1- \pi(X)) (1/\alpha - 1))] }{E [(Y- Q(1,X))^2 | I = 1]}
+$$
+Note this expectation is over those who
 By Theorem 5 in XXX, under the sensitivity model
 $$
 \alpha = 1 - \frac{\EE [ ]}{\EE[ ] }
