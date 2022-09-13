@@ -1014,16 +1014,16 @@ Figure~\ref{fig:cori-bias} presents the potential bias in instantaneous reproduc
 
 \section{Sensitivity Analysis}
 
-The proposed approcah relies on the assumption $I_{j,t}^{(NR)} \indep Y_{j,t} \, | \, X_{j,t}$, i.e., the sampling indicator in the non-probabilistic survey is conditionally independent of the outcome given the covariates.  However, estimates of population quantities based on inverse-weighting and/or model-based estimates will be biased in the presence of `unobserved confounding'.  The purpose of this section is to introduce a sensitivity analysis.  To this, we consider the logit-linear model by~\cite{Imbens2003} adjusted to self-selection in a time-varying setting rather than causal inference in a single time-point setting.  That is, consider the model
+The proposed approach relies on the assumption $I_{j,t}^{(NR)} \indep Y_{j,t} \, | \, X_{j,t}$, i.e., the sampling indicator in the non-probabilistic survey is conditionally independent of the outcome given the covariates.  However, estimates of population quantities based on inverse-weighting and/or model-based estimates will be biased in the presence of `unobserved confounding'.  The purpose of this section is to introduce a sensitivity analysis to address this concern.  To this end, we consider the logit-linear model by~\cite{Imbens2003}, adjusted to the time-varying, self-selection setting from the single time-point, causal inference setting.  That is, consider the model
 \begin{align*}
 \logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) &= h_t(x_t) + \alpha_t u_t \\
 E[ Y_t | i_t, x_t, u_t] &= l_t(i_t, x_t) + \delta_t u_t
 \end{align*}
 for some functions~$h_t$ and $l_t$ that are allowed to depend on time. Re-arranging the terms we see that
 $$
-E[ Y | i_t x_t, u_t ] = l_t(i_t,x)  + \frac{\delta_t}{\alpha_t} \left( \logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) - h_t (x_t) \right)
+E[ Y_t | i_t x_t, u_t ] = l_t(i_t,x)  + \frac{\delta_t}{\alpha_t} \left( \logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) - h_t (x_t) \right)
 $$
-The key idea in~\cite{Imbens2003} is that positing a distribution on $P(I_t = 1 | x_y, u_t)$ directly allows one to circumvent the need to specify a distribution for~$U_t$, a highly non-trivial task.
+The key idea in~\cite{Imbens2003} is that positing a distribution on $\pi(I_t = 1 | x_y, u_t)$ directly allows one to circumvent the need to specify a distribution for~$U_t$, a highly non-trivial task.
 
 The logit-linear model above unfortunately does not lead to a tractable sensitivity analysis.  Instead, we consider a sensitivity model based on work by~\cite{Veitch2020}, again adjusted to deal with the current setting of self-selection, given by:
 \begin{equation}
@@ -1042,7 +1042,7 @@ $$
 The sensitivity model satisfies the requirement that the self-selection propensity and conditional expectated outcome model can match the observed data:
 \begin{align*}
 P(I_t = 1 | X_t ) &= E[ E[ I_t | X_t, U_t ] | X_t ] = E[ \pi_t(X_t, U_t) | X_t ] = \pi_t (X_t) \\
-E[Y_t = 1 | X_t, I_t = 1 ] &= E[ E[ Y_t | X_t, U_t, I_t =1 ] | X_t, I_t = 1 ] = Q(1,X).
+E[Y_t = 1 | X_t, I_t = 1 ] &= E[ E[ Y_t | X_t, U_t, I_t =1 ] | X_t, I_t = 1 ] =: Q_t(1,X_t).
 \end{align*}
 Moreover, the model satisfies that $Y_t$ does not depend on $I_t$ given $(X_t, U_t)$. This is a key adaptation to the non-probabilistic survey setting with potential time-varying confounding and a binary outcome.
 
@@ -1072,7 +1072,7 @@ and thus
 \begin{align*}
 \EE \left[ Z \logit(Z) \right] =& \frac{\alpha}{\alpha + \beta} \left[ \psi(\alpha + 1) - \psi(\alpha + \beta +1) \right] + \frac{\beta}{\alpha + \beta} \left[ \psi(\beta + 1) - \psi(\alpha + \beta +1) \right] \\
 &- \left[ \psi(\beta) - \psi(\alpha + \beta) \right] \\
-=& \psi(\alpha + \beta) - \psi(\alpha + \beta -1) + \frac{\alpha}{\alpha + \beta} \left[ \psi(\alpha + 1) - \psi(\beta+1) \right] + \frac{1}{\beta} \\
+=& \psi(\alpha + \beta) - \psi(\alpha + \beta +1) + \frac{\alpha}{\alpha + \beta} \left[ \psi(\alpha + 1) - \psi(\beta+1) \right] + \frac{1}{\beta} \\
 =& \frac{\alpha}{\alpha + \beta} \left[ \psi(\alpha + 1) - \psi(\beta+1) \right] + \left[ \frac{1}{\beta} - \frac{1}{\alpha + \beta} \right].
 \end{align*}
 Plugging in $\alpha = \pi_t (X_t) (1/\alpha_t -1)$ and $\beta = (1-\pi_t (X_t))(1/\alpha_t - 1)$ yields:
@@ -1126,9 +1126,10 @@ $$
 R_Y^2 (\alpha, \delta) = \delta^2 \frac{\EE [\psi_1 ( \pi(X) (\alpha - 1) + 1 ) + \psi_1 ( (1- \pi(X)) (1/\alpha - 1))] }{E [(Y- Q(1,X))^2 | I = 1]}
 $$
 Note this expectation is over those who
-By Theorem 5 in XXX, under the sensitivity model
+
+Following from~\cite[Theorem 5]{Veitch2020}, the parameter~$\alpha$ can be reexpressed in a more convenient form:
 $$
-\alpha = 1 - \frac{\EE [ ]}{\EE[ ] }
+\alpha = 1 - \frac{\EE \left[ \pi (X_{t,J},U_{t,J}) \left( 1 - \pi (X_{t,J},U_{t,J}) \right)  \right]}{\EE\left[ \pi (X_{t,J}) \left( 1 - \pi (X_{t,J}) \right) \right] }
 $$
 
 \subsection{Estimating sensitivity parameters}
