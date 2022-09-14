@@ -1,4 +1,4 @@
-\documentclass[11pt]{amsart}
+\documentclass[12pt]{amsart}
 
 \RequirePackage[OT1]{fontenc}
 
@@ -1039,7 +1039,7 @@ The time-varying sensitivity parameter~$\alpha_t \in (0,1)$  controls the influe
 $$
 \alpha_t = E[ \pi_t (X_t,U_t) | I = 1] - E[ \pi_t (X_t,U_t) | I = 0].
 $$
-The sensitivity model satisfies the requirement that the self-selection propensity and conditional expectated outcome model can match the observed data:
+The sensitivity model satisfies the requirement that the self-selection propensity and conditional expectation outcome model can match the observed data:
 \begin{align*}
 P(I_t = 1 | X_t ) &= E[ E[ I_t | X_t, U_t ] | X_t ] = E[ \pi_t(X_t, U_t) | X_t ] = \pi_t (X_t) \\
 E[Y_t = 1 | X_t, I_t = 1 ] &= E[ E[ Y_t | X_t, U_t, I_t =1 ] | X_t, I_t = 1 ] =: Q_t(1,X_t).
