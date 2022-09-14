@@ -1014,12 +1014,12 @@ Figure~\ref{fig:cori-bias} presents the potential bias in instantaneous reproduc
 
 \section{Sensitivity Analysis}
 
-The proposed approach relies on the assumption $I_{j,t}^{(NR)} \indep Y_{j,t} \, | \, X_{j,t}$, i.e., the sampling indicator in the non-probabilistic survey is conditionally independent of the outcome given the covariates.  However, estimates of population quantities based on inverse-weighting and/or model-based estimates will be biased in the presence of `unobserved confounding'.  The purpose of this section is to introduce a sensitivity analysis to address this concern.  To this end, we consider the logit-linear model by~\cite{Imbens2003}, adjusted to the time-varying, self-selection setting from the single time-point, causal inference setting.  That is, consider the model
+The proposed approach relies on the assumption $I_{j,t}^{(NR)} \indep Y_{j,t} \, | \, X_{j,t}$, i.e., the sampling indicator in the non-probabilistic survey is conditionally independent of the outcome given the covariates.  However, estimates of population quantities based on inverse-weighting and/or model-based estimates will be biased in the presence of `unobserved confounding'.  Here we introduce a sensitivity analysis to address this concern.  To this end, we consider the logit-linear model by~\cite{Imbens2003}, adjusted to the time-varying, self-selection setting from the single time-point, causal inference setting.  That is, consider the model
 \begin{align*}
 \logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) &= h_t(x_t) + \alpha_t u_t \\
 E[ Y_t | i_t, x_t, u_t] &= l_t(i_t, x_t) + \delta_t u_t
 \end{align*}
-for some functions~$h_t$ and $l_t$ that are allowed to depend on time. Re-arranging the terms we see that
+for functions~$h_t$ and $l_t$ that depend on time. Re-arranging terms we have
 $$
 E[ Y_t | i_t x_t, u_t ] = l_t(i_t,x)  + \frac{\delta_t}{\alpha_t} \left( \logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) - h_t (x_t) \right)
 $$
@@ -1042,7 +1042,7 @@ $$
 The sensitivity model satisfies the requirement that the self-selection propensity and conditional expectation outcome model can match the observed data:
 \begin{align*}
 P(I_t = 1 | X_t ) &= E[ E[ I_t | X_t, U_t ] | X_t ] = E[ \pi_t(X_t, U_t) | X_t ] = \pi_t (X_t) \\
-E[Y_t = 1 | X_t, I_t = 1 ] &= E[ E[ Y_t | X_t, U_t, I_t =1 ] | X_t, I_t = 1 ] =: Q_t(1,X_t).
+E[Y_t | X_t, I_t = 1 ] &= E[ E[ Y_t | X_t, U_t, I_t =1 ] | X_t, I_t = 1 ] =: Q_t(1,X_t).
 \end{align*}
 Moreover, the model satisfies that $Y_t$ does not depend on $I_t$ given $(X_t, U_t)$. This is a key adaptation to the non-probabilistic survey setting with potential time-varying confounding and a binary outcome.
 
@@ -1083,7 +1083,19 @@ Since $\pi_t(X_t)$ cancels with the denominator term, the first term will match 
 $$
 -\delta_t \frac{\alpha_t}{1-\alpha_t} \EE \left[ \frac{1}{\pi_t(X_{t,J})} \right]
 $$
-Note that this is an expectation over the population-level distribution of the covariate~$X$.  Thus, computation requires use of the probabilistic sample in order to estimate the potential bias.
+Note that this is an expectation over the population.  Thus, estimation requires use of the probabilistic sample in order to estimate the potential bias.
+
+% In the main manuscript, we consider a stabilized version of the IPW estimator which can be expressed as
+% $$
+% \frac{E[ I_{J,t} \pi^{-1}_{j,t} (X_{J,t}) Y_{J,t}]}{E[ I_{J,t} \pi^{-1}_{j,t} (X_{J,t})]}.
+% $$
+% The denominator satisfies
+% \begin{align*}
+% E[ I_{J,t} \pi^{-1}_{j,t} (X_{J,t})] &= E \left[ E[ I_{J,t} | X_{J,t}, U_{J,t}] \pi^{-1}_{j,t} (X_{J,t}) \right] \\
+% &= E \left[ \frac{E[ \pi_{j,t} (X_{J,t}, U_{J,t}) | X_{J,t}]}{\pi_{j,t} (X_{J,t})} \right] \\
+% &= E \left[ \frac{\pi_{j,t} (X_{J,t})}{\pi_{j,t} (X_{J,t})} \right] = 1.
+% \end{align*}
+% Therefore both versions under~\eqref{eq:sensmodel} have the same bias calculation for large $N$.
 
 % \noindent {\bf Model-based estimator:} Investigating the model-based estimator, we have:
 % $$
@@ -1108,35 +1120,52 @@ Note that this is an expectation over the population-level distribution of the c
 
 Following~\cite{Veitch2020}, we re-express the outcome-confounder strength in terms of the partial coefficient of determination
 $$
-R_Y^2 (\alpha, \delta) = \frac{\EE [( Y - Q(1,X) )^2 | I=1 ] - \EE[ (Y - \EE[ Y | X, U ])^2]}{E[(Y - Q(1,X))^2 | I = 1]}
+R_t^2 (\alpha_t, \delta_t) = \frac{\EE [( Y_{J,t} - Q_t(1,X_{J,t}) )^2 | I_{J,t}=1 ] - \EE[ (Y_{J,t} - \EE[ Y_{J,t} | X_{J,t}, U_{J,t} ])^2 | I_{J,t} = 1]}{E[(Y_{J,t} - Q_t(1,X_{J,t}))^2 | I = 1]}
 $$
-in terms of $\delta^2$.  To do so, writ
-em\begin{align*}
-\EE [ (Y - \EE[ Y | X, U] )^2 | I = 1 ] =& \EE [ (Y - Q(1,X))^2 | I = 1 ] \\
-&- 2 \delta \EE \left[ (Y - Q(1,X)) (\logit \pi(X,U) - \EE[ \logit \pi (X,U) | X, I=1 ]) | I = 1 \right] \\
-&+ \delta^2 \EE \left[ (\logit \pi(X,U) - \EE[ \logit \pi (X,U) | X, I=1 ])^2 | I = 1 \right] \\
-&= \EE [ (Y - Q(1,X))^2 | I = 1 ] - \delta^2 \EE \left[ \text{var} \left( \logit \pi(X,U) \right) | X, I = 1 \right]
+in terms of $\delta_t^2$. To do so, write
+\begin{align*}
+&\EE [ (Y_{J,t} - \EE[ Y_{J,t} | X_{J,t}, U_{J,t}] )^2 | I_{J,t} = 1 ] \\
+= &\EE [ (Y_{J,t} - Q_t(1,X_{J,t}))^2 | I_{J,t} = 1 ] \\
+&- 2 \delta \EE \left[ (Y_{J,t} - Q_t(1,X_{J,t})) (\logit \pi(X_{J,t},U_{J,t}) - \EE[ \logit \pi (X_{J,t},U_{J,t}) | X_{J,t}, I_{J,t}=1 ]) | I_{J,t} = 1 \right] \\
+&+ \delta^2 \EE \left[ (\logit \pi_t(X_{J,t},U_{J,t}) - \EE[ \logit \pi_t (X_{J,t},U_{J,t}) | X_{J,t}, I_{J,t}=1 ])^2 | I_{J,t} = 1 \right] \\
+= &\EE [ (Y_{J,t} - Q_t(1,X_{J,t}))^2 | I_{J,t} = 1 ] - \delta^2 \EE \left[ \text{var} \left( \logit \pi_t(X_{J,t},U_{J,t}) \right) | X_{J,t}, I_{J,t} = 1 \right]
 \end{align*}
 By Beta-Bernoulli conjugacy, the second term is the variance of the logit-transformed Beta distribution which has an analytic expression:
 $$
-\text{var} \left( \logit \pi(X,U) | X, I = 1 \right) = \psi_1 ( \pi(X) (\alpha - 1) + 1 ) + \psi_1 ( (1- \pi(X)) (1/\alpha - 1))
+\text{var} \left( \logit \pi_t(X_{J,t},U_{J,t}) | X_{J,t}, I_{J,t} = 1 \right) = \psi_1 ( \pi(X_{J,t}) (\alpha_t - 1) + 1 ) + \psi_1 ( (1- \pi(X_{J,t})) (1/\alpha_t - 1))
 $$
-where $\psi_1$ is the trigamma function. This implies the outcome influence is
-$$
-R_Y^2 (\alpha, \delta) = \delta^2 \frac{\EE [\psi_1 ( \pi(X) (\alpha - 1) + 1 ) + \psi_1 ( (1- \pi(X)) (1/\alpha - 1))] }{E [(Y- Q(1,X))^2 | I = 1]}
-$$
-Note this expectation is over those who
+where $\psi_1$ is the trigamma function. This implies the following relationship:
+\begin{equation}
+\label{eq:partialcoef}
+R_t^2 (\alpha_t, \delta_t) = \delta_t^2 \frac{\EE [\psi_1 ( \pi(X_{J,t}) (\alpha_t - 1) + 1 ) + \psi_1 ( (1- \pi(X_{J,t})) (1/\alpha_t - 1)) | I_{J,t} = 1 ] }{E [(Y_{J,t}- Q_t(1,X_{J,t}))^2 | I_{J,t} = 1]}
+\end{equation}
+Note that unlike the prior expecation, these are expressed conditional on self-selection, i.e., $I_{J,t} = 1$.  This was done since the binary outcomes are only measured in the non-probabilistic sample.
 
-Following from~\cite[Theorem 5]{Veitch2020}, the parameter~$\alpha$ can be reexpressed in a more convenient form:
+Following from~\cite[Theorem 5]{Veitch2020}, the parameter~$\alpha_t$ can be reexpressed as
+\begin{equation}
+\label{eq:alphaest}
+\alpha_t = 1 - \frac{\EE \left[ \pi (X_{t,J},U_{t,J}) \left( 1 - \pi (X_{t,J},U_{t,J}) \right)  \right]}{\EE\left[ \pi (X_{t,J}) \left( 1 - \pi (X_{t,J}) \right) \right] },
+\end{equation}
+which is a more convenient form when trying to estimate the parameter from observed data.
+
+\subsection{Calibration of sensitivity parameters}
+
+Based on~\eqref{eq:partialcoef} and~\eqref{eq:alphaest}, one can use the probability and nonprobability samples to calibrate the sensitivity parameters to be in line with the observed covariate influence on treatment and outcome.  That is, for a given observed covariate~$Z_{J,t}$, we wish to measure the degree of influence it has on self-selection and outcome given the other observed covariates~$X_{J,t} \backslash Z_{J,t}$.  Note that this dependence is likely time-varying, which is why it is important estimate~$\alpha_t$ and~$R_t^2$ as functions of time~$t$.
+
+For the outcome, we can measure the partial coefficient of determination as:
 $$
-\alpha = 1 - \frac{\EE \left[ \pi (X_{t,J},U_{t,J}) \left( 1 - \pi (X_{t,J},U_{t,J}) \right)  \right]}{\EE\left[ \pi (X_{t,J}) \left( 1 - \pi (X_{t,J}) \right) \right] }
+R_{t, Z}^2 := \frac{\frac{1}{n} \sum_{i=1}^n (y_{i,t} - \hat Q_{t,Z} (1, x_{i,t} \backslash z_{i,t}) )^2 - \frac{1}{n} \sum_{i=1}^n (y_{i,t} - \hat Q_{t,Z} (1, x_{i,t}) )^2}{\frac{1}{n} \sum_{i=1}^n (y_{i,t} - \hat Q_{t,Z} (1, x_{i,t} \backslash z_{i,t}) )^2}.
 $$
+We can measure influence of $Z$ on self-selection propensity given $X_{J,t} \backslash Z_{J,t}$ by
+$$
+\hat \alpha_{t, Z} := 1 - \frac{\sum_{j=1}^N I_{j,t}^R W_{j,t}^R \cdot \hat \pi(X_{J,t}) (1- \hat \pi(X_{J,t}))}{\sum_{j=1}^N I_{j,t}^R W_{j,t}^R \cdot \hat \pi(X_{J,t} \backslash Z_{J,t}) (1- \hat \pi(X_{J,t} \backslash Z_{J,t}))}
+$$
+where~$\hat \pi_t (\cdot)$ is the fitted self-selection probability based on~\eqref{eq:auxinfoprob} in Section~\ref{subsec:auxprob} using the appropriately chosen set of observed covariates.
 
-\subsection{Estimating sensitivity parameters}
+\subsection{IPW Sensitivity Analysis of COVID-19 Active Infection Prevalence in Indiana}
 
-Based on equations XX and XX, we can estimate the time-varying sensitivity parameters.
+Here we perform a sensitivity analysis of the IPW estimator of COVID-19 active infection prevalence in indiana.  While~\cite{Veitch2020} use Austen plots, we do not have such a simple visualization due to time-dependence.  To handle this, for each observed covariate~$Z$, we plot $(\alpha_{t,Z}, R^2_{t,Z})$ in the $[0,1]^2$.  These ``calibration curves'' help us in selection of a range of values for~$(\alpha_t, R^2_t)$ in our sensitivity analysis. Here, we consider $Z$ to be separately (a) age, (b) gender, (c) race, and (d) symptom status.  The four plots are presented in Figure XX.
 
-With these estimates
 
 
 
