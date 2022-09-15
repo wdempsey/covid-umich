@@ -1012,7 +1012,8 @@ Here we present estimates of the instantaneous reproductive number using the app
 
 Figure~\ref{fig:cori-bias} presents the potential bias in instantaneous reproductive rate estimator.  The general conclusions follow similarly as in  Figure~\ref{fig:ratio-bias}. The rate is overestimated prior to the peak and underestimated afterwards.  Estimates at the peak time appear to have minimal bias.
 
-\section{Sensitivity Analysis}
+\section{Sensitivity Analysis to Unmeasured Confounding}
+\label{sec:sensitivity_confounders}
 
 The proposed approach relies on the assumption $I_{j,t}^{(NR)} \indep Y_{j,t} \, | \, X_{j,t}$, i.e., the sampling indicator in the non-probabilistic survey is conditionally independent of the outcome given the covariates.  However, estimates of population quantities based on inverse-weighting and/or model-based estimates will be biased in the presence of `unobserved confounding'.  Here we introduce a sensitivity analysis to address this concern.  To this end, we consider the logit-linear model by~\cite{Imbens2003}, adjusted to the time-varying, self-selection setting from the single time-point, causal inference setting.  That is, consider the model
 \begin{align*}
