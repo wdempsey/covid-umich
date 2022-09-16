@@ -163,7 +163,7 @@ names(results) = c("week", "year", "feverFALSE", "feverTRUE", "contactTRUE",
                    "25to34", "35to44", "45to54", "55to64", "65to74", "75plus")
 saveRDS(results, "./smoothedpropensities_nogender_091521.RDS")
 ## No fever/contact (i.e., symptoms)
-model = ~ -1+as.factor(gender) + ethnicity + as.factor(age)
+model = ~ -1+as.factor(gender) + ethnicity + race + as.factor(age)
 results = irls_fitmodel(model)
 names(results) = c("week", "year", 
                    "genderF", "NotHoL", "raceAA", "raceOther", "raceWhite", 
