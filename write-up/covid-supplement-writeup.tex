@@ -1022,7 +1022,7 @@ E[ Y_t | i_t, x_t, u_t] &= l_t(i_t, x_t) + \delta_t u_t
 \end{align*}
 for functions~$h_t$ and $l_t$ that depend on time. Re-arranging terms we have
 $$
-E[ Y_t | i_t x_t, u_t ] = l_t(i_t,x)  + \frac{\delta_t}{\alpha_t} \left( \logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) - h_t (x_t) \right)
+E[ Y_t | i_t, x_t, u_t ] = l_t(i_t,x)  + \frac{\delta_t}{\alpha_t} \left( \logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) - h_t (x_t) \right)
 $$
 The key idea in~\cite{Imbens2003} is that positing a distribution on $\pi(I_t = 1 | x_y, u_t)$ directly allows one to circumvent the need to specify a distribution for~$U_t$, a highly non-trivial task.
 
@@ -1038,7 +1038,7 @@ Y_t | I_t, X_t, U_t &\sim \text{Bern}(\rho_t(X_t, U_t))
 \end{equation}
 The time-varying sensitivity parameter~$\alpha_t \in (0,1)$  controls the influence of the unobserved confounder~$U_t$ on selection propensity. In particular, $\alpha_t$ measures the change in belief of how likely an individual self-selects into the non-probabilistic sample at time~$t$:
 $$
-\alpha_t = E[ \pi_t (X_t,U_t) | I = 1] - E[ \pi_t (X_t,U_t) | I = 0].
+\alpha_t = E[ \pi_t (X_t,U_t) | I_t = 1] - E[ \pi_t (X_t,U_t) | I_t = 0].
 $$
 The sensitivity model satisfies the requirement that the self-selection propensity and conditional expectation outcome model can match the observed data:
 \begin{align*}
@@ -1121,7 +1121,7 @@ Note that this is an expectation over the population.  Thus, estimation requires
 
 Following~\cite{Veitch2020}, we re-express the outcome-confounder strength in terms of the partial coefficient of determination
 $$
-R_t^2 (\alpha_t, \delta_t) = \frac{\EE [( Y_{J,t} - Q_t(1,X_{J,t}) )^2 | I_{J,t}=1 ] - \EE[ (Y_{J,t} - \EE[ Y_{J,t} | X_{J,t}, U_{J,t} ])^2 | I_{J,t} = 1]}{E[(Y_{J,t} - Q_t(1,X_{J,t}))^2 | I = 1]}
+R_t^2 (\alpha_t, \delta_t) = \frac{\EE [( Y_{J,t} - Q_t(1,X_{J,t}) )^2 | I_{J,t}=1 ] - \EE[ (Y_{J,t} - \EE[ Y_{J,t} | X_{J,t}, U_{J,t} ])^2 | I_{J,t} = 1]}{E[(Y_{J,t} - Q_t(1,X_{J,t}))^2 | I_t = 1]}
 $$
 in terms of $\delta_t^2$. To do so, write
 \begin{align*}
@@ -1151,13 +1151,13 @@ which is a more convenient form when trying to estimate the parameter from obser
 
 \subsection{Calibration of sensitivity parameters}
 
-Based on~\eqref{eq:partialcoef} and~\eqref{eq:alphaest}, one can use the probability and nonprobability samples to calibrate the sensitivity parameters to be in line with the observed covariate influence on treatment and outcome.  That is, for a given observed covariate~$Z_{J,t}$, we wish to measure the degree of influence it has on self-selection and outcome given the other observed covariates~$X_{J,t} \backslash Z_{J,t}$.  Note that this dependence is likely time-varying, which is why it is important estimate~$\alpha_t$ and~$R_t^2$ as functions of time~$t$.
+Based on~\eqref{eq:partialcoef} and~\eqref{eq:alphaest}, one can use the probability and nonprobability samples to calibrate the sensitivity parameters to be in line with the observed covariate influence on treatment and outcome.  That is, for a given observed covariate~$Z_{J,t}$, we wish to measure the degree of influence it has on self-selection and outcome given the other observed covariates~$X_{J,t} \backslash Z_{J,t}$.  Note that this dependence is likely time-varying, which is why it is important that~$\alpha_t$ and~$R_t^2$ are functions of time~$t$.
 
 For the outcome, we can measure the partial coefficient of determination as:
 $$
 R_{t, Z}^2 := \frac{\frac{1}{n} \sum_{i=1}^n (y_{i,t} - \hat Q_{t,Z} (1, x_{i,t} \backslash z_{i,t}) )^2 - \frac{1}{n} \sum_{i=1}^n (y_{i,t} - \hat Q_{t,Z} (1, x_{i,t}) )^2}{\frac{1}{n} \sum_{i=1}^n (y_{i,t} - \hat Q_{t,Z} (1, x_{i,t} \backslash z_{i,t}) )^2}.
 $$
-We can measure influence of $Z$ on self-selection propensity given $X_{J,t} \backslash Z_{J,t}$ by
+among the non-probabilistic sample.  We can measure influence of $Z$ on self-selection propensity given $X_{J,t} \backslash Z_{J,t}$ by
 $$
 \hat \alpha_{t, Z} := 1 - \frac{\sum_{j=1}^N I_{j,t}^R W_{j,t}^R \cdot \hat \pi(X_{J,t}) (1- \hat \pi(X_{J,t}))}{\sum_{j=1}^N I_{j,t}^R W_{j,t}^R \cdot \hat \pi(X_{J,t} \backslash Z_{J,t}) (1- \hat \pi(X_{J,t} \backslash Z_{J,t}))}
 $$
@@ -1165,11 +1165,31 @@ where~$\hat \pi_t (\cdot)$ is the fitted self-selection probability based on~\eq
 
 \subsection{IPW Sensitivity Analysis of COVID-19 Active Infection Prevalence in Indiana}
 
-Here we perform a sensitivity analysis of the IPW estimator of COVID-19 active infection prevalence in indiana.  While~\cite{Veitch2020} use Austen plots, we do not have such a simple visualization due to time-dependence.  To handle this, for each observed covariate~$Z$, we plot $(\alpha_{t,Z}, R^2_{t,Z})$ in the $[0,1]^2$.  These ``calibration curves'' help us in selection of a range of values for~$(\alpha_t, R^2_t)$ in our sensitivity analysis. Here, we consider $Z$ to be separately (a) age, (b) gender, (c) race, and (d) symptom status.  The four plots are presented in Figure XX.
+Here we perform a sensitivity analysis of the IPW estimator of COVID-19 active infection prevalence in indiana.  While~\cite{Veitch2020} use Austen plots, we do not have such a simple visualization due to time-dependence.  Here, we plot  $\alpha_{t,Z}$ and $R^2_{t,Z}$ as functions of time for three covariates that demonstrate different patterns: (1) Symptoms, (2) Race, and (3) Ethnicity.  Figures~\ref{fig:alpha_sensitivity} and~\ref{fig:rsq_sensitivity} present these ``calibration curves.'' Figure~\ref{fig:bias_sensitivity} presents the bias under these three curves.  Here, we see that if an unobserved confounder has similar strength in selection-confounder and outcome-confounder relationships as ``Symptom Status'', then bias would be high even into 2022.  However, bias under an unobserved confounder with similar strength to ``Ethnicitiy'' dissipates significantly by late 2021.
 
-
-
-
+\begin{figure}[!th]
+ \centering
+ \begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../figs/alpha_sensitivity_fig.png}
+  \caption{Calibration curves for~$\alpha$ per week}
+  \label{fig:alpha_sensitivity}
+ \end{subfigure}
+ \begin{subfigure}{.45\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../figs/rsq_sensitivity_fig.png}
+ \caption{Calibration curves for~$R^2$ per week}
+ \label{fig:rsq_sensitivity}
+ \end{subfigure} \\ [1ex]
+ \begin{subfigure}{\linewidth}
+ \centering
+ \includegraphics[width=.5\linewidth]{../figs/bias_sensitivity_fig.png}
+  \caption{Bias as a function of~$\alpha$ and~$R^2$ calibration curves}
+  \label{fig:bias_sensitivity}
+ \end{subfigure}
+ \caption{Sensitivity analysis for time-varying active infection rate estimates}
+ \label{fig:sensitivity}
+ \end{figure}
 
 
 

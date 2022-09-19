@@ -95,11 +95,13 @@ png(filename = "../figs/alpha_sensitivity_fig.png",
     width = 960, height = 480, units = "px", pointsize = 25)
 
 ggplot(data = subset_alpha_plot_df, aes(x = date, y = alpha_t, group = Method)) +
-  ylim(0,0.08)+ geom_point(size = 2, aes(color = Method, shape = Method)) +
+  ylim(0,0.08)+ geom_point(size = 5, aes(color = Method, shape = Method)) +
   labs(x = "Date",
        y = expression(alpha)) + 
-  theme(text = element_text(size=25)) +
-  scale_color_manual(values=my_palette) + theme_minimal() + geom_smooth(method = "loess", aes(color = Method))
+  # theme(text = element_text(size=25)) +
+  scale_color_manual(values=my_palette) + theme_minimal() + 
+  geom_smooth(method = "loess", aes(color = Method)) + 
+  theme(text = element_text(size=20))
 
 dev.off()
 

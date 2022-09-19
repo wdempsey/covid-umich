@@ -103,10 +103,12 @@ png(filename = "../figs/bias_sensitivity_fig.png",
     width = 960, height = 480, units = "px", pointsize = 25)
 
 ggplot(data = bias_plot_df, aes(x = date, y = bias, group = Method)) +
-  ylim(0,0.2)+ geom_point(aes(shape = Method, color = Method), size = 2) +
+  ylim(0,0.2)+ geom_point(aes(shape = Method, color = Method), size = 5) +
   labs(x = "Date",
        y = "Bias") + 
-  theme(text = element_text(size=25)) +
-  scale_color_manual(values=my_palette) + theme_minimal() #+ geom_smooth(method = "loess")
+  # theme(text = element_text(size=25)) +
+  scale_color_manual(values=my_palette) + 
+  theme_minimal() + 
+  theme(text = element_text(size=20)) # + geom_smooth(method = "loess")
 
 dev.off()

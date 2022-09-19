@@ -91,11 +91,13 @@ png(filename = "../figs/rsq_sensitivity_fig.png",
     width = 960, height = 480, units = "px", pointsize = 25)
 
 ggplot(data = subset_rsq_plot_df, aes(x = date, y = rsq_t, group = Method)) +
-  ylim(0,0.125)+ geom_point(size = 2, aes(color = Method, shape = Method)) +
+  ylim(0,0.125)+ geom_point(size = 5, aes(color = Method, shape = Method)) +
   labs(x = "Date",
        y = expression(R^2)) + 
-  theme(text = element_text(size=25)) +
-  scale_color_manual(values=my_palette) + theme_minimal() + geom_smooth(method = "loess", aes(color = Method))
+  # theme(text = element_text(size=25)) +
+  scale_color_manual(values=my_palette) + theme_minimal() + 
+  geom_smooth(method = "loess", aes(color = Method)) + 
+  theme(text = element_text(size=20))
 
 dev.off()
 
