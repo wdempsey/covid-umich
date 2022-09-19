@@ -68,11 +68,12 @@ png(filename = "../figs/tvprop_alt_fig1_mainpaper.png",
 
 ggplot(data = propensities_long, aes(x = date, y = propensity, col = age)) +
   geom_point(size = 5) +
+  theme_classic() +
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
        title = "Non-Hispanic, White Male with Symptoms") +
   theme(text = element_text(size=25)) +
-  scale_color_manual(values=my_palette)
+  scale_color_manual(values=my_palette) 
 
 dev.off()
 
@@ -133,11 +134,12 @@ png(filename = "../figs/tvprop_alt_fig2_mainpaper.png",
 
 ggplot(data = propensities_long, aes(x = date, y = propensity, col = age)) +
   geom_point(size = 5) +
+  theme_classic() +
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
        title = "Non-Hispanic, White Male without Symptoms") +
   theme(text = element_text(size=25)) +
-  scale_color_manual(values=my_palette)
+  scale_color_manual(values=my_palette) 
 
 dev.off()
 
@@ -189,6 +191,7 @@ png(filename = "../figs/tvprop_alt_fig1_supp1.png",
 
 ggplot(data = propensities_long, aes(x = date, y = propensity, col = age)) +
   geom_point(size = 5) +
+  theme_classic() + 
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
        title = "Non-Hispanic, African American Male with Symptoms") +
@@ -236,6 +239,7 @@ png(filename = "../figs/tvprop_alt_fig2_supp1.png",
 
 ggplot(data = propensities_long, aes(x = date, y = propensity, col = age)) +
   geom_point(size = 5) +
+  theme_classic() +
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
        title = "Non-Hispanic, African American Male without Symptoms") +
@@ -285,6 +289,7 @@ png(filename = "../figs/tvprop_alt_fig1_supp2.png",
 
 ggplot(data = propensities_long, aes(x = date, y = propensity, col = age)) +
   geom_point(size = 5) +
+  theme_classic() +
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
        title = "Hispanic, White Male with Symptoms") +
@@ -332,6 +337,7 @@ png(filename = "../figs/tvprop_alt_fig2_supp2.png",
 
 ggplot(data = propensities_long, aes(x = date, y = propensity, col = age)) +
   geom_point(size = 5) +
+  theme_classic() + 
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
        title = "Hispanic, White Male without Symptoms") +
@@ -381,6 +387,7 @@ png(filename = "../figs/tvprop_alt_fig1_supp3.png",
 
 ggplot(data = propensities_long, aes(x = date, y = propensity, col = age)) +
   geom_point(size = 5) +
+  theme_classic() + 
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
        title = "Hispanic, 'Other Race' Male with Symptoms") +
@@ -428,6 +435,7 @@ png(filename = "../figs/tvprop_alt_fig2_supp3.png",
 
 ggplot(data = propensities_long, aes(x = date, y = propensity, col = age)) +
   geom_point(size = 5) +
+  theme_classic() + 
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
        title = "Hispanic, 'Other Race' Male without Symptoms") +
@@ -477,6 +485,7 @@ png(filename = "../figs/tvprop_alt_fig1_supp4.png",
 
 ggplot(data = propensities_long, aes(x = date, y = propensity, col = age)) +
   geom_point(size = 5) +
+  theme_classic() + 
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
        title = "Not Hispanic, White Female with Symptoms") +
@@ -524,10 +533,11 @@ png(filename = "../figs/tvprop_alt_fig2_supp4.png",
 
 ggplot(data = propensities_long, aes(x = date, y = propensity, col = age)) +
   geom_point(size = 5) +
+  theme_classic() +
   labs(x = "Date",
        y = "COVID-19 Testing Propensity",
        title = "Not Hispanic, White Female without Symptoms") +
   theme(text = element_text(size=25)) +
-  scale_color_manual(values=my_palette)
+  scale_color_manual(values=my_palette) 
 
 dev.off()
