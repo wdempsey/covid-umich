@@ -82,12 +82,28 @@ ratio_temp = data.frame(date = date, Method = rep("Doubly Robust", length(date))
 ratio_long = rbind(ratio_long, ratio_temp)
 prevalence_long = rbind(prevalence_long, prevalence_temp)
 
+## ADDING FLOOR 
+indiana_data = readRDS("../data/weeklycoviddata_withsympcontact.RDS")
+indiana_data$week = week(indiana_data$startdate)
+indiana_data$year = year(indiana_data$startdate)
+agg_counts = aggregate(covid_counts ~ week + year, indiana_data, sum)
+N <- 6.732E6; # Indiana Population
+agg_counts$air_floor = agg_counts$covid_counts/N
+
+agg_counts$date = MMWRweek::MMWRweek2Date(MMWRyear = agg_counts$year,
+                                          MMWRweek = agg_counts$week,
+                                          MMWRday = 1)
+agg_counts_df = data.frame("date" = agg_counts$date, 
+                           "Method" = rep("Floor", nrow(agg_counts)), 
+                           "estimate" = agg_counts$air_floor)
+# prevalence_long = rbind(prevalence_long, agg_counts_df)
+
 ## FINAL FIGURES
 png(filename = "../figs/tv_air.png",
 width = 960, height = 480, units = "px", pointsize = 25)
 
 ggplot(data = prevalence_long, aes(x = date, y = estimate, col = Method)) +
-  geom_line(size = 2) +
+  geom_line(size = 2,aes(linetype = )) +
   labs(x = "Date",
        y = "Active Infection Rate Estimate") + 
   theme(text = element_text(size=25)) +
