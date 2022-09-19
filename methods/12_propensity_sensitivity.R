@@ -111,7 +111,7 @@ irls_fitmodel <- function(model) {
 
 
 ## Bringing in complete FB and Indiana data
-setwd("~/Dropbox/Fb-Data/sensitivityanalysis/")
+setwd("~/../Dropbox/Fb-Data/sensitivityanalysis/")
 indiana_data = readRDS("./weeklycoviddata_withsympcontact.RDS")
 fb_data = readRDS("./fb_weeklycomplete.RDS")
 names(fb_data)[3] = "fever"
