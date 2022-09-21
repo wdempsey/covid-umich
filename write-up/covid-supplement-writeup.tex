@@ -89,8 +89,10 @@
 This is the supplementary materials to the manuscript titled ``Addressing selection bias and measurement error in COVID-19 case count data using auxiliary information.''  Section~\ref{app:imperfect} derives the statistical decompositions for the measurement-error corrected estimator and provides the connection to model-based estimators. Sections~\ref{app:ipwderivation} and~\ref{app:DRderivation} derives the statistical decomposition for the inverse-probability weighted and doubly robust estimators respectively.
 Section~\ref{app:asympderivations} gives the proof for the asymptotics of the inverse-probability weighted estimator.  
 Section~\ref{app:irls} outlines the iteratively re-weighted least squares algorithm.
-Section~\ref{app:in_add_details} provides additional detals on the COVID-19 analysis of Indiana's case-count data.
+Section~\ref{app:in_add_details} provides additional details on the COVID-19 analysis of Indiana's case-count data.
 Section~\ref{app:prior_modelbased} provides prior specifications for the SEIR model.
+Section~\ref{app:cori_rt} provides an alternative estimator of the instantaneous reproductive number and associated analysis of bias under an SEIR model.
+Section~\ref{sec:sensitivity_confounders} provides a sensitivity analysis to unmeasured confounders.
 \end{abstract}
 
 \maketitle
@@ -1004,7 +1006,7 @@ Here we present estimates of the instantaneous reproductive number using the app
 
 \begin{figure}
  \centering
-  \includegraphics[width=.9\linewidth]{../figs/seir_cori_rt.png}
+  \includegraphics[width=.75\linewidth]{../figs/seir_cori_rt.png}
   \caption{Effective reproductive rate estimator}
  \caption{Potential bias in instantaneous reproductive rate estimator based on~\cite{Cori20113} under an SEIR model with $\beta = 1.2$, $\gamma = 0.15$, and $\sigma = 0.3$.  Here, $f = 0.02$, $FP = 0.024$, $FN = 0.13$, and a range of relative sampling fractions $M = f_1/f_0$ are considered.}
  \label{fig:cori-bias}
@@ -1019,25 +1021,25 @@ Figure~\ref{fig:cori-bias} presents the potential bias in instantaneous reproduc
 The proposed approach relies on the assumption $I_{j,t}^{(NR)} \indep Y_{j,t} \, | \, X_{j,t}$, i.e., the sampling indicator in the non-probabilistic survey is conditionally independent of the outcome given the covariates.  However, estimates of population quantities based on inverse-weighting and/or model-based estimates will be biased in the presence of `unobserved confounding'.  Here we introduce a sensitivity analysis to address this concern.  To this end, we consider the logit-linear model by~\cite{Imbens2003}, adjusted to the time-varying, self-selection setting from the single time-point, causal inference setting.  That is, consider the model
 \begin{align*}
 \logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) &= h_t(x_t) + \alpha_t u_t \\
-E[ Y_t | i_t, x_t, u_t] &= l_t(i_t, x_t) + \delta_t u_t
+E[ Y_t | i_t, x_t, u_t] &= l_t(x_t) + \delta_t u_t
 \end{align*}
 for functions~$h_t$ and $l_t$ that depend on time. Re-arranging terms we have
 $$
-E[ Y_t | i_t, x_t, u_t ] = l_t(i_t,x)  + \frac{\delta_t}{\alpha_t} \left( \logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) - h_t (x_t) \right)
+E[ Y_t | i_t, x_t, u_t ] = l_t(x_t)  + \frac{\delta_t}{\alpha_t} \left( \logit \pi \left( I_{t} = 1  | x_{t}, u_{t} \right) - h_t (x_t) \right)
 $$
 The key idea in~\cite{Imbens2003} is that positing a distribution on $\pi(I_t = 1 | x_y, u_t)$ directly allows one to circumvent the need to specify a distribution for~$U_t$, a highly non-trivial task.
 
-The logit-linear model above unfortunately does not lead to a tractable sensitivity analysis.  Instead, we consider a sensitivity model based on work by~\cite{Veitch2020}, again adjusted to deal with the current setting of self-selection, given by:
+The logit-linear model above unfortunately does not lead to a tractable sensitivity analysis.  Instead, we consider a sensitivity model based on work by~\cite{Veitch2020}, again adjusted to deal with the current setting of self-selection, given by
 \begin{equation}
 \begin{aligned}
 \label{eq:sensmodel}
 \pi_t(X_t, U_t) &\sim \text{Beta} \left( \pi_t (X_t) (1/\alpha_t - 1), (1-\pi_t(X_t)) (1/\alpha_t - 1) \right) \\
 I_t | X_t, U_t &\sim \text{Bern} (\pi (X_t,U_t)) \\
 \rho_t(X_t, U_t) &= Q_t(X_t,1) + \delta_t \left( \logit \pi_t(X_t,U_t) - \EE \left[ \logit \pi_t(X_t,U_t) | X_t, I_t = 1 \right] \right) \\
-Y_t | I_t, X_t, U_t &\sim \text{Bern}(\rho_t(X_t, U_t))
+Y_t | I_t, X_t, U_t &\sim \text{Bern}(\rho_t(X_t, U_t)),
 \end{aligned}
 \end{equation}
-The time-varying sensitivity parameter~$\alpha_t \in (0,1)$  controls the influence of the unobserved confounder~$U_t$ on selection propensity. In particular, $\alpha_t$ measures the change in belief of how likely an individual self-selects into the non-probabilistic sample at time~$t$:
+where~$Q_t(X_t,1)$ is the conditional expectation of the outcome given covariates~$X_t$ and self-selection into the nonprobability sample, i.e.,~$I_t = 1$. The time-varying sensitivity parameter~$\alpha_t \in (0,1)$  controls the influence of the unobserved confounder~$U_t$ on selection propensity. In particular, $\alpha_t$ measures the change in belief of how likely an individual self-selects into the non-probabilistic sample at time~$t$:
 $$
 \alpha_t = E[ \pi_t (X_t,U_t) | I_t = 1] - E[ \pi_t (X_t,U_t) | I_t = 0].
 $$
@@ -1052,7 +1054,7 @@ Moreover, the model satisfies that $Y_t$ does not depend on $I_t$ given $(X_t, U
 \begin{align*}
 \EE\left[\pi^{-1}_t (X_{J,t}, U_{J,t}) I_{J,t} Y_{J,t} \right]
 = &\EE[ E[ Y_{J,t} | X_{J,t}, U_{J,t}] ] \\
-= &\EE \left[ Q(1,X_{J,t}) + \delta \left( \logit \pi_t (X_{J,t}, U_{J,t}) - \EE \left[ \logit \pi_t (X_{J,t}, U_{J,t}) | X_{J,t}, I_{J,t} = 1 \right] \right) \right]
+= &\EE \left[ Q(1,X_{J,t}) + \delta_t \left( \logit \pi_t (X_{J,t}, U_{J,t}) - \EE \left[ \logit \pi_t (X_{J,t}, U_{J,t}) | X_{J,t}, I_{J,t} = 1 \right] \right) \right]
 \end{align*}
 \noindent {\bf IPW-based estimator:} Investigating the IPW estimator using only~$X_t$, we have:
 \begin{align*}
@@ -1062,7 +1064,7 @@ Moreover, the model satisfies that $Y_t$ does not depend on $I_t$ given $(X_t, U
 \end{align*}
 Using the fact that $\EE \left[ \pi_t (X_{J,t}, U_{J,t}) | X_{J,t} \right] = \pi_{t} (X_{J,t})$, the \emph{bias} is
 $$
-\delta \EE \left[ \logit \pi_t (X_{t,J}, U_{t,J}) - \frac{\pi_t (X_{J,t}, U_{J,t})}{\pi_t (X_{J,t})} \logit \pi_t (X_{t,J}, U_{t,J}) \right].
+\delta_t \EE \left[ \logit \pi_t (X_{t,J}, U_{t,J}) - \frac{\pi_t (X_{J,t}, U_{J,t})}{\pi_t (X_{J,t})} \logit \pi_t (X_{t,J}, U_{t,J}) \right].
 $$
 Using the fact that~$Z \sim Beta(\alpha, \beta)$ then $E[ ln(Z) ] = \psi(\alpha) - \psi(\alpha + \beta)$, $E[ ln(1-Z) ] = \psi(\beta) - \psi(\alpha + \beta)$ then~$E[ \logit (Z) ] = \psi(\alpha) - \psi(\beta)$ where~$\psi$ is the digamma function.  Moreover,~$\EE[ Z ln Z ] = \frac{\alpha}{\alpha + \beta} \left[ \psi(\alpha + 1) - \psi(\alpha + \beta +1) \right]$ and
 \begin{align*}
@@ -1141,9 +1143,9 @@ where $\psi_1$ is the trigamma function. This implies the following relationship
 \label{eq:partialcoef}
 R_t^2 (\alpha_t, \delta_t) = \delta_t^2 \frac{\EE [\psi_1 ( \pi(X_{J,t}) (\alpha_t - 1) + 1 ) + \psi_1 ( (1- \pi(X_{J,t})) (1/\alpha_t - 1)) | I_{J,t} = 1 ] }{E [(Y_{J,t}- Q_t(1,X_{J,t}))^2 | I_{J,t} = 1]}
 \end{equation}
-Note that unlike the prior expecation, these are expressed conditional on self-selection, i.e., $I_{J,t} = 1$.  This was done since the binary outcomes are only measured in the non-probabilistic sample.
+Note that unlike the prior expectation, these are expressed conditional on self-selection, i.e., $I_{J,t} = 1$.  This was done since the binary outcomes are only measured in the non-probabilistic sample.
 
-Following from~\cite[Theorem 5]{Veitch2020}, the parameter~$\alpha_t$ can be reexpressed as
+Following from~\cite[Theorem 5]{Veitch2020}, the parameter~$\alpha_t$ can be re-expressed as
 \begin{equation}
 \label{eq:alphaest}
 \alpha_t = 1 - \frac{\EE \left[ \pi (X_{t,J},U_{t,J}) \left( 1 - \pi (X_{t,J},U_{t,J}) \right)  \right]}{\EE\left[ \pi (X_{t,J}) \left( 1 - \pi (X_{t,J}) \right) \right] },
@@ -1156,9 +1158,9 @@ Based on~\eqref{eq:partialcoef} and~\eqref{eq:alphaest}, one can use the probabi
 
 For the outcome, we can measure the partial coefficient of determination as:
 $$
-R_{t, Z}^2 := \frac{\frac{1}{n} \sum_{i=1}^n (y_{i,t} - \hat Q_{t,Z} (1, x_{i,t} \backslash z_{i,t}) )^2 - \frac{1}{n} \sum_{i=1}^n (y_{i,t} - \hat Q_{t,Z} (1, x_{i,t}) )^2}{\frac{1}{n} \sum_{i=1}^n (y_{i,t} - \hat Q_{t,Z} (1, x_{i,t} \backslash z_{i,t}) )^2}.
+R_{t, Z}^2 := \frac{\frac{1}{n} \sum_{i=1}^n (y_{i,t} - \hat Q_{t,Z} (1, x_{i,t} \backslash z_{i,t}) )^2 - \frac{1}{n} \sum_{i=1}^n (y_{i,t} - \hat Q_{t} (1, x_{i,t}) )^2}{\frac{1}{n} \sum_{i=1}^n (y_{i,t} - \hat Q_{t,Z} (1, x_{i,t} \backslash z_{i,t}) )^2},
 $$
-among the non-probabilistic sample.  We can measure influence of $Z$ on self-selection propensity given $X_{J,t} \backslash Z_{J,t}$ by
+where~$\hat Q_t$ is the conditional expectation given all covariates and~$\hat Q_{t,Z}$ is the conditional expectation given all covariates except~$Z$.  Note these are sums averages the non-probabilistic sample.  We can measure influence of $Z$ on self-selection propensity given $X_{J,t} \backslash Z_{J,t}$ by
 $$
 \hat \alpha_{t, Z} := 1 - \frac{\sum_{j=1}^N I_{j,t}^R W_{j,t}^R \cdot \hat \pi(X_{J,t}) (1- \hat \pi(X_{J,t}))}{\sum_{j=1}^N I_{j,t}^R W_{j,t}^R \cdot \hat \pi(X_{J,t} \backslash Z_{J,t}) (1- \hat \pi(X_{J,t} \backslash Z_{J,t}))}
 $$
@@ -1166,7 +1168,7 @@ where~$\hat \pi_t (\cdot)$ is the fitted self-selection probability based on~\eq
 
 \subsection{IPW Sensitivity Analysis of COVID-19 Active Infection Prevalence in Indiana}
 
-Here we perform a sensitivity analysis of the IPW estimator of COVID-19 active infection prevalence in indiana.  While~\cite{Veitch2020} use Austen plots, we do not have such a simple visualization due to time-dependence.  Here, we plot  $\alpha_{t,Z}$ and $R^2_{t,Z}$ as functions of time for three covariates that demonstrate different patterns: (1) Symptoms, (2) Race, and (3) Ethnicity.  Figures~\ref{fig:alpha_sensitivity} and~\ref{fig:rsq_sensitivity} present these ``calibration curves.'' Figure~\ref{fig:bias_sensitivity} presents the bias under these three curves.  Here, we see that if an unobserved confounder has similar strength in selection-confounder and outcome-confounder relationships as ``Symptom Status'', then bias would be high even into 2022.  However, bias under an unobserved confounder with similar strength to ``Ethnicitiy'' dissipates significantly by late 2021.
+Here we perform a sensitivity analysis of the IPW estimator of COVID-19 active infection prevalence in Indiana.  While~\cite{Veitch2020} use Austen plots, we do not have such a simple visualization due to time-dependence.  Here, we plot  $\alpha_{t,Z}$ and $R^2_{t,Z}$ as functions of time for three covariates that demonstrate different patterns: (1) Symptoms, (2) Race, and (3) Ethnicity.  Figures~\ref{fig:alpha_sensitivity} and~\ref{fig:rsq_sensitivity} present these ``calibration curves.'' Figure~\ref{fig:bias_sensitivity} presents the bias under these three curves.  Here, we see that if an unobserved confounder has similar strength in selection-confounder and outcome-confounder relationships as ``Symptom Status'', then bias would be high even into early 2021.  However, bias under an unobserved confounder with similar strength to ``Ethnicity'' dissipates significantly by late 2020.
 
 \begin{figure}[!th]
  \centering
