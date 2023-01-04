@@ -729,6 +729,28 @@ V_{4,t} = \left( \begin{array}{c}
 $$
 
 The asymptotic variance for the IPW estimator is then the first diagonal element of the matrix $E \left[ \phi_n (\eta_0) \right]^{-1} \times \left[ V_{1,t} + V_{2,t} + V_{3,t} + V_{4,t} \right] E \left[ \phi_n (\eta_0) \right]^{-1}$.
+
+We next state Lemma~\ref{lemma:dr} for the doubly-robust estimator presented in Section XX.  The proof follows the same derivation as above.
+
+\begin{lemma}[Variance of doubly-robust estimator] \normalfont
+ \label{lemma:dr}
+ The estimates~$\mu_t := \bar y_{n,t}^\star$ and $\hat \pi_{j,t}$
+ are solutions to the following set of estimating equations
+ $$
+ \Phi_n (\eta_t) =
+ \left (
+ \begin{array}{c}
+ \frac{1}{N} \left[ \sum_{j=1}^N \frac{I^{NR}_{j,t}}{\pi_{j,t}} \left( \left( \frac{Y_{j,t} - FP}{1-FP-FN} - \hat \mu_{j,t}  \right)  - \mu_t \right) + \frac{\sum_{l=1}^L K_{h} (|t - t_l^\prime|) \sum_{j=1}^N I^{R}_{j,t_l^\prime} W^{R}_{j,t_l^\prime} \hat \mu_{j,t_l^\prime}}{\sum_{l=1}^L K_{h} (|t - t_l^\prime|) \sum_{j=1}^N I^{R}_{j,t_l^\prime} W^{R}_{j,t_l^\prime}} \right] \\
+ \frac{1}{N \times \sum_{l=1}^L K_{h} (|t - t_l^\prime|)} \sum_{l=1}^L K_{h} (|t - t_l^\prime|) \sum_{j=1}^N I^{NR}_{j,t^\prime} X_{j,t^\prime} - \frac{1}{N} \sum_{j = 1}^N I^{R}_{j,t^\prime} W^{R}_{j,t^\prime}  \pi_{j,t^\prime} X_{j,t^\prime}  \\
+ \frac{1}{n_{FP}} \sum_{j=1}^{n_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
+ \frac{1}{n_{FN}} \sum_{j=1}^{n_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
+ \end{array}
+ \right ) = {\bf 0}
+ $$
+ where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (\bar n^{-1/2})$ and $\text{var} (\hat y_{n,t}) = V_{t}^{(DR)} + o (\bar n^{-1})$ where $\bar n = n \sum_{l=1}^L K_h(|t-t_l|)$ and $V_t^{(DR)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\Phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$ where $\phi_n = \frac{\partial \Phi (\eta)}{\partial \eta}$ with $E[\cdot]$ and $\text{Var} (\cdot)$ are under the joint randomization of propensity score and sampling designs.
+ \end{lemma}
+
+
 \section{IRLS}
 \label{app:irls}
 First derivative with respect to $\theta$
@@ -978,6 +1000,26 @@ For simplicity, we list the priors used in STAN below:
   \item \code{xi = xi\_raw + 0.5;}
 \end{itemize}
 where \code{beta, eta, eta\_two, eta\_three} refer to the four values that form the time-varying parameter $\beta_t$ when combined with \code{xi, eta, eta\_two, eta\_three} in the SEIR model as described in Section~\ref{section:modelbased}. Following~\cite{Song2020}, we employ Runge-Kutta (RK4) approximations for discretization.  Due to the low number of deaths per strata, i.e., based on Race, Age, Sex and Ethnicity, we employ a kernel smoothing of the new infections per age strata into these sub-strata using relative number of observed deaths.  This ensured a suitably complex model that fits the observed death data well while generating strata-specific active infection rates that can be used in the doubly-robust estimation procedure.
+
+\begin{figure}[!th]
+ \centering
+ \begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../figs/deaths_ppc.png}
+ \caption{PPC on aggregate daily death counts.}
+ \label{fig:deathsppc}
+ \end{subfigure}%
+ \begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../figs/infections_ppc.png}
+ \caption{Posterior on daily new infections.}
+ \label{fig:casesppc}
+ \end{subfigure}
+ \caption{Posterior predictive check (PPC) on death counts and posterior distribution of infections.}
+ \label{fig:ppcs}
+ \end{figure}
+
+ To check model fit, a posterior predictive check on aggregate death counts was performed. Figure~\ref{fig:deathsppc} shows the results which suggests chosen SEIR model fits the observed data well. Figure~\ref{fig:casesppc} presents the posterior distribution of daily new infections. As the active infection rate is defined as all infected individuals whose viral load has yet to fall below detectable levels by RT-PCR testing, to construct the active infection estimates we exponentially discount the number of newly infected individuals to estimate the number of these newly infected individuals who still have an active infection on future days. That is, the number of active infections on day~$t$ is given by~$\sum_{s=0}^t I_t^{\new} e^{-\lambda (t-s)}$. Strata-specific active infections are calculated similarly. In our analysis, the exponential discounting parameter is set to $20$ days to match with prior evidence that ``30\% to 40\% of people will still test positive at three weeks''~\citep{wlocneg}. To compare with case count data, Figure~\ref{fig:undercounting} in the supplementary materials computes the cumulative undercount factor of observed case counts as compared to new infections.  Posterior distributions for the age-specific new infections are used as part of the doubly-robust estimator of the active infection rate.
 
 \begin{figure}[!th]
  \centering

@@ -90,9 +90,6 @@
 
 \maketitle
 
-\newpage
-
-
 \section{Introduction}
 The World Health Organization has declared the coronavirus disease 2019 (COVID-19) a public health emergency.  As of July 29th, 2021, over 196 million cases have been confirmed worldwide with 34.8 million cases and over 612 thousand confirmed deaths across the United States. This pandemic
 has become the focal point of everyday life; yet the data landscape for understanding COVID-19 remains limited.  Public databases~\citep{JHU_Lancet,NYT} provide incoming county-level information of confirmed cases and deaths.  Statisticians, epidemiologists, economists, and data scientists have used this granular data to forecast COVID-19 case-counts, deaths, and hospitalizations~\citep{Giordano2020,Song2020,Ray2020,2020.IHME,Wang2020.03,JTD36385}.
@@ -397,7 +394,7 @@ Note that Indiana's COVID-19 response team has access to official \emph{governme
  Many epidemiologists argue that tracking the effective reproduction number is the only way to manage through the crisis~\citep{Gabriel2020}.
 Here, we study the instantaneous reproduction number~\citep{Cori20113,Fraser2007}, denoted $R_t$, which is the average number of secondary cases that each infected individual would infect if the conditions remained as they were at time~$t$.  This is distinct from the case reproduction number,~$R_t^c$, which is the average number of secondary cases that a case infected at time step $t$ will eventually infect~\citep{Wallinga2004}. The case reproduction number accounts for potential changes to contact rates and transmissibility, which include impact of control measures.  The instantaneous reproduction number~$R_t$ is the only reproduction number easily estimated in real time, and therefore has been a key focal point in the COVID-19 pandemic.
 
-Under a Poisson likelihood, a simple relation between the trajectory of new cases and the instantaneous reproduction number can be derived \citep{Bettencourt2008}.  In particular, under an SIR model the number of case counts on day $t$, denoted $K_t$, is Poisson distributed with rate $K_{t-1} \exp \left( \gamma (R_t - 1) \right)$ where $K_{t-1} = Y_{t-1}-Y_{t-2}$ is the number of new cases on day $t-1$ and $\gamma$ is the serial interval, which is approximately $7$ days for COVID-19~\citep{Sanche2020}.
+% Under a Poisson likelihood, a simple relation between the trajectory of new cases and the instantaneous reproduction number can be derived \citep{Bettencourt2008}.  In particular, under an SIR model the number of case counts on day $t$, denoted $K_t$, is Poisson distributed with rate $K_{t-1} \exp \left( \gamma (R_t - 1) \right)$ where $K_{t-1} = Y_{t-1}-Y_{t-2}$ is the number of new cases on day $t-1$ and $\gamma$ is the serial interval, which is approximately $7$ days for COVID-19~\citep{Sanche2020}.
 
 \cite{Heng2020} derive an approximate formula for the basic reproduction number under SEIR dynamics, which corresponds to the solution for the SIR model assuming an infectious period of $1/\gamma + 1/\sigma$ for $s_0 \approx 1$ and $i_0 \ll 1$. Using this connection, a moment-based estimator is given by
 $$
@@ -413,36 +410,36 @@ This approximation ignores a term that is quadratic in the epidemic growth rate 
  This implies a similar trade-off as before but on the logarithmic scale.  The error is no longer scaled by $\bar Y_t/\bar Y_{t-1}$ but by the serial interval and does not depend on prevalence but on the fraction of new cases out of those susceptible. This leads to differences in when the bias is most pronounced. Figure~\ref{fig:r0-bias} displays the bias as a function of the relative sampling fraction ignoring the final term (i.e., $S_t / S_{t-1} \approx 1$). Section~\ref{app:cori_rt} in the supplementary materials presents an alternative estimator of the instantaneous effective reproductive number and shows similar bias~\cite{Cori20113}.
 
 
- \subsection{Rate comparisons}
+ % \subsection{Rate comparisons}
 
 
- \begin{figure}[!th]
- \centering
- \begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{../figs/seir.png}
-  \caption{Fraction of new cases in population}
-  \label{fig:fracpop}
- \end{subfigure}%
- \begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{../figs/seir_rt_comparison.png}
-  \caption{Effective reproduction rate estimators}
-  \label{fig:eff}
- \end{subfigure}
- \caption{Left: fraction infected in two SEIR models with $\beta = 1.2$ and $0.9$ respectively, $\sigma = 0.3$, and $\gamma = 0.15$ with same initial conditions. Right: comparison of $\hat R_t$ across time with $FN = 0.30$, $FP = 0.024$, and $M = 4$.}
- \label{fig:comparison}
- \end{figure}
+ % \begin{figure}[!th]
+ % \centering
+ % \begin{subfigure}{.5\textwidth}
+ %  \centering
+ %  \includegraphics[width=.9\linewidth]{../figs/seir.png}
+ %  \caption{Fraction of new cases in population}
+ %  \label{fig:fracpop}
+ % \end{subfigure}%
+ % \begin{subfigure}{.5\textwidth}
+ %  \centering
+ %  \includegraphics[width=.9\linewidth]{../figs/seir_rt_comparison.png}
+ %  \caption{Effective reproduction rate estimators}
+ %  \label{fig:eff}
+ % \end{subfigure}
+ % \caption{Left: fraction infected in two SEIR models with $\beta = 1.2$ and $0.9$ respectively, $\sigma = 0.3$, and $\gamma = 0.15$ with same initial conditions. Right: comparison of $\hat R_t$ across time with $FN = 0.30$, $FP = 0.024$, and $M = 4$.}
+ % \label{fig:comparison}
+ % \end{figure}
 
 
- So far we have focused on understanding the limitations of using case-count data to understand population quantities of interest for a \emph{single} population.  Many are interested in cross-population comparisons to contrast the impact of countries' mitigation policies.  Here, for simplicity, we focus on comparing the estimated effective reproductive rate.  We assume the two time-series are aligned so that $t=0$ is the time of first case in each population respectively.
- % This negates alignment issues and is common in practice.
+ % So far we have focused on understanding the limitations of using case-count data to understand population quantities of interest for a \emph{single} population.  Many are interested in cross-population comparisons to contrast the impact of countries' mitigation policies.  Here, for simplicity, we focus on comparing the estimated effective reproductive rate.  We assume the two time-series are aligned so that $t=0$ is the time of first case in each population respectively.
+ % % This negates alignment issues and is common in practice.
 
- % While the above issues on $Z$-scores and effective sample size are important, here we highlight a separate issue.
- %Here we demonstrate the interaction of biases in estimation of the two trajectories when the peak infection times differ slightly.
- %First, we can write the difference in the rates as $R_{t1} - R_{t2} = \frac{1}{\gamma} \log \left( \frac{1 + e_{1t}}{1+e_{2t}} \right)$ where $e_{jt}$ is the error associated given in Section \ref{section:r0-estimation}.
- %Recall that the error allowed for over-estimation prior to the peak and then under-estimation post-peak.  Here, these errors can mingle in interesting ways.
- Consider two countries (A and B) in which the peak occurs 2 weeks prior for country A than country B.  Figure~\ref{fig:comparison} presents such a comparison where each country's disease trajectory follows an SEIR model (A=black and B=grey). Figure~\ref{fig:eff} shows how biases interact in complex ways.  At first, the difference is correctly estimated; then the gap is over-estimated as country A sees a rapid rise in cases; then the magnitude of over-estimation increases as country A sees declining case-count while country B sees rapidly increasing case-count; then country A's rate is correctly estimated while country B's rate is under-estimated as it sees declining case-count; finally, the gap disappears.  While this may not always be the case, the analysis demonstrates how estimates can tell a more complex story than the truth (i.e., country A's peak is 2 weeks prior to country B's peak).
+ % % While the above issues on $Z$-scores and effective sample size are important, here we highlight a separate issue.
+ % %Here we demonstrate the interaction of biases in estimation of the two trajectories when the peak infection times differ slightly.
+ % %First, we can write the difference in the rates as $R_{t1} - R_{t2} = \frac{1}{\gamma} \log \left( \frac{1 + e_{1t}}{1+e_{2t}} \right)$ where $e_{jt}$ is the error associated given in Section \ref{section:r0-estimation}.
+ % %Recall that the error allowed for over-estimation prior to the peak and then under-estimation post-peak.  Here, these errors can mingle in interesting ways.
+ % Consider two countries (A and B) in which the peak occurs 2 weeks prior for country A than country B.  Figure~\ref{fig:comparison} presents such a comparison where each country's disease trajectory follows an SEIR model (A=black and B=grey). Figure~\ref{fig:eff} shows how biases interact in complex ways.  At first, the difference is correctly estimated; then the gap is over-estimated as country A sees a rapid rise in cases; then the magnitude of over-estimation increases as country A sees declining case-count while country B sees rapidly increasing case-count; then country A's rate is correctly estimated while country B's rate is under-estimated as it sees declining case-count; finally, the gap disappears.  While this may not always be the case, the analysis demonstrates how estimates can tell a more complex story than the truth (i.e., country A's peak is 2 weeks prior to country B's peak).
 
  \section{Potential improvements to prevalence estimation}
  \label{section:improvedcasecount}
@@ -530,18 +527,18 @@ This approximation ignores a term that is quadratic in the epidemic growth rate 
  \begin{lemma}[Variance of IPW estimator] \normalfont
  \label{lemma:ipw}
  % \textcolor{red}{Must check.}
-The estimates~$\hat \mu_t := \bar y_{n,t}^\star$, $\hat \pi_{j,t}$, $\hat{FP}$, and $\hat{FN}$ at a time~$t \in \{t_l^\prime\}$ are solutions to the following set of estimating equations
- $$
- \Phi_n (\eta_t) =
- \left (
- \begin{array}{c}
- \frac{1}{N} \sum_{j=1}^N I^{NR}_{j,t} \frac{Y_{j,t} - FP - (1-FP-FN) \cdot \mu_t}{\pi_{j,t}} \\
- \frac{1}{N \times \sum_{l = 1}^L K_h \left(|t - t_l^\prime| \right)} \sum_{l = 1}^L K_h \left(|t - t_l^\prime| \right) \left[ \sum_{j=1}^N I^{NR}_{j,t_l^\prime} X_{j,t_l^\prime} - \sum_{j = 1}^N I^{R}_{j,t_l^\prime} W^{R}_{j,t_l^\prime}  \pi_{j,t_l^\prime} X_{j,t_l^\prime}  \right] \\
- \frac{1}{n_{FP}} \sum_{i=1}^{n_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
- \frac{1}{n_{FN}} \sum_{i=1}^{n_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
- \end{array}
- \right ) = {\bf 0}
- $$
+The estimates~$\hat \mu_t := \bar y_{n,t}^\star$, $\hat \pi_{j,t}$, $\hat{FP}$, and $\hat{FN}$ at a time~$t \in \{t_l^\prime\}$ are solutions to the set of estimating equations~$\Phi_n(\eta_t)$ given in Appendix~\ref{app:asympderivations},
+ % $$
+ % \Phi_n (\eta_t) =
+ % \left (
+ % \begin{array}{c}
+ % \frac{1}{N} \sum_{j=1}^N I^{NR}_{j,t} \frac{Y_{j,t} - FP - (1-FP-FN) \cdot \mu_t}{\pi_{j,t}} \\
+ % \frac{1}{N \times \sum_{l = 1}^L K_h \left(|t - t_l^\prime| \right)} \sum_{l = 1}^L K_h \left(|t - t_l^\prime| \right) \left[ \sum_{j=1}^N I^{NR}_{j,t_l^\prime} X_{j,t_l^\prime} - \sum_{j = 1}^N I^{R}_{j,t_l^\prime} W^{R}_{j,t_l^\prime}  \pi_{j,t_l^\prime} X_{j,t_l^\prime}  \right] \\
+ % \frac{1}{n_{FP}} \sum_{i=1}^{n_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
+ % \frac{1}{n_{FN}} \sum_{i=1}^{n_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
+ % \end{array}
+ % \right ) = {\bf 0}
+ % $$
  where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under certain regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (\bar n^{-1/2})$  and $\text{var} (\hat y_{n,t}) = V_{t}^{(IPW)} + o (\bar n^{-1})$ where $\bar n = n \sum_{l=1}^L K_{h} (|t - t_l^\prime|)$ and $V_t^{(IPW)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$ where $\phi_n = \frac{\partial \Phi (\eta)}{\partial \eta}$ with $E[\cdot]$ and $\text{Var} (\cdot)$ are under the joint randomization of propensity score and sampling designs.
  \end{lemma}
 
@@ -602,26 +599,7 @@ Here, we consider covariate information that takes the form of a stratification 
  $$
  \frac{1}{\sum_{j=1}^N I^{R}_{j,t} W^R_{j,t}} \sum_{j=1}^N  I_{j,t}^{R} W_{j,t}^{R} \hat \mu_{t} (X_{j,t}) + \frac{1}{\sum_{j=1}^N I_{j,t}^{NR} w (X_{j,t})} \sum_{j=1}^N I_{j,t}^{NR} w(X_{j,t}) \left( \frac{Y_{j,t} - FP}{1 - FP - FN} - \hat \mu_t(X_{j,t}) \right).
  $$
- Assuming correct selection propensity model specification, then under the probability sample design and nonprobability sample design, Lemma~\ref{lemma:dr} shows that the doubly robust estimator is consistent and calculates the estimator's variance. See Appendix~\ref{app:asympderivations} for additional details.
-
- \begin{lemma}[Variance of doubly-robust estimator] \normalfont
- \label{lemma:dr}
- The estimates~$\mu_t := \bar y_{n,t}^\star$ and $\hat \pi_{j,t}$
- are solutions to the following set of estimating equations
- $$
- \Phi_n (\eta_t) =
- \left (
- \begin{array}{c}
- \frac{1}{N} \left[ \sum_{j=1}^N \frac{I^{NR}_{j,t}}{\pi_{j,t}} \left( \left( \frac{Y_{j,t} - FP}{1-FP-FN} - \hat \mu_{j,t}  \right)  - \mu_t \right) + \frac{\sum_{l=1}^L K_{h} (|t - t_l^\prime|) \sum_{j=1}^N I^{R}_{j,t_l^\prime} W^{R}_{j,t_l^\prime} \hat \mu_{j,t_l^\prime}}{\sum_{l=1}^L K_{h} (|t - t_l^\prime|) \sum_{j=1}^N I^{R}_{j,t_l^\prime} W^{R}_{j,t_l^\prime}} \right] \\
- \frac{1}{N \times \sum_{l=1}^L K_{h} (|t - t_l^\prime|)} \sum_{l=1}^L K_{h} (|t - t_l^\prime|) \sum_{j=1}^N I^{NR}_{j,t^\prime} X_{j,t^\prime} - \frac{1}{N} \sum_{j = 1}^N I^{R}_{j,t^\prime} W^{R}_{j,t^\prime}  \pi_{j,t^\prime} X_{j,t^\prime}  \\
- \frac{1}{n_{FP}} \sum_{j=1}^{n_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
- \frac{1}{n_{FN}} \sum_{j=1}^{n_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
- \end{array}
- \right ) = {\bf 0}
- $$
- where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (\bar n^{-1/2})$ and $\text{var} (\hat y_{n,t}) = V_{t}^{(DR)} + o (\bar n^{-1})$ where $\bar n = n \sum_{l=1}^L K_h(|t-t_l|)$ and $V_t^{(DR)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\Phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$ where $\phi_n = \frac{\partial \Phi (\eta)}{\partial \eta}$ with $E[\cdot]$ and $\text{Var} (\cdot)$ are under the joint randomization of propensity score and sampling designs.
- \end{lemma}
-
+ Assuming correct selection propensity model specification, then under the probability sample design and nonprobability sample design, Lemma~\ref{lemma:dr} in Appendix~\ref{app:asympderivations} shows that the doubly robust estimator is consistent and calculates the estimator's variance.
 
  \section{COVID-19 active infection prevalence in Indiana}
  \label{section:applications}
@@ -750,27 +728,27 @@ Here, we consider covariate information that takes the form of a stratification 
  $$
  \beta_t = \sum_{k=1}^{3} \left(\beta_{k-1} (1-w^{(k)}_t ) + \beta_{k} w_t\right),\quad w^{(k)}_t = (1 + \exp \left( -\xi (t - t_k - \nu) \right))^{-1} {\bf 1}[t \geq t_k]
  $$
- where~$(\beta_0,\beta_1, \beta_2, \beta_3)$ is the vector of transmission rate parameters, $\nu \geq 0$ is the potential delay, $\xi$ is the rate of change, and ${\bf 1}[\cdot]$ is an indicator function.  Each weight~$w_t^{(k)} = 0$ for $t < t_k$ and $w_t^{(k)} \to 1$ as $t \to \infty$. See Section~\ref{app:prior_modelbased} in the supplementary materials for details on prior specification.
+ where~$(\beta_0,\beta_1, \beta_2, \beta_3)$ is the vector of transmission rate parameters, $\nu \geq 0$ is the potential delay, $\xi$ is the rate of change, and ${\bf 1}[\cdot]$ is an indicator function.  Each weight~$w_t^{(k)} = 0$ for $t < t_k$ and $w_t^{(k)} \to 1$ as $t \to \infty$. See Section~\ref{app:prior_modelbased} in the supplementary materials for details on prior specification, posterior predict checks, and discussion on case undercounting.
 
- \begin{figure}[!th]
- \centering
- \begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{../figs/deaths_ppc.png}
- \caption{PPC on aggregate daily death counts.}
- \label{fig:deathsppc}
- \end{subfigure}%
- \begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{../figs/infections_ppc.png}
- \caption{Posterior on daily new infections.}
- \label{fig:casesppc}
- \end{subfigure}
- \caption{Posterior predictive check (PPC) on death counts and posterior distribution of infections.}
- \label{fig:ppcs}
- \end{figure}
+ % \begin{figure}[!th]
+ % \centering
+ % \begin{subfigure}{.5\textwidth}
+ %  \centering
+ %  \includegraphics[width=.9\linewidth]{../figs/deaths_ppc.png}
+ % \caption{PPC on aggregate daily death counts.}
+ % \label{fig:deathsppc}
+ % \end{subfigure}%
+ % \begin{subfigure}{.5\textwidth}
+ %  \centering
+ %  \includegraphics[width=.9\linewidth]{../figs/infections_ppc.png}
+ % \caption{Posterior on daily new infections.}
+ % \label{fig:casesppc}
+ % \end{subfigure}
+ % \caption{Posterior predictive check (PPC) on death counts and posterior distribution of infections.}
+ % \label{fig:ppcs}
+ % \end{figure}
 
- To check model fit, a posterior predictive check on aggregate death counts was performed. Figure~\ref{fig:deathsppc} shows the results which suggests chosen SEIR model fits the observed data well. Figure~\ref{fig:casesppc} presents the posterior distribution of daily new infections. As the active infection rate is defined as all infected individuals whose viral load has yet to fall below detectable levels by RT-PCR testing, to construct the active infection estimates we exponentially discount the number of newly infected individuals to estimate the number of these newly infected individuals who still have an active infection on future days. That is, the number of active infections on day~$t$ is given by~$\sum_{s=0}^t I_t^{\new} e^{-\lambda (t-s)}$. Strata-specific active infections are calculated similarly. In our analysis, the exponential discounting parameter is set to $20$ days to match with prior evidence that ``30\% to 40\% of people will still test positive at three weeks''~\citep{wlocneg}. To compare with case count data, Figure~\ref{fig:undercounting} in the supplementary materials computes the cumulative undercount factor of observed case counts as compared to new infections.  Posterior distributions for the age-specific new infections are used as part of the doubly-robust estimator of the active infection rate.
+ % To check model fit, a posterior predictive check on aggregate death counts was performed. Figure~\ref{fig:deathsppc} shows the results which suggests chosen SEIR model fits the observed data well. Figure~\ref{fig:casesppc} presents the posterior distribution of daily new infections. As the active infection rate is defined as all infected individuals whose viral load has yet to fall below detectable levels by RT-PCR testing, to construct the active infection estimates we exponentially discount the number of newly infected individuals to estimate the number of these newly infected individuals who still have an active infection on future days. That is, the number of active infections on day~$t$ is given by~$\sum_{s=0}^t I_t^{\new} e^{-\lambda (t-s)}$. Strata-specific active infections are calculated similarly. In our analysis, the exponential discounting parameter is set to $20$ days to match with prior evidence that ``30\% to 40\% of people will still test positive at three weeks''~\citep{wlocneg}. To compare with case count data, Figure~\ref{fig:undercounting} in the supplementary materials computes the cumulative undercount factor of observed case counts as compared to new infections.  Posterior distributions for the age-specific new infections are used as part of the doubly-robust estimator of the active infection rate.
 
 
  \subsection{Time-varying prevalence estimates}
