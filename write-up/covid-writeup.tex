@@ -199,12 +199,12 @@ To better estimate SARS-CoV-2 immunity in a population, seroprevalence studies t
 Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on weekends compared to weekdays. Moreover, COVID-19 tests are reported on the day they were administered, while case counts are reported based on the date the positive test was reported to and confirmed by the Indiana Department of Health system.  To minimize the impact of reporting, testing and case-count data are aggregated at the weekly level for analysis.
  \end{remark}
 
-\begin{remark}[Public versus government datasets]
-% In September 2020, the author submitted a data request to the Indiana Data Hub (IDH).  Over the next three months, we worked with Indiana's COVID-19 response team to refine the request.  In December 2020, the request was officially approved and data streams were made publicly available on the IDH.
-In this paper, we focus on \emph{publicly-available data}, i.e., data that anyone can download directly from official government data portals such as the Indiana Data Hub (IDH). While the scientific community has contributed through independent COVID-19 observational and clinical studies, a significant component of public policy guidance has relied on testing and case count data, e.g., CDC and state guidelines based on test positivity rates and relative changes in the case counts over time.   Addressing selection bias and measurement-error in these public datasets is imperative for better informed public policy debates.
+% \begin{remark}[Public versus government datasets]
+% % In September 2020, the author submitted a data request to the Indiana Data Hub (IDH).  Over the next three months, we worked with Indiana's COVID-19 response team to refine the request.  In December 2020, the request was officially approved and data streams were made publicly available on the IDH.
+% In this paper, we focus on \emph{publicly-available data}, i.e., data that anyone can download directly from official government data portals such as the Indiana Data Hub (IDH). While the scientific community has contributed through independent COVID-19 observational and clinical studies, a significant component of public policy guidance has relied on testing and case count data, e.g., CDC and state guidelines based on test positivity rates and relative changes in the case counts over time.   Addressing selection bias and measurement-error in these public datasets is imperative for better informed public policy debates.
 
-Note that Indiana's COVID-19 response team has access to official \emph{government data} which may not be publicly-available and is likely stored at the individual-level. Due to data privacy and legal concerns, some collected covariates may not be reported publicly and others are aggregated and reported marginally.  While data analytic decisions discussed in Section~\ref{section:applications} were made due to access of publicly-available data, the overall data analysis framework is designed to be a tool for health departments to assess the pandemic and guide responses, e.g.,  account for individual-level covariate information, rather than publicly-reported strata-level information, that may include important covariates such as symptom status and recent COVID-19 contact.
- \end{remark}
+% Note that Indiana's COVID-19 response team has access to official \emph{government data} which may not be publicly-available and is likely stored at the individual-level. Due to data privacy and legal concerns, some collected covariates may not be reported publicly and others are aggregated and reported marginally.  While data analytic decisions discussed in Section~\ref{section:applications} were made due to access of publicly-available data, the overall data analysis framework is designed to be a tool for health departments to assess the pandemic and guide responses, e.g.,  account for individual-level covariate information, rather than publicly-reported strata-level information, that may include important covariates such as symptom status and recent COVID-19 contact.
+%  \end{remark}
 
  %https://www.npr.org/sections/goatsandsoda/2020/05/31/865932474/should-i-get-tested-for-coronavirus-just-for-the-heck-of-it
 
@@ -234,47 +234,46 @@ Note that Indiana's COVID-19 response team has access to official \emph{governme
 
  \subsubsection{Random statewide testing}
 
- Between April 25--29, 2020, Indiana conducted statewide random molecular testing of persons ages $\geq 12$ years to assess prevalence of active infection to SARS-CoV-2~\citep{Yiannoutsos2021}. A stratified random sampling design was conducted using Indiana’s 10 public health preparedness districts as sampling strata. 15,495 participants were contacted resulting in a final sample size of 3,658. Demographic data was collected (e.g., summary statistics on age, sex, and race) as well as data on whether they experienced any COVID-19 compatible symptoms during the past 2 weeks or had shared a household with someone who had a positive test result for SARS-CoV-2. During May 2--3, 2020, an additional non-random sample of 898 individuals was also collected.
- Table~\ref{tab:indiana} summarizes the data.
+ Between April 25--29, 2020, Indiana conducted statewide random molecular testing of persons ages $\geq 12$ years to assess prevalence of active infection to SARS-CoV-2~\citep{Yiannoutsos2021}. A stratified random sampling design was conducted using Indiana’s 10 public health preparedness districts as sampling strata. 15,495 participants were contacted resulting in a final sample size of 3,658. Demographic data was collected (e.g., summary statistics on age, sex, and race) as well as data on whether they experienced any COVID-19 compatible symptoms during the past 2 weeks or had shared a household with someone who had a positive test result for SARS-CoV-2. During May 2--3, 2020, an additional non-random sample of 898 individuals was also collected.  Table~\ref{tab:indiana} in Appendix~\ref{app:in_add_details} summarizes the data.
  % In this paper, the nonrandom sample is used to assess whether the cumulative summary statistics are appropriate in constructing the inverse-probability weights as well as in constructing appropriate weights using symptom information.
 
- \begin{table}[!th]
- \begin{tabular}{c | c | r r r | r | r r }
- & & \multicolumn{3}{c}{Total Tests (\%)} & IN & \multicolumn{2}{c}{Positive Test Rate (\%)}\\
- \cline{3-5} \cline{7-8}
- & & NonRandom & Random & CTIS & Census & NonRandom & Random \\ \hline
- \multirow{2}{*}{Sex} & Female & 58.2 & 55.0 & 54.0 & 50.7 & 21.7 (11.2) & 1.4 \\
- & Male & 41.8 & 45.0  & 46.0 & 49.3 & 24.2 (12.4) & 2.1 \\ \hline
- \multirow{3}{*}{Age} & $<40$ & 39.4 & 28.0  & 36.2 & 52.7
- & 29.7 (15.0) & 1.7 \\
- & $40-59$ & 41.1 & 36.0  & 34.3 & 25.2 & 24.9 (12.5) & 2.1 \\
- & $\geq 60$ & 19.5 & 36.0  & 29.5 & 22.1 & 6.7 (3.4) & 0.9 \\ \hline
- \multirow{2}{*}{Race} & White & 23.1 & 92.0  & - & 86.9 & 19.5 (9.6) & 1.5 \\
- & Nonwhite & 76.9 & 8.0  & - & 13.1 & 25.0 (12.3) & 3.4 \\ \hline
- % Hispanic & Hispanic & 44.1 & 2.0 & 7.1 & 37.6 & 6.9 \\
- % Origin & Non-Hispanic & 55.9 & 98.0 & 92.9 & 13.0 & 1.3 \\ \hline
- \multirow{2}{*}{Fever} & Yes & 17.0 & 1.8  & 1.0 & - & 66.4 (32.1) & 4.5 \\
- & No & 83.0 & 98.2  & 99.0 & - & 15.6 (7.5) & 1.3 \\ \hline
- Household & Yes & 10.8 & 1.4  & 1.8 & - & 46.1 (22.4) & 29.4 \\
- $+$ Case & No & 89.2 & 98.6  & 98.2 & - & 21.6 (10.4) & 1.3 \\ \hline
- Prior $+$ & Yes & 6.1 & 1.4  & - & - & 39.2 (20.2) & 24.4 \\
- Test & No & 93.9 & 98.6  & - & - & 21.6 (11.1) & 1.3 \\ \hline
- \end{tabular}
- \caption{Estimated total tests ($\%$) and point prevalence of active infection with SARS-CoV-2 by demographics in Indiana~\citep{Yiannoutsos2021,doi:10.1073/pnas.2111454118}. NonRandom positive test rates in parentheses are adjusted rates to match the statewide rate of $11.7\%$ on August 30th.}
- \label{tab:indiana}
- \end{table}
+ % \begin{table}[!th]
+ % \begin{tabular}{c | c | r r r | r | r r }
+ % & & \multicolumn{3}{c}{Total Tests (\%)} & IN & \multicolumn{2}{c}{Positive Test Rate (\%)}\\
+ % \cline{3-5} \cline{7-8}
+ % & & NonRandom & Random & CTIS & Census & NonRandom & Random \\ \hline
+ % \multirow{2}{*}{Sex} & Female & 58.2 & 55.0 & 54.0 & 50.7 & 21.7 (11.2) & 1.4 \\
+ % & Male & 41.8 & 45.0  & 46.0 & 49.3 & 24.2 (12.4) & 2.1 \\ \hline
+ % \multirow{3}{*}{Age} & $<40$ & 39.4 & 28.0  & 36.2 & 52.7
+ % & 29.7 (15.0) & 1.7 \\
+ % & $40-59$ & 41.1 & 36.0  & 34.3 & 25.2 & 24.9 (12.5) & 2.1 \\
+ % & $\geq 60$ & 19.5 & 36.0  & 29.5 & 22.1 & 6.7 (3.4) & 0.9 \\ \hline
+ % \multirow{2}{*}{Race} & White & 23.1 & 92.0  & - & 86.9 & 19.5 (9.6) & 1.5 \\
+ % & Nonwhite & 76.9 & 8.0  & - & 13.1 & 25.0 (12.3) & 3.4 \\ \hline
+ % % Hispanic & Hispanic & 44.1 & 2.0 & 7.1 & 37.6 & 6.9 \\
+ % % Origin & Non-Hispanic & 55.9 & 98.0 & 92.9 & 13.0 & 1.3 \\ \hline
+ % \multirow{2}{*}{Fever} & Yes & 17.0 & 1.8  & 1.0 & - & 66.4 (32.1) & 4.5 \\
+ % & No & 83.0 & 98.2  & 99.0 & - & 15.6 (7.5) & 1.3 \\ \hline
+ % Household & Yes & 10.8 & 1.4  & 1.8 & - & 46.1 (22.4) & 29.4 \\
+ % $+$ Case & No & 89.2 & 98.6  & 98.2 & - & 21.6 (10.4) & 1.3 \\ \hline
+ % Prior $+$ & Yes & 6.1 & 1.4  & - & - & 39.2 (20.2) & 24.4 \\
+ % Test & No & 93.9 & 98.6  & - & - & 21.6 (11.1) & 1.3 \\ \hline
+ % \end{tabular}
+ % \caption{Estimated total tests ($\%$) and point prevalence of active infection with SARS-CoV-2 by demographics in Indiana~\citep{Yiannoutsos2021,doi:10.1073/pnas.2111454118}. NonRandom positive test rates in parentheses are adjusted rates to match the statewide rate of $11.7\%$ on August 30th.}
+ % \label{tab:indiana}
+ % \end{table}
 
  \subsubsection{Delphi's COVID-19 Trends and Impact Survey}
  \label{subsection:fbsymptom}
- Since April 2020, in collaboration with Facebook, the Delphi group at Carnegie Mellon University has conducted the COVID-19 Trends and Impact Survey (CTIS) to monitor the spread and impact of the COVID-19 pandemic in the United States.  The survey is advertised through Facebook, who automatically select a random sample of its users to see the advertisement~\citep{doi:10.1073/pnas.2111454118}.  Data collected includes basic demographic information and if the respondent has symptoms such as fever, coughing, shortness of breath, or loss of smell which are associated with COVID-19.  The survey defines an individual as displaying \emph{COVID-like symptoms} if they exhibit a fever along with a cough, or shortness of breath, or difficulty breathing.  Figure~\ref{fig:fbsymptoms} displays smoothed estimates of the fraction of individuals who report COVID-like symptoms within the past 24-hours by age and gender.  The Delphi's COVID-19 Trends and Impact Survey (CTIS) is used as the main source of auxiliary information on time-varying characteristics of the population of Indiana, e.g., displaying COVID-like symptoms or in contact with COVID-19 positive individuals.
+ Since April 2020, in collaboration with Facebook, the Delphi group at Carnegie Mellon University has conducted the COVID-19 Trends and Impact Survey (CTIS) to monitor the spread and impact of the COVID-19 pandemic in the United States.  The survey is advertised through Facebook, who automatically select a random sample of its users to see the advertisement~\citep{doi:10.1073/pnas.2111454118}.  Data collected includes basic demographic information and if the respondent has symptoms such as fever, coughing, shortness of breath, or loss of smell which are associated with COVID-19.  The survey defines an individual as displaying \emph{COVID-like symptoms} if they exhibit a fever along with a cough, or shortness of breath, or difficulty breathing.  Figure~\ref{fig:fbsymptoms} in Appendix~\ref{app:in_add_details} displays smoothed estimates of the fraction of individuals who report COVID-like symptoms within the past 24-hours by age and gender.  The Delphi's COVID-19 Trends and Impact Survey (CTIS) is used as the main source of auxiliary information on time-varying characteristics of the population of Indiana, e.g., displaying COVID-like symptoms or in contact with COVID-19 positive individuals.
 
- \begin{figure}[!th]
- \centering
- \includegraphics[width = 0.9\textwidth]{../figs/fbcovid19symptoms.png}
- \caption{Rate of reported COVID-19 symptoms per strata.  Daily rates were estimated using weighted method suggested by~\citep{doi:10.1073/pnas.2111454118} on each day separately and then smoothed over time using local-linear nonparametric regression.}
- \label{fig:fbsymptoms}
- \vspace{-0.3cm}
- \end{figure}
+ % \begin{figure}[!th]
+ % \centering
+ % \includegraphics[width = 0.9\textwidth]{../figs/fbcovid19symptoms.png}
+ % \caption{Rate of reported COVID-19 symptoms per strata.  Daily rates were estimated using weighted method suggested by~\citep{doi:10.1073/pnas.2111454118} on each day separately and then smoothed over time using local-linear nonparametric regression.}
+ % \label{fig:fbsymptoms}
+ % \vspace{-0.3cm}
+ % \end{figure}
 
  %% GOOD THROUGH HERE
 
@@ -519,28 +518,28 @@ This approximation ignores a term that is quadratic in the epidemic growth rate 
  $$
  where $K_h$ is a kernel function with tunable parameter $h$. Given $\pi (x;\hat \theta_t)$, the prevalence estimator $\bar y_{n,t}^\star$ is given by~\ref{eq:ipwest} using case-count data observed on day~$t$.
 
- \subsubsection{Asymptotics}
- \label{section:asymptotics}
+%  \subsubsection{Asymptotics}
+%  \label{section:asymptotics}
 
- Here we suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$ and that there are $L_\nu$ non-probability samples and probability samples of size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^{L_{\nu}}$ over the study window~$[0,T]$. Assuming correct selection model specification, then under the probability sample design and nonprobability sample propensities, Lemma~\ref{lemma:ipw} shows that the IPW estimator at a time~$t \in \{ t^\prime_l \}$ is consistent as $\nu$ goes to infinity (i.e., $N_{\nu}, L_{\nu} \to \infty$) and calculates the estimator's variance.  In Lemma~\ref{lemma:ipw}, sensitivity/specificity are unknown and estimated using a pseudo-likelihood on two random samples whose sizes (denoted~$n_{FP}$ and $n_{FN}$) reflect uncertainty in these quantities.  See Appendix~\ref{app:asympderivations} for additional details.
+%  Here we suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$ and that there are $L_\nu$ non-probability samples and probability samples of size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^{L_{\nu}}$ over the study window~$[0,T]$. Assuming correct selection model specification, then under the probability sample design and nonprobability sample propensities, Lemma~\ref{lemma:ipw} shows that the IPW estimator at a time~$t \in \{ t^\prime_l \}$ is consistent as $\nu$ goes to infinity (i.e., $N_{\nu}, L_{\nu} \to \infty$) and calculates the estimator's variance.  In Lemma~\ref{lemma:ipw}, sensitivity/specificity are unknown and estimated using a pseudo-likelihood on two random samples whose sizes (denoted~$n_{FP}$ and $n_{FN}$) reflect uncertainty in these quantities.  See Appendix~\ref{app:asympderivations} for additional details.
 
- \begin{lemma}[Variance of IPW estimator] \normalfont
- \label{lemma:ipw}
- % \textcolor{red}{Must check.}
-The estimates~$\hat \mu_t := \bar y_{n,t}^\star$, $\hat \pi_{j,t}$, $\hat{FP}$, and $\hat{FN}$ at a time~$t \in \{t_l^\prime\}$ are solutions to the set of estimating equations~$\Phi_n(\eta_t)$ given in Appendix~\ref{app:asympderivations},
- % $$
- % \Phi_n (\eta_t) =
- % \left (
- % \begin{array}{c}
- % \frac{1}{N} \sum_{j=1}^N I^{NR}_{j,t} \frac{Y_{j,t} - FP - (1-FP-FN) \cdot \mu_t}{\pi_{j,t}} \\
- % \frac{1}{N \times \sum_{l = 1}^L K_h \left(|t - t_l^\prime| \right)} \sum_{l = 1}^L K_h \left(|t - t_l^\prime| \right) \left[ \sum_{j=1}^N I^{NR}_{j,t_l^\prime} X_{j,t_l^\prime} - \sum_{j = 1}^N I^{R}_{j,t_l^\prime} W^{R}_{j,t_l^\prime}  \pi_{j,t_l^\prime} X_{j,t_l^\prime}  \right] \\
- % \frac{1}{n_{FP}} \sum_{i=1}^{n_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
- % \frac{1}{n_{FN}} \sum_{i=1}^{n_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
- % \end{array}
- % \right ) = {\bf 0}
- % $$
- where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under certain regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (\bar n^{-1/2})$  and $\text{var} (\hat y_{n,t}) = V_{t}^{(IPW)} + o (\bar n^{-1})$ where $\bar n = n \sum_{l=1}^L K_{h} (|t - t_l^\prime|)$ and $V_t^{(IPW)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$ where $\phi_n = \frac{\partial \Phi (\eta)}{\partial \eta}$ with $E[\cdot]$ and $\text{Var} (\cdot)$ are under the joint randomization of propensity score and sampling designs.
- \end{lemma}
+%  \begin{lemma}[Variance of IPW estimator] \normalfont
+%  \label{lemma:ipw}
+%  % \textcolor{red}{Must check.}
+% The estimates~$\hat \mu_t := \bar y_{n,t}^\star$, $\hat \pi_{j,t}$, $\hat{FP}$, and $\hat{FN}$ at a time~$t \in \{t_l^\prime\}$ are solutions to the set of estimating equations~$\Phi_n(\eta_t)$ given in Appendix~\ref{app:asympderivations},
+%  % $$
+%  % \Phi_n (\eta_t) =
+%  % \left (
+%  % \begin{array}{c}
+%  % \frac{1}{N} \sum_{j=1}^N I^{NR}_{j,t} \frac{Y_{j,t} - FP - (1-FP-FN) \cdot \mu_t}{\pi_{j,t}} \\
+%  % \frac{1}{N \times \sum_{l = 1}^L K_h \left(|t - t_l^\prime| \right)} \sum_{l = 1}^L K_h \left(|t - t_l^\prime| \right) \left[ \sum_{j=1}^N I^{NR}_{j,t_l^\prime} X_{j,t_l^\prime} - \sum_{j = 1}^N I^{R}_{j,t_l^\prime} W^{R}_{j,t_l^\prime}  \pi_{j,t_l^\prime} X_{j,t_l^\prime}  \right] \\
+%  % \frac{1}{n_{FP}} \sum_{i=1}^{n_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
+%  % \frac{1}{n_{FN}} \sum_{i=1}^{n_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
+%  % \end{array}
+%  % \right ) = {\bf 0}
+%  % $$
+%  where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under certain regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (\bar n^{-1/2})$  and $\text{var} (\hat y_{n,t}) = V_{t}^{(IPW)} + o (\bar n^{-1})$ where $\bar n = n \sum_{l=1}^L K_{h} (|t - t_l^\prime|)$ and $V_t^{(IPW)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$ where $\phi_n = \frac{\partial \Phi (\eta)}{\partial \eta}$ with $E[\cdot]$ and $\text{Var} (\cdot)$ are under the joint randomization of propensity score and sampling designs.
+%  \end{lemma}
 
  \subsection{Model-based estimation}
  \label{section:modelbased}
@@ -572,67 +571,72 @@ Here, we consider covariate information that takes the form of a stratification 
  % 65+ years old: 90,000/1000000 * 100 -> 9.0
  %
 
+ \begin{remark}[Doubly robust estimation]
+Rather than relying solely on IPW or epidemiological forecasts, we combine forecasting and inverse-probability weighting by extending recent work by~\cite{Chen2019} to account time-varying propensities and measurement-error. The doubly-robust estimator is presented in Appendix~\ref{app:drestimation}.
+ \end{remark}
 
- \subsection{Doubly robust estimation.}
- Rather than relying solely on IPW or epidemiological forecasts, here we combine forecasting and inverse-probability weighting by extending recent work by~\cite{Chen2019} to account time-varying propensities and measurement-error.
- Let~$\hat \mu(x)$ denote the posterior mean of the active infection rate individuals with covariate value~$x$ based on the SEIR model described in Section~\ref{section:modelbased}. In this context, the doubly-robust estimator is given by
- $$
- \bar y_{n}^{(DR)} = \frac{1}{N} \sum_{j=1}^N \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j^{NR} w (x_j)} \sum_{j=1}^N I_j^{NR} w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \hat \mu(x_j) \right).
- $$
- where $\hat \mu(x_j)$ is not corrected for measurement-error as it estimates true active infections. This estimator is called ``doubly-robust'' because it is consistent if either the model-based forecasts or the time-varying propensities are correctly specified. A statistical error decomposition can be derived
- \begin{align}
- \label{eq:statdecomp3}
- \begin{split}
- \rho_{I^{NR} (X), Y-\mu(X)} &\times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y-\mu(X)}  \\
- &\times \underbrace{\left[ 1 - \frac{\rho_{I^{NR}(X),Y} \sigma_{Y}}{\rho_{I^{NR} (X),Y-\mu(X)} \sigma_{Y-\mu(X)}} \times \tilde \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{\tilde f_0 (1-\bar Y) + \tilde f_1 \bar Y} \right]}_{\tilde D_M}.
- \end{split}
- \end{align}
- See Appendix~\ref{app:DRderivation} for the derivation.
- % Comparing~\eqref{eq:statdecomp3} to~\eqref{eq:statdecomp2} shows that the addition of the model-based forecast impacts the estimation error in two ways.
- If the model is adequate, then one may expect a reduction in the problem difficulty and (potentially) in the data quality components.
- % Note that the model-based forecast does not impact the data quantity component.
-% Second, if the model-based forecast is correct then $E_{\bf R} [ \rho_{\tilde I (X), Y-\mu(X)} ] = 0$  and therefore $\rho_{\tilde I(X), Y-\mu(X)} = O(N^{-1})$; however, if the forecasts are not correctly specified then the data quality index is unlikely to inversely scale with population size.
- Interestingly, the impact of measurement-error on data quality now depends on a relative comparison of the data quality and problem difficulty of the weighted estimator and the doubly-robust estimator.
- % For decent models, one would expect this ratio to be greater than one.  Therefore, $\tilde \Delta < 0$ implies an expected increase in impact of measurement-error and $\tilde \Delta > 0$ implies the magnitude could shrink toward zero or change sign and have an even large magnitude in the opposite direction.  Again, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from a DR estimator are likely to put too much confidence in the sheer size of the data.
 
- Unfortunately, the first term of the doubly robust estimator cannot be computed as covariate information is not collected on the entire population.  Here, we suppose the same asymptotic regime as in Section~\ref{section:asymptotics} and use the probability sample at the time~$t \in \{t_l^\prime\}$ to estimate this term:
- $$
- \frac{1}{\sum_{j=1}^N I^{R}_{j,t} W^R_{j,t}} \sum_{j=1}^N  I_{j,t}^{R} W_{j,t}^{R} \hat \mu_{t} (X_{j,t}) + \frac{1}{\sum_{j=1}^N I_{j,t}^{NR} w (X_{j,t})} \sum_{j=1}^N I_{j,t}^{NR} w(X_{j,t}) \left( \frac{Y_{j,t} - FP}{1 - FP - FN} - \hat \mu_t(X_{j,t}) \right).
- $$
- Assuming correct selection propensity model specification, then under the probability sample design and nonprobability sample design, Lemma~\ref{lemma:dr} in Appendix~\ref{app:asympderivations} shows that the doubly robust estimator is consistent and calculates the estimator's variance.
+%  \subsection{Doubly robust estimation.}
+%  Rather than relying solely on IPW or epidemiological forecasts, here we combine forecasting and inverse-probability weighting by extending recent work by~\cite{Chen2019} to account time-varying propensities and measurement-error.
+%  Let~$\hat \mu(x)$ denote the posterior mean of the active infection rate individuals with covariate value~$x$ based on the SEIR model described in Section~\ref{section:modelbased}. In this context, the doubly-robust estimator is given by
+%  $$
+%  \bar y_{n}^{(DR)} = \frac{1}{N} \sum_{j=1}^N \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j^{NR} w (x_j)} \sum_{j=1}^N I_j^{NR} w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \hat \mu(x_j) \right).
+%  $$
+%  where $\hat \mu(x_j)$ is not corrected for measurement-error as it estimates true active infections. This estimator is called ``doubly-robust'' because it is consistent if either the model-based forecasts or the time-varying propensities are correctly specified. A statistical error decomposition can be derived
+%  \begin{align}
+%  \label{eq:statdecomp3}
+%  \begin{split}
+%  \rho_{I^{NR} (X), Y-\mu(X)} &\times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y-\mu(X)}  \\
+%  &\times \underbrace{\left[ 1 - \frac{\rho_{I^{NR}(X),Y} \sigma_{Y}}{\rho_{I^{NR} (X),Y-\mu(X)} \sigma_{Y-\mu(X)}} \times \tilde \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{\tilde f_0 (1-\bar Y) + \tilde f_1 \bar Y} \right]}_{\tilde D_M}.
+%  \end{split}
+%  \end{align}
+%  See Appendix~\ref{app:DRderivation} for the derivation.
+%  % Comparing~\eqref{eq:statdecomp3} to~\eqref{eq:statdecomp2} shows that the addition of the model-based forecast impacts the estimation error in two ways.
+%  If the model is adequate, then one may expect a reduction in the problem difficulty and (potentially) in the data quality components.
+%  % Note that the model-based forecast does not impact the data quantity component.
+% % Second, if the model-based forecast is correct then $E_{\bf R} [ \rho_{\tilde I (X), Y-\mu(X)} ] = 0$  and therefore $\rho_{\tilde I(X), Y-\mu(X)} = O(N^{-1})$; however, if the forecasts are not correctly specified then the data quality index is unlikely to inversely scale with population size.
+%  Interestingly, the impact of measurement-error on data quality now depends on a relative comparison of the data quality and problem difficulty of the weighted estimator and the doubly-robust estimator.
+%  % For decent models, one would expect this ratio to be greater than one.  Therefore, $\tilde \Delta < 0$ implies an expected increase in impact of measurement-error and $\tilde \Delta > 0$ implies the magnitude could shrink toward zero or change sign and have an even large magnitude in the opposite direction.  Again, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from a DR estimator are likely to put too much confidence in the sheer size of the data.
+
+%  Unfortunately, the first term of the doubly robust estimator cannot be computed as covariate information is not collected on the entire population.  Here, we suppose the same asymptotic regime as in Section~\ref{section:asymptotics} and use the probability sample at the time~$t \in \{t_l^\prime\}$ to estimate this term:
+%  $$
+%  \frac{1}{\sum_{j=1}^N I^{R}_{j,t} W^R_{j,t}} \sum_{j=1}^N  I_{j,t}^{R} W_{j,t}^{R} \hat \mu_{t} (X_{j,t}) + \frac{1}{\sum_{j=1}^N I_{j,t}^{NR} w (X_{j,t})} \sum_{j=1}^N I_{j,t}^{NR} w(X_{j,t}) \left( \frac{Y_{j,t} - FP}{1 - FP - FN} - \hat \mu_t(X_{j,t}) \right).
+%  $$
+%  Assuming correct selection propensity model specification, then under the probability sample design and nonprobability sample design, Lemma~\ref{lemma:dr} in Appendix~\ref{app:asympderivations} shows that the doubly robust estimator is consistent and calculates the estimator's variance.
 
  \section{COVID-19 active infection prevalence in Indiana}
  \label{section:applications}
 
  % For COVID-19 case-count data, the only covariate information provided by state and local governments are summary statistics for those factors discussed in Section~\ref{section:testinginfo} -- age, sex,  and race.  These are discrete factors and therefore define a stratification of the population.  Currently, US testing does not collect additional covariate information such as symptom information; however, this need not be the case moving forward.  Recommendation XX below states that additional covariate information should be collected from nonprobabilistic samples.
 
- We next consider estimation of the active infection rate in Indiana using unweighted, IPW, model-based, and doubly robust estimates. To start, we recap the data sources used in estimation:
- \begin{itemize}[leftmargin=*]
- \item {\bf Testing data}:  The number of daily tests performed and number of daily positive tests are reported.  These counts are broken out jointly by age, gender, and racial demographic information.  Figure~\ref{fig:in-cases} and~\ref{fig:in-tests} plots daily COVID-19 positive cases and tests by age strata.
+ We next consider estimation of the active infection rate in Indiana using unweighted, IPW, model-based, and doubly robust estimates based on the combination of testing data, random/nonrandom statewide samples, CTIS survey data, and hospitalization records previously discussed in Section~\ref{section:data}.
+ % To start, we recap the data sources used in estimation:
+ % \begin{itemize}[leftmargin=*]
+ % \item {\bf Testing data}:  The number of daily tests performed and number of daily positive tests are reported.  These counts are broken out jointly by age, gender, and racial demographic information.  Figure~\ref{fig:in-cases} and~\ref{fig:in-tests} plots daily COVID-19 positive cases and tests by age strata.
 
- \item {\bf Random/Nonrandom statewide sample}: Table~\ref{tab:indiana} summarizes data from a random sample from April 25--29th as well as a nonrandom sample obtained between May 2--3 in racial/ethnic minority communities~\citep{Yiannoutsos2021}. The nonrandom sample is not a random subsample of the overall case-counts; however, this data provides important supplementary covariate information.
- % Namely, the samples collected included covariate information on (1) prior symptoms, (2) COVID-19 positive individual in household, and (3) prior COVID-19 positive test.
- To account for the nonrandom sample being from high risk areas, we adjust estimates to match the statewide positivity rate of 11.7\% on August 30th. These adjusted rates are presented in parentheses in Table~\ref{tab:indiana} along with the relevant covariate information.
+ % \item {\bf Random/Nonrandom statewide sample}: Table~\ref{tab:indiana} summarizes data from a random sample from April 25--29th as well as a nonrandom sample obtained between May 2--3 in racial/ethnic minority communities~\citep{Yiannoutsos2021}. The nonrandom sample is not a random subsample of the overall case-counts; however, this data provides important supplementary covariate information.
+ % % Namely, the samples collected included covariate information on (1) prior symptoms, (2) COVID-19 positive individual in household, and (3) prior COVID-19 positive test.
+ % To account for the nonrandom sample being from high risk areas, we adjust estimates to match the statewide positivity rate of 11.7\% on August 30th. These adjusted rates are presented in parentheses in Table~\ref{tab:indiana} along with the relevant covariate information.
 
- \item {\bf Delphi's COVID-19 Trends and Impact Survey}: From the daily symptom surveys completed as part of Delphi's CTIS (see Section~\ref{subsection:fbsymptom} for details), we extract survey responses for individuals who identify as living in Indiana.  We collect age, sex, and demographic information as well as COVID-19 related symptoms, which Delphi defines as having (1) a fever and cough, (2) shortness of breath, \emph{or} (3) difficulty breathing. Table~\ref{tab:comparison} in Section~\ref{app:in_add_details} of the supplementary materials shows minimal bias with respect to symptom distributions when comparing to Indiana's random sample to the CTIS data collected from April 25th to April 29th.
+ % \item {\bf Delphi's COVID-19 Trends and Impact Survey}: From the daily symptom surveys completed as part of Delphi's CTIS (see Section~\ref{subsection:fbsymptom} for details), we extract survey responses for individuals who identify as living in Indiana.  We collect age, sex, and demographic information as well as COVID-19 related symptoms, which Delphi defines as having (1) a fever and cough, (2) shortness of breath, \emph{or} (3) difficulty breathing. Table~\ref{tab:comparison} in Section~\ref{app:in_add_details} of the supplementary materials shows minimal bias with respect to symptom distributions when comparing to Indiana's random sample to the CTIS data collected from April 25th to April 29th.
 
- % \begin{table}[!th]
- % \centering
- % \begin{tabular}{c | c c c | c}
- % & \multicolumn{3}{c}{Facebook} & Random \\ \cline{2-4}
- % & Lower CI & Estimate & Upper CI & Estimate \\ \hline
- % Fever &  0.017 & 0.020 & 0.024 & 0.018 \\
- % Cough &  0.142 & 0.148 & 0.154 & 0.149 \\
- % Shortness & 0.058 & 0.060 & 0.062 & 0.062 \\ \hline
- % \end{tabular}
- % \caption{Comparison of Facebook survey and random sample}
- % \label{tab:comparison}
- % \end{table}
+ % % \begin{table}[!th]
+ % % \centering
+ % % \begin{tabular}{c | c c c | c}
+ % % & \multicolumn{3}{c}{Facebook} & Random \\ \cline{2-4}
+ % % & Lower CI & Estimate & Upper CI & Estimate \\ \hline
+ % % Fever &  0.017 & 0.020 & 0.024 & 0.018 \\
+ % % Cough &  0.142 & 0.148 & 0.154 & 0.149 \\
+ % % Shortness & 0.058 & 0.060 & 0.062 & 0.062 \\ \hline
+ % % \end{tabular}
+ % % \caption{Comparison of Facebook survey and random sample}
+ % % \label{tab:comparison}
+ % % \end{table}
 
- % \item {\bf Hospitalization data}: On each day, we observe the number of individuals who are COVID-19 positive that visited a hospital on that day.  Unfortunately, hospitalization data is not broken out by age, gender, and racial demographic information.  Instead, we rely on combining Facebook data to calculate the fraction of those who sought the hospital per week in each strata. We then use this to figure out how many individuals per strata were hospitalized and then back out how many
+ % % \item {\bf Hospitalization data}: On each day, we observe the number of individuals who are COVID-19 positive that visited a hospital on that day.  Unfortunately, hospitalization data is not broken out by age, gender, and racial demographic information.  Instead, we rely on combining Facebook data to calculate the fraction of those who sought the hospital per week in each strata. We then use this to figure out how many individuals per strata were hospitalized and then back out how many
 
- \item {\bf Death data}: Daily COVID-19 related deaths are observed by age, gender, and racial demographics.  Figure~\ref{fig:in-deaths} plots COVID-19 related deaths over time by age group. While most tests and positive cases are within the younger age strata, most deaths are within the 70+ age strata.
- \end{itemize}
+ % \item {\bf Death data}: Daily COVID-19 related deaths are observed by age, gender, and racial demographics.  Figure~\ref{fig:in-deaths} plots COVID-19 related deaths over time by age group. While most tests and positive cases are within the younger age strata, most deaths are within the 70+ age strata.
+ % \end{itemize}
 
 \begin{remark}
 \label{rmk:limitations}
@@ -674,11 +678,11 @@ Here, we consider covariate information that takes the form of a stratification 
  \subsubsection{Time-varying IPW estimator}
  \label{section:tvipw}
 
- The IPW analysis is next extended to the time-varying setting.  To do so, we make use of the CTIS, hospitalization, and testing data.  Recall the COVID-19 testing and positive case counts are known by age, gender, and racial demographics. Symptom status (e.g., fever, coughing, shortness of breath) and related covariate information (COVID-19 positive contact), however, are currently unavailable, which is likely due to data privacy considerations.  As COVID-19 symptom status is likely to alter the testing propensity and likelihood of active infection, for illustrative purposes CTIS and hospitalization data are used in two ways to impute symptom status per strata. We outline the imputation methods below; see Section~\ref{section:discussion} for additional discussion.
+ The IPW analysis is next extended to the time-varying setting.  To do so, we make use of the CTIS, hospitalization, and testing data.  Recall the COVID-19 testing and positive case counts are known by age, gender, and racial demographics. Symptom status (e.g., fever, coughing, shortness of breath) and related covariate information (COVID-19 positive contact), however, are currently unavailable, which is likely due to data privacy considerations.  As COVID-19 symptom status is likely to alter the testing propensity and likelihood of active infection, for illustrative purposes CTIS and hospitalization data are used in two ways (termed IPW1 and IPW2 respectively) to impute symptom status per strata. We present IPW2 below; see Section~\ref{section:discussion} for details on IPW1 and additional discussion.
 
- In the first approach, we estimate two logistic regressions using weighted pseudo-likelihoods with the CTIS data.  The first estimates the probability of contact with a COVID-19 positive individual given demographic and COVID-19 test status (positive or negative COVID-19 test). Figure~\ref{fig:contactlik1} and~\ref{fig:contactlik2} in Section~\ref{app:in_add_details} in the supplementary materials presents the estimated likelihood of contact with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  The second estimates the probability of fever given demographic, COVID-19 test status, \emph{and} whether the individual has had contact with a COVID-19 positive individual.  Figure~\ref{fig:symptomlik1} and~\ref{fig:symptomlik2} in Section~\ref{app:in_add_details} in the supplementary materials presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that likelihood of fever varies greatly based on whether the individual also reported contact with a COVID-19 positive individual. Using these two models, mean imputation is used to calculate the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. Inverse probability weights are computed based on the resulting dataset (termed IPW1).
+ % In the first approach, we estimate two logistic regressions using weighted pseudo-likelihoods with the CTIS data.  The first estimates the probability of contact with a COVID-19 positive individual given demographic and COVID-19 test status (positive or negative COVID-19 test). Figure~\ref{fig:contactlik1} and~\ref{fig:contactlik2} in Section~\ref{app:in_add_details} in the supplementary materials presents the estimated likelihood of contact with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  The second estimates the probability of fever given demographic, COVID-19 test status, \emph{and} whether the individual has had contact with a COVID-19 positive individual.  Figure~\ref{fig:symptomlik1} and~\ref{fig:symptomlik2} in Section~\ref{app:in_add_details} in the supplementary materials presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that likelihood of fever varies greatly based on whether the individual also reported contact with a COVID-19 positive individual. Using these two models, mean imputation is used to calculate the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. Inverse probability weights are computed based on the resulting dataset (termed IPW1).
 
- In the second approach, we leverage hospitalization information. We first estimate the probability of fever given demographic and COVID-19 test status.  When the COVID-19 test status is positive, the probability of fever is allowed to depend on whether the individual was hospitalized.  Figure~\ref{fig:symptomlik1_model2} and~\ref{fig:symptomlik2_model2} in Section~\ref{app:in_add_details} in the supplementary materials presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that hospitalization significantly increases the likelihood of fever as expected.  We use these models and the case-to-hospitalization rates by demographic strata to perform mean imputation of the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. The use of hospitalization data to estimate the probability of fever may be subject to survivor bias as well as biases driven by differential care.  Inverse probability weights are then computed based on the resulting dataset (termed IPW2).
+ IPW2 starts by estimating the probability of fever given demographic and COVID-19 test status.  When the COVID-19 test status is positive, the probability of fever is allowed to depend on whether the individual was hospitalized.  Figure~\ref{fig:symptomlik1_model2} and~\ref{fig:symptomlik2_model2} in Section~\ref{app:in_add_details} in the supplementary materials presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that hospitalization significantly increases the likelihood of fever as expected.  We use these models and the case-to-hospitalization rates by demographic strata to perform mean imputation of the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. The use of hospitalization data to estimate the probability of fever may be subject to survivor bias as well as biases driven by differential care.  Inverse probability weights are then computed based on the resulting dataset (termed IPW2).
 
 
  \begin{figure}[!th]
@@ -699,8 +703,7 @@ Here, we consider covariate information that takes the form of a stratification 
  \label{fig:testinglik_mainpaper}
  \end{figure}
 
-
- Figure~\ref{fig:testinglik_mainpaper} presents the testing propensity for non-Hispanic, white males across age strata and fever status using the second approach.  Note that the ratio of testing propensity within strata across fever status is time-varying, starting 50 times more likely in early April and dropping to ten times more likely by end of 2020.  Similar plots for other strata and a discussion of their relative testing propensities can be found in Section~\ref{section:propplots} of the supplementary materials.
+Figure~\ref{fig:testinglik_mainpaper} presents the testing propensity for non-Hispanic, white males across age strata and fever status using the second approach.  Note that the ratio of testing propensity within strata across fever status is time-varying, starting 50 times more likely in early April and dropping to ten times more likely by end of 2020.  Similar plots for other strata and a discussion of their relative testing propensities can be found in Section~\ref{section:propplots} of the supplementary materials.
 
 
 
@@ -810,7 +813,7 @@ Figure~\ref{fig:air_cis} in the supplementary materials presents the confidence 
 
  % \textcolor{red}{I want to say that if i have many more random samples, then we should bias towards the random samples and not only smooth the means. But this is future work.}
 
- A valid criticism of the proposed approach is that recording covariates on every tested individual is time-consuming and costly.  We argue that the list of relevant factors is of reasonable length.  For example, symptom status and COVID-19 contact are clearly relevant factors in testing selection.  Future work may consider how to include/exclude factors over time that are not significant to limit citizen reporting burden.  Moreover, equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected for all individuals in the nonprobability sample, which is often not feasible for state/local governments where rapid sample collection is prioritized.  One can easily extend~\eqref{eq:auxinfoprob} by randomly sampling a subset of the nonprobability sample on which to collect the covariate information.
+ A valid criticism of the proposed approach is that recording covariates on every tested individual is time-consuming and costly.  We argue that the list of relevant factors is of reasonable length.  For example, symptom status and COVID-19 contact are clearly relevant factors in testing selection.  Future work may consider how to include/exclude factors over time that are not significant to limit reporting burden.  Moreover, equation~\eqref{eq:auxinfoprob} presupposes covariate information is collected for all individuals in the nonprobability sample, which is often not feasible for state/local governments where rapid sample collection is prioritized.  One can easily extend~\eqref{eq:auxinfoprob} by randomly sampling a subset of the nonprobability sample on which to collect the covariate information.
  This would balance goals of rapid testing and auxiliary data collection.
 
 \newpage

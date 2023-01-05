@@ -75,6 +75,7 @@
 \def\I{\bf I}
 \def\code#1{\texttt{#1}}
 \def\EE{\mathbb{E}}
+\def\new{\text{new}}
 %\newcommand{\indep}{\perp \!\!\! \perp}
 
 \begin{document}
@@ -548,6 +549,29 @@ $$
 $$
 where $\pi_{j,t^\prime} = \pi (X_{j,t^\prime}; \theta_t)$, $Z_j$ is an indicator of a false positive in the sample $S_{FP}$  and $\tilde Z_j$ is an indicator of a false negative in the sample $S_{FN}$.  We assume the $|S_{FP}|^{-1} \sum_{j \in S_{FP}} Z_j = 0.024$ and $|S_{FP}|^{-1} \sum_{j \in S_{FP}} Z_j = 0.30$.  Sample sizes, denoted $n_{FP}$ and $n_{FN}$ respectively, are chosen to achieve desired estimator variance, i.e., $\frac{0.024 \cdot (0.976)}{n_{FP}} = \sigma^2_{FP}$ and $\frac{0.13 \cdot 0.87}{n_{FN}} = \sigma^2_{FN}$. In this paper, we set $\sigma^2_{FP} = 0.02^2$ and $\sigma_{FN}^2 = 0.05^2$ which means $n_{FP} \approx 59$ and $n_{FN} \approx 45$ respectively.
 
+% \subsubsection{Asymptotics}
+%  \label{section:asymptotics}
+
+%  Here we suppose there is a sequence of finite populations of size $N_{\nu}$ indexed by $\nu$ and that there are $L_\nu$ non-probability samples and probability samples of size $n$ drawn at equally spaced times $\{ t^\prime_l \}_{l=1}^{L_{\nu}}$ over the study window~$[0,T]$. Assuming correct selection model specification, then under the probability sample design and nonprobability sample propensities, Lemma~\ref{lemma:ipw} shows that the IPW estimator at a time~$t \in \{ t^\prime_l \}$ is consistent as $\nu$ goes to infinity (i.e., $N_{\nu}, L_{\nu} \to \infty$) and calculates the estimator's variance.  In Lemma~\ref{lemma:ipw}, sensitivity/specificity are unknown and estimated using a pseudo-likelihood on two random samples whose sizes (denoted~$n_{FP}$ and $n_{FN}$) reflect uncertainty in these quantities.  See Appendix~\ref{app:asympderivations} for additional details.
+
+ \begin{lemma}[Variance of IPW estimator] \normalfont
+ \label{lemma:ipw}
+ % \textcolor{red}{Must check.}
+The estimates~$\hat \mu_t := \bar y_{n,t}^\star$, $\hat \pi_{j,t}$, $\hat{FP}$, and $\hat{FN}$ at a time~$t \in \{t_l^\prime\}$ are solutions to the set of estimating equations~$\Phi_n(\eta_t)$ given in Appendix~\ref{app:asympderivations},
+ % $$
+ % \Phi_n (\eta_t) =
+ % \left (
+ % \begin{array}{c}
+ % \frac{1}{N} \sum_{j=1}^N I^{NR}_{j,t} \frac{Y_{j,t} - FP - (1-FP-FN) \cdot \mu_t}{\pi_{j,t}} \\
+ % \frac{1}{N \times \sum_{l = 1}^L K_h \left(|t - t_l^\prime| \right)} \sum_{l = 1}^L K_h \left(|t - t_l^\prime| \right) \left[ \sum_{j=1}^N I^{NR}_{j,t_l^\prime} X_{j,t_l^\prime} - \sum_{j = 1}^N I^{R}_{j,t_l^\prime} W^{R}_{j,t_l^\prime}  \pi_{j,t_l^\prime} X_{j,t_l^\prime}  \right] \\
+ % \frac{1}{n_{FP}} \sum_{i=1}^{n_{FP}} \frac{Z_j}{FP} - \frac{1-Z_j}{1-FP} \\
+ % \frac{1}{n_{FN}} \sum_{i=1}^{n_{FN}} \frac{\tilde Z_j}{FN} - \frac{1-\tilde Z_j}{1-FN} \\
+ % \end{array}
+ % \right ) = {\bf 0}
+ % $$
+ where $\eta_t = (\mu_t, \pi_t, FP, FN)$. Under certain regularity assumptions (see Appendix~\ref{app:asympderivations}), we have $\bar y_{n,t}^\star - \bar Y_{t} = O_p (\bar n^{-1/2})$  and $\text{var} (\hat y_{n,t}) = V_{t}^{(IPW)} + o (\bar n^{-1})$ where $\bar n = n \sum_{l=1}^L K_{h} (|t - t_l^\prime|)$ and $V_t^{(IPW)}$ is the first diagonal element of $E [\phi_n(\eta_0)]^{-1} \text{Var}(\phi_n(\eta_0))E [\phi_n(\eta_0)]^{-1}$ where $\phi_n = \frac{\partial \Phi (\eta)}{\partial \eta}$ with $E[\cdot]$ and $\text{Var} (\cdot)$ are under the joint randomization of propensity score and sampling designs.
+ \end{lemma}
+
 To prove consistency, first consider the setting where a single random sample of size $n$ is observed at time $t$.  Let $\tilde \Phi (\eta)$ denote the corresponding estimating equations, which is the same as $\Phi(\eta)$ except for the second component which is now given by
 $$
 \frac{1}{N} \left[ \sum_{j=1}^N I_{j,t} X_{j,t} - \sum_{j = 1}^N \tilde I_{j,t} \tilde W_{j,t}  \pi_{j,t} X_{j,t} \right].
@@ -730,7 +754,34 @@ $$
 
 The asymptotic variance for the IPW estimator is then the first diagonal element of the matrix $E \left[ \phi_n (\eta_0) \right]^{-1} \times \left[ V_{1,t} + V_{2,t} + V_{3,t} + V_{4,t} \right] E \left[ \phi_n (\eta_0) \right]^{-1}$.
 
-We next state Lemma~\ref{lemma:dr} for the doubly-robust estimator presented in Section XX.  The proof follows the same derivation as above.
+\subsection{Doubly robust estimation.}
+\label{app:drestimation}
+ Rather than relying solely on IPW or epidemiological forecasts, here we combine forecasting and inverse-probability weighting by extending recent work by~\cite{Chen2019} to account time-varying propensities and measurement-error.
+ Let~$\hat \mu(x)$ denote the posterior mean of the active infection rate individuals with covariate value~$x$ based on the SEIR model described in Section~\ref{section:modelbased}. In this context, the doubly-robust estimator is given by
+ $$
+ \bar y_{n}^{(DR)} = \frac{1}{N} \sum_{j=1}^N \hat \mu (x_j) + \frac{1}{\sum_{j=1}^N I_j^{NR} w (x_j)} \sum_{j=1}^N I_j^{NR} w(x_j) \left( \frac{Y_j - FP}{1 - FP - FN} - \hat \mu(x_j) \right).
+ $$
+ where $\hat \mu(x_j)$ is not corrected for measurement-error as it estimates true active infections. This estimator is called ``doubly-robust'' because it is consistent if either the model-based forecasts or the time-varying propensities are correctly specified. A statistical error decomposition can be derived
+ \begin{align}
+ \label{eq:statdecomp3}
+ \begin{split}
+ \rho_{I^{NR} (X), Y-\mu(X)} &\times \sqrt{\frac{1-f+ CV^2_W}{f}} \times \sigma_{Y-\mu(X)}  \\
+ &\times \underbrace{\left[ 1 - \frac{\rho_{I^{NR}(X),Y} \sigma_{Y}}{\rho_{I^{NR} (X),Y-\mu(X)} \sigma_{Y-\mu(X)}} \times \tilde \Delta \times \frac{\bar Y}{1-\bar Y} \times \frac{FP(1-\bar Y) + FN \cdot \bar Y}{\tilde f_0 (1-\bar Y) + \tilde f_1 \bar Y} \right]}_{\tilde D_M}.
+ \end{split}
+ \end{align}
+ See Appendix~\ref{app:DRderivation} for the derivation.
+ % Comparing~\eqref{eq:statdecomp3} to~\eqref{eq:statdecomp2} shows that the addition of the model-based forecast impacts the estimation error in two ways.
+ If the model is adequate, then one may expect a reduction in the problem difficulty and (potentially) in the data quality components.
+ % Note that the model-based forecast does not impact the data quantity component.
+% Second, if the model-based forecast is correct then $E_{\bf R} [ \rho_{\tilde I (X), Y-\mu(X)} ] = 0$  and therefore $\rho_{\tilde I(X), Y-\mu(X)} = O(N^{-1})$; however, if the forecasts are not correctly specified then the data quality index is unlikely to inversely scale with population size.
+ Interestingly, the impact of measurement-error on data quality now depends on a relative comparison of the data quality and problem difficulty of the weighted estimator and the doubly-robust estimator.
+ % For decent models, one would expect this ratio to be greater than one.  Therefore, $\tilde \Delta < 0$ implies an expected increase in impact of measurement-error and $\tilde \Delta > 0$ implies the magnitude could shrink toward zero or change sign and have an even large magnitude in the opposite direction.  Again, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from a DR estimator are likely to put too much confidence in the sheer size of the data.
+
+ Unfortunately, the first term of the doubly robust estimator cannot be computed as covariate information is not collected on the entire population.  Here, we suppose the same asymptotic regime as in Section~\ref{section:asymptotics} and use the probability sample at the time~$t \in \{t_l^\prime\}$ to estimate this term:
+ $$
+ \frac{1}{\sum_{j=1}^N I^{R}_{j,t} W^R_{j,t}} \sum_{j=1}^N  I_{j,t}^{R} W_{j,t}^{R} \hat \mu_{t} (X_{j,t}) + \frac{1}{\sum_{j=1}^N I_{j,t}^{NR} w (X_{j,t})} \sum_{j=1}^N I_{j,t}^{NR} w(X_{j,t}) \left( \frac{Y_{j,t} - FP}{1 - FP - FN} - \hat \mu_t(X_{j,t}) \right).
+ $$
+ Assuming correct selection propensity model specification, then under the probability sample design and nonprobability sample design, Lemma~\ref{lemma:dr} shows that the doubly robust estimator is consistent and calculates the estimator's variance.  The proof follows the same derivation as above.
 
 \begin{lemma}[Variance of doubly-robust estimator] \normalfont
  \label{lemma:dr}
@@ -769,6 +820,34 @@ $$
 \section{Indiana COVID-19 Analysis: Additional details}
 \label{app:in_add_details}
 
+Table~\ref{tab:indiana} summarizes the statewide random molecular tests conducted in Indiana between April 25--29, 2020 as well as an additional non-random sample of 898 individuals during May 2--3, 2020.
+
+\begin{table}[!th]
+ \begin{tabular}{c | c | r r r | r | r r }
+ & & \multicolumn{3}{c}{Total Tests (\%)} & IN & \multicolumn{2}{c}{Positive Test Rate (\%)}\\
+ \cline{3-5} \cline{7-8}
+ & & NonRandom & Random & CTIS & Census & NonRandom & Random \\ \hline
+ \multirow{2}{*}{Sex} & Female & 58.2 & 55.0 & 54.0 & 50.7 & 21.7 (11.2) & 1.4 \\
+ & Male & 41.8 & 45.0  & 46.0 & 49.3 & 24.2 (12.4) & 2.1 \\ \hline
+ \multirow{3}{*}{Age} & $<40$ & 39.4 & 28.0  & 36.2 & 52.7
+ & 29.7 (15.0) & 1.7 \\
+ & $40-59$ & 41.1 & 36.0  & 34.3 & 25.2 & 24.9 (12.5) & 2.1 \\
+ & $\geq 60$ & 19.5 & 36.0  & 29.5 & 22.1 & 6.7 (3.4) & 0.9 \\ \hline
+ \multirow{2}{*}{Race} & White & 23.1 & 92.0  & - & 86.9 & 19.5 (9.6) & 1.5 \\
+ & Nonwhite & 76.9 & 8.0  & - & 13.1 & 25.0 (12.3) & 3.4 \\ \hline
+ % Hispanic & Hispanic & 44.1 & 2.0 & 7.1 & 37.6 & 6.9 \\
+ % Origin & Non-Hispanic & 55.9 & 98.0 & 92.9 & 13.0 & 1.3 \\ \hline
+ \multirow{2}{*}{Fever} & Yes & 17.0 & 1.8  & 1.0 & - & 66.4 (32.1) & 4.5 \\
+ & No & 83.0 & 98.2  & 99.0 & - & 15.6 (7.5) & 1.3 \\ \hline
+ Household & Yes & 10.8 & 1.4  & 1.8 & - & 46.1 (22.4) & 29.4 \\
+ $+$ Case & No & 89.2 & 98.6  & 98.2 & - & 21.6 (10.4) & 1.3 \\ \hline
+ Prior $+$ & Yes & 6.1 & 1.4  & - & - & 39.2 (20.2) & 24.4 \\
+ Test & No & 93.9 & 98.6  & - & - & 21.6 (11.1) & 1.3 \\ \hline
+ \end{tabular}
+ \caption{Estimated total tests ($\%$) and point prevalence of active infection with SARS-CoV-2 by demographics in Indiana~\citep{Yiannoutsos2021,doi:10.1073/pnas.2111454118}. NonRandom positive test rates in parentheses are adjusted rates to match the statewide rate of $11.7\%$ on August 30th.}
+ \label{tab:indiana}
+ \end{table}
+
 Table~\ref{tab:comparison} demonstrates minimal bias in the Delphi’s COVID-19 Trends and Impact Survey (CTIS) with respect to symptom distributions.
 
  \begin{table}[!th]
@@ -784,8 +863,21 @@ Table~\ref{tab:comparison} demonstrates minimal bias in the Delphi’s COVID-19 
  \label{tab:comparison}
  \end{table}
 
+ Figure~\ref{fig:fbsymptoms} displays smoothed estimates of the fraction of individuals who report COVID-like symptoms within the past 24-hours by age and gender.
+
+ \begin{figure}[!th]
+ \centering
+ \includegraphics[width = 0.9\textwidth]{../figs/fbcovid19symptoms.png}
+ \caption{Rate of reported COVID-19 symptoms per strata.  Daily rates were estimated using weighted method suggested by~\citep{doi:10.1073/pnas.2111454118} on each day separately and then smoothed over time using local-linear nonparametric regression.}
+ \label{fig:fbsymptoms}
+ \vspace{-0.3cm}
+ \end{figure}
+
+
 Next, we describe the two mean-imputation methods.
 \subsection{Model 1}
+
+% In the first approach, we estimate two logistic regressions using weighted pseudo-likelihoods with the CTIS data.  The first estimates the probability of contact with a COVID-19 positive individual given demographic and COVID-19 test status (positive or negative COVID-19 test). Figure~\ref{fig:contactlik1} and~\ref{fig:contactlik2} in Section~\ref{app:in_add_details} in the supplementary materials presents the estimated likelihood of contact with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  The second estimates the probability of fever given demographic, COVID-19 test status, \emph{and} whether the individual has had contact with a COVID-19 positive individual.  Figure~\ref{fig:symptomlik1} and~\ref{fig:symptomlik2} in Section~\ref{app:in_add_details} in the supplementary materials presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that likelihood of fever varies greatly based on whether the individual also reported contact with a COVID-19 positive individual. Using these two models, mean imputation is used to calculate the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. Inverse probability weights are computed based on the resulting dataset (termed IPW1).
 
 First, we use the pseudo-likelihood to compute the likelihood of contact given age, gender, and test result.  Figure~\ref{fig:contactlik1} and~\ref{fig:contactlik2} plots the likelihood for 25-34 years old given a negative test and positive test respectfully.  We see that the likelihood of COVID-19 is much higher for those with a positive test and the likelihood is time-varying.
 
