@@ -777,7 +777,7 @@ The asymptotic variance for the IPW estimator is then the first diagonal element
  Interestingly, the impact of measurement-error on data quality now depends on a relative comparison of the data quality and problem difficulty of the weighted estimator and the doubly-robust estimator.
  % For decent models, one would expect this ratio to be greater than one.  Therefore, $\tilde \Delta < 0$ implies an expected increase in impact of measurement-error and $\tilde \Delta > 0$ implies the magnitude could shrink toward zero or change sign and have an even large magnitude in the opposite direction.  Again, if the data quality is not at the level of $N^{-1}$, then confidence intervals constructed from a DR estimator are likely to put too much confidence in the sheer size of the data.
 
- Unfortunately, the first term of the doubly robust estimator cannot be computed as covariate information is not collected on the entire population.  Here, we suppose the same asymptotic regime as in Section~\ref{section:asymptotics} and use the probability sample at the time~$t \in \{t_l^\prime\}$ to estimate this term:
+ Unfortunately, the first term of the doubly robust estimator cannot be computed as covariate information is not collected on the entire population.  Here, we suppose the same asymptotic regime as in Section~\ref{app:asympderivations} and use the probability sample at the time~$t \in \{t_l^\prime\}$ to estimate this term:
  $$
  \frac{1}{\sum_{j=1}^N I^{R}_{j,t} W^R_{j,t}} \sum_{j=1}^N  I_{j,t}^{R} W_{j,t}^{R} \hat \mu_{t} (X_{j,t}) + \frac{1}{\sum_{j=1}^N I_{j,t}^{NR} w (X_{j,t})} \sum_{j=1}^N I_{j,t}^{NR} w(X_{j,t}) \left( \frac{Y_{j,t} - FP}{1 - FP - FN} - \hat \mu_t(X_{j,t}) \right).
  $$
@@ -875,7 +875,7 @@ Table~\ref{tab:comparison} demonstrates minimal bias in the Delphi’s COVID-19 
 
 
 Next, we describe the two mean-imputation methods.
-\subsection{Model 1}
+\subsection{Model 1 (IPW1)}
 
 % In the first approach, we estimate two logistic regressions using weighted pseudo-likelihoods with the CTIS data.  The first estimates the probability of contact with a COVID-19 positive individual given demographic and COVID-19 test status (positive or negative COVID-19 test). Figure~\ref{fig:contactlik1} and~\ref{fig:contactlik2} in Section~\ref{app:in_add_details} in the supplementary materials presents the estimated likelihood of contact with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  The second estimates the probability of fever given demographic, COVID-19 test status, \emph{and} whether the individual has had contact with a COVID-19 positive individual.  Figure~\ref{fig:symptomlik1} and~\ref{fig:symptomlik2} in Section~\ref{app:in_add_details} in the supplementary materials presents the estimated likelihood of reporting a fever with a COVID-19 positive individual given a negative and positive COVID-19 test in the past 24 hours respectively.  We see that likelihood of fever varies greatly based on whether the individual also reported contact with a COVID-19 positive individual. Using these two models, mean imputation is used to calculate the number of positive and negative tests given demographic strata, fever status, and COVID-19 contact status. Inverse probability weights are computed based on the resulting dataset (termed IPW1).
 
@@ -941,7 +941,7 @@ Based on mean-imputation of COVID-19 contact and fever indicators, we can use th
 \label{fig:testinglik}
 \end{figure}
 
-\subsection{Model 2 (Hospitalization)}
+\subsection{Model 2 (IPW2)}
 
 This model uses hospitalization records to try and improve our mean-imputation strategy.  First, we use the pseudo-likelihood to compute the likelihood of fever given age, gender, and test result.  The model only depends on hospitalization status for positive tests.  Figure~\ref{fig:symptomlik1_model2} and~\ref{fig:symptomlik2_model2} plots the likelihood for 35-44 years old given a negative test and positive test respectfully.  We see that the likelihood of fever is time-varying.  For a negative test, the likelihood of ever fever is very high in early April, which accounts for testing restrictions. We see that hospitalization significantly increases the risk of fever given a positive test.
 
