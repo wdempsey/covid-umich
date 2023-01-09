@@ -731,7 +731,7 @@ Figure~\ref{fig:testinglik_mainpaper} presents the testing propensity for non-Hi
  $$
  \beta_t = \sum_{k=1}^{3} \left(\beta_{k-1} (1-w^{(k)}_t ) + \beta_{k} w_t\right),\quad w^{(k)}_t = (1 + \exp \left( -\xi (t - t_k - \nu) \right))^{-1} {\bf 1}[t \geq t_k]
  $$
- where~$(\beta_0,\beta_1, \beta_2, \beta_3)$ is the vector of transmission rate parameters, $\nu \geq 0$ is the potential delay, $\xi$ is the rate of change, and ${\bf 1}[\cdot]$ is an indicator function.  Each weight~$w_t^{(k)} = 0$ for $t < t_k$ and $w_t^{(k)} \to 1$ as $t \to \infty$. See Section~\ref{app:prior_modelbased} in the supplementary materials for details on prior specification, posterior predict checks, and discussion on case undercounting.
+ where~$(\beta_0,\beta_1, \beta_2, \beta_3)$ is the vector of transmission rate parameters, $\nu \geq 0$ is the potential delay, $\xi$ is the rate of change, and ${\bf 1}[\cdot]$ is an indicator function.  Each weight~$w_t^{(k)} = 0$ for $t < t_k$ and $w_t^{(k)} \to 1$ as $t \to \infty$. See Section~\ref{app:prior_modelbased} in the supplementary materials for details on prior specification, posterior predictive checks, and discussion on case undercounting.
 
  % \begin{figure}[!th]
  % \centering
@@ -810,7 +810,7 @@ We end with a brief discussion of important related topics.
  \subsection*{Real-world implementation of the proposed method}
 
  The proposed methodology relied on access to two critical datasets: (1) COVID-19 testing, case, hospitalization, and death data by demographic strata and (2) CTIS data.  Public access to (1) required submission of data requests to the state of Indiana.  The author's request was one of only five data requests to be approved by Indiana for public release.  Most states do not release such granular data, making selection bias adjustments difficult.  Coordinated, systematic data collection and reporting is critical.
- Lack of covariate information on individuals seeking COVID-19 tests is unacceptable.  Random samples over time to supplement this data with auxiliary information is desperately needed.  We acknowledge that this proposal will lead to data privacy concerns as well as adjustments to the proposed method to account for the time-consuming and costly nature of data collection will both need to be addressed.
+ Lack of covariate information on individuals seeking COVID-19 tests is unacceptable.  Random samples over time to supplement this data with auxiliary information is desperately needed.  We acknowledge that this proposal will lead to data privacy concerns that will need to be addressed as well as adjustments to the proposed method to account for the time-consuming and costly nature of sample collection.
 
  % While we are eternally grateful to Indiana for the release, symptom information was not made available.  This severely limits our ability to estimate correct selection propensity models and strata-specific infection rates.  A more sustained effort to collect relevant measures of an individual's past history that may impact their likelihood of seeking testing and being COVID-19 positive is required.  Such data collection and dissemination is critical to address selection bias.
 
