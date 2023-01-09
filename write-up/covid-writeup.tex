@@ -230,11 +230,11 @@ Figure~\ref{fig:in-data} shows clear reduced testing and case count reporting on
 
  \subsection{Probabilistic samples in Indiana}
 
- Due to testing restrictions and other potential selection biases, publicly reported COVID-19 case count data may not be sufficient to understand active infection rates or the disease trajectory.  Here, we discuss two random samples that provide auxiliary information and may help address selection bias.
+ Due to testing restrictions and other potential selection biases, publicly reported COVID-19 case count data may not be sufficient to understand active infection rates or the disease trajectory.  Here, we discuss two samples that provide auxiliary information and may help address selection bias.
 
  \subsubsection{Random statewide testing}
 
- Between April 25--29, 2020, Indiana conducted statewide random molecular testing of persons ages $\geq 12$ years to assess prevalence of active infection to SARS-CoV-2~\citep{Yiannoutsos2021}. A stratified random sampling design was conducted using Indiana’s 10 public health preparedness districts as sampling strata. 15,495 participants were contacted resulting in a final sample size of 3,658. Demographic data was collected (e.g., summary statistics on age, sex, and race) as well as data on whether they experienced any COVID-19 compatible symptoms during the past 2 weeks or had shared a household with someone who had a positive test result for SARS-CoV-2. During May 2--3, 2020, an additional non-random sample of 898 individuals was also collected.  Table~\ref{tab:indiana} in Appendix~\ref{app:in_add_details} summarizes the data.
+ Between April 25--29, 2020, Indiana conducted statewide random molecular testing of persons ages $\geq 12$ years to assess prevalence of active infection to SARS-CoV-2~\citep{Yiannoutsos2021}. A stratified random sampling design was conducted using Indiana’s 10 public health preparedness districts as sampling strata. 15,495 participants were contacted resulting in a final sample size of 3,658. Demographic data was collected (e.g., summary statistics on age, sex, and race) as well as data on whether they experienced any COVID-19 compatible symptoms during the past 2 weeks or had shared a household with someone who had a positive test result for SARS-CoV-2. During May 2--3, 2020, an additional non-random sample of 898 individuals was also collected.  Table 1 in Appendix~\ref{app:in_add_details} summarizes the data.
  % In this paper, the nonrandom sample is used to assess whether the cumulative summary statistics are appropriate in constructing the inverse-probability weights as well as in constructing appropriate weights using symptom information.
 
  % \begin{table}[!th]
@@ -651,7 +651,7 @@ Rather than relying solely on IPW or epidemiological forecasts, we combine forec
  % FN: https://www.medrxiv.org/content/10.1101/2020.04.16.20066787v2.full.pdf
 
 
- We start by using Table~\ref{tab:indiana} to compute IPW weights for end of April, early May.  The random sample is $n=3,658$. IPW weights are computed per strata using Indiana Census and random survey data, and are allowed to depend on Gender, Age, Race, Fever, Positive Case in Household, and Prior Positive Test. The weight for the strata defined as Male, 40--59, White, has a Fever, no household cases, and no prior tests, for example, is proportional to:
+ We start by using Table~\ref{app:indianatable} to compute IPW weights for end of April, early May.  The random sample is $n=3,658$. IPW weights are computed per strata using Indiana Census and random survey data, and are allowed to depend on Gender, Age, Race, Fever, Positive Case in Household, and Prior Positive Test. The weight for the strata defined as Male, 40--59, White, has a Fever, no household cases, and no prior tests, for example, is proportional to:
  $$
  \frac{\left( 0.493 \times 0.252 \times 0.869 \times 0.018 \times 0.986 \times 0.986 \right)}{\left(0.418 \times 0.411 \times 0.231 \times 0.17 \times 0.892 \times 0.939 \right)} \approx 0.334
  $$
